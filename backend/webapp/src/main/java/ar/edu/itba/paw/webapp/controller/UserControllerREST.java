@@ -51,7 +51,7 @@ public class UserControllerREST {
     }
 
 
-    //TODO : validate user content and maybe user @FormDataParam
+    //TODO : validate user content and maybe use @FormDataParam
     @Path("/")
     @POST
     public Response createUser(final UserDTO userDto) {
@@ -65,10 +65,9 @@ public class UserControllerREST {
     @Path("/{id}/picture")
     @Produces(value = {"image/png", "image/jpeg"})
     public Response getUserProfilePicture(@PathParam("id") final int id) {
-        LOGGER.debug("Accessed getUserProfilePicture with id {}", id);
+        LOGGER.debug("In getUserProfilePicture() with id {}", id);
 
         final Optional<UserPicture> pictureOpt = ups.findByUserId(id);
-
         if (!pictureOpt.isPresent()) {
             LOGGER.warn("Cannot render user profile picture, user with id {} not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();

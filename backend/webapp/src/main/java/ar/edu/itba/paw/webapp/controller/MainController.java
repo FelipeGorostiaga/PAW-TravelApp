@@ -37,8 +37,4 @@ public class MainController  {
         return user.get();
     }
 
-    /*@ExceptionHandler(Exception.class)
-    private ModelAndView handleConstraint() {
-        return new ModelAndView("500");
-    }*/
 }
