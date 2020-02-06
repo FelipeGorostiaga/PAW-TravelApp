@@ -21,7 +21,7 @@
 
   <servlet-mapping>
     <servlet-name>jersey-servlet</servlet-name>
-    <url-pattern>/api/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
   <context-param>
@@ -68,7 +68,7 @@
 
   <filter-mapping>
     <filter-name>springSecurityFilterChain</filter-name>
-    <url-pattern>/api/*</url-pattern>
+    <url-pattern>/*</url-pattern>
     <dispatcher>ERROR</dispatcher>
     <dispatcher>REQUEST</dispatcher>
   </filter-mapping>

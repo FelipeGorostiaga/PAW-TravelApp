@@ -17,7 +17,6 @@ import org.thymeleaf.context.Context;
 
 import java.util.Locale;
 
-import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
 
 @Service

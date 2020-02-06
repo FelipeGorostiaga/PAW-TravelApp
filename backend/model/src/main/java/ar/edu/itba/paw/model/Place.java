@@ -30,12 +30,8 @@ public class Place {
     @Column(length = 500, nullable = false)
     private String address;
 
-    ///////////////
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "place")
     private List<Activity> activities = new LinkedList<>();
-
-    ////////////////
 
 
     public Place(long id, String googleId, String name, double latitude, double longitude, String address) {

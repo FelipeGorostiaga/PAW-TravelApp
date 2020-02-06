@@ -32,8 +32,6 @@ public class Trip implements Comparable<Trip>{
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    /////////////////
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<User> users = new LinkedList<>();
 
@@ -46,7 +44,6 @@ public class Trip implements Comparable<Trip>{
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
     private List<TripComment> comments = new LinkedList<>();
 
-    /////////////////
 
 
     public Trip(long id, long adminId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate) {

@@ -8,31 +8,44 @@
   <name>paw2019a</name>
 
   <properties>
+
+    <!--juliano-->
+    <org.hibernate.version>5.1.0.Final</org.hibernate.version>
+    <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
+    <jersey.version>3.0-SNAPSHOT</jersey.version>
+    <jersey.bean-validation>2.25</jersey.bean-validation>
+    <org.hibernate-validator.version>5.2.4.Final</org.hibernate-validator.version>
+
+    <!--mia-->
+    <org.hibernate.version>5.1.0.Final</org.hibernate.version>
+    <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
+    <jersey.version>3.0-SNAPSHOT</jersey.version>
+    <jersey.bean-validation>2.25</jersey.bean-validation>
+    <org.hibernate-validator.version>5.2.4.Final</org.hibernate-validator.version>
+
+
+
     <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
     <servlet-api.version>2.5</servlet-api.version>
     <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
     <jstl.version>1.2</jstl.version>
+    <maven-war-plugin.version>2.6</maven-war-plugin.version>
+    <junit.version>4.12</junit.version>
     <org.postgresql.version>9.3-1102-jdbc41</org.postgresql.version>
     <org.hsqldb.version>2.3.1</org.hsqldb.version>
     <org.webjars.bootstrap.version>4.1.3</org.webjars.bootstrap.version>
     <org.webjars.jquery.version>3.2.1</org.webjars.jquery.version>
     <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
-    <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
     <spring-security.version>4.0.4.RELEASE</spring-security.version>
     <org.slf4j.version>1.7.5</org.slf4j.version>
     <logback.version>1.1.2</logback.version>
     <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
-    <maven-war-plugin.version>2.6</maven-war-plugin.version>
-    <google-places-api-java-version>2.1.7</google-places-api-java-version>
-    <simple-java-mail-version>5.1.6</simple-java-mail-version>
     <commons-fileupload-version>1.3.3</commons-fileupload-version>
     <mockito.version>2.25.1</mockito.version>
-    <org.hibernate.version>5.1.0.Final</org.hibernate.version>
-    <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
-    <spring-integration-version>5.0.8.RELEASE</spring-integration-version>
-    <java-mail-version>1.4.7</java-mail-version>
+    <google-places-api-java-version>2.1.7</google-places-api-java-version>
+    <simple-java-mail-version>5.1.6</simple-java-mail-version>
     <org.imgscalr.version>4.2</org.imgscalr.version>
-    <jersey.version>3.0-SNAPSHOT</jersey.version>
+    <jsonwebtoken.version>0.7.0</jsonwebtoken.version>
   </properties>
 
   <build>
@@ -41,6 +54,19 @@
      <groupId>org.apache.maven.plugins</groupId>
      <artifactId>maven-eclipse-plugin</artifactId>
      <version>${maven-eclipse-plugin.version}</version>
+      <configuration>
+        <downloadSources>true</downloadSources>
+        <downloadJavadocs>true</downloadJavadocs>
+      </configuration>
+    </plugin>
+    <plugin>
+       <groupId>org.apache.maven.plugins</groupId>
+       <artifactId>maven-compiler-plugin</artifactId>
+       <version>3.1</version>
+       <configuration>
+         <source>1.8</source>
+         <target>1.8</target>
+       </configuration>
     </plugin>
     <plugin>
       <groupId>org.apache.maven.plugins</groupId>
@@ -64,9 +90,59 @@
     </repository>
   </repositories>
 
-
   <dependencyManagement>
     <dependencies>
+
+      <!--  SPRING  -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-core</artifactId>
+        <version>${spring-security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+        <version>${spring-security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+        <version>${spring-security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${org.springframework.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-tx</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+
+
+      <!--  JERSEY  -->
       <dependency>
         <groupId>org.glassfish.jersey.containers</groupId>
         <artifactId>jersey-container-servlet-core</artifactId>
@@ -78,6 +154,7 @@
         <version>${jersey.version}</version>
         <exclusions>
           <exclusion>
+            <!-- La versión incluida requiere Java 9+ -->
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2</artifactId>
           </exclusion>
@@ -100,6 +177,18 @@
         </exclusions>
       </dependency>
       <dependency>
+        <groupId>org.glassfish.jersey.ext</groupId>
+        <artifactId>jersey-bean-validation</artifactId>
+        <version>${jersey.bean-validation}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
         <groupId>org.glassfish.jersey.media</groupId>
         <artifactId>jersey-media-moxy</artifactId>
         <version>${jersey.version}</version>
@@ -109,15 +198,31 @@
         <artifactId>jersey-media-jaxb</artifactId>
         <version>${jersey.version}</version>
       </dependency>
+
+      <!--  DATABASES  -->
       <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-java8</artifactId>
-        <version>${org.hibernate.version}</version>
+        <groupId>org.hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <version>${org.hsqldb.version}</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-orm</artifactId>
-        <version>${org.springframework.version}</version>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${org.postgresql.version}</version>
+      </dependency>
+
+      <!--  HIBERNATE  -->
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${org.hibernate-validator.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.hibernate</groupId>
@@ -134,21 +239,8 @@
         <artifactId>hibernate-jpa-2.1-api</artifactId>
         <version>${org.hibernate.jpa.version}</version>
       </dependency>
-      <dependency>
-        <groupId>commons-fileupload</groupId>
-        <artifactId>commons-fileupload</artifactId>
-        <version>${commons-fileupload-version}</version>
-      </dependency>
-      <dependency>
-      <groupId>org.simplejavamail</groupId>
-      <artifactId>simple-java-mail</artifactId>
-      <version>${simple-java-mail-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>se.walkercrou</groupId>
-        <artifactId>google-places-api-java</artifactId>
-        <version>${google-places-api-java-version}</version>
-      </dependency>
+
+      <!--  LOGGING  -->
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
@@ -175,43 +267,36 @@
         <version>${logback-ext-spring.version}</version>
         <scope>runtime</scope>
       </dependency>
+
       <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-core</artifactId>
-        <version>${spring-security.version}</version>
+        <groupId>commons-fileupload</groupId>
+        <artifactId>commons-fileupload</artifactId>
+        <version>${commons-fileupload-version}</version>
       </dependency>
+
+
+     <!--  MAIL  -->
       <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-web</artifactId>
-        <version>${spring-security.version}</version>
+        <groupId>org.simplejavamail</groupId>
+        <artifactId>simple-java-mail</artifactId>
+        <version>${simple-java-mail-version}</version>
       </dependency>
+
+      <!--  MAPS  -->
       <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-config</artifactId>
-        <version>${spring-security.version}</version>
+        <groupId>se.walkercrou</groupId>
+        <artifactId>google-places-api-java</artifactId>
+        <version>${google-places-api-java-version}</version>
       </dependency>
+
       <dependency>
         <groupId>javax.validation</groupId>
         <artifactId>validation-api</artifactId>
         <version>${javax.validation-api.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>${org.hibernate.validator}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${org.springframework.version}</version>
-        <scope>test</scope>
-      </dependency>
+
+
+      <!--  WEB JARS  -->
       <dependency>
         <groupId>org.webjars</groupId>
         <artifactId>bootstrap</artifactId>
@@ -222,43 +307,16 @@
         <artifactId>jquery</artifactId>
         <version>${org.webjars.jquery.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.hsqldb</groupId>
-        <artifactId>hsqldb</artifactId>
-        <version>${org.hsqldb.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-webmvc</artifactId>
-        <version>${org.springframework.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>${org.springframework.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-jdbc</artifactId>
-        <version>${org.springframework.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>${org.postgresql.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-tx</artifactId>
-        <version>${org.springframework.version}</version>
-      </dependency>
+
+
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
         <version>${mockito.version}</version>
         <scope>test</scope>
       </dependency>
+
+      <!--  SERVLET  -->
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
@@ -270,16 +328,7 @@
         <artifactId>jstl</artifactId>
         <version>${jstl.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-mail</artifactId>
-        <version>${spring-integration-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.mail</groupId>
-        <artifactId>mail</artifactId>
-        <version>${java-mail-version}</version>
-      </dependency>
+
       <dependency>
         <groupId>org.thymeleaf</groupId>
         <artifactId>thymeleaf-spring4</artifactId>
@@ -290,6 +339,15 @@
         <artifactId>imgscalr-lib</artifactId>
         <version>${org.imgscalr.version}</version>
       </dependency>
+
+
+      <!-- AUTHENTICATION TOKEN SERVICE -->
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt</artifactId>
+        <version>${jsonwebtoken.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
