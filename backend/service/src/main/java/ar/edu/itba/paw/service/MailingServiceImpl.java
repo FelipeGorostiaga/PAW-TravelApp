@@ -1,3 +1,4 @@
+
 package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.MailingService;
@@ -15,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+
+
 import java.util.Locale;
 
 
@@ -22,6 +25,7 @@ import java.util.Locale;
 @Service
 @Transactional
 public class MailingServiceImpl implements MailingService {
+
 
     private static final Integer PORT = 587;
     private static final String EMAIL_SERVER = "smtp.gmail.com";
@@ -120,5 +124,5 @@ public class MailingServiceImpl implements MailingService {
         sendMail(firstname + " " + lastname, email, html, subject, ctx);
     }
 
-
 }
+

@@ -7,7 +7,6 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
-import ar.edu.itba.paw.webapp.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
