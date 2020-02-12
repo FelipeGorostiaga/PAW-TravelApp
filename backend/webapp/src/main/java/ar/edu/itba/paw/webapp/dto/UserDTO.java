@@ -10,19 +10,12 @@ import java.time.LocalDate;
 public class UserDTO {
 
     private long id;
-
     private String firstname;
-
     private String lastname;
-
     private String email;
-
     private String password;
-
     private LocalDate birthday;
-
     private String biography;
-
     private String nationality;
 
     private URI url;

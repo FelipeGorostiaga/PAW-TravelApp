@@ -32,7 +32,7 @@ import java.util.Optional;
 
 import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
-@Controller
+
 public class UserController extends MainController{
 
     @Autowired

@@ -7,11 +7,14 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
+import ar.edu.itba.paw.webapp.dto.UserDTO;
+import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -20,6 +23,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+
 
 @Path("users")
 @Controller
@@ -57,13 +61,17 @@ public class UserControllerREST {
         }
     }
 
-
-    //TODO : validate user content and maybe use @FormDataParam
-    @Path("/")
     @POST
-    public Response createUser(final UserDTO userDto) {
-        final User user = us.create(userDto.getFirstname(), userDto.getLastname(), userDto.getEmail(),
-                userDto.getPassword(), userDto.getBirthday(), userDto.getNationality());
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createUser(@Valid UserCreateForm userForm) {
+
+        Optional<User> userDuplicate = us.findByUsername(userForm.getEmail());
+        if(userDuplicate.isPresent()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        final User user = us.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
+                userForm.getPassword(), userForm.getBirthday(), userForm.getNationality());
         final URI uri = uriContext.getAbsolutePathBuilder().path(String.valueOf(user.getId())).build();
         return Response.created(uri).build();
     }
@@ -84,8 +92,8 @@ public class UserControllerREST {
     }
 
     @GET
-    @Path("/{id}/trips")
-    public Response getUserTrips(@PathParam("id") final int id,
+    @Path("/{userId}/trips")
+    public Response getUserTrips(@PathParam("userId") final int id,
                                  @DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("per_page") int pageSize)  {
 
@@ -99,6 +107,9 @@ public class UserControllerREST {
         final List<Trip> trips = ts.getAllUserTrips(user);
         return Response.ok(trips).build();
     }
+
+
+
 
 
 }

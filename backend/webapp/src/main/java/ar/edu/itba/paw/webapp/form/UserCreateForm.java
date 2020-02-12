@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.model.DateManipulation;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -28,18 +29,18 @@ public class UserCreateForm {
     private String pswrepeat;
 
     @NotNull
-    @Size(min = 8, max = 10)
-    private String birthday;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private LocalDate birthday;
 
     @NotNull
     @Size(min = 2, max = 5)
     private String nationality;
 
-    public String getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 
@@ -96,8 +97,6 @@ public class UserCreateForm {
     }
 
     public boolean checkBirthday() {
-        LocalDate birth = DateManipulation.stringToLocalDate(birthday);
-        LocalDate now = LocalDate.now();
-        return birth.isBefore(now);
+        return birthday.isBefore(LocalDate.now());
     }
 }

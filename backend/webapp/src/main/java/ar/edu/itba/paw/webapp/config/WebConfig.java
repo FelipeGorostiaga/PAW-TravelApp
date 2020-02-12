@@ -32,6 +32,8 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
@@ -132,5 +134,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return templateEngine;
     }
 
+    @Bean
+    public Validator validator() {
+        return Validation.buildDefaultValidatorFactory().getValidator();
+    }
 
 }
