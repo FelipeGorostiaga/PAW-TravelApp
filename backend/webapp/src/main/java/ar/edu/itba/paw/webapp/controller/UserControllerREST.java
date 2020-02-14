@@ -66,7 +66,6 @@ public class UserControllerREST {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(@Valid UserCreateForm userForm) {
-
         Optional<User> userDuplicate = us.findByUsername(userForm.getEmail());
         if(userDuplicate.isPresent()) {
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -82,7 +81,6 @@ public class UserControllerREST {
     @Produces(value = {"image/png", "image/jpeg"})
     public Response getUserProfilePicture(@PathParam("id") final int id) {
         LOGGER.debug("In getUserProfilePicture() with id {}", id);
-
         final Optional<UserPicture> pictureOpt = ups.findByUserId(id);
         if (!pictureOpt.isPresent()) {
             LOGGER.warn("Cannot render user profile picture, user with id {} not found", id);
@@ -107,7 +105,6 @@ public class UserControllerREST {
         final List<Trip> trips = ts.getAllUserTrips(user);
         return Response.ok(trips).build();
     }
-
 
 }
 

@@ -25,18 +25,23 @@ public class ActivityServiceImpl implements ActivityService {
     ActivityDao ad;
 
     @Override
-    public Optional<Activity> findById(long id) {
+    public Optional<Activity> findById(final long id) {
         return ad.findById(id);
     }
 
     @Override
-    public Optional<Activity> findByName(String name) {
+    public Optional<Activity> findByName(final String name) {
         return ad.findByName(name);
     }
 
     @Override
     public Activity create(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
         return ad.create(name, category, place, trip, startDate, endDate);
+    }
+
+    @Override
+    public List<Activity> getTripActivities(final long tripId) {
+        return ad.getTripActivities(tripId);
     }
 
     @Override

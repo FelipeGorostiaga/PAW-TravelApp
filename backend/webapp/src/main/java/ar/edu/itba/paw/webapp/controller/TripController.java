@@ -29,7 +29,7 @@ import java.util.*;
 import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
 @Controller
-public class TripController extends MainController{
+public class TripController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
     private static final GooglePlaces client = new GooglePlaces("AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M");
@@ -437,7 +437,7 @@ public class TripController extends MainController{
                 return "updated";
             }
             else {
-                return "rate doest change";
+                return "rate doesnt change";
             }
         } else {
             tripRateService.create(user, maybeTrip.get(), rate);

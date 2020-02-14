@@ -33,7 +33,7 @@ import java.util.Optional;
 import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
 
-public class UserController extends MainController{
+public class UserController {
 
     @Autowired
     private UserPicturesService ups;
@@ -118,15 +118,18 @@ public class UserController extends MainController{
             mav.addObject("alreadyExists", true);
             return mav;
         }
+/*
 
         ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastname(), getLocale());
         User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), form.getPassword(),
                 DateManipulation.stringToLocalDate(form.getBirthday()), form.getNationality());
+*/
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
+
+      /*  UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         authToken.setDetails(new WebAuthenticationDetails(request));
         Authentication authentication = authenticationManager.authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);*/
         mav.setViewName("redirect:/home/1");
         return mav;
     }

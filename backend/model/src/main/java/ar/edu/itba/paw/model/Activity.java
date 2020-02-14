@@ -26,15 +26,11 @@ public class Activity implements Comparable<Activity> {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    ///////////////
-
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Place place;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Trip trip;
-
-    ////////////////
 
     public Activity(long id, String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
         this(name, category, place, trip, startDate, endDate);
