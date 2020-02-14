@@ -120,7 +120,6 @@ public class TripController extends MainController{
             return mav;
         }
         Place place = places.get(0);
-        LOGGER.debug("Google Place name is {}", place.getName());
 
         Optional<ar.edu.itba.paw.model.Place> maybePlace = ps.findByGoogleId(place.getPlaceId());
 

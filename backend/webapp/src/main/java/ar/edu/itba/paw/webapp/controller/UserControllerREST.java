@@ -61,6 +61,7 @@ public class UserControllerREST {
         }
     }
 
+    @Path("/create")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -98,7 +99,6 @@ public class UserControllerREST {
                                  @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("per_page") int pageSize)  {
 
         final Optional<User> userOptional = us.findById(id);
-
         if (!userOptional.isPresent()) {
             LOGGER.debug("Failed to get user with ID: {} trips, user not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -107,9 +107,6 @@ public class UserControllerREST {
         final List<Trip> trips = ts.getAllUserTrips(user);
         return Response.ok(trips).build();
     }
-
-
-
 
 
 }

@@ -54,6 +54,8 @@ public class AuthenticatedUserController {
         return Response.noContent().build();
     }
 
+
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLoggedInUser() {
@@ -64,8 +66,5 @@ public class AuthenticatedUserController {
         }
         return Response.ok(new UserDTO(loggedUser, uriContext.getBaseUri())).build();
     }
-
-
-
 
 }

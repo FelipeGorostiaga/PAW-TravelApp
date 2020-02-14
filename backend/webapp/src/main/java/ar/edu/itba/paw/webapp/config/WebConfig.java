@@ -29,6 +29,7 @@ import org.springframework.web.servlet.view.JstlView;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import se.walkercrou.places.GooglePlaces;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -137,6 +138,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public Validator validator() {
         return Validation.buildDefaultValidatorFactory().getValidator();
+    }
+
+    @Bean
+    public GooglePlaces googlePlacesClient() {
+        return new GooglePlaces("AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M");
     }
 
 }

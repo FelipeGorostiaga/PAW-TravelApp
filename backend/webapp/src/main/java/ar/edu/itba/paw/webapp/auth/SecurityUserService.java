@@ -12,10 +12,8 @@ import java.util.Optional;
 @Component
 public class SecurityUserService {
 
-
     @Autowired
     UserService userService;
-
 
     public User getLoggedUser() {
         String loggedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
