@@ -50,9 +50,7 @@ public class UserControllerREST {
     @Path("/{id}")
     public Response getUserById(@PathParam("id") final int id) {
         final Optional<User> userOptional = us.findById(id);
-
         LOGGER.debug("Accessed getUserById with id {}", id);
-
         if (userOptional.isPresent()) {
             return Response.ok(new UserDTO(userOptional.get(), uriContext.getBaseUri())).build();
         } else {

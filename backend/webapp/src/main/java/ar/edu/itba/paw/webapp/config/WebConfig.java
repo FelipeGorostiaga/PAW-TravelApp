@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -137,8 +138,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public Validator validator() {
-        return Validation.buildDefaultValidatorFactory().getValidator();
+        final LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
+        factory.setValidationMessageSource(messageSource());
+        return factory;
     }
+
 
     @Bean
     public GooglePlaces googlePlacesClient() {
