@@ -13,20 +13,29 @@ public class UserDTO {
     private String firstname;
     private String lastname;
     private String email;
-    private String password;
     private LocalDate birthday;
     private String biography;
     private String nationality;
 
     private URI url;
 
+    public UserDTO() {
+        // Empty constructor needed by JAX-RS
+    }
+
     public UserDTO(User user,  final URI baseUri) {
+        this(user);
+        url = baseUri.resolve("users/" + id);
+    }
+
+    public UserDTO(User user) {
         id = user.getId();
         firstname = user.getFirstname();
         lastname = user.getLastname();
         email = user.getEmail();
-
-        url = baseUri.resolve("users/" + id);
+        birthday = user.getBirthday();
+        nationality = user.getNationality();
+        biography = user.getBiography();
     }
 
     public long getId() {
@@ -59,14 +68,6 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public LocalDate getBirthday() {

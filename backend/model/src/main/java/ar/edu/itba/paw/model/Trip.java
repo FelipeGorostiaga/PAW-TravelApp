@@ -45,7 +45,6 @@ public class Trip implements Comparable<Trip>{
     private List<TripComment> comments = new LinkedList<>();
 
 
-
     public Trip(long id, long adminId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate) {
         this(adminId, startPlaceId, name, description, startDate, endDate);
         this.id = id;

@@ -17,15 +17,11 @@ public class TripComment implements Comparable<TripComment>{
     @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
 
-    ////////////
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Trip trip;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private User user;
-
-    ////////////
 
     /* package */ TripComment() {
         // Just for Hibernate

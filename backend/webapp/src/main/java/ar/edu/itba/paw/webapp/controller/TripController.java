@@ -31,7 +31,7 @@ import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 @Controller
 public class TripController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TripController.class);
     private static final GooglePlaces client = new GooglePlaces("AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");

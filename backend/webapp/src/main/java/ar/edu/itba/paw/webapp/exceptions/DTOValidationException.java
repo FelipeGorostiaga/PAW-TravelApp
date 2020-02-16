@@ -16,6 +16,4 @@ public class DTOValidationException extends Exception{
         return constraintViolations;
     }
 
-
-
 }
