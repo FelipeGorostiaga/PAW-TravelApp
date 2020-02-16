@@ -11,4 +11,5 @@ import javax.ws.rs.core.MediaType;
 @Controller
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class ActivityControllerREST {
+
 }

@@ -1,12 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
+import ar.edu.itba.paw.interfaces.PlaceService;
 import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
+import ar.edu.itba.paw.webapp.dto.ImageDTO;
+import ar.edu.itba.paw.webapp.dto.TripDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.slf4j.Logger;
@@ -23,6 +27,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Path("users")
@@ -30,8 +35,7 @@ import java.util.Optional;
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class UserControllerREST {
 
-    public static final int DEFAULT_PAGE_SIZE = 9;
-
+    private static final int DEFAULT_PAGE_SIZE = 9;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserControllerREST.class);
 
     @Autowired
@@ -64,6 +68,9 @@ public class UserControllerREST {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(@Valid UserCreateForm userForm) {
+
+        //TODO - VALIDATE CONSTRAINTS
+
         Optional<User> userDuplicate = us.findByUsername(userForm.getEmail());
         if(userDuplicate.isPresent()) {
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -84,23 +91,19 @@ public class UserControllerREST {
             LOGGER.warn("Cannot render user profile picture, user with id {} not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
-        return Response.ok(pictureOpt.get().getPicture()).build();
+        return Response.ok(new ImageDTO(pictureOpt.get())).build();
     }
 
     @GET
     @Path("/{userId}/trips")
-    public Response getUserTrips(@PathParam("userId") final int id,
-                                 @DefaultValue("1") @QueryParam("page") int page,
-                                 @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("per_page") int pageSize)  {
-
+    public Response getUserTrips(@PathParam("userId") final int id, @DefaultValue("1") @QueryParam("page") int page) {
         final Optional<User> userOptional = us.findById(id);
         if (!userOptional.isPresent()) {
-            LOGGER.debug("Failed to get user with ID: {} trips, user not found", id);
+            LOGGER.debug("Failed to get trips of user with id {} , user not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         User user = userOptional.get();
-        final List<Trip> trips = ts.getAllUserTrips(user);
+        List<TripDTO> trips = ts.getAllUserTrips(user).stream().map(TripDTO::new).collect(Collectors.toList());
         return Response.ok(trips).build();
     }
 

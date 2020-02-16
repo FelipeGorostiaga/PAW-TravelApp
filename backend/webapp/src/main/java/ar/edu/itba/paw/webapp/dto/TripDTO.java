@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 public class TripDTO {
 
     private long id;
-    private UserDTO admin;
-    private PlaceDTO startPlace;
+    private long adminId;
+    private long startPlaceId;
     private String name;
     private String description;
     private LocalDate startDate;
@@ -24,15 +24,15 @@ public class TripDTO {
         // Empty constructor needed by JAX-RS
     }
 
-    public TripDTO(Trip trip, UserDTO admin, PlaceDTO startPlace) {
+    public TripDTO(Trip trip) {
         this.id = trip.getId();
         this.name = trip.getName();
         this.description = trip.getDescription();
         this.tripPicture = new ImageDTO(trip.getProfilePicture());
         this.startDate = trip.getStartDate();
         this.endDate = trip.getEndDate();
-        this.admin = admin;
-        this.startPlace = startPlace;
+        this.adminId = trip.getAdminId();
+        this.startPlaceId = trip.getStartPlaceId();
         this.users = trip.getUsers().stream().map(UserDTO::new).collect(Collectors.toList());
         this.activities = trip.getActivities().stream().map(ActivityDTO::new).collect(Collectors.toList());
         this.comments = trip.getComments().stream().map(TripCommentDTO::new).collect(Collectors.toList());
@@ -46,20 +46,20 @@ public class TripDTO {
         this.id = id;
     }
 
-    public UserDTO getAdmin() {
-        return admin;
+    public long getAdminId() {
+        return adminId;
     }
 
-    public void setAdmin(UserDTO admin) {
-        this.admin = admin;
+    public void setAdminId(long adminId) {
+        this.adminId = adminId;
     }
 
-    public PlaceDTO getStartPlace() {
-        return startPlace;
+    public long getStartPlaceId() {
+        return startPlaceId;
     }
 
-    public void setStartPlace(PlaceDTO startPlace) {
-        this.startPlace = startPlace;
+    public void setStartPlaceId(long startPlaceId) {
+        this.startPlaceId = startPlaceId;
     }
 
     public List<ActivityDTO> getActivities() {

@@ -30,8 +30,6 @@ public class User {
     @Column(length = 500)
     private String biography;
 
-    //////////////
-
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Trip> trips;
 
@@ -43,8 +41,6 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripComment> rates;
-
-    /////////////
 
     @Column(length = 100, nullable = false)
     private String nationality;
@@ -175,4 +171,5 @@ public class User {
     public void setComments(List<TripComment> comments) {
         this.comments = comments;
     }
+
 }
