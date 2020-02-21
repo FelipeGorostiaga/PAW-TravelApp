@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto.constraints;
+package ar.edu.itba.paw.webapp.dto.constraint;
 
 public class ConstraintViolationDTO {
 

@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.model.DateManipulation;
+import ar.edu.itba.paw.webapp.form.annotation.EqualPasswords;
+import ar.edu.itba.paw.webapp.form.annotation.ValidBirthday;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
@@ -8,6 +11,9 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+
+@EqualPasswords
+@ValidBirthday
 public class UserCreateForm {
 
     public UserCreateForm() {
@@ -22,6 +28,7 @@ public class UserCreateForm {
     @Size(min = 2, max = 100)
     private String lastname;
 
+    @Email
     @Pattern(regexp =  "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     @Size(min = 6, max = 100)
     private String email;

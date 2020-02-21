@@ -4,7 +4,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
-import ar.edu.itba.paw.webapp.dto.constraints.ConstraintViolationsDTO;
+import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
 import ar.edu.itba.paw.webapp.form.EditProfileForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

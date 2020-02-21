@@ -5,7 +5,7 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.dto.constraints.ConstraintViolationsDTO;
+import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
 import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
 import ar.edu.itba.paw.webapp.form.TripCommentForm;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;

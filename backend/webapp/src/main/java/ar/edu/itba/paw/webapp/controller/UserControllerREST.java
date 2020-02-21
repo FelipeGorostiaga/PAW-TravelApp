@@ -7,15 +7,16 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
-import ar.edu.itba.paw.webapp.dto.ErrorDTO;
 import ar.edu.itba.paw.webapp.dto.ImageDTO;
 import ar.edu.itba.paw.webapp.dto.TripDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
-import ar.edu.itba.paw.webapp.dto.constraints.ConstraintViolationsDTO;
+import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationDTO;
+import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 
 import javax.validation.ConstraintViolation;
@@ -29,6 +30,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
+
 
 @Path("users")
 @Controller
@@ -37,6 +40,9 @@ public class UserControllerREST {
 
     private static final int DEFAULT_PAGE_SIZE = 9;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserControllerREST.class);
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Autowired
     Validator validator;
@@ -76,10 +82,6 @@ public class UserControllerREST {
         Set<ConstraintViolation<UserCreateForm>> violations = validator.validate(userForm);
         if(!violations.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ConstraintViolationsDTO(violations)).build();
-        }
-        Optional<User> userDuplicate = us.findByUsername(userForm.getEmail());
-        if(userDuplicate.isPresent()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("username already in use")).build();
         }
         final User user = us.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
                 userForm.getPassword(), DateManipulation.stringToLocalDate(userForm.getBirthday()), userForm.getNationality());
