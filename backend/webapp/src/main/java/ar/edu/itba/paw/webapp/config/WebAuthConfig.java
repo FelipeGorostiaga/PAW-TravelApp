@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
@@ -38,10 +39,16 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private TravelUserDetailsService userDetailsService;
 
     @Override
+    public void configure(final WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico","/icons/**","/webjars/**");
+    }
+
+    @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.userDetailsService(userDetailsService)
-                .sessionManagement()
-                //.invalidSessionUrl("/")
+        http.csrf().disable().authorizeRequests().antMatchers("/api/**").permitAll();
+
+
+               /* //.invalidSessionUrl("/")
                 .and().authorizeRequests()
                 .antMatchers("/","/signin", "/signup").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
@@ -62,10 +69,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
                 .and().exceptionHandling()
                 .accessDeniedPage("/403")
-                .and().csrf().disable();
+                .and().csrf().disable();*/
     }
 
-    private String getRememberMeKey() {
+    /*private String getRememberMeKey() {
         final StringWriter writer = new StringWriter();
         try (Reader reader = new InputStreamReader(key.getInputStream())) {
             char[] data = new char[1024];
@@ -78,7 +85,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
             throw new RuntimeException(e);
         }
         return writer.toString();
-    }
+    }*/
 
     @Bean
     public DaoAuthenticationProvider getDaoAuth() {
@@ -90,19 +97,18 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder); OTRA FORMA
         auth.authenticationProvider(getDaoAuth());
-    }
-
-    @Override
-    public void configure(final WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico","/icons/**","/webjars/**");
     }
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 
 }

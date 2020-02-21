@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.webapp.dto;
 
-public class UserLoginDTO {
+public class AuthenticationRequestDTO {
 
     private String username;
     private String password;
 
-    public UserLoginDTO() {
+    public AuthenticationRequestDTO() {
         // Empty constructor needed by JAX-RS
     }
 

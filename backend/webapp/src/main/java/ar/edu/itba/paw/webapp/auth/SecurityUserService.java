@@ -5,11 +5,11 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Component
+@Service
 public class SecurityUserService {
 
     @Autowired
@@ -19,7 +19,6 @@ public class SecurityUserService {
         String loggedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> loggedUser = userService.findByUsername(loggedUserEmail);
         return loggedUser.orElse(null);
-
     }
 
 }

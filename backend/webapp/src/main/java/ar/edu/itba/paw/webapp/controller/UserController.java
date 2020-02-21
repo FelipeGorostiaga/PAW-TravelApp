@@ -120,8 +120,8 @@ public class UserController {
         }
 /*
 
-        ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastname(), getLocale());
-        User user = us.create(form.getFirstname(), form.getLastname(), form.getEmail(), form.getPassword(),
+        ms.sendRegisterMail(form.getEmail(), form.getFirstname() , form.getLastName(), getLocale());
+        User user = us.create(form.getFirstname(), form.getLastName(), form.getEmail(), form.getPassword(),
                 DateManipulation.stringToLocalDate(form.getBirthday()), form.getNationality());
 */
 

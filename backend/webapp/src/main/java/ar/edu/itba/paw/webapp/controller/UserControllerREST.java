@@ -1,32 +1,32 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
-import ar.edu.itba.paw.interfaces.PlaceService;
 import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.model.Place;
-import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
 import ar.edu.itba.paw.webapp.dto.ImageDTO;
 import ar.edu.itba.paw.webapp.dto.TripDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
+import ar.edu.itba.paw.webapp.dto.constraints.ConstraintViolationsDTO;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import javax.validation.Validator;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -37,6 +37,9 @@ public class UserControllerREST {
 
     private static final int DEFAULT_PAGE_SIZE = 9;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserControllerREST.class);
+
+    @Autowired
+    Validator validator;
 
     @Autowired
     private UserPicturesService ups;
@@ -51,12 +54,18 @@ public class UserControllerREST {
     private UriInfo uriContext;
 
     @GET
+    @Path("/hello")
+    public Response testHello() {
+        return Response.ok("Hello World!").build();
+    }
+
+    @GET
     @Path("/{id}")
     public Response getUserById(@PathParam("id") final int id) {
         final Optional<User> userOptional = us.findById(id);
         LOGGER.debug("Accessed getUserById with id {}", id);
         if (userOptional.isPresent()) {
-            return Response.ok(new UserDTO(userOptional.get(), uriContext.getBaseUri())).build();
+            return Response.ok(new UserDTO(userOptional.get())).build();
         } else {
             LOGGER.warn("Cannot render user profile, user with id {} not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -68,17 +77,17 @@ public class UserControllerREST {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(@Valid UserCreateForm userForm) {
-
-        //TODO - VALIDATE CONSTRAINTS
-
+        Set<ConstraintViolation<UserCreateForm>> violations = validator.validate(userForm);
+        if(!violations.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ConstraintViolationsDTO(violations)).build();
+        }
         Optional<User> userDuplicate = us.findByUsername(userForm.getEmail());
         if(userDuplicate.isPresent()) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         final User user = us.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
                 userForm.getPassword(), userForm.getBirthday(), userForm.getNationality());
-        final URI uri = uriContext.getAbsolutePathBuilder().path(String.valueOf(user.getId())).build();
-        return Response.created(uri).build();
+        return Response.ok(new UserDTO(user)).build();
     }
 
     @GET

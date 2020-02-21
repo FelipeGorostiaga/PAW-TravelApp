@@ -24,15 +24,11 @@ public class TripRate {
     @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
 
-    ////////////
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Trip trip;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private User user;
-
-    ////////////
 
     /* package */ TripRate() {
         // Just for Hibernate

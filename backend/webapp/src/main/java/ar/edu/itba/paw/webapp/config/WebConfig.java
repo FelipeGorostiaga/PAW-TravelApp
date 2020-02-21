@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
@@ -45,6 +46,7 @@ import java.util.Properties;
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
 
+    @Autowired
     private ApplicationContext applicationContext;
 
     @Value("classpath:schema.sql")
@@ -52,19 +54,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-        return resolver;
+        return new CommonsMultipartResolver();
     }
 
     @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -115,7 +111,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public SpringResourceTemplateResolver templateResolver(){
         final SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setApplicationContext(this.applicationContext);
+        templateResolver.setApplicationContext(applicationContext);
         templateResolver.setPrefix("/WEB-INF/mail/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);

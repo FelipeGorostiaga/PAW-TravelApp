@@ -3,35 +3,27 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.model.User;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.net.URI;
 import java.time.LocalDate;
 
 @XmlRootElement
 public class UserDTO {
 
     private long id;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String email;
     private LocalDate birthday;
     private String biography;
     private String nationality;
 
-    private URI url;
-
     public UserDTO() {
         // Empty constructor needed by JAX-RS
     }
 
-    public UserDTO(User user,  final URI baseUri) {
-        this(user);
-        url = baseUri.resolve("users/" + id);
-    }
-
     public UserDTO(User user) {
         id = user.getId();
-        firstname = user.getFirstname();
-        lastname = user.getLastname();
+        firstName = user.getFirstname();
+        lastName = user.getLastname();
         email = user.getEmail();
         birthday = user.getBirthday();
         nationality = user.getNationality();
@@ -47,19 +39,19 @@ public class UserDTO {
     }
 
     public String getFirstname() {
-        return firstname;
+        return firstName;
     }
 
     public void setFirstname(String firstname) {
-        this.firstname = firstname;
+        this.firstName = firstname;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
