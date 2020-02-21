@@ -6,6 +6,10 @@ import javax.validation.constraints.Size;
 
 public class EditProfileForm {
 
+    public EditProfileForm() {
+
+    }
+
     @Size(max = 500)
     private String biography;
 

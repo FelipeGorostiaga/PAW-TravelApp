@@ -9,8 +9,8 @@ import java.time.LocalDate;
 public class UserDTO {
 
     private long id;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
     private String email;
     private LocalDate birthday;
     private String biography;
@@ -22,8 +22,8 @@ public class UserDTO {
 
     public UserDTO(User user) {
         id = user.getId();
-        firstName = user.getFirstname();
-        lastName = user.getLastname();
+        firstname = user.getFirstname();
+        lastname = user.getLastname();
         email = user.getEmail();
         birthday = user.getBirthday();
         nationality = user.getNationality();
@@ -39,19 +39,19 @@ public class UserDTO {
     }
 
     public String getFirstname() {
-        return firstName;
+        return firstname;
     }
 
     public void setFirstname(String firstname) {
-        this.firstName = firstname;
+        this.firstname = firstname;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getEmail() {

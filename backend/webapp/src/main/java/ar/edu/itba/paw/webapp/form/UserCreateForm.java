@@ -10,6 +10,10 @@ import java.time.LocalDate;
 
 public class UserCreateForm {
 
+    public UserCreateForm() {
+
+    }
+
     @Pattern(regexp = "[a-zA-ZñáéíóúüÑÁÉÍÓÚÜ]+[ ]?([a-zA-ZÑÁÉÍÓÚÜñáéíóúü])*$")
     @Size(min = 2, max = 100)
     private String firstname;

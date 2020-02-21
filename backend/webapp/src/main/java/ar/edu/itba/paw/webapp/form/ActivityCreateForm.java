@@ -12,6 +12,9 @@ import java.util.List;
 
 public class ActivityCreateForm {
 
+    public ActivityCreateForm() {
+
+    }
 
     @Size(min = 3, max = 40)
     private String name;

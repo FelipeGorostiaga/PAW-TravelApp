@@ -7,6 +7,10 @@ import javax.validation.constraints.Size;
 
 public class EditTripForm {
 
+    public EditTripForm() {
+
+    }
+
     @NotNull
     private MultipartFile imageUpload;
 

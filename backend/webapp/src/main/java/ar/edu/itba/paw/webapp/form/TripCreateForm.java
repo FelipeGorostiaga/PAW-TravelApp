@@ -11,6 +11,10 @@ import java.util.List;
 
 public class TripCreateForm {
 
+    public TripCreateForm() {
+
+    }
+
     @Size(min = 5, max = 100)
     private String placeInput;
 

@@ -6,6 +6,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class TripCommentForm {
+
+    public TripCommentForm() {
+
+    }
+
     @NotNull
     @Size(min = 1, max = 160)
     private String comment;

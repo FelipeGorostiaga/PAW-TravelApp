@@ -6,6 +6,10 @@ import java.time.LocalDate;
 
 public class AdvancedSearchForm {
 
+    public AdvancedSearchForm() {
+
+    }
+
     private String tripName;
     private String placeName;
     private String startDate;
