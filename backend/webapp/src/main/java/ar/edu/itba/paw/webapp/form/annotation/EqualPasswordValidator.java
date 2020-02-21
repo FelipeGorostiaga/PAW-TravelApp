@@ -18,7 +18,7 @@ public class EqualPasswordValidator implements ConstraintValidator<EqualPassword
 
     @Override
     public void initialize(EqualPasswords constraintAnnotation) {
-        errorMessage = applicationContext.getMessage("uniqueUsernameError", null, getLocale());
+        errorMessage = applicationContext.getMessage("pswrepeatError", null, getLocale());
     }
 
     @Override

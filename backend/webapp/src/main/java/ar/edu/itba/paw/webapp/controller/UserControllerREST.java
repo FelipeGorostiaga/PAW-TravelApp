@@ -10,7 +10,6 @@ import ar.edu.itba.paw.model.UserPicture;
 import ar.edu.itba.paw.webapp.dto.ImageDTO;
 import ar.edu.itba.paw.webapp.dto.TripDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
-import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationDTO;
 import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.slf4j.Logger;
@@ -30,8 +29,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
-
 
 @Path("users")
 @Controller
@@ -40,9 +37,6 @@ public class UserControllerREST {
 
     private static final int DEFAULT_PAGE_SIZE = 9;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserControllerREST.class);
-
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Autowired
     Validator validator;

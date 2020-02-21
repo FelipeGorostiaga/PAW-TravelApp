@@ -26,7 +26,7 @@ public class UniqueUsernameValidator implements ConstraintValidator<UniqueUserna
 
     @Override
     public void initialize(UniqueUsername constraintAnnotation) {
-        errorMessage = applicationContext.getMessage("uniqueUsername", null, getLocale());
+        errorMessage = applicationContext.getMessage("uniqueUsernameError", null, getLocale());
     }
 
     @Override

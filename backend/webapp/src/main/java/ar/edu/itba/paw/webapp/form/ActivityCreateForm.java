@@ -1,15 +1,15 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.model.Activity;
-import ar.edu.itba.paw.model.DateManipulation;
+import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.webapp.form.annotation.ValidDates;
+import ar.edu.itba.paw.webapp.form.annotation.ValidTripItinerary;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
-import java.util.List;
 
+@ValidTripItinerary
+@ValidDates
 public class ActivityCreateForm {
 
     public ActivityCreateForm() {
@@ -19,7 +19,6 @@ public class ActivityCreateForm {
     @Size(min = 3, max = 40)
     private String name;
 
-    @NotNull
     @Pattern(regexp = "[a-zA-Z]+")
     @Size(min = 3, max = 40)
     private String category;
@@ -27,15 +26,23 @@ public class ActivityCreateForm {
     @Size(min = 3, max = 100)
     private String placeInput;
 
-    @NotNull
     @Size(min = 8, max = 10)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String startDate;
 
-    @NotNull
     @Size(min = 8, max = 10)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String endDate;
+
+    private Trip trip;
+
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trip trip) {
+        this.trip = trip;
+    }
 
     public String getStartDate() {
         return startDate;
@@ -77,25 +84,5 @@ public class ActivityCreateForm {
         this.placeInput = placeInput;
     }
 
-    public boolean checkDates(LocalDate tripStart, LocalDate tripEnd) {
-        LocalDate sDate = DateManipulation.stringToLocalDate(startDate);
-        LocalDate eDate = DateManipulation.stringToLocalDate(endDate);
-        LocalDate now = LocalDate.now();
-        return  (sDate.isAfter(tripStart) || sDate.isEqual(tripStart)) && (eDate.isBefore(tripEnd) || eDate.isEqual(tripEnd))
-        && now.isBefore(sDate) && sDate.isBefore(eDate);
-    }
 
-    public boolean checkTimeline(List<Activity> activities) {
-        LocalDate sDate = DateManipulation.stringToLocalDate(startDate);
-        LocalDate eDate = DateManipulation.stringToLocalDate(endDate);
-        for(Activity activity : activities) {
-            if(  (sDate.isBefore(activity.getStartDate()) && eDate.isAfter(activity.getStartDate()))
-                    || (sDate.isBefore(activity.getEndDate()) && eDate.isAfter(activity.getEndDate()))
-                    || (sDate.isBefore(activity.getStartDate()) && eDate.isAfter(activity.getEndDate()))
-                    || (sDate.isAfter(activity.getStartDate()) && eDate.isBefore(activity.getEndDate())) ) {
-                return false;
-            }
-        }
-        return true;
-    }
 }

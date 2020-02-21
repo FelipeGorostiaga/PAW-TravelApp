@@ -35,8 +35,6 @@ import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class TripControllerREST {
 
-    // TODO - SWITCH TO DTOS
-
     private static final Logger LOGGER = LoggerFactory.getLogger(TripControllerREST.class);
     private static final String ADD = "Add";
     private static final String DELETE = "Delete";
@@ -79,9 +77,10 @@ public class TripControllerREST {
     }
 
     @POST
-    @Path("/{id}/create")
+    @Path("/{userId}/create")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createTrip(@Valid TripCreateForm tripCreateForm, @PathParam("id") final long userId) {
+    public Response createTrip(@Valid TripCreateForm tripCreateForm, @PathParam("userId") final long userId) {
+        //TODO -  remove path param and get logged in user
         Optional<User> userOpt = userService.findById(userId);
         if(!userOpt.isPresent()) {
             LOGGER.debug("Invalid userId");
@@ -96,6 +95,7 @@ public class TripControllerREST {
             places = googleClient.getPlacesByQuery(tripCreateForm.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
         }
         catch(GooglePlacesException gpe) {
+            //TODO ADD CONSTRAINT VIOLATION DTO
             LOGGER.debug("Invalid google maps query location");
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -251,17 +251,15 @@ public class TripControllerREST {
     @POST
     @Path("/{id}/activities/create")
     public Response createTripActivity(@PathParam("id") final long tripId, @Valid ActivityCreateForm activityCreateForm) {
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        if(!tripOptional.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        activityCreateForm.setTrip(tripOptional.get());
         Set<ConstraintViolation<ActivityCreateForm>> violations = validator.validate(activityCreateForm);
         if(!violations.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ConstraintViolationsDTO(violations)).build();
         }
-
-        // TODO
-        // form.checkDates(trip.getStartDate(), trip.getEndDate()
-        // form.checkTimeline(trip.getActivities())
-
-        Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(!tripOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
         ar.edu.itba.paw.model.Place modelPlace;
         List<Place> googlePlaces;
         try {
