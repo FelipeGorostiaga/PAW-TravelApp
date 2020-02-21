@@ -30,8 +30,8 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public Optional<User> findById(long id) {
-        return Optional.of(em.find(User.class, id));
+    public Optional<User> findById(long id)  {
+        return Optional.ofNullable(em.find(User.class, id));
     }
 
     @Override

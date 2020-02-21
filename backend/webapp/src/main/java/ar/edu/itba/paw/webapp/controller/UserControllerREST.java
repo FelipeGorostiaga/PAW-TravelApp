@@ -4,8 +4,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
+import ar.edu.itba.paw.webapp.dto.ErrorDTO;
 import ar.edu.itba.paw.webapp.dto.ImageDTO;
 import ar.edu.itba.paw.webapp.dto.TripDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
@@ -20,10 +22,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -50,16 +50,11 @@ public class UserControllerREST {
     @Autowired
     private TripService ts;
 
-    @Context
-    private UriInfo uriContext;
-
     @GET
     @Path("/hello")
     public Response testHello() {
         return Response.ok("Hello World!").build();
     }
-
-
 
     @GET
     @Path("/{id}")
@@ -76,7 +71,6 @@ public class UserControllerREST {
 
     @Path("/create")
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(@Valid UserCreateForm userForm) {
         Set<ConstraintViolation<UserCreateForm>> violations = validator.validate(userForm);
@@ -85,10 +79,10 @@ public class UserControllerREST {
         }
         Optional<User> userDuplicate = us.findByUsername(userForm.getEmail());
         if(userDuplicate.isPresent()) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("username already in use")).build();
         }
         final User user = us.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
-                userForm.getPassword(), userForm.getBirthday(), userForm.getNationality());
+                userForm.getPassword(), DateManipulation.stringToLocalDate(userForm.getBirthday()), userForm.getNationality());
         return Response.ok(new UserDTO(user)).build();
     }
 

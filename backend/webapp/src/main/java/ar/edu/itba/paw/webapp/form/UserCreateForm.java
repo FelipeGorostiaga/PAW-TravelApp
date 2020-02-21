@@ -34,17 +34,17 @@ public class UserCreateForm {
 
     @NotNull
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private LocalDate birthday;
+    private String birthday;
 
     @NotNull
     @Size(min = 2, max = 5)
     private String nationality;
 
-    public LocalDate getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
@@ -101,6 +101,6 @@ public class UserCreateForm {
     }
 
     public boolean checkBirthday() {
-        return birthday.isBefore(LocalDate.now());
+        return DateManipulation.stringToLocalDate(birthday).isBefore(LocalDate.now());
     }
 }
