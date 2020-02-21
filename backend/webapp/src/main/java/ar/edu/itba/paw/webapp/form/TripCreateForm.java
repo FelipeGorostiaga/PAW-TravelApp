@@ -12,7 +12,7 @@ import java.util.List;
 public class TripCreateForm {
 
     public TripCreateForm() {
-
+        // Empty constructor needed by JAX-RS
     }
 
     @Size(min = 5, max = 100)

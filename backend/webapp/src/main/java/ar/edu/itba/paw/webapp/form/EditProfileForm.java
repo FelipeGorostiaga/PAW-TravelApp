@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 public class EditProfileForm {
 
     public EditProfileForm() {
-
+        // Empty constructor needed by JAX-RS
     }
 
     @Size(max = 500)

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class UserCreateForm {
 
     public UserCreateForm() {
-
+        // Empty constructor needed by JAX-RS
     }
 
     @Pattern(regexp = "[a-zA-ZñáéíóúüÑÁÉÍÓÚÜ]+[ ]?([a-zA-ZÑÁÉÍÓÚÜñáéíóúü])*$")

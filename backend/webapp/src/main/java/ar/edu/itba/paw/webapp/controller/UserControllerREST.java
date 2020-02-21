@@ -59,6 +59,8 @@ public class UserControllerREST {
         return Response.ok("Hello World!").build();
     }
 
+
+
     @GET
     @Path("/{id}")
     public Response getUserById(@PathParam("id") final int id) {

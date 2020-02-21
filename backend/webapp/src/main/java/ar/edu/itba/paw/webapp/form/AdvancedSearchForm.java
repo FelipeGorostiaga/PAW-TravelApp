@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class AdvancedSearchForm {
 
     public AdvancedSearchForm() {
-
+        // Empty constructor needed by JAX-RS
     }
 
     private String tripName;

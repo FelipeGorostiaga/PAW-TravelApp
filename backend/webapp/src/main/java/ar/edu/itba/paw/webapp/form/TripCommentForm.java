@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 public class TripCommentForm {
 
     public TripCommentForm() {
-
+        // Empty constructor needed by JAX-RS
     }
 
     @NotNull

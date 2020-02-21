@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 public class EditTripForm {
 
     public EditTripForm() {
-
+        // Empty constructor needed by JAX-RS
     }
 
     @NotNull

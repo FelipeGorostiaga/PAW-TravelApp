@@ -13,7 +13,7 @@ import java.util.List;
 public class ActivityCreateForm {
 
     public ActivityCreateForm() {
-
+        // Empty constructor needed by JAX-RS
     }
 
     @Size(min = 3, max = 40)
