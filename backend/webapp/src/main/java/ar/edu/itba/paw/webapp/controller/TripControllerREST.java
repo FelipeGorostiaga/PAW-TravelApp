@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationDTO;
 import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
 import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
 import ar.edu.itba.paw.webapp.form.TripCommentForm;
@@ -77,35 +78,32 @@ public class TripControllerREST {
     }
 
     @POST
-    @Path("/{userId}/create")
+    @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createTrip(@Valid TripCreateForm tripCreateForm, @PathParam("userId") final long userId) {
-        //TODO -  remove path param and get logged in user
-        Optional<User> userOpt = userService.findById(userId);
-        if(!userOpt.isPresent()) {
-            LOGGER.debug("Invalid userId");
-            return Response.status(Response.Status.NOT_FOUND).build();
+    public Response createTrip(@Valid TripCreateForm tripCreateForm) {
+        Optional<User> loggedUser = securityUserService.getLoggedUser();
+        if(!loggedUser.isPresent()) {
+            LOGGER.debug("Cannot create trip, user is not logged");
+            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Authentication needed to create a trip")).build();
         }
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
-        if(!violations.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ConstraintViolationsDTO(violations)).build();
-        }
-        List<Place> places;
+        ConstraintViolationsDTO violationsDTO = new ConstraintViolationsDTO(violations);
+        List<Place> places = null;
         try {
             places = googleClient.getPlacesByQuery(tripCreateForm.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
         }
         catch(GooglePlacesException gpe) {
-            //TODO ADD CONSTRAINT VIOLATION DTO
             LOGGER.debug("Invalid google maps query location");
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            violationsDTO.add(new ConstraintViolationDTO("Invalid google maps location", "mapInput"));
         }
-        Place place = places.get(0);
-        LOGGER.debug("Google Place name is {}", place.getName());
-        Optional<ar.edu.itba.paw.model.Place> maybePlace = placeService.findByGoogleId(place.getPlaceId());
-
-        ar.edu.itba.paw.model.Place dbPlace = maybePlace.orElseGet(() -> placeService
-                .create(place.getPlaceId(), place.getName(), place.getLatitude(), place.getLongitude(), place.getAddress()));
-        Trip trip = tripService.create(userOpt.get().getId(), dbPlace.getId(), tripCreateForm.getName(),
+        if(violationsDTO.getErrors().length > 0) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(violationsDTO).build();
+        }
+        ar.edu.itba.paw.model.Place customPlace = createGooglePlaceReference(places);
+        if(customPlace == null) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        Trip trip = tripService.create(loggedUser.get().getId(), customPlace.getId(), tripCreateForm.getName(),
                 tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
                 DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()));
         return Response.ok(new TripDTO(trip)).build();
@@ -135,10 +133,14 @@ public class TripControllerREST {
     @DELETE
     @Path("/{id}/delete")
     public Response deleteTrip(@PathParam("id") final long tripId) {
+        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if(tripOptional.isPresent()) {
-            tripService.deleteTrip(tripId);
-            return Response.ok().build();
+            if(loggedUserOptional.isPresent() && loggedUserOptional.get().getId() == tripOptional.get().getAdminId()) {
+                tripService.deleteTrip(tripId);
+                return Response.ok().build();
+            }
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
@@ -160,39 +162,41 @@ public class TripControllerREST {
         return addOrDeleteUserFromTrip(tripId, userId, ADD);
     }
 
+    @PUT
+    @Path("/{id}/remove/{userId}")
+    public Response removeUserFromTrip(@PathParam("id") final long tripId, @PathParam("userId") final long userId) {
+        return addOrDeleteUserFromTrip(tripId, userId, DELETE);
+    }
+
     private Response addOrDeleteUserFromTrip(final long tripId, final long userId, final String type) {
+        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
         Optional<User> userOptional = userService.findById(userId);
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(userOptional.isPresent() && tripOptional.isPresent()) {
+        if(loggedUserOptional.isPresent() && userOptional.isPresent() && tripOptional.isPresent()) {
+            User loggedUser = loggedUserOptional.get();
             User u = userOptional.get();
             Trip t = tripOptional.get();
-            Optional<User> tripAdmin = userService.findById(t.getAdminId());
-            if(tripAdmin.isPresent()) {
-                User admin = tripAdmin.get();
+            if(t.getAdminId() == loggedUser.getId()) {
                 switch (type) {
                     case ADD:
                         tripService.addUserToTrip(userId, tripId);
-                        mailingService.sendJoinTripMail(u.getEmail(), u.getFirstname(), t.getName(), admin.getFirstname(),
-                                admin.getLastname(), getLocale());
+                        mailingService.sendJoinTripMail(u.getEmail(), u.getFirstname(), t.getName(), loggedUser.getFirstname(),
+                                loggedUser.getLastname(), getLocale());
                         break;
                     case DELETE:
                         tripService.removeUserFromTrip(userId, tripId);
-                        mailingService.sendExitTripMail(u.getEmail(), u.getFirstname(), t.getName(), admin.getFirstname(),
-                                admin.getLastname(), getLocale());
+                        mailingService.sendExitTripMail(u.getEmail(), u.getFirstname(), t.getName(), loggedUser.getFirstname(),
+                                loggedUser.getLastname(), getLocale());
                         break;
                 }
                 return Response.ok().build();
             }
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
-        return Response.status(Response.Status.BAD_REQUEST).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    @PUT
-    @Path("/{id}/remove/{userId}")
-    public Response removeUserFromTrip(@PathParam("id") final long tripId,
-                                       @PathParam("userId") final long userId) {
-        return addOrDeleteUserFromTrip(tripId, userId, DELETE);
-    }
+
 
     @GET
     @Path("/{id}/image")
@@ -209,30 +213,38 @@ public class TripControllerREST {
     @GET
     @Path("/{id}/comments")
     public Response getTripComments(@PathParam("id") final long tripId) {
+        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(tripOptional.isPresent()) {
-            return Response.ok(tripService.getTripComments(tripId)
-                    .stream()
-                    .map(TripCommentDTO::new)
-                    .collect(Collectors.toList())).build();
+        if(tripOptional.isPresent() && loggedUserOptional.isPresent()) {
+            User loggedUser = loggedUserOptional.get();
+            Trip t = tripOptional.get();
+            if(t.getUsers().contains(loggedUser) || t.getAdminId() == loggedUser.getId()) {
+                return Response.ok(tripService.getTripComments(tripId).stream().map(TripCommentDTO::new)
+                        .collect(Collectors.toList())).build();
+            }
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @POST
     @Path("/{id}/comments/add/{userId}")
-    public Response addCommentToTripChat(@PathParam("id") final long tripId, @PathParam("userId") final long userId,
-                                         @Valid TripCommentForm tripCommentForm) {
-        Optional<User> userOptional = userService.findById(userId);
+    public Response addCommentToTripChat(@PathParam("id") final long tripId, @Valid TripCommentForm tripCommentForm) {
+        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         Set<ConstraintViolation<TripCommentForm>> violations = validator.validate(tripCommentForm);
         if(!violations.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ConstraintViolationsDTO(violations)).build();
         }
-        if(userOptional.isPresent() && tripOptional.isPresent()) {
-            TripComment tripComment = tripCommentsService.create(userOptional.get(), tripOptional.get(), tripCommentForm.getComment());
-            tripService.addCommentToTrip(tripComment.getId(), tripId);
-            return Response.ok(new TripCommentDTO(tripComment)).build();
+        if(loggedUserOptional.isPresent() && tripOptional.isPresent()) {
+            User loggedUser = loggedUserOptional.get();
+            Trip t = tripOptional.get();
+            if(t.getUsers().contains(loggedUser) || t.getAdminId() == loggedUser.getId()) {
+                TripComment tripComment = tripCommentsService.create(loggedUser, t, tripCommentForm.getComment());
+                tripService.addCommentToTrip(tripComment.getId(), tripId);
+                return Response.ok(new TripCommentDTO(tripComment)).build();
+            }
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
@@ -248,49 +260,69 @@ public class TripControllerREST {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
+    private ar.edu.itba.paw.model.Place createGooglePlaceReference(List<Place> googlePlaces) {
+        if(googlePlaces != null && !googlePlaces.isEmpty()) {
+            Place googlePlace = googlePlaces.get(0);
+            LOGGER.debug("Google Place name is {}", googlePlace.getName());
+            Optional<ar.edu.itba.paw.model.Place> maybePlace = placeService.findByGoogleId(googlePlace.getPlaceId());
+            return maybePlace.orElseGet(() -> placeService
+                    .create(googlePlace.getPlaceId(), googlePlace.getName(), googlePlace.getLatitude(),
+                    googlePlace.getLongitude(), googlePlace.getAddress()));
+        }
+        return null;
+    }
+
     @POST
     @Path("/{id}/activities/create")
     public Response createTripActivity(@PathParam("id") final long tripId, @Valid ActivityCreateForm activityCreateForm) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
+        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
         if(!tripOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        activityCreateForm.setTrip(tripOptional.get());
-        Set<ConstraintViolation<ActivityCreateForm>> violations = validator.validate(activityCreateForm);
-        if(!violations.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ConstraintViolationsDTO(violations)).build();
+        Trip trip = tripOptional.get();
+        if(loggedUserOptional.isPresent() && loggedUserOptional.get().getId() == trip.getAdminId()) {
+            activityCreateForm.setTrip(tripOptional.get());
+            Set<ConstraintViolation<ActivityCreateForm>> violations = validator.validate(activityCreateForm);
+            ConstraintViolationsDTO violationsDTO = new ConstraintViolationsDTO(violations);
+            List<Place> googlePlaces = null;
+            try {
+                googlePlaces = googleClient.getPlacesByQuery(activityCreateForm.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
+            }
+            catch(GooglePlacesException gpe) {
+                violationsDTO.add(new ConstraintViolationDTO("Invalid maps location", "mapInput"));
+            }
+            if(violationsDTO.getErrors().length > 0) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(violationsDTO).build();
+            }
+            ar.edu.itba.paw.model.Place customPlace = createGooglePlaceReference(googlePlaces);
+            if(customPlace == null) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+            Activity activity = activityService.create(activityCreateForm.getName(), activityCreateForm.getCategory(), customPlace,
+                    trip, DateManipulation.stringToLocalDate(activityCreateForm.getStartDate()),
+                    DateManipulation.stringToLocalDate(activityCreateForm.getEndDate()));
+            tripService.addActivityToTrip(activity.getId(), tripId);
+            return Response.ok(new ActivityDTO(activity)).build();
         }
-        ar.edu.itba.paw.model.Place modelPlace;
-        List<Place> googlePlaces;
-        try {
-            googlePlaces = googleClient.getPlacesByQuery(activityCreateForm.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
-        }
-        catch(GooglePlacesException gpe) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        Place googlePlace = googlePlaces.get(0);
-        Optional<ar.edu.itba.paw.model.Place> maybePlace = placeService.findByGoogleId(googlePlace.getPlaceId());
-        modelPlace = maybePlace.orElseGet(() -> placeService.create(googlePlace.getPlaceId(), googlePlace.getName(), googlePlace.getLatitude(),
-                googlePlace.getLongitude(), googlePlace.getAddress()));
-        Activity activity = activityService.create(activityCreateForm.getName(), activityCreateForm.getCategory(), modelPlace,
-                tripOptional.get(), DateManipulation.stringToLocalDate(activityCreateForm.getStartDate()),
-                DateManipulation.stringToLocalDate(activityCreateForm.getEndDate()));
-        tripService.addActivityToTrip(activity.getId(), tripId);
-        return Response.ok(new ActivityDTO(activity)).build();
+        return Response.status(Response.Status.FORBIDDEN).build();
     }
 
     @DELETE
     @Path("/{id}/activities/delete/{activityId}")
     public Response deleteTripActivity(@PathParam("id") final long tripId, @PathParam("activityId") final long activityId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(tripOptional.isPresent()) {
-            if(tripOptional.get().getAdminId() != securityUserService.getLoggedUser().getId()) {
-                return Response.status(Response.Status.FORBIDDEN).build();
+        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
+        if(tripOptional.isPresent() && loggedUserOptional.isPresent()) {
+            Trip trip = tripOptional.get();
+            User loggedUser = loggedUserOptional.get();
+            if(trip.getAdminId() == loggedUser.getId()) {
+                tripService.deleteTripActivity(activityId, tripId);
+                return Response.ok().build();
             }
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
-        tripService.deleteTripActivity(activityId, tripId);
-        return Response.ok().build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
 }

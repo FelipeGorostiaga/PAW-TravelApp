@@ -15,17 +15,10 @@ public class ConstraintViolationsDTO {
     }
 
     public <T> ConstraintViolationsDTO(Set<ConstraintViolation<T>> violations) {
-        add(violations);
+        if(!violations.isEmpty()) {
+            add(violations);
+        }
     }
-
-    public ConstraintViolationDTO[] getErrors() {
-        return errors;
-    }
-
-    public void setErrors(ConstraintViolationDTO[] errors) {
-        this.errors = errors;
-    }
-
 
     public <T> void add(Set<ConstraintViolation<T>> violations) {
         List<ConstraintViolationDTO> errorsList = new ArrayList<>(violations.size());
@@ -41,4 +34,13 @@ public class ConstraintViolationsDTO {
         list.add(violationDTO);
         list.toArray(errors);
     }
+
+    public ConstraintViolationDTO[] getErrors() {
+        return errors;
+    }
+
+    public void setErrors(ConstraintViolationDTO[] errors) {
+        this.errors = errors;
+    }
+
 }
