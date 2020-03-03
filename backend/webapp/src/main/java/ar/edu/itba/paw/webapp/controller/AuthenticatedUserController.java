@@ -8,14 +8,13 @@ import ar.edu.itba.paw.model.UserPicture;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.dto.ErrorDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
-import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationDTO;
 import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
 import ar.edu.itba.paw.webapp.form.EditProfileForm;
+import ar.edu.itba.paw.webapp.utils.ImageValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
@@ -35,7 +34,6 @@ import java.util.Set;
 public class AuthenticatedUserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticatedUserController.class);
-    private static final long MAX_UPLOAD_SIZE = 5242880;
 
     @Context
     private UriInfo uriContext;
@@ -65,34 +63,24 @@ public class AuthenticatedUserController {
         LOGGER.debug("Accessed edit profile for user {}", loggedUser.getId());
         Set<ConstraintViolation<EditProfileForm>> violations = validator.validate(editProfileForm);
         ConstraintViolationsDTO constraintViolationsDTO = new ConstraintViolationsDTO(violations);
-        MultipartFile tripPicture = editProfileForm.getImageUpload();
-        byte[] imageBytes = null;
-        if(tripPicture != null && !tripPicture.isEmpty()) {
-            String contentType = tripPicture.getContentType();
-            if(!contentType.equals("image/jpeg") && !contentType.equals("image/png")) {
-                constraintViolationsDTO.add(new ConstraintViolationDTO("Invalid image format", "imageInput"));
-            }
-            else if(tripPicture.getSize() > MAX_UPLOAD_SIZE) {
-                constraintViolationsDTO.add(new ConstraintViolationDTO("Image size is too big", "imageInput"));
-            }
-            try {
-                imageBytes = tripPicture.getBytes();
-            } catch (IOException e) {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(new ErrorDTO("Server couldn´t get image bytes"))
-                        .build();
-            }
+        byte[] imageBytes;
+        try {
+            imageBytes = ImageValidator.validateImage(constraintViolationsDTO, editProfileForm.getImageUpload());
+        } catch (IOException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorDTO("Server couldn´t get image bytes"))
+                    .build();
         }
         if(constraintViolationsDTO.getErrors().length > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(constraintViolationsDTO).build();
         }
-
         if(userPicturesService.findByUserId(loggedUser.getId()).isPresent()) {
             userPicturesService.deleteByUserId(loggedUser.getId());
         }
         UserPicture userPicture = userPicturesService.create(loggedUser, imageBytes);
         loggedUser.setBiography(editProfileForm.getBiography());
         userService.update(loggedUser);
+
         //TODO - ADD SERVICE METHOD THAT DELETES OLD PICTURE AND PUTS NEW ONE INSTEAD OF DOING IT IN CONTROLLER
         return Response.ok(new UserDTO(loggedUser)).build();
     }

@@ -109,10 +109,10 @@ public class UserController {
             mav.addObject("pswRepeatError", true);
             return mav;
         }
-        if(!form.checkBirthday()) {
+       /* if(!form.checkBirthday()) {
             mav.addObject("invalidBirthday", true);
             return mav;
-        }
+        }*/
         Optional userOpt = us.findByUsername(form.getEmail());
         if(userOpt.isPresent()) {
             mav.addObject("alreadyExists", true);

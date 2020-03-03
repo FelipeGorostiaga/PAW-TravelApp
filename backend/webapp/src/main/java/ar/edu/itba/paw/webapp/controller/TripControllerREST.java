@@ -11,6 +11,7 @@ import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
 import ar.edu.itba.paw.webapp.form.EditTripForm;
 import ar.edu.itba.paw.webapp.form.TripCommentForm;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
+import ar.edu.itba.paw.webapp.utils.ImageValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 public class TripControllerREST {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TripControllerREST.class);
-    private static final long MAX_UPLOAD_SIZE = 5242880;
+
     private static final String ADD = "Add";
     private static final String DELETE = "Delete";
 
@@ -81,7 +82,6 @@ public class TripControllerREST {
         return Response.ok(trips.stream().map(TripDTO::new).collect(Collectors.toList())).build();
     }
 
-
     @PUT
     @Path("/{id}/edit")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -93,33 +93,19 @@ public class TripControllerREST {
         if(!loggedUserOptional.isPresent() || (loggedUserOptional.get().getId() != trip.getAdminId())) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        User loggedUser = loggedUserOptional.get();
         Set<ConstraintViolation<EditTripForm>> violations = validator.validate(form);
         ConstraintViolationsDTO constraintViolationsDTO = new ConstraintViolationsDTO(violations);
-
-        //TODO - DUPLICATE CODE
-        MultipartFile tripPicture = form.getImageUpload();
-        byte[] imageBytes = null;
-        if(tripPicture != null && !tripPicture.isEmpty()) {
-            String contentType = tripPicture.getContentType();
-            if(!contentType.equals("image/jpeg") && !contentType.equals("image/png")) {
-                constraintViolationsDTO.add(new ConstraintViolationDTO("Invalid image format", "imageInput"));
-            }
-            else if(tripPicture.getSize() > MAX_UPLOAD_SIZE) {
-                constraintViolationsDTO.add(new ConstraintViolationDTO("Image size is too big", "imageInput"));
-            }
-            try {
-                imageBytes = tripPicture.getBytes();
-            } catch (IOException e) {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(new ErrorDTO("Server couldn´t get image bytes"))
-                        .build();
-            }
+        byte[] imageBytes;
+        try {
+            imageBytes = ImageValidator.validateImage(constraintViolationsDTO,  form.getImageUpload());
+        } catch (IOException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorDTO("Server couldn´t get image bytes"))
+                    .build();
         }
         if(constraintViolationsDTO.getErrors().length > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(constraintViolationsDTO).build();
         }
-
         if(tripPicturesService.findByTripId(tripId).isPresent()) {
             tripPicturesService.deleteByTripId(tripId);
         }

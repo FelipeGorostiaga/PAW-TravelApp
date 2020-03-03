@@ -1,46 +1,44 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.webapp.form.annotation.EqualPasswords;
-import ar.edu.itba.paw.webapp.form.annotation.ValidBirthday;
-import org.hibernate.validator.constraints.Email;
-import org.springframework.format.annotation.DateTimeFormat;
+import ar.edu.itba.paw.webapp.form.annotation.FieldMatch;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 
 
-@EqualPasswords
-@ValidBirthday
+@FieldMatch(first = "password", second = "pswrepeat", message = "Passwords do not match")
 public class UserCreateForm {
 
     public UserCreateForm() {
         // Empty constructor needed by JAX-RS
     }
 
+    @NotNull
     @Pattern(regexp = "[a-zA-ZñáéíóúüÑÁÉÍÓÚÜ]+[ ]?([a-zA-ZÑÁÉÍÓÚÜñáéíóúü])*$")
     @Size(min = 2, max = 100)
     private String firstname;
 
+    @NotNull
     @Pattern(regexp = "[a-zA-ZñáéíóúüÑÁÉÍÓÚÜ]+[ ]?([a-zA-ZÑÁÉÍÓÚÜñáéíóúü])*$")
     @Size(min = 2, max = 100)
     private String lastname;
 
-    @Email
+    @NotNull
     @Pattern(regexp =  "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
-    @Size(min = 6, max = 100)
     private String email;
 
+    @NotNull
     @Size(min = 8, max = 100)
     private String password;
 
+    @NotNull
     @Size(min = 8, max = 100)
     private String pswrepeat;
 
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Pattern(regexp =  "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$")
     private String birthday;
 
     @NotNull
@@ -107,7 +105,4 @@ public class UserCreateForm {
         return password.equals(pswrepeat);
     }
 
-    public boolean checkBirthday() {
-        return DateManipulation.stringToLocalDate(birthday).isBefore(LocalDate.now());
-    }
 }

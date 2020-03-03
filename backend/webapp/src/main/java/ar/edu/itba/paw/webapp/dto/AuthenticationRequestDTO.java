@@ -8,10 +8,9 @@ import javax.validation.constraints.Size;
 
 public class AuthenticationRequestDTO {
 
-    /*@NotNull
+    @NotNull
     @Pattern(regexp =  "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
-    @Size(min = 6, max = 100)*/
-    @Email
+    @Size(min = 6, max = 100)
     private String username;
 
     @Size(min = 8, max = 100)
