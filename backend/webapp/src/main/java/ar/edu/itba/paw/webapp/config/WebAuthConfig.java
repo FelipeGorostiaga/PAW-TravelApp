@@ -15,8 +15,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,6 +48,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests().antMatchers("/api/**").permitAll();
+
+
 
 
                /* //.invalidSessionUrl("/")

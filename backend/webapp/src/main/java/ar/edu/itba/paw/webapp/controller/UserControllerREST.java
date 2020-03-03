@@ -7,14 +7,18 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
-import ar.edu.itba.paw.webapp.dto.ImageDTO;
-import ar.edu.itba.paw.webapp.dto.TripDTO;
-import ar.edu.itba.paw.webapp.dto.UserDTO;
+import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
+import ar.edu.itba.paw.webapp.auth.util.JwtUtil;
+import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 
 import javax.validation.ConstraintViolation;
@@ -49,6 +53,33 @@ public class UserControllerREST {
     @Autowired
     private TripService ts;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private TravelUserDetailsService userDetailsService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @POST
+    @Path("/authenticate")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createAuthenticationToken(@Valid AuthenticationRequestDTO authenticationRequest) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+                            authenticationRequest.getPassword()));
+        }
+        catch (AuthenticationException e) {
+            LOGGER.debug("Invalid username or password");
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final String jwt = jwtUtil.generateToken(userDetails);
+        return Response.ok(new AuthenticationResponseDTO(jwt)).build();
+    }
+
     @GET
     @Path("/hello")
     public Response testHello() {
@@ -67,6 +98,7 @@ public class UserControllerREST {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+
 
     @Path("/create")
     @POST
