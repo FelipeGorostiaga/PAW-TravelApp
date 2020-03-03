@@ -1,12 +1,8 @@
 package ar.edu.itba.paw.model;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Calendar;
-import java.util.Date;
 
 public class DateManipulation {
 
@@ -17,8 +13,12 @@ public class DateManipulation {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static LocalDate stringToLocalDate(String dateString) {
-        LocalDate date = LocalDate.parse(dateString, formatter);
-        return date;
+        try {
+            return LocalDate.parse(dateString, formatter);
+        }
+        catch (DateTimeParseException e){
+            return null;
+        }
     }
 
     public static boolean validate(String dateString) {

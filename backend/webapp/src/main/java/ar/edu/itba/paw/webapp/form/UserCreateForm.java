@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.annotation.EqualPasswords;
 import ar.edu.itba.paw.webapp.form.annotation.FieldMatch;
+import ar.edu.itba.paw.webapp.form.annotation.ValidBirthday;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-
+@ValidBirthday(message = "Invalid birthday")
 @FieldMatch(first = "password", second = "pswrepeat", message = "Passwords do not match")
 public class UserCreateForm {
 
