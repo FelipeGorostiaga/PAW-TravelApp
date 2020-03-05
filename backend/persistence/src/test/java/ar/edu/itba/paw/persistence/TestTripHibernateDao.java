@@ -32,6 +32,7 @@ public class TestTripHibernateDao {
     private static final String DESC = "Lucy in the sky with diamonds";
     private static final LocalDate START_DATE = LocalDate.of(1997, 6, 16);
     private static final LocalDate END_DATE = LocalDate.of(1997, 6, 18);
+    private static final boolean IS_PRIVATE = true;
 
 
     @Autowired
@@ -39,7 +40,7 @@ public class TestTripHibernateDao {
 
     @Test
     public void testCreate() {
-        Trip trip = td.create(userId, placeId, NAME, DESC, START_DATE, END_DATE);
+        Trip trip = td.create(userId, placeId, NAME, DESC, START_DATE, END_DATE, IS_PRIVATE);
         Assert.assertNotNull(trip);
         Assert.assertEquals(NAME, trip.getName());
         Assert.assertEquals(DESC, trip.getDescription());

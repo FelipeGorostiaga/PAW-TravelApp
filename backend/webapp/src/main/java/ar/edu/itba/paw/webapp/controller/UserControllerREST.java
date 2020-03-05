@@ -62,6 +62,7 @@ public class UserControllerREST {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    //WORKS
     @POST
     @Path("/authenticate")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -80,12 +81,8 @@ public class UserControllerREST {
         return Response.ok(new AuthenticationResponseDTO(jwt)).build();
     }
 
-    @GET
-    @Path("/hello")
-    public Response testHello() {
-        return Response.ok("Hello World!").build();
-    }
 
+    //WORKS
     @GET
     @Path("/{id}")
     public Response getUserById(@PathParam("id") final int id) {
@@ -99,7 +96,7 @@ public class UserControllerREST {
         }
     }
 
-
+    //WORKS
     @Path("/create")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -113,6 +110,8 @@ public class UserControllerREST {
         return Response.ok(new UserDTO(user)).build();
     }
 
+
+    //WORKS NOT FOUND --> TODO: CHECK IF IT WORKS WITH DB PICTURE
     @GET
     @Path("/{id}/picture")
     @Produces(value = {"image/png", "image/jpeg"})
@@ -126,6 +125,8 @@ public class UserControllerREST {
         return Response.ok(new ImageDTO(pictureOpt.get())).build();
     }
 
+
+    //WORKS NOT CONTENT --> TODO: CHECK IF IT WORKS WITH EXISTING TRIPS
     @GET
     @Path("/{userId}/trips")
     public Response getUserTrips(@PathParam("userId") final int id, @DefaultValue("1") @QueryParam("page") int page) {
@@ -136,6 +137,10 @@ public class UserControllerREST {
         }
         User user = userOptional.get();
         List<TripDTO> trips = ts.getAllUserTrips(user).stream().map(TripDTO::new).collect(Collectors.toList());
+        System.out.println(trips);
+        if(trips.isEmpty()) {
+            return Response.status(Response.Status.NO_CONTENT).build();
+        }
         return Response.ok(trips).build();
     }
 

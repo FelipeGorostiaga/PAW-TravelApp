@@ -129,7 +129,7 @@ public class TripController {
 
         Trip trip = ts.create(user.getId(), modelPlace.getId(), form.getName(), form.getDescription(),
                 DateManipulation.stringToLocalDate(form.getStartDate()),
-                DateManipulation.stringToLocalDate(form.getEndDate()));
+                DateManipulation.stringToLocalDate(form.getEndDate()), form.isPrivate());
 
         String redirectFormat = String.format("redirect:/home/trip/%d", trip.getId());
         mav.setViewName(redirectFormat);

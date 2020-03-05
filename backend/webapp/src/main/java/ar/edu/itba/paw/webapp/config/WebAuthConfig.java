@@ -50,6 +50,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests().antMatchers("/api/**").permitAll();
 
 
+        /*"/api/user" --> authenticated*/
+
+
+
 
 
                /* //.invalidSessionUrl("/")
