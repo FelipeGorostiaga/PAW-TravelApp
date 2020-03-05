@@ -113,6 +113,8 @@ public class TripControllerREST {
         return Response.ok(new TripDTO(trip)).build();
     }
 
+
+
     @POST
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -141,7 +143,7 @@ public class TripControllerREST {
         }
         Trip trip = tripService.create(loggedUser.get().getId(), customPlace.getId(), tripCreateForm.getName(),
                 tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
-                DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()));
+                DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());
         return Response.ok(new TripDTO(trip)).build();
     }
 

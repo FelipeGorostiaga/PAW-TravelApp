@@ -30,8 +30,8 @@ public class TripServiceImpl implements TripService {
     private UserDao ud;
 
     @Override
-    public Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate) {
-        return td.create(userId, startPlaceId, name, description, startDate, endDate);
+    public Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) {
+        return td.create(userId, startPlaceId, name, description, startDate, endDate, isPrivate);
     }
 
     @Override

@@ -20,6 +20,9 @@ public class Trip implements Comparable<Trip>{
     @Column
     private long adminId;
 
+    @Column
+    private boolean isPrivate;
+
     @Column(length = 100, nullable = false)
     private String name;
 
@@ -45,12 +48,14 @@ public class Trip implements Comparable<Trip>{
     private List<TripComment> comments = new LinkedList<>();
 
 
-    public Trip(long id, long adminId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate) {
-        this(adminId, startPlaceId, name, description, startDate, endDate);
+    public Trip(long id, long adminId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate,
+                boolean isPrivate) {
+        this(adminId, startPlaceId, name, description, startDate, endDate, isPrivate);
         this.id = id;
     }
 
-    public Trip(long adminId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate) {
+    public Trip(long adminId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate,
+                boolean isPrivate) {
         super();
         this.adminId = adminId;
         this.startPlaceId = startPlaceId;
@@ -58,6 +63,7 @@ public class Trip implements Comparable<Trip>{
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.isPrivate = isPrivate;
     }
 
     public long getAdminId() {
@@ -84,6 +90,13 @@ public class Trip implements Comparable<Trip>{
         return id;
     }
 
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
 
     public String getName() {
         return name;

@@ -11,6 +11,7 @@ public class TripDTO {
     private long id;
     private long adminId;
     private long startPlaceId;
+    private boolean isPrivate;
     private String name;
     private String description;
     private LocalDate startDate;
@@ -36,6 +37,15 @@ public class TripDTO {
         this.users = trip.getUsers().stream().map(UserDTO::new).collect(Collectors.toList());
         this.activities = trip.getActivities().stream().map(ActivityDTO::new).collect(Collectors.toList());
         this.comments = trip.getComments().stream().map(TripCommentDTO::new).collect(Collectors.toList());
+        this.isPrivate = trip.isPrivate();
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
     }
 
     public long getId() {

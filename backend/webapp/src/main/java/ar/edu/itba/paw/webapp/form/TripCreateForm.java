@@ -32,6 +32,17 @@ public class TripCreateForm {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String endDate;
 
+    @NotNull
+    private boolean isPrivate;
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+
     public String getPlaceInput() {
         return placeInput;
     }
