@@ -15,10 +15,10 @@ public class SecurityUserService {
     @Autowired
     UserService userService;
 
-    public Optional<User> getLoggedUser() {
+    public User getLoggedUser() {
         String loggedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> loggedUser = userService.findByUsername(loggedUserEmail);
-        return loggedUser;
+        return loggedUser.orElse(null);
     }
 
 }

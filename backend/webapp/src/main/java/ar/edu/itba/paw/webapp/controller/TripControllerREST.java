@@ -86,10 +86,10 @@ public class TripControllerREST {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editTrip(@Valid final EditTripForm form, @PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
+        User loggedUser = securityUserService.getLoggedUser();
         if(!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         Trip trip = tripOptional.get();
-        if(!loggedUserOptional.isPresent() || (loggedUserOptional.get().getId() != trip.getAdminId())) {
+        if(loggedUser.getId() != trip.getAdminId()) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         Set<ConstraintViolation<EditTripForm>> violations = validator.validate(form);
@@ -119,11 +119,7 @@ public class TripControllerREST {
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
-        Optional<User> loggedUser = securityUserService.getLoggedUser();
-        if(!loggedUser.isPresent()) {
-            LOGGER.debug("Cannot create trip, user is not logged");
-            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Authentication needed to create a trip")).build();
-        }
+        User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
         ConstraintViolationsDTO violationsDTO = new ConstraintViolationsDTO(violations);
         List<Place> places = null;
@@ -141,7 +137,7 @@ public class TripControllerREST {
         if(customPlace == null) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        Trip trip = tripService.create(loggedUser.get().getId(), customPlace.getId(), tripCreateForm.getName(),
+        Trip trip = tripService.create(loggedUser.getId(), customPlace.getId(), tripCreateForm.getName(),
                 tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
                 DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());
         return Response.ok(new TripDTO(trip)).build();
@@ -171,10 +167,10 @@ public class TripControllerREST {
     @DELETE
     @Path("/{id}/delete")
     public Response deleteTrip(@PathParam("id") final long tripId) {
-        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
+        User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if(tripOptional.isPresent()) {
-            if(loggedUserOptional.isPresent() && loggedUserOptional.get().getId() == tripOptional.get().getAdminId()) {
+            if(loggedUser.getId() == tripOptional.get().getAdminId()) {
                 tripService.deleteTrip(tripId);
                 return Response.ok().build();
             }
@@ -207,11 +203,10 @@ public class TripControllerREST {
     }
 
     private Response addOrDeleteUserFromTrip(final long tripId, final long userId, final String type) {
-        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
+        User loggedUser = securityUserService.getLoggedUser();
         Optional<User> userOptional = userService.findById(userId);
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(loggedUserOptional.isPresent() && userOptional.isPresent() && tripOptional.isPresent()) {
-            User loggedUser = loggedUserOptional.get();
+        if(userOptional.isPresent() && tripOptional.isPresent()) {
             User u = userOptional.get();
             Trip t = tripOptional.get();
             if(t.getAdminId() == loggedUser.getId()) {
@@ -251,10 +246,9 @@ public class TripControllerREST {
     @GET
     @Path("/{id}/comments")
     public Response getTripComments(@PathParam("id") final long tripId) {
-        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
+        User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(tripOptional.isPresent() && loggedUserOptional.isPresent()) {
-            User loggedUser = loggedUserOptional.get();
+        if(tripOptional.isPresent()) {
             Trip t = tripOptional.get();
             if(t.getUsers().contains(loggedUser) || t.getAdminId() == loggedUser.getId()) {
                 return Response.ok(tripService.getTripComments(tripId).stream().map(TripCommentDTO::new)
@@ -268,14 +262,13 @@ public class TripControllerREST {
     @POST
     @Path("/{id}/comments/add/{userId}")
     public Response addCommentToTripChat(@PathParam("id") final long tripId, @Valid TripCommentForm tripCommentForm) {
-        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
+        User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         Set<ConstraintViolation<TripCommentForm>> violations = validator.validate(tripCommentForm);
         if(!violations.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ConstraintViolationsDTO(violations)).build();
         }
-        if(loggedUserOptional.isPresent() && tripOptional.isPresent()) {
-            User loggedUser = loggedUserOptional.get();
+        if(tripOptional.isPresent()) {
             Trip t = tripOptional.get();
             if(t.getUsers().contains(loggedUser) || t.getAdminId() == loggedUser.getId()) {
                 TripComment tripComment = tripCommentsService.create(loggedUser, t, tripCommentForm.getComment());
@@ -314,12 +307,12 @@ public class TripControllerREST {
     @Path("/{id}/activities/create")
     public Response createTripActivity(@PathParam("id") final long tripId, @Valid ActivityCreateForm activityCreateForm) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
+        User loggedUser = securityUserService.getLoggedUser();
         if(!tripOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         Trip trip = tripOptional.get();
-        if(loggedUserOptional.isPresent() && loggedUserOptional.get().getId() == trip.getAdminId()) {
+        if(loggedUser.getId() == trip.getAdminId()) {
             activityCreateForm.setTrip(tripOptional.get());
             Set<ConstraintViolation<ActivityCreateForm>> violations = validator.validate(activityCreateForm);
             ConstraintViolationsDTO violationsDTO = new ConstraintViolationsDTO(violations);
@@ -350,10 +343,9 @@ public class TripControllerREST {
     @Path("/{id}/activities/delete/{activityId}")
     public Response deleteTripActivity(@PathParam("id") final long tripId, @PathParam("activityId") final long activityId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
-        if(tripOptional.isPresent() && loggedUserOptional.isPresent()) {
+        User loggedUser = securityUserService.getLoggedUser();
+        if(tripOptional.isPresent()) {
             Trip trip = tripOptional.get();
-            User loggedUser = loggedUserOptional.get();
             if(trip.getAdminId() == loggedUser.getId()) {
                 tripService.deleteTripActivity(activityId, tripId);
                 return Response.ok().build();

@@ -54,12 +54,7 @@ public class AuthenticatedUserController {
     @Path("/picture")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response editUserProfile(@Valid EditProfileForm editProfileForm) {
-
-        //TODO - ADD INTERNACIONALIZATION
-
-        Optional<User> loggedUserOptional = securityUserService.getLoggedUser();
-        if(!loggedUserOptional.isPresent()) return Response.status(Response.Status.FORBIDDEN).build();
-        User loggedUser = loggedUserOptional.get();
+        User loggedUser = securityUserService.getLoggedUser();
         LOGGER.debug("Accessed edit profile for user {}", loggedUser.getId());
         Set<ConstraintViolation<EditProfileForm>> violations = validator.validate(editProfileForm);
         ConstraintViolationsDTO constraintViolationsDTO = new ConstraintViolationsDTO(violations);
@@ -77,21 +72,19 @@ public class AuthenticatedUserController {
         if(userPicturesService.findByUserId(loggedUser.getId()).isPresent()) {
             userPicturesService.deleteByUserId(loggedUser.getId());
         }
-        UserPicture userPicture = userPicturesService.create(loggedUser, imageBytes);
+        userPicturesService.create(loggedUser, imageBytes);
         loggedUser.setBiography(editProfileForm.getBiography());
         userService.update(loggedUser);
-
-        //TODO - ADD SERVICE METHOD THAT DELETES OLD PICTURE AND PUTS NEW ONE INSTEAD OF DOING IT IN CONTROLLER
         return Response.ok(new UserDTO(loggedUser)).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLoggedInUser() {
-        Optional<User> loggedUser = securityUserService.getLoggedUser();
-        if(!loggedUser.isPresent()) {
+        User loggedUser = securityUserService.getLoggedUser();
+        if(loggedUser == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(new UserDTO(loggedUser.get())).build();
+        return Response.ok(new UserDTO(loggedUser)).build();
     }
 }
