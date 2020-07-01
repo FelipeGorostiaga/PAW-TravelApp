@@ -22,7 +22,7 @@ hs_err_pid*
 
 # dependencies
 /node_modules
-
+/frontend-angular/node_modules
 # profiling files
 chrome-profiler-events*.json
 speed-measure-plugin*.json

@@ -15,16 +15,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.util.concurrent.TimeUnit;
 
 @EnableWebSecurity
 @Configuration
@@ -51,11 +43,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
 
         /*"/api/user" --> authenticated*/
-
-
-
-
-
                /* //.invalidSessionUrl("/")
                 .and().authorizeRequests()
                 .antMatchers("/","/signin", "/signup").permitAll()
