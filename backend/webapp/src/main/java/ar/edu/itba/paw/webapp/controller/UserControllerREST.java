@@ -81,7 +81,6 @@ public class UserControllerREST {
         return Response.ok(new AuthenticationResponseDTO(jwt)).build();
     }
 
-
     //WORKS
     @GET
     @Path("/{id}")
@@ -110,7 +109,6 @@ public class UserControllerREST {
         return Response.ok(new UserDTO(user)).build();
     }
 
-
     //WORKS NOT FOUND --> TODO: CHECK IF IT WORKS WITH DB PICTURE
     @GET
     @Path("/{id}/picture")
@@ -124,7 +122,6 @@ public class UserControllerREST {
         }
         return Response.ok(new ImageDTO(pictureOpt.get())).build();
     }
-
 
     //WORKS NOT CONTENT --> TODO: CHECK IF IT WORKS WITH EXISTING TRIPS
     @GET

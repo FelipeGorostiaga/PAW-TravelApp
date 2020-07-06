@@ -49,7 +49,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         // CHECKING (2)
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/authenticate", "/api/register")
+                .antMatchers("/api/users/authenticate", "/api/users/register")
                 .permitAll().anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
