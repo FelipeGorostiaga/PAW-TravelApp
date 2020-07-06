@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
+import ar.edu.itba.paw.webapp.filters.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,22 +16,24 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @Configuration
-@ComponentScan("ar.edu.itba.paw.webapp.auth")
+@ComponentScan({"ar.edu.itba.paw.webapp.auth","ar.edu.itba.paw.webapp.filters"})
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("classpath:rememberme.key")
-    private Resource key;
-
     @Autowired
-    public PasswordEncoder passwordEncoder;
+    private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
     private TravelUserDetailsService userDetailsService;
+
+    @Autowired
+    public PasswordEncoder passwordEncoder;
 
     @Override
     public void configure(final WebSecurity web) throws Exception {
@@ -39,32 +42,19 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers("/api/**").permitAll();
 
+        // WORKS (1)
+        // http.csrf().disable().authorizeRequests().antMatchers("/api/authenticate", "/api/register").permitAll();
 
-        /*"/api/user" --> authenticated*/
-               /* //.invalidSessionUrl("/")
-                .and().authorizeRequests()
-                .antMatchers("/","/signin", "/signup").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/home/**").authenticated()
-                .and().formLogin()
-                .loginPage("/signin")
-                .defaultSuccessUrl("/home/1", true)
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .failureUrl("/signin?error=true")
-                .and().rememberMe()
-                .rememberMeParameter("rememberme")
-                .userDetailsService(userDetailsService)
-                .key(getRememberMeKey())
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(27))
-                .and().logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .and().exceptionHandling()
-                .accessDeniedPage("/403")
-                .and().csrf().disable();*/
+        // CHECKING (2)
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/api/authenticate", "/api/register")
+                .permitAll().anyRequest().authenticated()
+                .and().exceptionHandling().and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
 
     /*private String getRememberMeKey() {

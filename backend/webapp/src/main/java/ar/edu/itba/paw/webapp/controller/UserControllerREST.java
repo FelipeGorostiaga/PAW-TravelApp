@@ -8,7 +8,7 @@ import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
-import ar.edu.itba.paw.webapp.auth.util.JwtUtil;
+import ar.edu.itba.paw.webapp.auth.JwtUtil;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
