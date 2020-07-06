@@ -21,8 +21,13 @@ export class LoginComponent implements OnInit {
 
   login() {
     const userDetails = new UserAuth(this.username, this.password);
-    this.userService.authenticateUser(userDetails).subscribe(data => {
-      console.log(data);
-    });
+    this.userService.authenticateUser(userDetails).subscribe(
+        res => {
+          console.log(res);
+        },
+        err => {
+          alert("Error in login");
+        }
+    );
   }
 }
