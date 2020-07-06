@@ -21,6 +21,7 @@ export class ApiUserService {
     private baseURL = 'http://localhost:8080/api';
     private usersBaseURL = `${this.baseURL}/users/`;
     private tripsBaseURL = `${this.baseURL}/trips/`;
+    private searchBaseURL = `${this.baseURL}/search/`;
 
     constructor(private http: HttpClient) {}
 
@@ -124,4 +125,31 @@ export class ApiUserService {
         const url = this.tripsBaseURL + tripId + '/activities/delete/' + activityId;
         return this.http.delete(url);
     }
+
+    // ---------------------- Search trips -----------------------
+
+    searchByName(name: string): Observable<Trip[]> {
+        const url = this.searchBaseURL + '/name';
+        const params = new HttpParams().set('nameInput', name);
+        return this.http.get<Trip[]>(url, {params});
+    }
+
+    advancedSearch(name?: string, sdate?: string, edate?: string, category?: string): Observable<Trip[]> {
+        const url = this.searchBaseURL + '/advanced';
+        let params = new HttpParams();
+        if (name) {
+            params = params.set('name', name);
+        }
+        if (sdate) {
+            params = params.set('startDate', sdate);
+        }
+        if (edate) {
+            params = params.set('endDate', edate);
+        }
+        if (category) {
+            params = params.set('category', category);
+        }
+        return this.http.get<Trip[]>(url, {params});
+    }
+    
 }
