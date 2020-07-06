@@ -151,5 +151,5 @@ export class ApiUserService {
         }
         return this.http.get<Trip[]>(url, {params});
     }
-    
+
 }

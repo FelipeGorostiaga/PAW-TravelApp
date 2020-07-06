@@ -120,6 +120,7 @@ public class TripControllerREST {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
         User loggedUser = securityUserService.getLoggedUser();
+
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
         ConstraintViolationsDTO violationsDTO = new ConstraintViolationsDTO(violations);
         List<Place> places = null;

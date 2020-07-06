@@ -10,22 +10,21 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-user" style="margin-left: 4px;"></i></span>
                         </div>
-                        <input type="text" class="form-control" placeholder="email" name="username">
+                        <input type="text" class="form-control" [(ngModel)]="username" placeholder="email" name="username">
 
                     </div>
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-lock" style="margin-left: 5px;px;"></i></span>
                         </div>
-                        <input type="password" class="form-control" placeholder="password" name="password">
+                        <input type="password" class="form-control" [(ngModel)]="password" placeholder="password" name="password">
                     </div>
                     <div class="row">
-                        <label style="margin-left:5px;color:white;" ><input type="checkbox" name="rememberme" >   Remember me</label>
+                        <label style="margin-left:5px;color:white;" ><input type="checkbox" [(ngModel)]="rememberMe" name="rememberme" >   Remember me</label>
                     </div>
                     <br>
-
                     <div class="form-group">
-                        <input type="submit" value="Sign In" class="btn float-left login_btn">
+                        <input type="submit" value="Sign In" (click)="login()"  class="btn float-left login_btn">
                     </div>
                 </form>
             </div>

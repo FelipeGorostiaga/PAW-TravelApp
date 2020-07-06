@@ -48,9 +48,4 @@ public class SearchControllerREST {
         return Response.ok(resultTrips.stream().map(TripDTO::new).collect(Collectors.toList())).build();
     }
 
-
-
-
-
-
 }
