@@ -3,11 +3,9 @@ package ar.edu.itba.paw.webapp.config;
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
 import ar.edu.itba.paw.webapp.filters.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
@@ -36,41 +34,21 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder;
 
     @Override
-    public void configure(final WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico","/icons/**","/webjars/**");
-    }
-
-    @Override
     protected void configure(final HttpSecurity http) throws Exception {
-
-        // WORKS (1)
-        // http.csrf().disable().authorizeRequests().antMatchers("/api/authenticate", "/api/register").permitAll();
-
-        // CHECKING (2)
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/users/authenticate", "/api/users/register")
-                .permitAll().anyRequest().authenticated()
+                .antMatchers("/api/users/authenticate", "/api/users/register").anonymous()
+                .anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
 
-    /*private String getRememberMeKey() {
-        final StringWriter writer = new StringWriter();
-        try (Reader reader = new InputStreamReader(key.getInputStream())) {
-            char[] data = new char[1024];
-            int len;
-            while ((len = reader.read(data)) != -1) {
-                writer.write(data,0,len);
-            }
-        }
-        catch (IOException e){
-            throw new RuntimeException(e);
-        }
-        return writer.toString();
-    }*/
+    @Override
+    public void configure(final WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico","/icons/**","/webjars/**");
+    }
 
     @Bean
     public DaoAuthenticationProvider getDaoAuth() {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {UserForm} from '../../model/forms/user-form';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {UserAuth} from '../../model/user-auth';
 import {Observable} from 'rxjs';
 import {User} from '../../model/user';
@@ -11,7 +11,7 @@ import {User} from '../../model/user';
 export class AuthService {
 
     private baseURL = 'http://localhost:8080/api';
-    private usersBaseURL = `${this.baseURL}/users/`;
+    private usersBaseURL = `${this.baseURL}/users`;
 
     constructor(private http: HttpClient) { }
 

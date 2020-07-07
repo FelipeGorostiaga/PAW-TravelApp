@@ -9,11 +9,14 @@ export class TokenInterceptor implements HttpInterceptor {
     }
 
     intercept(req, next) {
-        const tokenizedReq = req.clone({
-            setHeaders: {
-                Authorization: `Bearer ${this.authService.getJwtToken()}`
-            }
-        });
-        return next.handle(tokenizedReq);
+        if (this.authService.isLoggedIn()) {
+            const tokenizedReq = req.clone({
+                setHeaders: {
+                    Authorization: `Bearer ${this.authService.getJwtToken()}`
+                }
+            });
+            return next.handle(tokenizedReq);
+        }
+        return next.handle(req);
     }
 }

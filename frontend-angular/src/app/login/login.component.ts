@@ -10,8 +10,11 @@ import {AuthService} from '../services/auth/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  username: string;
-  password: string;
+  user: UserAuth = {
+    username: "",
+    password: ""
+  };
+
   rememberMe: boolean;
   message: any;
 
@@ -22,10 +25,10 @@ export class LoginComponent implements OnInit {
 
   login(event) {
     event.preventDefault();
-    const userDetails = new UserAuth(this.username, this.password);
-    this.authService.login(userDetails).subscribe(
+    this.authService.login(this.user).subscribe(
         res => {
-          this.authService.setJwtToken(res);
+          console.log(res);
+          /*this.authService.setJwtToken(res);*/
           this.router.navigate(["/home"]);
         },
         err => {

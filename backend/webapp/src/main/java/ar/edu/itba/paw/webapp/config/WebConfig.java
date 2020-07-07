@@ -20,9 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -37,7 +35,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 @EnableTransactionManagement
-@EnableWebMvc
 @ComponentScan({"ar.edu.itba.paw.webapp.controller","ar.edu.itba.paw.persistence","ar.edu.itba.paw.service"})
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
@@ -140,4 +137,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return new GooglePlaces("AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M");
     }
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("HEAD","GET", "PUT", "POST", "DELETE","OPTIONS")
+                .allowedOrigins("*")
+                .allowedHeaders("*")
+                .allowCredentials(true).maxAge(3600);
+    }
 }

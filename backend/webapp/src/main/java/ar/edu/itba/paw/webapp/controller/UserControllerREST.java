@@ -7,8 +7,8 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
-import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
 import ar.edu.itba.paw.webapp.auth.JwtUtil;
+import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
@@ -19,7 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 
 @Path("users")
-@Controller
+@RestController
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class UserControllerREST {
 
@@ -62,7 +62,6 @@ public class UserControllerREST {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    //WORKS
     @POST
     @Path("/authenticate")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -81,7 +80,6 @@ public class UserControllerREST {
         return Response.ok(new AuthenticationResponseDTO(jwt)).build();
     }
 
-    //WORKS
     @GET
     @Path("/{id}")
     public Response getUserById(@PathParam("id") final int id) {
@@ -95,7 +93,6 @@ public class UserControllerREST {
         }
     }
 
-    //WORKS
     @Path("/create")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
