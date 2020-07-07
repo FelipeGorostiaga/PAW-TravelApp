@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import {ApiUserService} from '../services/api-user.service';
+import {Component, OnInit} from '@angular/core';
 import {UserAuth} from '../model/user-auth';
 import {Router} from '@angular/router';
+import {AuthService} from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,17 +15,17 @@ export class LoginComponent implements OnInit {
   rememberMe: boolean;
   message: any;
 
-  constructor(private userService: ApiUserService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
   }
 
-  login() {
+  login(event) {
+    event.preventDefault();
     const userDetails = new UserAuth(this.username, this.password);
-    this.userService.authenticateUser(userDetails).subscribe(
+    this.authService.login(userDetails).subscribe(
         res => {
-          console.log(res)
-          // Todo: set jwt in auth service?
+          this.authService.setJwtToken(res);
           this.router.navigate(["/home"]);
         },
         err => {

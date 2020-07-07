@@ -1,15 +1,17 @@
-<div class="container">
-    <div class="d-flex justify-content-center h-75">
+<div class="container" >
+    <div class="d-flex justify-content-center h-75 my-auto">
         <div class="card">
             <div class="card-header">
                 <h3>Sign In</h3>
             </div>
             <div class="card-body">
                 <form action="#" enctype="application/x-www-form-urlencoded">
+                    <div *ngIf="message" class="alert alert-danger" role="alert">{{message}}</div>
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-user" style="margin-left: 4px;"></i></span>
                         </div>
+
                         <input type="text" class="form-control" [(ngModel)]="username" placeholder="email" name="username">
 
                     </div>
@@ -24,14 +26,14 @@
                     </div>
                     <br>
                     <div class="form-group">
-                        <input type="submit" value="Sign In" (click)="login()"  class="btn float-left login_btn">
+                        <input type="submit" value="Sign In" (click)="login($event)"  class="btn float-left login_btn">
                     </div>
                 </form>
             </div>
             <div class="card-footer">
                 <div class="d-flex justify-content-center links">
                     Dont have an account?
-                    <a href="#">
+                    <a href="/register">
                         <u>Register</u>
                     </a>
                 </div>

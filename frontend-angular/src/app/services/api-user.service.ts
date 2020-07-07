@@ -32,20 +32,9 @@ export class ApiUserService {
         return this.http.get<Trip[]>(url);
     }
 
-    authenticateUser(userAuth: UserAuth): Observable<any>  {
-        const url = this.usersBaseURL + '/authenticate';
-        return this.http.post(url, userAuth);
-    }
-
-
     getUserById(id: string): Observable<User> {
         const url = this.usersBaseURL + id;
         return this.http.get<User>(url);
-    }
-
-    createUser(userForm: UserForm): Observable<User> {
-        const url = this.usersBaseURL + '/create';
-        return this.http.post<User>(url, userForm);
     }
 
     getUserPicture(id: string): Observable<ImageDTO> {
