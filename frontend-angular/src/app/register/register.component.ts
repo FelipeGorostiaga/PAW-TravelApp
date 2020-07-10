@@ -13,21 +13,16 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 })
 export class RegisterComponent implements OnInit {
 
-    private registerForm: FormGroup;
-    private submitted = false;
-    private birthday: string;
-    private password: string;
-    private passwordRepeat: string;
-    private email: string;
-    private firstname: string;
-    private lastname: string;
-    private nationality: string;
+    registerForm: FormGroup;
+    submitted = false;
 
     constructor(private http: HttpClient,
                 private authService: AuthService,
                 private router: Router,
                 private formBuilder: FormBuilder) {
     }
+
+    // TODO: validate date
 
     ngOnInit() {
         this.registerForm = this.formBuilder.group({
@@ -44,40 +39,35 @@ export class RegisterComponent implements OnInit {
         });
     }
 
-    registerUser() {
-        const formData = new UserForm(this.firstname, this.lastname, this.email, this.password, this.passwordRepeat,
-        this. nationality, this.birthday);
-        this.authService.register(formData).subscribe(
-            res => {
-              console.log(res);
-              this.authService.login(new UserAuth(formData.email, formData.password))
-                  .subscribe(
-                      // tslint:disable-next-line:no-shadowed-variable
-                      res => {
-                        this.authService.setJwtToken(res);
-                      },
-                    error => {
-                        alert("Error redirecting to login");
-                      }
-              );
-              this.router.navigate(["/home"]);
-            },
-            err => {
-              alert("Error registering user");
-            }
-        );
-    }
-
     // convenience getter for easy access to form fields
     get f() { return this.registerForm.controls; }
 
     onSubmit() {
+        const values = this.registerForm.value;
         this.submitted = true;
         if (this.registerForm.invalid) {
             return;
         }
-        // display form values on success
-        alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value, null, 4));
+        const formData = new UserForm(values.firstName, values.lastName, values.email,
+            values.password, values.confirmPassword, values.nationality, values.birthDate);
+        this.authService.register(formData).subscribe(
+            res => {
+                    console.log(res);
+                    this.authService.login(new UserAuth(formData.email, formData.password)).subscribe(
+                        // tslint:disable-next-line:no-shadowed-variable
+                        res => {
+                            this.authService.setJwtToken(res);
+                            this.router.navigate(["/home"]);
+                        },
+                        error => {
+                            alert("Error redirecting to login");
+                        }
+                    );
+            },
+            err => {
+                alert("Error registering user");
+            });
+
     }
 
 
