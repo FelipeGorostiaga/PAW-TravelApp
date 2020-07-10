@@ -16,7 +16,7 @@ import { CommentComponent } from './trip/chat/comment/comment.component';
 import { MapComponent } from './map/map.component';
 import { ProfileComponent } from './profile/profile.component';
 import { HomeComponent } from './home/home.component';
-import { FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthService} from './services/auth/auth.service';
 import {AuthGuard} from './services/auth/auth.guard';
 import {TokenInterceptor} from './services/auth/token-interceptor';
@@ -41,7 +41,8 @@ import {TokenInterceptor} from './services/auth/token-interceptor';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent]
