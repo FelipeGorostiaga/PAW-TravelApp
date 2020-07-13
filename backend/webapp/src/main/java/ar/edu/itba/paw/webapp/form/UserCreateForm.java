@@ -30,15 +30,14 @@ public class UserCreateForm {
     private String email;
 
     @NotNull
-    @Size(min = 8, max = 100)
+    @Size(min = 6, max = 50)
     private String password;
 
     @NotNull
-    @Size(min = 8, max = 100)
+    @Size(min = 6, max = 50)
     private String pswrepeat;
 
     @NotNull
-    @Pattern(regexp =  "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$")
     private String birthday;
 
     @NotNull

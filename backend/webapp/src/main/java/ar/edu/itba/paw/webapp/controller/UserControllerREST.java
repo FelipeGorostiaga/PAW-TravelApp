@@ -106,7 +106,7 @@ public class UserControllerREST {
         return Response.ok(new UserDTO(user)).build();
     }
 
-    //WORKS NOT FOUND --> TODO: CHECK IF IT WORKS WITH DB PICTURE
+    //Todo: check if it works with db picture
     @GET
     @Path("/{id}/picture")
     @Produces(value = {"image/png", "image/jpeg"})
@@ -120,7 +120,7 @@ public class UserControllerREST {
         return Response.ok(new ImageDTO(pictureOpt.get())).build();
     }
 
-    //WORKS NOT CONTENT --> TODO: CHECK IF IT WORKS WITH EXISTING TRIPS
+    //Todo: check if it works with existing trips
     @GET
     @Path("/{userId}/trips")
     public Response getUserTrips(@PathParam("userId") final int id, @DefaultValue("1") @QueryParam("page") int page) {

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {UserAuth} from "../model/user-auth";
 import {UserForm} from "../model/forms/user-form";
 import {AuthService} from "../services/auth/auth.service";
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+
 
 @Component({
   selector: 'app-register',
@@ -22,8 +23,6 @@ export class RegisterComponent implements OnInit {
                 private formBuilder: FormBuilder) {
     }
 
-    // TODO: validate date
-
     ngOnInit() {
         this.registerForm = this.formBuilder.group({
             firstName: ['', Validators.required],
@@ -35,7 +34,7 @@ export class RegisterComponent implements OnInit {
             birthDate: ['', Validators.required],
             nationality: ['', Validators.required]
         }, {
-            validator: MustMatch('password', 'confirmPassword')
+            validators: MustMatch('password', 'confirmPassword')
         });
     }
 
@@ -95,5 +94,44 @@ export function MustMatch(controlName: string, matchingControlName: string) {
             matchingControl.setErrors(null);
         }
     };
+}
+
+
+export function ValidDate(controlName: string) {
+    return (formGroup: FormGroup) => {
+        const control = formGroup.controls[controlName];
+        if (control.errors) {
+            return;
+        }
+        // set error on matchingControl if validation fails
+        if (validDate(control.value)) {
+            control.setErrors({ invalidDate: true });
+        } else {
+            control.setErrors(null);
+        }
+    };
+}
+
+export function validDate(date: string): boolean {
+    // First check for the pattern
+    if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(date)) {
+        return false;
+    }
+    // Parse the date parts to integers
+    const parts = date.split("/");
+    const month = parseInt(parts[0], 10);
+    const day = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10);
+    // Check the ranges of month and year
+    if (year < 1000 || year > 3000 || month === 0 || month > 12) {
+        return false;
+    }
+    const monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+    // Adjust for leap years
+    if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
+        monthLength[1] = 29;
+    }
+    // Check the range of the day
+    return day > 0 && day <= monthLength[month - 1];
 }
 

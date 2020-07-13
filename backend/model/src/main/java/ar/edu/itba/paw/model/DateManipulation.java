@@ -10,7 +10,7 @@ public class DateManipulation {
     private DateManipulation() {
     }
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static LocalDate stringToLocalDate(String dateString) {
         try {
