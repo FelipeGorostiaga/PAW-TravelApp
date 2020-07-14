@@ -21,6 +21,8 @@ import {AuthGuard} from './services/auth/auth.guard';
 import {TokenInterceptor} from './services/auth/token-interceptor';
 import { TripCardComponent } from './home/trip-card/trip-card.component';
 import { PaginatorComponent } from './paginator/paginator.component';
+import { CreateTripComponent } from './create-trip/create-trip.component';
+import {GoogleMapsModule} from "@angular/google-maps";
 
 @NgModule({
   declarations: [
@@ -38,14 +40,16 @@ import { PaginatorComponent } from './paginator/paginator.component';
     ProfileComponent,
     HomeComponent,
     TripCardComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    CreateTripComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    GoogleMapsModule
   ],
   providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent]

@@ -5,6 +5,7 @@ import {RegisterComponent} from './register/register.component';
 import {HomeComponent} from './home/home.component';
 import {TripComponent} from './trip/trip.component';
 import {AuthGuard} from './services/auth/auth.guard';
+import {AboutComponent} from "./about/about.component";
 
 
 const routes: Routes = [
@@ -29,6 +30,10 @@ const routes: Routes = [
   {
     path: 'trip/:id',
     component: TripComponent
+  },
+  {
+    path: 'about',
+    component: AboutComponent
   }
 ];
 

@@ -58,4 +58,7 @@ export class TripCardComponent implements OnInit {
     }
   }
 
+  tripClicked() {
+    console.log("clicked trip" + this.trip.id);
+  }
 }

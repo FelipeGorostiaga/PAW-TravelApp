@@ -1,0 +1,42 @@
+<app-navigation></app-navigation>
+
+
+<div class="container-fluid" id="main-container">
+    <div class="container box">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <div class="display-4 text-white">Create trip</div>
+                </div>
+                <form action="${createTripURL}" method="post" modelAttribute="createTripForm" id="formId" autocomplete="false">
+
+                    <input class="form-control" cssStyle="margin-bottom: 10px" type="text" path="name"
+                                name="trip_name"
+                                placeholder="${namePh}">
+
+                    <textarea class="form-control" type="text" path="description" name="trip_desc" placeholder="${descriptionPh}">
+                    <input class="form-control" type="hidden" placeholder="dd/mm/yyyy" id="startDate" path="startDate" name="startDate"/>
+                    <input class="form-control" type="hidden" placeholder="dd/mm/yyyy" path="endDate" name="endDate" id="endDate" />
+                    <div class="form-group">
+                        <label for="datefilter" class="text-white">Start date</label>
+                        <input type="text" id="datefilter" name="datefilter" value="" class="form-control" autocomplete="false"/>
+                    </div>
+                    <input id="pac-input" type="text" path="placeInput" placeholder="${locationPh}" cssClass="form-control"/>
+
+                    <div class="container" id="map"></div>
+
+                    <div id="infowindow-content">
+                        <img src="" width="16" height="16" id="place-icon">
+                        <span id="place-name" class="title"></span><br>
+                        <span id="place-address"></span>
+                    </div>
+                    <div class="text-center flex-fill">
+                        <button type="submit" class="btn-success btn btn-lg">
+                            Create
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

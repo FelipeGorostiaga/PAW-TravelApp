@@ -12,7 +12,6 @@
 </head>
 <body>
 <%@include file="header.jsp" %>
-
 <div class="container-fluid mt-4">
     <div class="card-deck">
         <div class="row justify-content-center">
@@ -39,7 +38,6 @@
                                         class="far fa-calendar-alt"></i> ${trip.key.key.startDate.format(dateFormat)} -
                                         ${trip.key.key.endDate.format(dateFormat)}</p>
                             </div>
-
                             <div class="card-footer">
                                 <i class="fas fa-users"></i>
                                 <small class="text-muted">

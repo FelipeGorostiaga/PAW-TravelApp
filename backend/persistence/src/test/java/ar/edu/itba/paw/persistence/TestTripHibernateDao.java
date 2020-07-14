@@ -24,8 +24,6 @@ public class TestTripHibernateDao {
     private static final long tripId = 2;
     private static final long userId = 1;
     private static final long placeId = 3;
-
-
     private static final String COMMENT = "test comment";
     private static final String TEST_NAME = "test name";
     private static final String NAME = "Triping under the stars";
@@ -33,7 +31,6 @@ public class TestTripHibernateDao {
     private static final LocalDate START_DATE = LocalDate.of(1997, 6, 16);
     private static final LocalDate END_DATE = LocalDate.of(1997, 6, 18);
     private static final boolean IS_PRIVATE = true;
-
 
     @Autowired
     private TripHibernateDao td;
