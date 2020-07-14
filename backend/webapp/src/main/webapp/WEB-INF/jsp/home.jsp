@@ -20,7 +20,6 @@
                 <c:url value="/home/trip/${trip.key.key.id}" var="tripUrl"/>
                 <a href="${tripUrl}" class="custom-card">
                     <div class="col-auto mb-3">
-
                         <div class="card trip-card" style="width: 30rem;">
                             <c:url value="/home/trip/${trip.key.key.id}/image" var="tripImageURL"/>
                             <c:choose>
@@ -31,7 +30,6 @@
                                     <img class="card-img-top" src="${defaultTP}" height="250" width="400">
                                 </c:otherwise>
                             </c:choose>
-
                             <div class="card-body">
                                 <h5 class="card-title"><c:out value="${trip.key.key.name}"/></h5>
                                 <p class="card-text"><c:out value="${trip.key.key.description}"/></p>

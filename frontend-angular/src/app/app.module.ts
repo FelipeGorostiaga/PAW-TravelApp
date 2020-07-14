@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './navigation/navigation.component';
@@ -20,6 +19,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthService} from './services/auth/auth.service';
 import {AuthGuard} from './services/auth/auth.guard';
 import {TokenInterceptor} from './services/auth/token-interceptor';
+import { TripCardComponent } from './home/trip-card/trip-card.component';
+import { PaginatorComponent } from './paginator/paginator.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,9 @@ import {TokenInterceptor} from './services/auth/token-interceptor';
     CommentComponent,
     MapComponent,
     ProfileComponent,
-    HomeComponent
+    HomeComponent,
+    TripCardComponent,
+    PaginatorComponent
   ],
   imports: [
     BrowserModule,

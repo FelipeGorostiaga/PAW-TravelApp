@@ -10,7 +10,8 @@ public interface TripService {
 
     public Trip create(long createdBy, long place, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate);
     public Optional<Trip> findById(long id);
-    public List<Trip> getAllTrips(int pageNum);
+    public List<Trip> getAllTripsPerPage(int pageNum);
+    public List<Trip> getAllTrips();
     public List<Trip> findByName(String name);
     public List<Trip> getAllUserTrips(User user);
     public List<Place> findTripPlaces(Trip trip);
@@ -26,4 +27,5 @@ public interface TripService {
     public List<Trip> findWithFilters(Map<String,Object> filterMap);
     public List<TripComment> getTripComments(long tripId);
     public List<TripRate> getTripRates(long tripId);
+
 }

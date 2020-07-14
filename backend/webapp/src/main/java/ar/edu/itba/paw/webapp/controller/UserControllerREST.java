@@ -138,6 +138,7 @@ public class UserControllerREST {
         return Response.ok(trips).build();
     }
 
+
 }
 
 

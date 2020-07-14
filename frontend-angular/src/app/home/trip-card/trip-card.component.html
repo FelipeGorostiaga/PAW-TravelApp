@@ -1,0 +1,28 @@
+<a href="${tripUrl}" class="custom-card">
+    <div class="col-auto mb-3">
+        <div class="card trip-card" style="width: 30rem;">
+            <img
+                    *ngIf="!isImageLoading && tripImage"
+                    src="" class="card-img-top"
+                    height="250" width="400">
+            <img
+                    *ngIf="!isImageLoading && !tripImage"
+                    src="./assets/images/trip-default.jpg"
+                    class="card-img-top"
+                    height="250" width="400">
+
+            <div class="card-body">
+                <h5 class="card-title">{{trip.name}}</h5>
+                <p class="card-text">{{trip.description}}</p>
+                <p class="card-text"><i class="fas fa-map-marker-alt"></i> </p>
+                <p class="card-text">
+                    <i class="far fa-calendar-alt"></i>{{trip.startDate | date}} - {{trip.endDate | date}}
+                </p>
+            </div>
+            <div class="card-footer">
+                <i class="fa fa-users"></i>
+                <small class="text-muted">{{usersAmount}}</small>
+            </div>
+        </div>
+    </div>
+</a>

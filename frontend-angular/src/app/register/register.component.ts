@@ -56,12 +56,13 @@ export class RegisterComponent implements OnInit {
                         // tslint:disable-next-line:no-shadowed-variable
                         res => {
                             this.authService.setJwtToken(res);
-                            this.router.navigate(["/home"]);
                         },
                         error => {
                             alert("Error redirecting to login");
                         }
                     );
+                    this.authService.setLoggedUser(res);
+                    this.router.navigate(["/home"])
             },
             err => {
                 alert("Error registering user");

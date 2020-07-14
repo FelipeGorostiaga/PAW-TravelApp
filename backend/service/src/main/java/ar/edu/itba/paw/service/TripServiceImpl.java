@@ -40,14 +40,20 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public List<Trip> getAllTripsPerPage(int pageNum) {
+        return td.getAllTripsPerPage(pageNum);
+    }
+
+    @Override
+    public List<Trip> getAllTrips() {
+        return td.getAllTrips();
+    }
+
+    @Override
     public List<Trip> findByName(String name) {
         return td.findByName(name);
     }
 
-    @Override
-    public List<Trip> getAllTrips(int pageNum) {
-        return td.getAllTrips(pageNum);
-    }
 
     @Override
     public List<Trip> getAllUserTrips(User user) {

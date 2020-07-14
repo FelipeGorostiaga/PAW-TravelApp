@@ -11,6 +11,7 @@ import {Place} from '../model/place';
 import {TripComment} from '../model/trip-comment';
 import {Activity} from '../model/activity';
 import {ActivityForm} from '../model/forms/activity-form';
+import {catchError} from "rxjs/operators";
 
 
 @Injectable({
@@ -18,12 +19,12 @@ import {ActivityForm} from '../model/forms/activity-form';
 })
 export class ApiUserService {
 
-    private baseURL = 'http://localhost:8080/api';
-    private usersBaseURL = `${this.baseURL}/users/`;
-    private tripsBaseURL = `${this.baseURL}/trips/`;
-    private searchBaseURL = `${this.baseURL}/search/`;
-
     constructor(private http: HttpClient) {}
+
+    private baseURL = 'http://localhost:8080/api';
+    private usersBaseURL = `${this.baseURL}/users`;
+    private tripsBaseURL = `${this.baseURL}/trips`;
+    private searchBaseURL = `${this.baseURL}/search`;
 
     // ------------------------ Users ---------------------
 
@@ -39,14 +40,25 @@ export class ApiUserService {
 
     getUserPicture(id: string): Observable<ImageDTO> {
         const url = this.usersBaseURL + id + '/picture';
-        return this.http.get(url);
+        return this.http.get<ImageDTO>(url);
     }
 
     // ----------------------- Trips -------------------------
 
-    getAlltrips(pageNum: number): Observable<Trip[]> {
-        const params = new HttpParams().set('page', String(pageNum));
-        return this.http.get<Trip[]>(this.tripsBaseURL, {params});
+    getTripUsersAmount(id: string): Observable<number> {
+        const url = this.tripsBaseURL + '/' + id + '/users/amount';
+        return this.http.get<number>(url);
+    }
+
+    getAllTripsPerPage(pageNum: number): Observable<Trip[]> {
+        const url = this.tripsBaseURL + '/all' + pageNum;
+        // const params = new HttpParams().set('page', String(pageNum));
+        return this.http.get<Trip[]>(this.tripsBaseURL);
+    }
+
+    getAllTrips(): Observable<Trip[][]> {
+        const url = this.tripsBaseURL + '/all';
+        return this.http.get<Trip[][]>(this.tripsBaseURL);
     }
 
     editTrip(id: string, tripForm: TripForm): Observable<Trip> {
@@ -56,7 +68,7 @@ export class ApiUserService {
 
     createTrip(tripForm: TripForm): Observable<Trip> {
         const url = this.tripsBaseURL + '/create';
-        return this.http.post(url, tripForm);
+        return this.http.post<Trip>(url, tripForm);
     }
 
     getTrip(id: string): Observable<Trip> {
@@ -140,5 +152,6 @@ export class ApiUserService {
         }
         return this.http.get<Trip[]>(url, {params});
     }
+
 
 }

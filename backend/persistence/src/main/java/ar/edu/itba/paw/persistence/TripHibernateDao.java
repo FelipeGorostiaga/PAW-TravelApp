@@ -44,10 +44,16 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
-    public List<Trip> getAllTrips(int pageNum) {
+    public List<Trip> getAllTripsPerPage(int pageNum) {
         final TypedQuery<Trip> query = em.createQuery("From Trip", Trip.class);
         query.setFirstResult((pageNum - 1) * MAX_ROWS);
         query.setMaxResults(MAX_ROWS);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Trip> getAllTrips() {
+        final TypedQuery<Trip> query = em.createQuery("Select T From Trip", Trip.class);
         return query.getResultList();
     }
 
@@ -180,4 +186,5 @@ public class TripHibernateDao implements TripDao {
         query.setParameter("tripId", tripId);
         return query.getResultList();
     }
+
 }

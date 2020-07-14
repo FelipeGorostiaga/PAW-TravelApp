@@ -15,7 +15,6 @@ public interface TripDao {
     public Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate);
     public Optional<Trip> findById(long id);
     public List<Trip> findByName(String name);
-    public List<Trip> getAllTrips(int pageNum);
     public List<Trip> findUserCreatedTrips(long userId);
     public void deleteTrip(long tripId);
     public int countAllTrips();
@@ -24,4 +23,6 @@ public interface TripDao {
     public List<Trip> findWithFilters(Map<String,Object> filterMap);
     public List<TripComment> getTripComments(long tripId);
     public List<TripRate> getTripRates(long tripId);
+    public List<Trip> getAllTrips();
+    public List<Trip> getAllTripsPerPage(int pageNum);
 }

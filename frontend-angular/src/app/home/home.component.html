@@ -1,1 +1,20 @@
-<p>home works!</p>
+<div class="container-fluid mt-4">
+    <div class="card-deck">
+        <div class="row justify-content-center">
+            <app-trip-card
+                    *ngFor="let trip of trips[currentPage]"
+                    [trip]="trip">
+            </app-trip-card>
+        </div>
+    </div>
+</div>
+<app-paginator
+        [numberOfPages]="trips.length"
+        (pageNumberClick)="updatePage($event)">
+</app-paginator>
+
+<script>
+    $(document).ready(function () {
+        $('#home-item').addClass('active');
+    });
+</script>

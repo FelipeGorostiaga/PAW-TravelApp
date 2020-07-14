@@ -70,7 +70,7 @@ public class UserController {
     public ModelAndView home(@ModelAttribute("user") User user, @PathVariable(value = "pageNum") int pageNum) {
         ModelAndView mav = new ModelAndView("home");
         int tripQty = ts.countAllTrips();
-        List<Trip> trips = ts.getAllTrips(pageNum);
+        List<Trip> trips = ts.getAllTrips();
         int requiredPages = (int) Math.ceil(tripQty/(double)MAX_TRIPS_PAGE);
         if(pageNum == 0 || (pageNum > 1 && pageNum > requiredPages)) {
             mav.setViewName("404");

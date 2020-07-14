@@ -12,6 +12,7 @@ import ar.edu.itba.paw.webapp.form.EditTripForm;
 import ar.edu.itba.paw.webapp.form.TripCommentForm;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import ar.edu.itba.paw.webapp.utils.ImageValidator;
+import ar.edu.itba.paw.webapp.utils.ListChopper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -43,6 +45,8 @@ public class TripControllerREST {
 
     private static final String ADD = "Add";
     private static final String DELETE = "Delete";
+
+    private static final int TRIPS_PER_PAGE = 9;
 
     @Autowired
     SecurityUserService securityUserService;
@@ -74,11 +78,31 @@ public class TripControllerREST {
     @Autowired
     Validator validator;
 
+
+    @GET
+    @Path("/{id}/users/amount")
+    public Response getTripUsersAmount(@PathParam("id") final long tripId) {
+        Optional<Trip> tripOptional = this.tripService.findById(tripId);
+        if(!tripOptional.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        Trip t = tripOptional.get();
+        return Response.ok(t.getUsers().size()).build();
+    }
+
+    @GET
+    @Path("/all/{page}")
+    public Response getAllTripsForPage(@PathParam("page") final int pageNum) {
+        List<Trip> trips = tripService.getAllTripsPerPage(pageNum);
+        return Response.ok(trips.stream().map(TripDTO::new).collect(Collectors.toList())).build();
+    }
+
     @GET
     @Path("/all")
-    public Response getAllTrips(@DefaultValue("1") @QueryParam("page") int pageNum) {
-        List<Trip> trips = tripService.getAllTrips(pageNum);
-        return Response.ok(trips.stream().map(TripDTO::new).collect(Collectors.toList())).build();
+    public Response getAllTrips() {
+        List<Trip> trips = tripService.getAllTrips();
+        List<List<TripDTO>> tripPages = ListChopper.chopped(trips, TRIPS_PER_PAGE);
+        return Response.ok(tripPages).build();
     }
 
     @PUT

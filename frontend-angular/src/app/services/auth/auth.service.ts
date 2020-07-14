@@ -12,6 +12,7 @@ export class AuthService {
 
     private baseURL = 'http://localhost:8080/api';
     private usersBaseURL = `${this.baseURL}/users`;
+    private loggedUser: User;
 
     constructor(private http: HttpClient) { }
 
@@ -39,7 +40,13 @@ export class AuthService {
         return this.http.post(url, userAuth);
     }
 
+    setLoggedUser(u: User) {
+        this.loggedUser = u;
+    }
+
     logout() {
         localStorage.removeItem('token');
+        this.loggedUser = null;
     }
+
 }
