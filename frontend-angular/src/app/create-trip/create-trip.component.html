@@ -4,27 +4,41 @@
     <div class="container box">
         <div class="row">
             <div class="col-12">
-                <h5 class="text-white">Create trip</h5>
+                <h1 style="margin-top: 30px;margin-bottom: 10px;">Create trip</h1>
                 <form method="post">
 
-                    <input class="form-control"type="text" name="trip_name" placeholder="Name">
-                    <textarea class="form-control" type="text" name="trip_desc" placeholder="Description"></textarea>
-                    <input class="form-control" type="hidden" placeholder="dd/mm/yyyy" name="startDate" id="startDate"/>
-                    <input class="form-control" type="hidden" placeholder="dd/mm/yyyy" name="endDate" id="endDate" />
-                    <div class="form-group">
-                        <label for="datefilter" class="text-white">Start date</label>
-                        <input type="text" id="datefilter" name="datefilter" value="" class="form-control" autocomplete="false"/>
-                    </div>
-                    <input  class="form-control" id="pac-input" type="text" placeholder="Enter location..."/>
-                    
-                    <google-map></google-map>
+                    <input class="form-control"type="text" name="trip_name" placeholder="Name" style="margin-bottom: 10px;">
+                    <textarea class="form-control" type="text" name="trip_desc" placeholder="Enter a description for your trip..." style="margin-bottom: 10px;"></textarea>
 
-                    <div id="infowindow-content">
-                        <img src="" width="16" height="16" id="place-icon">
-                        <span id="place-name" class="title"></span><br>
-                        <span id="place-address"></span>
+                    <div class="form-row">
+                        <div class="form-group col-5">
+                            <label>Starting date</label>
+                            <input class="form-control" type="date"  name="startDate" id="startDate"/>
+                        </div>
+                        <div class="form-group col-5">
+                            <label>Finish date</label>
+                            <input class="form-control" type="date" placeholder="dd-MM/yyyy" name="endDate" id="endDate" />
+                        </div>
                     </div>
-                    <div class="text-center flex-fill">
+
+                    <input class="form-control" id="pac-input" type="text" placeholder="Enter location..."/>
+
+                    <google-map>
+
+                        <map-marker>
+                        </map-marker>
+                    </google-map>
+
+                    <br>
+                    <p>Make private</p>
+                    <div class="container">
+                        <label class="switch" for="checkbox">
+                            <input type="checkbox" id="checkbox" />
+                            <div class="slider round"></div>
+                        </label>
+                    </div>
+
+                    <div class="text-center flex-fill" style="margin-bottom: 20px;">
                         <button type="submit" class="btn-success btn btn-lg">
                             Create
                         </button>
