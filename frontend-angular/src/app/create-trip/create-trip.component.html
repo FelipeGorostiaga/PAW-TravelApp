@@ -26,9 +26,8 @@
                         type="text"
                         autocomplete="off"
                         autocapitalize="off"/>
-                    <br>
-                    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" [scrollwheel]="false" >
-
+                    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 600px;width: 1110px;">
+                        <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
                     </agm-map>
                     <p>Make private</p>
                     <div class="container">

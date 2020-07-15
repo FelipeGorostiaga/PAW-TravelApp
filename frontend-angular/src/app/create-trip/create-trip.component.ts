@@ -22,19 +22,22 @@ export class CreateTripComponent implements OnInit {
   width: number;
   zoom: number;
 
+  submittedPlace: boolean;
   latitude: number;
   longitude: number;
   latlongs: any = [];
-  latlong: any = {};
   searchControl: FormControl;
 
 
   constructor(private mapsAPILoader: MapsAPILoader, private  ngZone: NgZone) { }
 
   ngOnInit() {
+    this.submittedPlace = false;
     this.zoom = 14;
     this.width = 1110;
     this.height = 400;
+    this.searchControl = new FormControl();
+    this.setCurrentPosition();
 
     this.mapsAPILoader.load().then(
         () => {
@@ -53,6 +56,9 @@ export class CreateTripComponent implements OnInit {
                 latitude: place.geometry.location.lat(),
                 longitude: place.geometry.location.lng()
               };
+              this.submittedPlace = true;
+              this.latitude = place.geometry.location.lat();
+              this.longitude = place.geometry.location.lng();
               this.latlongs.push(latlong);
             });
           });
@@ -65,10 +71,10 @@ export class CreateTripComponent implements OnInit {
         this.latitude = position.coords.latitude;
         this.longitude = position.coords.longitude;
       });
+    } else {
+      this.latitude = -34.603722;
+      this.longitude = -58.381592;
     }
   }
-
-
-
 
 }
