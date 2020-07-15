@@ -22,7 +22,7 @@ import {TokenInterceptor} from './services/auth/token-interceptor';
 import { TripCardComponent } from './home/trip-card/trip-card.component';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { CreateTripComponent } from './create-trip/create-trip.component';
-import {GoogleMapsModule} from "@angular/google-maps";
+import {AgmCoreModule} from "@agm/core";
 
 @NgModule({
   declarations: [
@@ -49,7 +49,12 @@ import {GoogleMapsModule} from "@angular/google-maps";
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    GoogleMapsModule
+    AgmCoreModule.forRoot(
+        {
+          apiKey: 'AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M',
+          libraries: ["places"]
+        }
+    )
   ],
   providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent]
