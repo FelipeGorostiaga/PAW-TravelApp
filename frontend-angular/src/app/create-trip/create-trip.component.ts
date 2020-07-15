@@ -22,16 +22,20 @@ export class CreateTripComponent implements OnInit {
   width: number;
   zoom: number;
 
+
   submittedPlace: boolean;
   latitude: number;
   longitude: number;
   latlongs: any = [];
   searchControl: FormControl;
 
+  tripStatus: string;
+
 
   constructor(private mapsAPILoader: MapsAPILoader, private  ngZone: NgZone) { }
 
   ngOnInit() {
+    this.tripStatus = "Public";
     this.submittedPlace = false;
     this.zoom = 14;
     this.width = 1110;
@@ -77,4 +81,11 @@ export class CreateTripComponent implements OnInit {
     }
   }
 
+  changeTripStatus() {
+    if (this.tripStatus === "Private") {
+      this.tripStatus = "Public";
+    } else {
+      this.tripStatus = "Private";
+    }
+  }
 }

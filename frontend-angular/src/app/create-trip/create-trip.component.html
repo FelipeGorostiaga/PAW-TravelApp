@@ -4,16 +4,16 @@
     <div class="container box">
         <div class="row">
             <div class="col-12">
-                <h1 style="margin-top: 30px;margin-bottom: 10px;">Create trip</h1>
+                <h1 style="margin-top: 30px;margin-bottom: 20px;">Create trip</h1>
                 <form method="post">
                     <input class="form-control"type="text" name="trip_name" placeholder="Name" style="margin-bottom: 10px;">
                     <textarea class="form-control" type="text" name="trip_desc" placeholder="Enter a description for your trip..." style="margin-bottom: 10px;"></textarea>
                     <div class="form-row">
-                        <div class="form-group col-5">
+                        <div class="form-group col">
                             <label>Starting date</label>
                             <input class="form-control" type="date"  name="startDate" id="startDate"/>
                         </div>
-                        <div class="form-group col-5">
+                        <div class="form-group col">
                             <label>Finish date</label>
                             <input class="form-control" type="date" placeholder="dd-MM-yyyy" name="endDate" id="endDate" />
                         </div>
@@ -26,16 +26,23 @@
                         type="text"
                         autocomplete="off"
                         autocapitalize="off"/>
-                    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 600px;width: 1110px;">
+                    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 500px;width: 1110px;">
                         <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
                     </agm-map>
-                    <p>Make private</p>
-                    <div class="container">
-                        <label class="switch" for="checkbox">
-                            <input type="checkbox" id="checkbox" />
-                            <div class="slider round"></div>
-                        </label>
+
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-sm-2">
+                            <h4>{{tripStatus}}</h4>
+                        </div>
+                        <div class="col">
+                            <label class="switch" for="checkbox">
+                                <input type="checkbox" id="checkbox" (click)="changeTripStatus()"/>
+                                <div class="slider round"></div>
+                            </label>
+                        </div>
                     </div>
+
+
                     <div class="text-center flex-fill" style="margin-bottom: 20px;">
                         <button type="submit" class="btn-success btn btn-lg">
                             Create
