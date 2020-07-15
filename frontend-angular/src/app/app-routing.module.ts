@@ -6,6 +6,7 @@ import {HomeComponent} from './home/home.component';
 import {TripComponent} from './trip/trip.component';
 import {AuthGuard} from './services/auth/auth.guard';
 import {AboutComponent} from "./about/about.component";
+import {CreateTripComponent} from "./create-trip/create-trip.component";
 
 
 const routes: Routes = [
@@ -34,6 +35,10 @@ const routes: Routes = [
   {
     path: 'about',
     component: AboutComponent
+  },
+  {
+    path: 'create-trip',
+    component: CreateTripComponent
   }
 ];
 
