@@ -53,16 +53,15 @@ export class RegisterComponent implements OnInit {
             res => {
                     console.log(res);
                     this.authService.login(new UserAuth(formData.email, formData.password)).subscribe(
-                        // tslint:disable-next-line:no-shadowed-variable
-                        res => {
-                            this.authService.setJwtToken(res);
+                        data => {
+                            this.authService.setJwtToken(data);
                         },
                         error => {
                             alert("Error redirecting to login");
                         }
                     );
                     this.authService.setLoggedUser(res);
-                    this.router.navigate(["/home"])
+                    this.router.navigate(["/home"]);
             },
             err => {
                 alert("Error registering user");

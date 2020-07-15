@@ -23,11 +23,11 @@ public class TripCreateForm {
     private String description;
 
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
     private String startDate;
 
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
     private String endDate;
 
     @NotNull
