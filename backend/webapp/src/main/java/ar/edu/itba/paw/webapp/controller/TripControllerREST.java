@@ -126,7 +126,7 @@ public class TripControllerREST {
                     .entity(new ErrorDTO("Server couldn´t get image bytes"))
                     .build();
         }
-        if(constraintViolationsDTO.getErrors().length > 0) {
+        if(constraintViolationsDTO.getErrors().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(constraintViolationsDTO).build();
         }
         if(tripPicturesService.findByTripId(tripId).isPresent()) {
@@ -144,7 +144,6 @@ public class TripControllerREST {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
         User loggedUser = securityUserService.getLoggedUser();
-
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
         ConstraintViolationsDTO violationsDTO = new ConstraintViolationsDTO(violations);
         List<Place> places = null;
@@ -155,7 +154,7 @@ public class TripControllerREST {
             LOGGER.debug("Invalid google maps query location");
             violationsDTO.add(new ConstraintViolationDTO("Invalid google maps location", "mapInput"));
         }
-        if(violationsDTO.getErrors().length > 0) {
+        if(violationsDTO.getErrors().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(violationsDTO).build();
         }
         ar.edu.itba.paw.model.Place customPlace = createGooglePlaceReference(places);
@@ -348,7 +347,7 @@ public class TripControllerREST {
             catch(GooglePlacesException gpe) {
                 violationsDTO.add(new ConstraintViolationDTO("Invalid maps location", "mapInput"));
             }
-            if(violationsDTO.getErrors().length > 0) {
+            if(violationsDTO.getErrors().size() > 0) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(violationsDTO).build();
             }
             ar.edu.itba.paw.model.Place customPlace = createGooglePlaceReference(googlePlaces);

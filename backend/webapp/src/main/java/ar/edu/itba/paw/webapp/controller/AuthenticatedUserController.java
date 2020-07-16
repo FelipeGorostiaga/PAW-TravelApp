@@ -66,7 +66,7 @@ public class AuthenticatedUserController {
                     .entity(new ErrorDTO("Server couldn´t get image bytes"))
                     .build();
         }
-        if(constraintViolationsDTO.getErrors().length > 0) {
+        if(constraintViolationsDTO.getErrors().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(constraintViolationsDTO).build();
         }
         if(userPicturesService.findByUserId(loggedUser.getId()).isPresent()) {

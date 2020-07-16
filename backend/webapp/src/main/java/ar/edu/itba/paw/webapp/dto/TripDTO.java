@@ -16,10 +16,6 @@ public class TripDTO {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private ImageDTO tripPicture;
-    private List<TripCommentDTO> comments;
-    private List<ActivityDTO> activities;
-    private List<UserDTO> users;
 
     public TripDTO() {
         // Empty constructor needed by JAX-RS
@@ -29,14 +25,10 @@ public class TripDTO {
         this.id = trip.getId();
         this.name = trip.getName();
         this.description = trip.getDescription();
-        this.tripPicture = new ImageDTO(trip.getProfilePicture());
         this.startDate = trip.getStartDate();
         this.endDate = trip.getEndDate();
         this.adminId = trip.getAdminId();
         this.startPlaceId = trip.getStartPlaceId();
-        this.users = trip.getUsers().stream().map(UserDTO::new).collect(Collectors.toList());
-        this.activities = trip.getActivities().stream().map(ActivityDTO::new).collect(Collectors.toList());
-        this.comments = trip.getComments().stream().map(TripCommentDTO::new).collect(Collectors.toList());
         this.isPrivate = trip.isPrivate();
     }
 
@@ -72,22 +64,6 @@ public class TripDTO {
         this.startPlaceId = startPlaceId;
     }
 
-    public List<ActivityDTO> getActivities() {
-        return activities;
-    }
-
-    public void setActivities(List<ActivityDTO> activities) {
-        this.activities = activities;
-    }
-
-    public List<UserDTO> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserDTO> users) {
-        this.users = users;
-    }
-
     public String getName() {
         return name;
     }
@@ -120,19 +96,4 @@ public class TripDTO {
         this.endDate = endDate;
     }
 
-    public List<TripCommentDTO> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<TripCommentDTO> comments) {
-        this.comments = comments;
-    }
-
-    public ImageDTO getTripPicture() {
-        return tripPicture;
-    }
-
-    public void setTripPicture(ImageDTO tripPicture) {
-        this.tripPicture = tripPicture;
-    }
 }

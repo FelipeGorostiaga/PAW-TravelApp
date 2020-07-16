@@ -1,14 +1,11 @@
 package ar.edu.itba.paw.webapp.dto.constraint;
 
 import javax.validation.ConstraintViolation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ConstraintViolationsDTO {
 
-    private ConstraintViolationDTO[] errors;
+    private final List<ConstraintViolationDTO> errors = new LinkedList<>();
 
     public ConstraintViolationsDTO() {
         // Empty constructor needed by JAX-RS
@@ -21,26 +18,20 @@ public class ConstraintViolationsDTO {
     }
 
     public <T> void add(Set<ConstraintViolation<T>> violations) {
-        List<ConstraintViolationDTO> errorsList = new ArrayList<>(violations.size());
-        this.errors =  new ConstraintViolationDTO[violations.size()];
-        for(ConstraintViolation<T> violation : violations) {
-            errorsList.add(new ConstraintViolationDTO(violation.getMessage(), violation.getPropertyPath().toString()));
+        if(violations != null) {
+            for(ConstraintViolation<T> violation : violations) {
+                errors.add(new ConstraintViolationDTO(violation.getMessage(), violation.getPropertyPath().toString()));
+            }
         }
-        errorsList.toArray(errors);
     }
 
     public <T> void add(ConstraintViolationDTO violationDTO) {
-        List<ConstraintViolationDTO> list = Arrays.asList(errors);
-        list.add(violationDTO);
-        list.toArray(errors);
+        errors.add(violationDTO);
     }
 
-    public ConstraintViolationDTO[] getErrors() {
+    public List<ConstraintViolationDTO> getErrors() {
         return errors;
     }
 
-    public void setErrors(ConstraintViolationDTO[] errors) {
-        this.errors = errors;
-    }
 
 }
