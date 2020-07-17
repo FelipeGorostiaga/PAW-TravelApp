@@ -24,6 +24,7 @@ import { PaginatorComponent } from './paginator/paginator.component';
 import { CreateTripComponent } from './create-trip/create-trip.component';
 import {AgmCoreModule} from "@agm/core";
 import { MapActivityComponent } from './trip/activities/map-activity/map-activity.component';
+import { IndexComponent } from './index/index.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { MapActivityComponent } from './trip/activities/map-activity/map-activit
     PaginatorComponent,
     CreateTripComponent,
     MapActivityComponent,
+    IndexComponent,
   ],
   imports: [
     BrowserModule,

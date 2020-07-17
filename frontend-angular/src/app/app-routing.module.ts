@@ -7,6 +7,7 @@ import {TripComponent} from './trip/trip.component';
 import {AuthGuard} from './services/auth/auth.guard';
 import {AboutComponent} from "./about/about.component";
 import {CreateTripComponent} from "./create-trip/create-trip.component";
+import {IndexComponent} from "./index/index.component";
 
 
 const routes: Routes = [
@@ -39,6 +40,10 @@ const routes: Routes = [
   {
     path: 'create-trip',
     component: CreateTripComponent
+  },
+  {
+    path: 'index',
+    component: IndexComponent
   }
 ];
 
