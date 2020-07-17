@@ -3,7 +3,7 @@ import {MapsAPILoader} from "@agm/core";
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 // @ts-ignore
 import {} from 'googlemaps';
-import {Router} from "@angular/router";
+import {NavigationExtras, Router} from "@angular/router";
 import {ApiUserService} from "../services/api-user.service";
 import {TripForm} from "../model/forms/trip-form";
 
@@ -30,6 +30,10 @@ export class CreateTripComponent implements OnInit {
 
   tripForm: FormGroup;
   submitted = false;
+
+  // todo: add errors from backend
+  constraintViolations: any;
+  receivedErrors: boolean;
 
   constructor(private mapsAPILoader: MapsAPILoader, private  ngZone: NgZone, private router: Router,
               private apiService: ApiUserService, private formBuilder: FormBuilder) { }
@@ -112,10 +116,12 @@ export class CreateTripComponent implements OnInit {
         res => {
           console.log("Trip created successfully");
           console.log(res);
-          alert('SUCCESS!!\n\n' + JSON.stringify(this.tripForm.value, null, 4));
+          const tripUrl = "/trips/" + res.id;
+          this.router.navigate([tripUrl]);
         },
         err => {
-          alert('SUCCESS!!\n\n' + JSON.stringify(this.tripForm.value, null, 4));
+          this.constraintViolations = err;
+          this.receivedErrors = true;
           console.log("Error creating trip");
         }
     );

@@ -1,0 +1,23 @@
+<div class="container">
+    <button type="button"
+            class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{activity.name}}</h5>
+        </div>
+        <small>{{activity.category}}</small>
+        <br>
+        <small>{{activity.startDate}} - {{activity.endDate}}</small>
+        <p class="mb-1"><i class="fas fa-map-marker-alt"></i>{{activity.place.address}}</p>
+    </button>
+
+    <form *ngIf="loggedUser.id == admin.id" method="post">
+        <button type="submit" class="btn float-right">
+            <i class="fas fa-trash-alt "></i>
+        </button>
+    </form>
+</div>
+<!-- TODO: add marker in activity lat and long -->
+<agm-map [zoom]="zoom">
+    <agm-marker [longitude]="activity.place.longitude" [latitude]="activity.place.latitude"></agm-marker>
+</agm-map>
+

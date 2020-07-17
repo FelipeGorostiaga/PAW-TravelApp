@@ -1,1 +1,20 @@
-<p>trip works!</p>
+<section id="tabs" class="project-tab">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <nav>
+                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Information</a>
+                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Activities</a>
+                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Chat</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <app-information [trip]="trip" [users]="users" [admin]="admin" [loggedUser]="loggedUser"></app-information>
+                    <app-activities [activities]="activities" [users]="users" [loggedUser]="loggedUser" [admin]="admin"></app-activities>
+                    <app-chat [users]="users" [comments]="comments" [loggedUser]="loggedUser" [admin]="admin"></app-chat>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

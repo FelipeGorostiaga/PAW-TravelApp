@@ -23,6 +23,7 @@ import { TripCardComponent } from './home/trip-card/trip-card.component';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { CreateTripComponent } from './create-trip/create-trip.component';
 import {AgmCoreModule} from "@agm/core";
+import { MapActivityComponent } from './trip/activities/map-activity/map-activity.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import {AgmCoreModule} from "@agm/core";
     HomeComponent,
     TripCardComponent,
     PaginatorComponent,
-    CreateTripComponent
+    CreateTripComponent,
+    MapActivityComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,7 +58,11 @@ import {AgmCoreModule} from "@agm/core";
         }
     )
   ],
-  providers: [AuthService, AuthGuard],
+  providers: [AuthService, AuthGuard, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

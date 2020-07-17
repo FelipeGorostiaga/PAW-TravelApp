@@ -49,4 +49,7 @@ export class AuthService {
         this.loggedUser = null;
     }
 
+    getLoggedUser() {
+        return this.loggedUser;
+    }
 }

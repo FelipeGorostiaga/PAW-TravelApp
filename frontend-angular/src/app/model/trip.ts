@@ -1,9 +1,12 @@
-export class Trip {
+export interface Trip {
 
-    id: string;
+    id: number;
+    adminId: number;
+    startPlaceId: number;
     name: string;
     description: string;
     startDate: string;
     endDate: string;
+    isPrivate: boolean;
 
 }
