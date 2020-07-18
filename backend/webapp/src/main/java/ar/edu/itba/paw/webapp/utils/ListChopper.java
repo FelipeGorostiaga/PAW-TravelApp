@@ -1,21 +1,20 @@
 package ar.edu.itba.paw.webapp.utils;
 
 import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.webapp.dto.TripDTO;
+import ar.edu.itba.paw.webapp.dto.TripListDTO;
+import ar.edu.itba.paw.webapp.dto.TripListListDTO;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ListChopper {
 
-    public static List<List<TripDTO>> chopped(List<Trip> list, final int L) {
-        List<List<TripDTO>> parts = new ArrayList<>();
+    public static TripListListDTO chopped(List<Trip> list, final int L) {
+        TripListListDTO ret = new TripListListDTO();
         final int N = list.size();
         for (int i = 0; i < N; i += L) {
-            List<Trip> auxList = new ArrayList<>(list.subList(i, Math.min(N, i + L)));
-            parts.add(auxList.stream().map(TripDTO::new).collect(Collectors.toList()));
+            TripListDTO tripListDTO = new TripListDTO(list.subList(i, Math.min(N, i + L)));
+            ret.addList(tripListDTO);
         }
-        return parts;
+        return ret;
     }
 }

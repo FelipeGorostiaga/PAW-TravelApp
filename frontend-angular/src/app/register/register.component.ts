@@ -66,7 +66,6 @@ export class RegisterComponent implements OnInit {
             err => {
                 alert("Error registering user");
             });
-
     }
 
 

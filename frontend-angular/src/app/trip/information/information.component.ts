@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from "../../model/user";
 import {Trip} from "../../model/trip";
+import {Place} from "../../model/place";
 
 @Component({
   selector: 'app-information',
@@ -13,6 +14,7 @@ export class InformationComponent implements OnInit {
   @Input() users: User[];
   @Input() admin: any;
   @Input() loggedUser: User;
+  @Input() startPlace: Place;
 
   constructor() { }
 

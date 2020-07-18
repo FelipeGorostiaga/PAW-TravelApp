@@ -32,7 +32,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public Optional<Trip> findById(long id) {
-        return Optional.of(em.find(Trip.class, id));
+        return Optional.ofNullable(em.find(Trip.class, id));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> getAllTrips() {
-        final TypedQuery<Trip> query = em.createQuery("Select T From Trip", Trip.class);
+        final TypedQuery<Trip> query = em.createQuery("From Trip", Trip.class);
         return query.getResultList();
     }
 

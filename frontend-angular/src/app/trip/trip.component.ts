@@ -6,6 +6,7 @@ import {User} from "../model/user";
 import {AuthService} from "../services/auth/auth.service";
 import {Activity} from "../model/activity";
 import {Comment} from "../model/comment";
+import {Place} from "../model/place";
 
 @Component({
   selector: 'app-trip',
@@ -25,7 +26,7 @@ export class TripComponent implements OnInit {
     activities: Activity[];
     users: User[];
 
-    place: string;
+    startPlace: Place;
     admin: {
         firstName: "admin firstName",
         lastName: "admin lastName"
@@ -35,6 +36,11 @@ export class TripComponent implements OnInit {
                 private authService: AuthService) { }
 
     ngOnInit() {
+
+        this.apiService
+
+
+
           this.place = "MOCK PLACE";
           this.loggedUser = this.authService.getLoggedUser();
           this.hasImage = false;

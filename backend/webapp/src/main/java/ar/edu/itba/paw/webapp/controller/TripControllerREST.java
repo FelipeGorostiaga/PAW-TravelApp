@@ -28,7 +28,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -78,6 +77,15 @@ public class TripControllerREST {
     @Autowired
     Validator validator;
 
+    @GET
+    @Path("/{id}")
+    public Response getTrip(@PathParam("id") final long tripId) {
+        Optional<Trip> trip = tripService.findById(tripId);
+        if(trip.isPresent()) {
+            return Response.ok(new TripDTO(trip.get())).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
 
     @GET
     @Path("/{id}/users/amount")
@@ -87,7 +95,7 @@ public class TripControllerREST {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         Trip t = tripOptional.get();
-        return Response.ok(t.getUsers().size()).build();
+        return Response.ok(new IntegerDTO(t.getUsers().size())).build();
     }
 
     @GET
@@ -101,7 +109,7 @@ public class TripControllerREST {
     @Path("/all")
     public Response getAllTrips() {
         List<Trip> trips = tripService.getAllTrips();
-        List<List<TripDTO>> tripPages = ListChopper.chopped(trips, TRIPS_PER_PAGE);
+        TripListListDTO tripPages = ListChopper.chopped(trips, TRIPS_PER_PAGE);
         return Response.ok(tripPages).build();
     }
 
@@ -137,8 +145,6 @@ public class TripControllerREST {
         return Response.ok(new TripDTO(trip)).build();
     }
 
-
-
     @POST
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -165,16 +171,6 @@ public class TripControllerREST {
                 tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
                 DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());
         return Response.ok(new TripDTO(trip)).build();
-    }
-
-    @GET
-    @Path("/{id}")
-    public Response getTrip(@PathParam("id") final long tripId) {
-        Optional<Trip> trip = tripService.findById(tripId);
-        if(trip.isPresent()) {
-            return Response.ok(new TripDTO(trip.get())).build();
-        }
-        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @GET
@@ -252,8 +248,6 @@ public class TripControllerREST {
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
-
-
 
     @GET
     @Path("/{id}/image")
