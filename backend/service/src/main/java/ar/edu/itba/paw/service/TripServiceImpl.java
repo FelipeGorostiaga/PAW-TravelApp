@@ -31,7 +31,15 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) {
-        return td.create(userId, startPlaceId, name, description, startDate, endDate, isPrivate);
+        Trip t;
+        Optional<User> u = ud.findById(userId);
+        if(u.isPresent()) {
+            t = td.create(userId, startPlaceId, name, description, startDate, endDate, isPrivate);
+            t.getUsers().add(u.get());
+            t.getAdmins().add(u.get());
+            return t;
+        }
+        return null;
     }
 
     @Override
@@ -129,6 +137,7 @@ public class TripServiceImpl implements TripService {
             ad.deleteActivity(activityId);
         }
     }
+
     @Override
     public int countAllTrips() {
         return td.countAllTrips();
@@ -150,15 +159,20 @@ public class TripServiceImpl implements TripService {
     }
     @Override
     public List<TripComment> getTripComments(long tripId) {
-
         List<TripComment> comments = td.getTripComments(tripId);
         Collections.sort(comments);
         return comments;
     }
 
     @Override
-    public List<TripRate> getTripRates(long tripId) {
-        return td.getTripRates(tripId);
+    public List<User> getTripUsers(long tripId) {
+        return this.td.getTripUsers(tripId);
     }
+
+    @Override
+    public List<User> getTripAdmins(long tripId) {
+        return td.getTripAdmins(tripId);
+    }
+
 
 }

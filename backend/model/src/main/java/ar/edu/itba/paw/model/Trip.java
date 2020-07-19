@@ -2,8 +2,10 @@ package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "trips")
@@ -35,8 +37,21 @@ public class Trip implements Comparable<Trip>{
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<User> users = new LinkedList<>();
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "Trip_Users",
+            joinColumns = { @JoinColumn(name = "trip_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
+    private Set<User> users = new HashSet<>();
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "Trip_Admins",
+            joinColumns = { @JoinColumn(name = "trip_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
+    private Set<User> admins = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
     private List<Activity> activities = new LinkedList<>();
@@ -130,14 +145,6 @@ public class Trip implements Comparable<Trip>{
         this.endDate = endDate;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
     public List<Activity> getActivities() {
         return activities;
     }
@@ -165,5 +172,21 @@ public class Trip implements Comparable<Trip>{
     @Override
     public int compareTo(Trip o) {
         return (this.startDate.isBefore(o.startDate)) ? -1 : 1;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    public Set<User> getAdmins() {
+        return admins;
+    }
+
+    public void setAdmins(Set<User> admins) {
+        this.admins = admins;
     }
 }

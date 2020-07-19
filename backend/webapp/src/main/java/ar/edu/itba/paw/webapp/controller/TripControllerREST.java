@@ -78,13 +78,35 @@ public class TripControllerREST {
     Validator validator;
 
     @GET
+    @Path("/{id}/admins")
+    public Response getTripAdmins(@PathParam("id") final long tripId) {
+        Optional<Trip> trip = tripService.findById(tripId);
+        if(!trip.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        List<User> users = this.tripService.getTripAdmins(tripId);
+        return Response.ok(new UserListDTO(users)).build();
+    }
+
+    @GET
+    @Path("/{id}/users")
+    public Response getTripUsers(@PathParam("id") final long tripId) {
+        Optional<Trip> trip = tripService.findById(tripId);
+        if(!trip.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        List<User> users = this.tripService.getTripUsers(tripId);
+        return Response.ok(new UserListDTO(users)).build();
+    }
+
+    @GET
     @Path("/{id}")
     public Response getTrip(@PathParam("id") final long tripId) {
         Optional<Trip> trip = tripService.findById(tripId);
-        if(trip.isPresent()) {
-            return Response.ok(new TripDTO(trip.get())).build();
+        if(!trip.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.ok(new TripDTO(trip.get())).build();
     }
 
     @GET
@@ -170,7 +192,10 @@ public class TripControllerREST {
         Trip trip = tripService.create(loggedUser.getId(), customPlace.getId(), tripCreateForm.getName(),
                 tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
                 DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());
-        return Response.ok(new TripDTO(trip)).build();
+        if(trip != null) {
+            return Response.ok(new TripDTO(trip)).build();
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
     @GET
@@ -195,17 +220,6 @@ public class TripControllerREST {
                 return Response.ok().build();
             }
             return Response.status(Response.Status.FORBIDDEN).build();
-        }
-        return Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-    @GET
-    @Path("/{id}/rates")
-    public Response getTripRates(@PathParam("id") final long tripId) {
-        Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(tripOptional.isPresent()) {
-            List<TripRate> tripRates = tripService.getTripRates(tripId);
-            return Response.ok(tripRates.stream().map(RateDTO::new).collect(Collectors.toList())).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }

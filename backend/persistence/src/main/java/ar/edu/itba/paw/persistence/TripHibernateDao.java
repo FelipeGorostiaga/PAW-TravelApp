@@ -3,7 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
-import ar.edu.itba.paw.model.TripRate;
+import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -48,6 +48,20 @@ public class TripHibernateDao implements TripDao {
         final TypedQuery<Trip> query = em.createQuery("From Trip", Trip.class);
         query.setFirstResult((pageNum - 1) * MAX_ROWS);
         query.setMaxResults(MAX_ROWS);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<User> getTripUsers(long tripId) {
+        final TypedQuery<User> query = em.createQuery("SELECT u FROM User u JOIN u.trips t WHERE t.id = :tripId", User.class);
+        query.setParameter("tripId", tripId);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<User> getTripAdmins(long tripId) {
+        final TypedQuery<User> query = em.createQuery("SELECT u FROM User u JOIN u.adminTrips t WHERE  t.id = :tripId", User.class);
+        query.setParameter("tripId", tripId);
         return query.getResultList();
     }
 
@@ -176,13 +190,6 @@ public class TripHibernateDao implements TripDao {
     @Override
     public List<TripComment> getTripComments(long tripId) {
         final TypedQuery<TripComment> query = em.createQuery("From TripComment as tc where tc.trip.id = :tripId", TripComment.class);
-        query.setParameter("tripId", tripId);
-        return query.getResultList();
-    }
-
-    @Override
-    public List<TripRate> getTripRates(long tripId) {
-        final TypedQuery<TripRate> query = em.createQuery("From TripRate as tr where tr.trip.id = :tripId", TripRate.class);
         query.setParameter("tripId", tripId);
         return query.getResultList();
     }

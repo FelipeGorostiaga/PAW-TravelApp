@@ -7,6 +7,7 @@ import {AuthService} from "../services/auth/auth.service";
 import {Activity} from "../model/activity";
 import {Comment} from "../model/comment";
 import {Place} from "../model/place";
+import {ApiTripService} from "../services/api-trip.service";
 
 @Component({
   selector: 'app-trip',
@@ -32,39 +33,36 @@ export class TripComponent implements OnInit {
         lastName: "admin lastName"
     };
 
-    constructor(private router: Router, private apiService: ApiUserService, private route: ActivatedRoute,
+    constructor(private router: Router, private ts: ApiTripService, private route: ActivatedRoute,
                 private authService: AuthService) { }
 
     ngOnInit() {
 
-        this.apiService
-
-
-
-          this.place = "MOCK PLACE";
-          this.loggedUser = this.authService.getLoggedUser();
-          this.hasImage = false;
-          const tripId = Number(this.route.snapshot.paramMap.get("id"));
-          this.apiService.getTrip(tripId).subscribe(
+        const tripId = Number(this.route.snapshot.paramMap.get("id"));
+        this.loggedUser = this.authService.getLoggedUser();
+        this.hasImage = false;
+        this.ts.getTrip(tripId).subscribe(
             res => {
                 this.trip = res;
             },
             error => {
                 console.log("Error getting trip");
                 this.router.navigate(["/404"]);
-            }
-            );
-          this.apiService.getTripImage(tripId).subscribe(
-              res => {
-                  // TODO
-                  this.tripImage = res.image;
-              },
-              error => {
-                  console.log("Error, trip has no image or server error");
-              }
-          );
+            });
+        this.ts.getTripImage(tripId).subscribe(
+            res => {
+                // TODO
+                this.tripImage = res.image; },
+            error => {
+                console.log("Error, trip has no image or server error");
+            });
+        this.ts.getTripActivities(tripId);
+        this.ts.getTripComments(tripId);
 
+        // TODO
 
+        // this.ts.getTripAdmins();
+        // this.ts.getTripUsers();
     }
 
 }

@@ -30,8 +30,11 @@ public class User {
     @Column(length = 500)
     private String biography;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Trip> trips;
+    @ManyToMany(mappedBy = "users")
+    private Set<Trip> trips = new HashSet<>();
+
+    @ManyToMany(mappedBy = "admins")
+    private Set<Trip> adminTrips = new HashSet<>();
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     private UserPicture profilePicture;
@@ -39,8 +42,6 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripComment> comments;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TripComment> rates;
 
     @Column(length = 100, nullable = false)
     private String nationality;
@@ -116,14 +117,6 @@ public class User {
         this.nationality = nationality;
     }
 
-    public List<Trip> getTrips() {
-        return trips;
-    }
-
-    public void setTrips(List<Trip> trips) {
-        this.trips = trips;
-    }
-
     public UserPicture getProfilePicture() {
         return profilePicture;
     }
@@ -172,4 +165,19 @@ public class User {
         this.comments = comments;
     }
 
+    public Set<Trip> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(Set<Trip> trips) {
+        this.trips = trips;
+    }
+
+    public Set<Trip> getAdminTrips() {
+        return adminTrips;
+    }
+
+    public void setAdminTrips(Set<Trip> adminTrips) {
+        this.adminTrips = adminTrips;
+    }
 }
