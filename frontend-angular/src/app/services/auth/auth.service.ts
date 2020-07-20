@@ -12,6 +12,7 @@ export class AuthService {
 
     private baseURL = 'http://localhost:8080/api';
     private usersBaseURL = `${this.baseURL}/users`;
+    private authBaseURL = `${this.baseURL}/user`;
     private loggedUser: User;
 
     constructor(private http: HttpClient) { }
@@ -34,14 +35,13 @@ export class AuthService {
         return this.http.post<User>(url, userForm);
     }
 
-
     login(userAuth: UserAuth): Observable<any>  {
         const url = this.usersBaseURL + '/authenticate';
-        return this.http.post(url, userAuth);
+        return this.http.post<string>(url, userAuth);
     }
 
     setLoggedUser(u: User) {
-        this.loggedUser = u;
+        this.loggedUser = new User(u.id, u.firstname, u.lastname, u.email, u.birthday, u.biography, u.nationality);
     }
 
     logout() {
@@ -51,5 +51,10 @@ export class AuthService {
 
     getLoggedUser() {
         return this.loggedUser;
+    }
+
+    getUserFromServer(): Observable<User> {
+        // const url = this.authBaseURL + '/logged';
+        return this.http.get<User>('http://localhost:8080/api/user/logged');
     }
 }

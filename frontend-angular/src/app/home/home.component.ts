@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
   trips: Trip[][];
   currentPage: number;
 
-  constructor(private ts: ApiTripService, private router: Router) { }
+  constructor(private ts: ApiTripService) { }
 
   ngOnInit() {
       this.currentPage = 0;

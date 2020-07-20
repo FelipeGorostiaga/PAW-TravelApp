@@ -124,7 +124,7 @@ public class TripControllerREST {
     @Path("/all/{page}")
     public Response getAllTripsForPage(@PathParam("page") final int pageNum) {
         List<Trip> trips = tripService.getAllTripsPerPage(pageNum);
-        return Response.ok(trips.stream().map(TripDTO::new).collect(Collectors.toList())).build();
+        return Response.ok(new TripListDTO(trips)).build();
     }
 
     @GET

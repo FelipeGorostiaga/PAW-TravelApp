@@ -20,6 +20,8 @@ export class NavigationComponent implements OnInit {
   ngOnInit() {
     this.isLoggedIn = this.authService.isLoggedIn();
     if (this.isLoggedIn) {
+      console.log(this.authService.getJwtToken());
+      console.log(this.authService.getLoggedUser());
       this.loggedUser = this.authService.getLoggedUser();
       this.apiService.getUserPicture(this.loggedUser.id).subscribe(
           res => {
@@ -33,7 +35,7 @@ export class NavigationComponent implements OnInit {
   }
 
   search() {
-
+    // TODO
   }
 
   logout() {

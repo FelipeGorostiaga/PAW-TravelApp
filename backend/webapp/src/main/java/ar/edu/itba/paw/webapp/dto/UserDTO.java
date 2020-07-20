@@ -13,7 +13,7 @@ public class UserDTO {
     private String lastname;
     private String email;
     private LocalDate birthday;
-    private String biography;
+    private String biography = null;
     private String nationality;
 
     public UserDTO() {

@@ -16,20 +16,30 @@ export class LoginComponent implements OnInit {
   };
 
   rememberMe: boolean;
-  message: any;
+  message: string;
 
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
   }
 
-  login(event) {
-    event.preventDefault();
+  login() {
+    console.log("performing login");
+    console.log(this.user);
     this.authService.login(this.user).subscribe(
         res => {
           console.log(res);
-          /*this.authService.setJwtToken(res);*/
-          this.router.navigate(["/home"]);
+          this.authService.setJwtToken(res.jwt);
+          this.authService.getUserFromServer().subscribe(
+              data => {
+                  console.log(data);
+                  this.authService.setLoggedUser(data);
+                  this.router.navigate(["/home"]);
+              },
+              error => {
+                this.message = "Error from server, try again...";
+              }
+          );
         },
         err => {
           alert("Error in login");

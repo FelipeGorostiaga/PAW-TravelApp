@@ -30,9 +30,9 @@ export class ApiTripService {
     return this.http.get<Trip[]>(this.tripsBaseURL);
   }
 
-  getAllTrips(): Observable<Trip[][]> {
+  getAllTrips(): Observable<any> {
     const url = this.tripsBaseURL + '/all';
-    return this.http.get<Trip[][]>(this.tripsBaseURL);
+    return this.http.get(url);
   }
 
   editTrip(id: number, tripForm: TripForm): Observable<Trip> {

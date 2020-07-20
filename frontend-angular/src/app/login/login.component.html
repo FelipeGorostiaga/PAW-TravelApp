@@ -6,15 +6,13 @@
                 <h3>Sign In</h3>
             </div>
             <div class="card-body">
-                <form action="#" enctype="application/x-www-form-urlencoded">
+                <form>
                     <div *ngIf="message" class="alert alert-danger" role="alert">{{message}}</div>
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-user" style="margin-left: 4px;"></i></span>
                         </div>
-
                         <input type="text" class="form-control" [(ngModel)]="user.username" placeholder="email" name="username">
-
                     </div>
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
@@ -27,7 +25,7 @@
                     </div>
                     <br>
                     <div class="form-group">
-                        <input type="submit" value="Sign In" (click)="login($event)"  class="btn float-left login_btn">
+                        <input type="submit" value="Sign In" (click)="login()"  class="btn float-left login_btn">
                     </div>
                 </form>
             </div>

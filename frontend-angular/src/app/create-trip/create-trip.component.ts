@@ -6,6 +6,7 @@ import {} from 'googlemaps';
 import {NavigationExtras, Router} from "@angular/router";
 import {ApiUserService} from "../services/api-user.service";
 import {TripForm} from "../model/forms/trip-form";
+import {ApiTripService} from "../services/api-trip.service";
 
 
 
@@ -36,7 +37,7 @@ export class CreateTripComponent implements OnInit {
   receivedErrors: boolean;
 
   constructor(private mapsAPILoader: MapsAPILoader, private  ngZone: NgZone, private router: Router,
-              private apiService: ApiUserService, private formBuilder: FormBuilder) { }
+              private ts: ApiTripService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
 
@@ -112,11 +113,11 @@ export class CreateTripComponent implements OnInit {
       return;
     }
     const formData = new TripForm(values.name, values.description, values.startDate, values.endDate, values.placeInput, values.isPrivate);
-    this.apiService.createTrip(formData).subscribe(
+    this.ts.createTrip(formData).subscribe(
         res => {
           console.log("Trip created successfully");
           console.log(res);
-          const tripUrl = "/trips/" + res.id;
+          const tripUrl = "/trip/" + res.id;
           this.router.navigate([tripUrl]);
         },
         err => {

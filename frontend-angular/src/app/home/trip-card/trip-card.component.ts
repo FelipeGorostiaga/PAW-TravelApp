@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Trip} from "../../model/trip";
 import {ApiUserService} from "../../services/api-user.service";
+import {ApiTripService} from "../../services/api-trip.service";
 
 @Component({
   selector: 'app-trip-card',
@@ -15,7 +16,7 @@ export class TripCardComponent implements OnInit {
   isImageLoading: boolean;
 
 
-  constructor(private us: ApiUserService) { }
+  constructor(private ts: ApiTripService) { }
 
   ngOnInit() {
     this.getUserNumber();
@@ -23,7 +24,7 @@ export class TripCardComponent implements OnInit {
   }
 
   getUserNumber() {
-    this.us.getTripUsersAmount(this.trip.id).subscribe(
+    this.ts.getTripUsersAmount(this.trip.id).subscribe(
         res => {
           this.usersAmount = res;
         },
@@ -35,7 +36,7 @@ export class TripCardComponent implements OnInit {
 
   getTripImage() {
     this.isImageLoading = true;
-    this.us.getTripImage(this.trip.id).subscribe(
+    this.ts.getTripImage(this.trip.id).subscribe(
         res => {
           this.isImageLoading = false;
           this.createImageFromBlob(res.image);

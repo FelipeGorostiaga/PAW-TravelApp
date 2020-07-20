@@ -8,6 +8,7 @@ import {AuthGuard} from './services/auth/auth.guard';
 import {AboutComponent} from "./about/about.component";
 import {CreateTripComponent} from "./create-trip/create-trip.component";
 import {IndexComponent} from "./index/index.component";
+import {LoggedGuard} from "./services/auth/logged.guard";
 
 
 const routes: Routes = [
@@ -23,7 +24,8 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent
+    component: HomeComponent,
+    canLoad: [LoggedGuard]
   },
   {
     path: 'register',
@@ -31,7 +33,8 @@ const routes: Routes = [
   },
   {
     path: 'trip/:id',
-    component: TripComponent
+    component: TripComponent,
+    canLoad: [LoggedGuard]
   },
   {
     path: 'about',
@@ -39,7 +42,8 @@ const routes: Routes = [
   },
   {
     path: 'create-trip',
-    component: CreateTripComponent
+    component: CreateTripComponent,
+    canLoad: [LoggedGuard]
   },
   {
     path: 'index',

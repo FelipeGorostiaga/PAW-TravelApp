@@ -79,6 +79,7 @@ public class AuthenticatedUserController {
     }
 
     @GET
+    @Path("/logged")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLoggedInUser() {
         User loggedUser = securityUserService.getLoggedUser();

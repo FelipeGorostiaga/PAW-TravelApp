@@ -27,7 +27,7 @@ export class ApiUserService {
     }
 
     getUserPicture(id: number): Observable<ImageDTO> {
-        const url = this.usersBaseURL + id + '/picture';
+        const url = this.usersBaseURL + '/' + id + '/picture';
         return this.http.get<ImageDTO>(url);
     }
 
