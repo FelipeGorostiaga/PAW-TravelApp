@@ -10,8 +10,7 @@ import {User} from "../../model/user";
 export class ActivitiesComponent implements OnInit {
 
   @Input() activities: Activity[];
-  @Input() users: User[];
-  @Input() admin: any;
+  @Input() isAdmin: boolean;
   @Input() loggedUser: User;
 
   isEmpty: boolean;

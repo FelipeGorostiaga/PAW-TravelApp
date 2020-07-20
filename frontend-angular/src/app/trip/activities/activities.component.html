@@ -9,10 +9,10 @@
             <app-map-activity
                     *ngFor="let activity in activities"
                     [loggedUser]="loggedUser"
-                    [admin]="admin"
+                    [isAdmin]="isAdmin"
                     [activity]="activity">
             </app-map-activity>
         </div>
     </div>
-    <a *ngIf="loggedUser.id == admin.id" class="btn btn-primary text-white" href="" role="button">Add Activity</a>
+    <a *ngIf="isAdmin" class="btn btn-primary text-white" href="" role="button">Add Activity</a>
 </div>

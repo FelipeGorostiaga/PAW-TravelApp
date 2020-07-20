@@ -7,9 +7,7 @@ import java.util.List;
 
 public class UserListDTO {
 
-
     List<UserDTO> users;
-
 
     public UserListDTO() {
 
@@ -20,4 +18,11 @@ public class UserListDTO {
         userList.forEach(t -> this.users.add(new UserDTO(t)));
     }
 
+    public List<UserDTO> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserDTO> users) {
+        this.users = users;
+    }
 }

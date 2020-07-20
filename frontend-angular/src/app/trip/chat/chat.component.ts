@@ -10,11 +10,10 @@ import {Comment} from "../../model/comment";
 })
 export class ChatComponent implements OnInit {
 
-
-  @Input() users;
-  @Input() admin: any;
   @Input() loggedUser: User;
-  @Input() comments: Comment;
+  @Input() users: User[];
+  @Input() admins: User[];
+  @Input() comments: Comment[];
 
   constructor() { }
 

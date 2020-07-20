@@ -10,9 +10,9 @@
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
-                    <app-information [trip]="trip" [users]="users" [admin]="admin" [loggedUser]="loggedUser" [startPlace]="startPlace"></app-information>
-                    <app-activities [activities]="activities" [users]="users" [loggedUser]="loggedUser" [admin]="admin"></app-activities>
-                    <app-chat [users]="users" [comments]="comments" [loggedUser]="loggedUser" [admin]="admin"></app-chat>
+                    <app-information [trip]="trip" [users]="users" [admins]="admins" [loggedUser]="loggedUser" [startPlace]="startPlace"></app-information>
+                    <app-activities [activities]="activities" [loggedUser]="loggedUser" [isAdmin]="isAdmin"></app-activities>
+                    <app-chat [users]="users" [comments]="comments" [loggedUser]="loggedUser" [admins]="admins"></app-chat>
                 </div>
             </div>
         </div>

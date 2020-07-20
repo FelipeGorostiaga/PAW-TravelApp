@@ -41,7 +41,7 @@ export class AuthService {
     }
 
     setLoggedUser(u: User) {
-        this.loggedUser = new User(u.id, u.firstname, u.lastname, u.email, u.birthday, u.biography, u.nationality);
+        localStorage.setItem('loggedUser', JSON.stringify(u));
     }
 
     logout() {
@@ -49,12 +49,12 @@ export class AuthService {
         this.loggedUser = null;
     }
 
-    getLoggedUser() {
-        return this.loggedUser;
+    getLoggedUser(): User {
+        return JSON.parse(localStorage.getItem('loggedUser'));
     }
 
     getUserFromServer(): Observable<User> {
-        // const url = this.authBaseURL + '/logged';
+        const url = this.authBaseURL + '/logged';
         return this.http.get<User>('http://localhost:8080/api/user/logged');
     }
 }

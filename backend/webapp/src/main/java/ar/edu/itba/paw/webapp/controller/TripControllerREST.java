@@ -282,9 +282,9 @@ public class TripControllerREST {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if(tripOptional.isPresent()) {
             Trip t = tripOptional.get();
-            if(t.getUsers().contains(loggedUser) || t.getAdminId() == loggedUser.getId()) {
-                return Response.ok(tripService.getTripComments(tripId).stream().map(TripCommentDTO::new)
-                        .collect(Collectors.toList())).build();
+            if(t.getUsers().contains(loggedUser)) {
+                List<TripComment> comments = tripService.getTripComments(tripId);
+                return Response.ok(new TripCommentListDTO(comments)).build();
             }
             return Response.status(Response.Status.FORBIDDEN).build();
         }
@@ -318,7 +318,7 @@ public class TripControllerREST {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if(tripOptional.isPresent()) {
             List<Activity> activities = activityService.getTripActivities(tripId);
-            return Response.ok(activities.stream().map(ActivityDTO::new).collect(Collectors.toList())).build();
+            return Response.ok(new ActivityListDTO(activities)).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }

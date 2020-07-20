@@ -37,7 +37,7 @@ public class Trip implements Comparable<Trip>{
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
     @JoinTable(
             name = "Trip_Users",
             joinColumns = { @JoinColumn(name = "trip_id") },
@@ -45,7 +45,7 @@ public class Trip implements Comparable<Trip>{
     )
     private Set<User> users = new HashSet<>();
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
     @JoinTable(
             name = "Trip_Admins",
             joinColumns = { @JoinColumn(name = "trip_id") },

@@ -4,10 +4,11 @@ import {Trip} from "../model/trip";
 import {TripForm} from "../model/forms/trip-form";
 import {Place} from "../model/place";
 import {ImageDTO} from "../model/image-dto";
-import {TripComment} from "../model/trip-comment";
 import {Activity} from "../model/activity";
 import {ActivityForm} from "../model/forms/activity-form";
 import {HttpClient} from "@angular/common/http";
+import {User} from "../model/user";
+import {Comment} from "../model/comment";
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,7 @@ export class ApiTripService {
   }
 
   editTrip(id: number, tripForm: TripForm): Observable<Trip> {
-    const url = this.tripsBaseURL + id + '/edit';
+    const url = this.tripsBaseURL + '/' + id + '/edit';
     return this.http.put<Trip>(url, tripForm);
   }
 
@@ -46,58 +47,68 @@ export class ApiTripService {
   }
 
   getTrip(id: number): Observable<Trip> {
-    const url = this.tripsBaseURL + id;
+    const url = this.tripsBaseURL + '/' + id;
     return this.http.get<Trip>(url);
   }
 
   getTripPlaces(id: number): Observable<Place[]> {
-    const url = this.tripsBaseURL + id + '/places';
+    const url = this.tripsBaseURL + '/' + id + '/places';
     return this.http.get<Place[]>(url);
   }
 
   deleteTrip(id: number): Observable<any> {
-    const url = this.tripsBaseURL + id + '/delete';
+    const url = this.tripsBaseURL + '/' + id + '/delete';
     return this.http.delete(url);
   }
 
   // Todo: fix sending User instead of userId and fix API receive
   addUserToTrip(userId: number, tripId: number): Observable<any> {
-    const url = this.tripsBaseURL + tripId + '/add/' + userId;
+    const url = this.tripsBaseURL + '/' + tripId + '/add/' + userId;
     return this.http.put(url, {});
   }
 
   removeUserFromTrip(userId: number, tripId: number): Observable<any> {
-    const url = this.tripsBaseURL + tripId + '/remove/' + userId;
+    const url = this.tripsBaseURL + '/' + tripId + '/remove/' + userId;
     return this.http.put(url, {});
   }
 
   getTripImage(id: number): Observable<ImageDTO> {
-    const url = this.tripsBaseURL + id + '/image';
+    const url = this.tripsBaseURL + '/' + id + '/image';
     return this.http.get<ImageDTO>(url);
   }
 
-  getTripComments(id: number): Observable<TripComment>  {
-    const url = this.tripsBaseURL + id + '/comments';
-    return this.http.get<TripComment>(url);
+  getTripComments(id: number): Observable<Comment[]>  {
+    const url = this.tripsBaseURL + '/' + id + '/comments';
+    return this.http.get<Comment[]>(url);
   }
 
   // Todo: TripCommentForm? and fix SENDING USER ID in API
-  postComment(tripId: number, userId: number, comment: TripComment): Observable<TripComment> {
-    const url = this.tripsBaseURL + tripId + '/comments/add/' + userId;
-    return this.http.post<TripComment>(url, comment);
+  postComment(tripId: number, userId: number, comment: Comment): Observable<Comment> {
+    const url = this.tripsBaseURL + '/' + tripId + '/comments/add/' + userId;
+    return this.http.post<Comment>(url, comment);
   }
 
   getTripActivities(id: number): Observable<Activity[]> {
-    const url = this.tripsBaseURL + id + '/activities';
+    const url = this.tripsBaseURL + '/' + id + '/activities';
     return this.http.get<Activity[]>(url);
   }
 
   createTripActivity(id: number, activityForm: ActivityForm) {
-    const url = this.tripsBaseURL + id + '/activities/create';
+    const url = this.tripsBaseURL + '/' + id + '/activities/create';
   }
 
   deleteTripActivity(tripId: number, activityId: number): Observable<any> {
-    const url = this.tripsBaseURL + tripId + '/activities/delete/' + activityId;
+    const url = this.tripsBaseURL + '/' + tripId + '/activities/delete/' + activityId;
     return this.http.delete(url);
+  }
+
+  getTripAdmins(tripId: number): Observable<User[]> {
+    const url = this.tripsBaseURL + '/' + tripId + '/admins';
+    return this.http.get<User[]>(url);
+  }
+
+  getTripUsers(tripId: number): Observable<User[]> {
+    const url = this.tripsBaseURL + '/' + tripId + '/users';
+    return this.http.get<User[]>(url);
   }
 }

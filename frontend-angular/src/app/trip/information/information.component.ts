@@ -10,10 +10,10 @@ import {Place} from "../../model/place";
 })
 export class InformationComponent implements OnInit {
 
+  @Input() loggedUser: User;
   @Input() trip: Trip;
   @Input() users: User[];
-  @Input() admin: any;
-  @Input() loggedUser: User;
+  @Input() admins: User[];
   @Input() startPlace: Place;
 
   constructor() { }
