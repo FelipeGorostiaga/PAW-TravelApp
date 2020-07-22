@@ -18,19 +18,8 @@ export class NavigationComponent implements OnInit {
   constructor(private authService: AuthService, private apiService: ApiUserService, private router: Router) { }
 
   ngOnInit() {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    if (this.isLoggedIn) {
-      console.log(this.authService.getJwtToken());
-      console.log(this.authService.getLoggedUser());
+    if (this.authService.isLoggedIn()) {
       this.loggedUser = this.authService.getLoggedUser();
-      this.apiService.getUserPicture(this.loggedUser.id).subscribe(
-          res => {
-            this.userImage = res.image;
-          },
-          error => {
-            console.log("Error getting user image");
-          }
-      );
     }
   }
 
@@ -49,5 +38,10 @@ export class NavigationComponent implements OnInit {
       this.router.navigate([profileUrl]);
     }
     return;
+  }
+
+  myTrips() {
+
+    this.router.navigate(["/home"]);
   }
 }

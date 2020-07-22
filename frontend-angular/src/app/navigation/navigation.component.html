@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/index">
+    <a class="navbar-brand" routerLink="/index">
         <img src="../../assets/images/earth-globe.png" alt="M&T" height="42" width="42"/>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -7,20 +7,19 @@
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- TODO: TRY WITH SPAN HTML TAG-->
+        <!-- TODO: TRY WITH SPAN HTML TAG-->
 
-    <div class="collapse navbar-collapse" id="topheader">
-        <ul *ngIf="isLoggedIn" class="navbar-nav mr-auto">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul
+                *ngIf="isLoggedIn"
+                class="navbar-nav mr-auto">
+
             <li class="nav-item" id="home-item"><a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a></li>
             <li class="nav-item"></li>
-            <li class="nav-item" id="my-trips-item"><a class="nav-link" href="#">My trips</a></li>
-            <li class="nav-item" id="create-trip-item"><a class="nav-link" href="#">Create trip </a></li>
-            <li class="nav-item" id="about-item"><a class="nav-link" href="/about">About</a></li>
+            <li class="nav-item" id="my-trips-item"><a class="nav-link" (click)="myTrips()">My trips</a></li>
+            <li class="nav-item" id="create-trip-item"><a class="nav-link" routerLink="/create-trip">Create trip </a></li>
+            <li class="nav-item" id="about-item"><a class="nav-link" routerLink="/about">About</a></li>
         </ul>
-
-        <a *ngIf="isLoggedIn" class="nav-item" href="">
-            <img src="https://img.icons8.com/cotton/50/000000/detective.png" height="38" width="38" style="margin-right: 7px;">
-        </a>
         <form *ngIf="isLoggedIn" class="form-inline my-2 my-lg-0">
             <input
                     id="nameInput"
@@ -37,8 +36,8 @@
 
         <a      *ngIf="!isLoggedIn"
                 id="signinButton"
-                class="btn btn-success my-2 my-sm-0 form-inline"
-                href="/login"
+                class="btn btn-success my-2 my-sm-0"
+                routerLink="/login"
                 style="margin-left: 15px">Sign In
         </a>
         <a
