@@ -13,6 +13,11 @@ import {LoggedGuard} from "./services/auth/logged.guard";
 
 const routes: Routes = [
   {
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [LoggedGuard]
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: '/login'
@@ -21,11 +26,6 @@ const routes: Routes = [
     path: 'login',
     component: LoginComponent,
     canActivate: [AuthGuard]
-  },
-  {
-    path: 'home',
-    component: HomeComponent,
-    canLoad: [LoggedGuard]
   },
   {
     path: 'register',
@@ -48,7 +48,8 @@ const routes: Routes = [
   {
     path: 'index',
     component: IndexComponent
-  }
+  },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

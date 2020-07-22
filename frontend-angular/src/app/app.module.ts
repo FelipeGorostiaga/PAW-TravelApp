@@ -25,6 +25,7 @@ import { CreateTripComponent } from './create-trip/create-trip.component';
 import {AgmCoreModule} from "@agm/core";
 import { MapActivityComponent } from './trip/activities/map-activity/map-activity.component';
 import { IndexComponent } from './index/index.component';
+import {LoggedGuard} from "./services/auth/logged.guard";
 
 @NgModule({
   declarations: [
@@ -64,7 +65,7 @@ import { IndexComponent } from './index/index.component';
     provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptor,
     multi: true
-  }],
+  }, LoggedGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
