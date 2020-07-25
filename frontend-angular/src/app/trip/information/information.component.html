@@ -1,77 +1,44 @@
 <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 
-    <img class="img-container" *ngIf="hasImage" src="">
+    <img *ngIf="hasImage" class="img-container" src="">
 
     <div>
         <div class="d-flex justify-content-between">
-
-            <div *ngIf="trip.adminId == loggedUser.id" class="p-2">
-                <a href="${editTripURL}" class="btn btn-primary text-white align-middle" style="margin-top: 10px;">
+            <div *ngIf="isAdmin" class="p-2">
+                <a href="" class="btn btn-primary text-white align-middle" style="margin-top: 10px;">
                     <i class="fas fa-edit "></i>
                 </a>
             </div>
-
         </div>
         <div class="display-4 ">{{trip.name}}</div>
         <p class="text-justify" style="font-size: 150%;">{{trip.description}}}</p>
         <div id="rate-bar" class="card-text"style="font-size: 150%; margin-bottom: 15px;"></div>
-
-        <p class="card-text"><i class="far fa-calendar-alt"></i>  {{trip.startDate}} -
-            {{trip.endDate}}</p>
+        <p class="card-text"><i class="far fa-calendar-alt"></i>{{trip.startDate}} - {{trip.endDate}}</p>
     </div>
 
     <h3 class="margin-class">Starting place</h3>
-    <p>{{place}}</p>
-
-
-    <!--                        <ul class="list-group">
-                                <button type="button"
-                                        class="list-group-item list-group-item-action flex-column align-items-start"
-                                        onclick="initMapStartPlace(${startPlace.latitude},${startPlace.longitude})">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <c:out value="${startPlace.name}"/>
-                                </button>
-                                <div id="startPlaceMap" style="height: 400px;width: 97%;display: none;"></div>
-                            </ul>-->
+    <p>{{startPlace.name}}</p>
+    <agm-map [latitude]="startPlace.latitude" [longitude]="startPlace.longitude" [zoom]="14" style="height: 400px;width: 700px;">
+        <agm-marker [latitude]="startPlace.latitude" [longitude]="startPlace.longitude"></agm-marker>
+    </agm-map>
     <h3 class="margin-class">
         Members
     </h3>
     <div class="list-group">
-        <a class="list-group-item list-group-item-action flex-column align-items-start"
-           href="">
+        <a *ngFor="let admin of admins" class="list-group-item list-group-item-action flex-column align-items-start" href="">
             <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1"><i class="fas fa-user" style="margin-right: 5px;"></i>
-                    {{admin.firstName}} {{admin.lastName}}</h5>
+                <h5 class="mb-1"><i class="fa fa-user" style="margin-right: 5px;"></i>
+                    {{admin.firstname}} {{admin.lastname}}</h5>
                 <small>Administrator</small>
             </div>
         </a>
-
-
-
-
-        <c:forEach items="${users}" var="ur">
-            <a class="list-group-item list-group-item-action flex-column align-items-start"
-               href="">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><i class="fas fa-user" style="margin-right: 5px;"></i>
-                        <c:out value="${ur.firstname}"/> <c:out value="${ur.lastname}"/></h5>
-                </div>
-            </a>
-        </c:forEach>
+        <a *ngFor="let user of users" class="list-group-item list-group-item-action flex-column align-items-start" href="">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"><i class="fa fa-user" style="margin-right: 5px;"></i>
+                    {{user.firstname}} {{user.lastname}}</h5>
+            </div>
+        </a>
     </div>
-
-    <c:if test="${user.id != admin.id}">
-        <c:choose>
-            <c:when test="${!isTravelling}">
-                <form action="${joinTripURL}" method="post" style="margin-top: 20px;">
-                    <input type="submit" value="<spring:message code="trip.joinTripBtn"/>" class="btn btn-success btn-lg text-white" >
-                </form>
-            </c:when>
-            <c:otherwise>
-                <form action="${exitTripURL}" method="post" style="margin-top: 20px;">
-                    <input type="submit" value="<spring:message code="trip.exitTripBtn"/>" class="btn btn-danger btn-lg text-white" >
-                </form>
-            </c:otherwise>
-        </c:choose>
-    </c:if>
+    <button class="btn-primary btn" (click)="leaveTrip()">Leave trip</button>
+    <button class="btn-primary btn" (click)="joinTrip()">Join trip</button>
 </div>

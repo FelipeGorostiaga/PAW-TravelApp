@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+<div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
     <h3 class="margin-class ">Activities</h3>
 
     <div *ngIf="activities.length == 0">
@@ -8,11 +8,9 @@
         <div class="list-group" style="margin-bottom: 20px">
             <app-map-activity
                     *ngFor="let activity in activities"
-                    [loggedUser]="loggedUser"
-                    [isAdmin]="isAdmin"
                     [activity]="activity">
             </app-map-activity>
         </div>
     </div>
-    <a *ngIf="isAdmin" class="btn btn-primary text-white" href="" role="button">Add Activity</a>
+    <a *ngIf="isAdmin" class="btn btn-primary text-white" (click)="createActivity()" role="button">Add Activity</a>
 </div>

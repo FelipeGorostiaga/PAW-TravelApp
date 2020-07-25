@@ -25,10 +25,10 @@ export class ApiTripService {
     return this.http.get<number>(url);
   }
 
-  getAllTripsPerPage(pageNum: number): Observable<Trip[]> {
+  getAllTripsPerPage(pageNum: number): Observable<any> {
     const url = this.tripsBaseURL + '/all' + pageNum;
     // const params = new HttpParams().set('page', String(pageNum));
-    return this.http.get<Trip[]>(this.tripsBaseURL);
+    return this.http.get(this.tripsBaseURL);
   }
 
   getAllTrips(): Observable<any> {
@@ -51,9 +51,9 @@ export class ApiTripService {
     return this.http.get<Trip>(url);
   }
 
-  getTripPlaces(id: number): Observable<Place[]> {
+  getTripPlaces(id: number): Observable<any> {
     const url = this.tripsBaseURL + '/' + id + '/places';
-    return this.http.get<Place[]>(url);
+    return this.http.get(url);
   }
 
   deleteTrip(id: number): Observable<any> {
@@ -77,9 +77,9 @@ export class ApiTripService {
     return this.http.get<ImageDTO>(url);
   }
 
-  getTripComments(id: number): Observable<Comment[]>  {
+  getTripComments(id: number): Observable<any>  {
     const url = this.tripsBaseURL + '/' + id + '/comments';
-    return this.http.get<Comment[]>(url);
+    return this.http.get(url);
   }
 
   // Todo: TripCommentForm? and fix SENDING USER ID in API
@@ -88,9 +88,9 @@ export class ApiTripService {
     return this.http.post<Comment>(url, comment);
   }
 
-  getTripActivities(id: number): Observable<Activity[]> {
+  getTripActivities(id: number): Observable<any> {
     const url = this.tripsBaseURL + '/' + id + '/activities';
-    return this.http.get<Activity[]>(url);
+    return this.http.get(url);
   }
 
   createTripActivity(id: number, activityForm: ActivityForm) {
@@ -102,13 +102,13 @@ export class ApiTripService {
     return this.http.delete(url);
   }
 
-  getTripAdmins(tripId: number): Observable<User[]> {
+  getTripAdmins(tripId: number): Observable<any> {
     const url = this.tripsBaseURL + '/' + tripId + '/admins';
-    return this.http.get<User[]>(url);
+    return this.http.get(url);
   }
 
-  getTripUsers(tripId: number): Observable<User[]> {
+  getTripUsers(tripId: number): Observable<any> {
     const url = this.tripsBaseURL + '/' + tripId + '/users';
-    return this.http.get<User[]>(url);
+    return this.http.get(url);
   }
 }

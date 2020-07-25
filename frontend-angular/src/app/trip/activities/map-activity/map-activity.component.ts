@@ -10,8 +10,6 @@ import {User} from "../../../model/user";
 export class MapActivityComponent implements OnInit {
 
   @Input() activity: Activity;
-  @Input() admin: User;
-  @Input() loggedUser: User;
   zoom: number;
 
   constructor() { }

@@ -50,7 +50,7 @@ const routes: Routes = [
     path: 'index',
     component: IndexComponent
   },
-  { path: '**', redirectTo: '' }
+  { path:   '**', redirectTo: '' }
 ];
 
 @NgModule({

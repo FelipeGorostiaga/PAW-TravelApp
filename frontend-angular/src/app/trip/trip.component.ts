@@ -7,6 +7,7 @@ import {Activity} from "../model/activity";
 import {Comment} from "../model/comment";
 import {Place} from "../model/place";
 import {ApiTripService} from "../services/api-trip.service";
+import {ApiPlaceService} from "../services/api-place.service";
 
 @Component({
   selector: 'app-trip',
@@ -27,28 +28,37 @@ export class TripComponent implements OnInit, AfterContentInit {
     users: User[];
     admins: User[];
 
+    tripId: number;
     isAdmin: boolean;
 
     startPlace: Place;
 
     constructor(private router: Router, private ts: ApiTripService, private route: ActivatedRoute,
-                private authService: AuthService) { }
+                private authService: AuthService, private ps: ApiPlaceService) { }
 
     ngOnInit() {
         let serverError = false;
-        const tripId = Number(this.route.snapshot.paramMap.get("id"));
+        this.tripId = Number(this.route.snapshot.paramMap.get("id"));
         this.loggedUser = this.authService.getLoggedUser();
         this.hasImage = false;
-        this.ts.getTrip(tripId).subscribe(
+        this.ts.getTrip(this.tripId).subscribe(
             res => {
                 this.trip = res;
+                this.ps.getPlaceById(this.trip.startPlaceId).subscribe(
+                    data => {
+                        this.startPlace = data;
+                    },
+                    error => {
+                        console.log("ERROR GETTING STARTING PLACE FROM SERVER");
+                    }
+                );
                 console.log(res);
             },
             err => {
                 alert("Error getting trip from server...");
                 serverError = true;
             });
-        this.ts.getTripImage(tripId).subscribe(
+        this.ts.getTripImage(this.tripId).subscribe(
             res => {
                 // TODO
                 this.tripImage = res.image;
@@ -58,54 +68,59 @@ export class TripComponent implements OnInit, AfterContentInit {
                 console.log("Trip has no image!");
             });
 
-        this.ts.getTripActivities(tripId).subscribe(
+        this.ts.getTripActivities(this.tripId).subscribe(
             res => {
-                this.activities = res;
-                console.log(res);
+                this.activities = res.activities;
             },
             err => {
                 console.log("Error getting trip activities");
+                this.activities = [];
                 serverError = true;
             }
         );
 
-        this.ts.getTripComments(tripId).subscribe(
+        this.ts.getTripComments(this.tripId).subscribe(
             res => {
-                this.comments = res;
-                console.log(res);
+                this.comments = res.comments;
             },
             err => {
+                this.comments = [];
                 console.log("Error getting trip comments");
                 serverError = true;
             }
         );
 
-        this.ts.getTripAdmins(tripId).subscribe(
+        this.ts.getTripAdmins(this.tripId).subscribe(
             res => {
-                this.admins = res;
-                console.log(res);
+                this.admins = res.admins;
+                console.log(this.admins);
             },
             err => {
                 console.log("Error getting trip admins");
                 serverError = true;
             }
         );
-        this.ts.getTripUsers(tripId).subscribe(
+        this.ts.getTripUsers(this.tripId).subscribe(
             res => {
-                this.users = res;
-                console.log(res);
+                this.users = res.users;
+                console.log(this.users);
             },
             err => {
                 console.log("Error getting trip users");
                 serverError = true;
             }
         );
-
     }
 
     ngAfterContentInit() {
-        this.isAdmin = this.admins.includes(this.loggedUser);
+        if (this.admins) {
+            this.isAdmin = this.admins.includes(this.loggedUser);
+        } else {
+            this.isAdmin = false;
+        }
     }
 
-
+    switchTab() {
+        // todo
+    }
 }

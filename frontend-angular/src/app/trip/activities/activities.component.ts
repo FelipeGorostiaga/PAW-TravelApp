@@ -18,9 +18,12 @@ export class ActivitiesComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    if (this.activities.length === 0) {
+    if (!this.activities || this.activities.length === 0) {
       this.isEmpty = true;
     }
   }
 
+  createActivity() {
+
+  }
 }

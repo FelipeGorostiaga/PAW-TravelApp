@@ -14,7 +14,7 @@ export class ApiPlaceService {
   constructor(private http: HttpClient) { }
 
   getPlaceById(id: number): Observable<Place> {
-    const url = this.placesBaseURL + '/' + id + '/start-place';
+    const url = this.placesBaseURL + '/' + id;
     return this.http.get<Place>(url);
   }
 }

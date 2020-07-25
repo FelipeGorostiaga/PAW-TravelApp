@@ -78,11 +78,9 @@
                     <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
                         <div *ngIf="f.placeInput.errors.required">Field is required</div>
                     </div>
-
                     <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 500px;width: 1110px;">
                         <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
                     </agm-map>
-
                     <div class="row" style="margin-top: 15px;">
                         <div class="col-sm-2">
                             <h4>{{tripStatus}}</h4>
