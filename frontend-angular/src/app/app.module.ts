@@ -26,6 +26,8 @@ import {AgmCoreModule} from "@agm/core";
 import { MapActivityComponent } from './trip/activities/map-activity/map-activity.component';
 import { IndexComponent } from './index/index.component';
 import {LoggedGuard} from "./services/auth/logged.guard";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MaterialModule} from "./material/material.module";
 
 @NgModule({
   declarations: [
@@ -59,7 +61,9 @@ import {LoggedGuard} from "./services/auth/logged.guard";
           apiKey: 'AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M',
           libraries: ["places"]
         }
-    )
+    ),
+    MaterialModule,
+    BrowserAnimationsModule
   ],
   providers: [AuthService, AuthGuard, {
     provide: HTTP_INTERCEPTORS,
