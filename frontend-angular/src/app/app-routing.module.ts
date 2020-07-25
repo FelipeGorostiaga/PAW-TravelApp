@@ -13,6 +13,11 @@ import {LoggedGuard} from "./services/auth/logged.guard";
 
 const routes: Routes = [
   {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'home',
     component: HomeComponent,
     canActivate: [LoggedGuard]
@@ -21,11 +26,6 @@ const routes: Routes = [
     path: '',
     pathMatch: 'full',
     redirectTo: '/login'
-  },
-  {
-    path: 'login',
-    component: LoginComponent,
-    canActivate: [AuthGuard]
   },
   {
     path: 'register',
@@ -38,7 +38,8 @@ const routes: Routes = [
   },
   {
     path: 'about',
-    component: AboutComponent
+    component: AboutComponent,
+    canActivate: [LoggedGuard]
   },
   {
     path: 'create-trip',

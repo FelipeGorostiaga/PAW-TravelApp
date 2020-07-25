@@ -48,7 +48,6 @@ export class CreateTripComponent implements OnInit {
       endDate: ['', Validators.required],
       placeInput: ['', Validators.required],
       isPrivate: ['']
-    }, {
     });
 
     this.tripStatus = "Public";
@@ -112,7 +111,7 @@ export class CreateTripComponent implements OnInit {
     if (this.tripForm.invalid) {
       return;
     }
-    const formData = new TripForm(values.name, values.description, values.startDate, values.endDate, values.placeInput, values.isPrivate);
+    const formData = new TripForm(values.name, values.description, values.startDate, values.endDate, values.placeInput, !values.isPrivate);
     this.ts.createTrip(formData).subscribe(
         res => {
           console.log("Trip created successfully");
