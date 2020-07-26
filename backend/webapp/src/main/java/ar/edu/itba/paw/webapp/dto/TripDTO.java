@@ -3,8 +3,6 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.model.Trip;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class TripDTO {
 

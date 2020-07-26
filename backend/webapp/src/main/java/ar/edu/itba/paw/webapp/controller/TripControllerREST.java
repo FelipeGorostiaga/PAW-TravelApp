@@ -12,7 +12,6 @@ import ar.edu.itba.paw.webapp.form.EditTripForm;
 import ar.edu.itba.paw.webapp.form.TripCommentForm;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import ar.edu.itba.paw.webapp.utils.ImageValidator;
-import ar.edu.itba.paw.webapp.utils.ListChopper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,8 +130,8 @@ public class TripControllerREST {
     @Path("/all")
     public Response getAllTrips() {
         List<Trip> trips = tripService.getAllTrips();
-        //TripListListDTO tripPages = ListChopper.chopped(trips, TRIPS_PER_PAGE);
-        return Response.ok(new TripListDTO(trips)).build();
+        List<Trip> publicTrips = trips.stream().filter(trip -> !trip.isPrivate()).collect(Collectors.toList());
+        return Response.ok(new TripListDTO(publicTrips)).build();
     }
 
     @PUT

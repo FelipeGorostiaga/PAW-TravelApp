@@ -6,15 +6,12 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
-        <!-- TODO: TRY WITH SPAN HTML TAG-->
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul
                 *ngIf="isLoggedIn"
                 class="navbar-nav mr-auto">
 
-            <li class="nav-item" id="home-item"><a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a></li>
+            <li class="nav-item" id="home-item"><a class="nav-link" routerLink="/home">Home <span class="sr-only">(current)</span></a></li>
             <li class="nav-item"></li>
             <li class="nav-item" id="my-trips-item"><a class="nav-link" (click)="myTrips()">My trips</a></li>
             <li class="nav-item" id="create-trip-item"><a class="nav-link" routerLink="/create-trip">Create trip </a></li>
@@ -33,7 +30,6 @@
                     (click)="search()">Search
             </button>
         </form>
-
         <a      *ngIf="!isLoggedIn"
                 id="signinButton"
                 class="btn btn-success my-2 my-sm-0"
