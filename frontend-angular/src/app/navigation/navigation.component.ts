@@ -35,6 +35,8 @@ export class NavigationComponent implements OnInit {
 
   navigateToProfile() {
     if (this.isLoggedIn && this.loggedUser) {
+      // TODO
+      return;
       const profileUrl = "profile/" + this.loggedUser.id;
       this.router.navigate([profileUrl]);
     }

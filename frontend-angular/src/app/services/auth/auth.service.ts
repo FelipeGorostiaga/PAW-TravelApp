@@ -13,7 +13,6 @@ export class AuthService {
     private baseURL = 'http://localhost:8080/api';
     private usersBaseURL = `${this.baseURL}/users`;
     private authBaseURL = `${this.baseURL}/user`;
-    private loggedUser: User;
 
     constructor(private http: HttpClient) { }
 
@@ -46,7 +45,7 @@ export class AuthService {
 
     logout() {
         localStorage.removeItem('token');
-        this.loggedUser = null;
+        localStorage.removeItem('loggedUser');
     }
 
     getLoggedUser(): User {

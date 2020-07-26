@@ -43,13 +43,10 @@
         <a
                 *ngIf="isLoggedIn"
                 (click)="navigateToProfile()">
-            <img alt="" style="margin-left: 10px" src="" height="32" width="32"/>
+            <img alt="" style="margin-left: 10px" src="../../assets/icons/user-profile.png"/>
         </a>
-        <a
-                *ngIf="isLoggedIn"
-                style="margin-left: 10px"
-                class="btn btn-dark my-2 my-sm-0"
-                (click)="logout()">Logout
+        <a *ngIf="isLoggedIn" class="btn btn-dark my-2 my-sm-0" (click)="logout()">
+            <img src="../../assets/icons/logout.png" alt="logout"/>
         </a>
     </div>
 </nav>
