@@ -20,9 +20,9 @@ export class ApiTripService {
   private baseURL = 'http://localhost:8080/api';
   private tripsBaseURL = `${this.baseURL}/trips`;
 
-  getTripUsersAmount(id: number): Observable<number> {
+  getTripUsersAmount(id: number): Observable<any> {
     const url = this.tripsBaseURL + '/' + id + '/users/amount';
-    return this.http.get<number>(url);
+    return this.http.get(url);
   }
 
   getAllTripsPerPage(pageNum: number): Observable<any> {

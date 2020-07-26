@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {ApiUserService} from "../services/api-user.service";
-import {Router} from "@angular/router";
-import {Trip} from "../model/trip";
+import {Component, OnInit} from '@angular/core';
 import {ApiTripService} from "../services/api-trip.service";
+import {Trip} from "../model/trip";
 
 @Component({
   selector: 'app-home',
@@ -13,19 +11,30 @@ export class HomeComponent implements OnInit {
 
   trips: Trip[][];
   currentPage: number;
+  numberOfPages: number;
+  tripsPerPage = 6;
 
   constructor(private ts: ApiTripService) { }
 
   ngOnInit() {
-      this.currentPage = 0;
       this.ts.getAllTrips().subscribe(
         res => {
-            this.trips = res;
+            this.currentPage = 0;
+            this.trips = this.chopList(res.trips);
+            this.numberOfPages = Math.ceil(this.trips.length / this.tripsPerPage);
         },
         err => {
             console.log("ERROR: couldn't get trips from server");
         }
     );
+  }
+
+  chopList(arr: Trip[]) {
+      const newarr = new Array();
+      for (let i = 0; i < arr.length; i = i + this.tripsPerPage) {
+          newarr.push(arr.slice(i, i + this.tripsPerPage));
+      }
+      return newarr;
   }
 
   updatePage(newPage) {

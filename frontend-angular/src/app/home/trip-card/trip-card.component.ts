@@ -19,6 +19,7 @@ export class TripCardComponent implements OnInit {
   constructor(private ts: ApiTripService) { }
 
   ngOnInit() {
+    console.log("Recieved trip: " + JSON.stringify(this.trip));
     this.getUserNumber();
     this.getTripImage();
   }
@@ -26,7 +27,7 @@ export class TripCardComponent implements OnInit {
   getUserNumber() {
     this.ts.getTripUsersAmount(this.trip.id).subscribe(
         res => {
-          this.usersAmount = res;
+          this.usersAmount = res.value;
         },
         err => {
           this.usersAmount = 0;

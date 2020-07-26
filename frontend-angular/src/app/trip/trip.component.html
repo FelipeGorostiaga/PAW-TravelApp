@@ -5,15 +5,59 @@
             <div class="col-md-12">
                 <nav>
                     <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" (click)="switchTab()" role="tab" aria-controls="nav-home" aria-selected="true">Information</a>
-                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" (click)="switchTab()" role="tab" aria-controls="nav-profile" aria-selected="false">Activities</a>
-                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" (click)="switchTab()" role="tab" aria-controls="nav-contact" aria-selected="false">Chat</a>
+                        <a class="nav-item nav-link active"
+                           id="nav-info-tab"
+                           data-toggle="tab"
+                           (click)="switchTab(0)"
+                           role="tab"
+                           [ngClass]="{'active':selectedIndex == 0}"
+                           aria-controls="nav-home"
+                           aria-selected="true">Information</a>
+                        <a class="nav-item nav-link"
+                           id="nav-act-tab"
+                           data-toggle="tab"
+                           (click)="switchTab(1)"
+                           role="tab" aria-controls="nav-profile"
+                           [ngClass]="{
+                            'active':selectedIndex == 1}"
+                           aria-selected="false">Activities
+                        </a>
+                        <a class="nav-item nav-link"
+                           id="nav-chat-tab"
+                           data-toggle="tab"
+                           (click)="switchTab(2)"
+                           role="tab"
+                           [ngClass]="{'active':selectedIndex == 2}"
+                           aria-controls="nav-contact"
+                           aria-selected="false">Chat
+                        </a>
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
-                    <app-information [trip]="trip" [users]="users" [admins]="admins" [loggedUser]="loggedUser" [startPlace]="startPlace"></app-information>
-                    <app-activities [activities]="activities" [loggedUser]="loggedUser" [isAdmin]="isAdmin"></app-activities>
-                    <app-chat [users]="users" [comments]="comments" [loggedUser]="loggedUser" [admins]="admins"></app-chat>
+                    <div
+                            *ngIf="selectedIndex == 0"
+                            class="tab-pane fade"
+                            [ngClass]="{
+                            'show':selectedIndex == 0,
+                            'active':selectedIndex == 0}"
+                            id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <app-information [trip]="trip" [users]="users" [admins]="admins" [loggedUser]="loggedUser" [startPlace]="startPlace"></app-information>
+                    </div>
+                    <div *ngIf="selectedIndex == 1" class="tab-pane fade"
+                         [ngClass]="{
+                            'show':selectedIndex == 1,
+                            'active':selectedIndex == 1}"
+                         id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <app-activities [activities]="activities" [loggedUser]="loggedUser" [isAdmin]="isAdmin"></app-activities>
+                    </div>
+                    <div *ngIf="selectedIndex == 2"
+                         class="tab-pane fade"
+                         [ngClass]="{
+                            'show':selectedIndex == 2,
+                            'active':selectedIndex == 2}"
+                         id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                        <app-chat [users]="users" [comments]="comments" [loggedUser]="loggedUser" [admins]="admins"></app-chat>
+                    </div>
                 </div>
             </div>
         </div>

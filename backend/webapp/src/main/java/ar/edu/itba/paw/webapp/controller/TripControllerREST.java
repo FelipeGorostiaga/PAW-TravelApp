@@ -131,8 +131,8 @@ public class TripControllerREST {
     @Path("/all")
     public Response getAllTrips() {
         List<Trip> trips = tripService.getAllTrips();
-        TripListListDTO tripPages = ListChopper.chopped(trips, TRIPS_PER_PAGE);
-        return Response.ok(tripPages).build();
+        //TripListListDTO tripPages = ListChopper.chopped(trips, TRIPS_PER_PAGE);
+        return Response.ok(new TripListDTO(trips)).build();
     }
 
     @PUT
