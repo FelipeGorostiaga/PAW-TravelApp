@@ -51,7 +51,11 @@ export class TripComponent implements OnInit, AfterContentInit {
                         this.startPlace = data;
                     },
                     error => {
-                        console.log("ERROR GETTING STARTING PLACE FROM SERVER");
+                        console.log("error getting trip from server or not found");
+                       /* if (error.status === "404") {
+
+                        }*/
+                        this.router.navigate(['not-found']);
                     }
                 );
                 console.log(res);

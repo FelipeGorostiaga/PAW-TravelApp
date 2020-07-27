@@ -9,6 +9,7 @@ import {AboutComponent} from "./about/about.component";
 import {CreateTripComponent} from "./create-trip/create-trip.component";
 import {IndexComponent} from "./index/index.component";
 import {LoggedGuard} from "./services/auth/logged.guard";
+import {ProfileComponent} from "./profile/profile.component";
 
 
 const routes: Routes = [
@@ -34,6 +35,11 @@ const routes: Routes = [
   {
     path: 'trip/:id',
     component: TripComponent,
+    canLoad: [LoggedGuard]
+  },
+  {
+    path: 'profile/:id',
+    component: ProfileComponent,
     canLoad: [LoggedGuard]
   },
   {

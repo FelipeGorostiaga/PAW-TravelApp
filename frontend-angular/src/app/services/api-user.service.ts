@@ -16,13 +16,13 @@ export class ApiUserService {
     private baseURL = 'http://localhost:8080/api';
     private usersBaseURL = `${this.baseURL}/users`;
 
-    getUserById(id: number): Observable<User> {
-        const url = this.usersBaseURL + id;
-        return this.http.get<User>(url);
+    getUserById(id: number): Observable<any> {
+        const url = this.usersBaseURL + '/' + id;
+        return this.http.get(url);
     }
 
     getUserTrips(id: number, page: number): Observable<Trip[]> {
-        const url = this.usersBaseURL + id  + '/trips';
+        const url = this.usersBaseURL + '/' + id  + '/trips';
         return this.http.get<Trip[]>(url);
     }
 

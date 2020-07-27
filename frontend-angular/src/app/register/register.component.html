@@ -2,12 +2,9 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-
-
             <div class="card m-5">
                 <h5 class="card-header">Register</h5>
                 <div class="card-body">
-
                     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
                         <div class="form-row">
                             <div class="form-group col-6">
@@ -321,7 +318,7 @@
                         <div class="form-group form-check">
                             <input type="checkbox" formControlName="acceptTerms" id="acceptTerms" class="form-check-input" [ngClass]="{ 'is-invalid': submitted && f.acceptTerms.errors }" />
                             <label for="acceptTerms" class="form-check-label">Accept Terms & Conditions</label>
-                            <div *ngIf="submitted && f.acceptTerms.errors" class="invalid-feedback">Accept Ts & Cs is required</div>
+                            <div *ngIf="submitted && f.acceptTerms.errors" class="invalid-feedback">Accept Terms & Conditions is required</div>
                         </div>
                         <div class="text-center">
                             <button class="btn btn-primary mr-1">Register</button>
@@ -330,8 +327,6 @@
                     </form>
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>
