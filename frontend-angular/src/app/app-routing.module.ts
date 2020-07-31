@@ -10,6 +10,8 @@ import {CreateTripComponent} from "./create-trip/create-trip.component";
 import {IndexComponent} from "./index/index.component";
 import {LoggedGuard} from "./services/auth/logged.guard";
 import {ProfileComponent} from "./profile/profile.component";
+import {PageNotFoundComponent} from "./errors/page-not-found/page-not-found.component";
+import {CreateActivityComponent} from "./create-activity/create-activity.component";
 
 
 const routes: Routes = [
@@ -24,18 +26,17 @@ const routes: Routes = [
     canActivate: [LoggedGuard]
   },
   {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: '/login'
-  },
-  {
     path: 'register',
     component: RegisterComponent
   },
   {
     path: 'trip/:id',
     component: TripComponent,
-    canLoad: [LoggedGuard]
+    canLoad: [LoggedGuard],
+    children: [{
+        path: 'create-activity',
+        component: CreateActivityComponent
+      }]
   },
   {
     path: 'profile/:id',
@@ -53,10 +54,10 @@ const routes: Routes = [
     canLoad: [LoggedGuard]
   },
   {
-    path: 'index',
+    path: '',
     component: IndexComponent
   },
-  { path:   '**', redirectTo: '' }
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({

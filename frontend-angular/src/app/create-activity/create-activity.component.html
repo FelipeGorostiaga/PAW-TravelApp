@@ -1,0 +1,58 @@
+<div class="container-fluid" id="main-container">
+    <div class="container box" style="margin-top: 20px;">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <div class="display-4 text-white">Create Activity</div>
+                </div>
+
+                <!--todo: form group, labels and errors-->
+                <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
+                    <div class="form-group">Activity name
+                        <input formControlName="name" type="text" placeholder=""  class="form-control"/>
+                    </div>
+                    <div class="form-group">Category
+                        <select formControlName="category" name="category" class="form-control" style="margin-bottom: 10px;">
+                            <option disabled selected>Select category</option>
+                            <option value="Cultural">Cultural</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Social">Social</option>
+                            <option value="Romantic">Romantic</option>
+                            <option value="Adventure">Adventure</option>
+                            <option value="Family">Family time</option>
+                            <option value="Friends">Friends</option>
+                            <option value="Business">Business</option>
+                            <option value="Relaxation">Relax</option>
+                            <option value="Nightlife">Nightlife</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-white">Start date</label>
+                        <input formControlName="startDate" class="form-control" type="text" placeholder="dd/mm/yyyy" name="startDate"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label p class="text-white">Finish date</label>
+                        <input formControlName="endDate" class="form-control" type="text" placeholder="dd/mm/yyyy" name="endDate"/>
+                    </div>
+
+                    <label>Location</label>
+                    <input #search formControlName="placeInput" id="place" type="text" placeholder="" class="form-control"/>
+                    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 500px;width: 1110px;">
+                        <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
+                    </agm-map>
+          <!--          <div class="container" id="map"></div>
+                    <div id="infowindow-content">
+                        <img src="" width="16" height="16" id="place-icon">
+                        <span id="place-name" class="title"></span><br>
+                        <span id="place-address"></span>
+                    </div> -->
+                    <div class="text-center flex-fill">
+                        <button type="submit" class="btn btn-primary btn-lg">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

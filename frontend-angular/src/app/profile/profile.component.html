@@ -5,8 +5,8 @@
         <div class="col-12">
 
             <div class="card car mx-auto" style="width: 60rem;">
-                <img class="card-img-top" *ngIf="hasProfilePicture"  src="">
-                <img class="card-img-top" *ngIf="!hasProfilePicture"  src="">
+                <img class="card-img-top" *ngIf="hasProfilePicture"  src="" alt="">
+                <img class="card-img-top" *ngIf="!hasProfilePicture"  src="" alt="">
                 <div class="card-header">
                     <h5 class="card-title">{{user.firstname}} {{user.lastname}}<span class="float-right"><i class="fa fa-map-pin"></i>{{user.nationality}}</span> </h5>
                 </div>
@@ -15,9 +15,7 @@
                     <p class="card-text"><i class="fa fa-envelope"></i>{{user.email}}</p>
                     <p class="card-text"><i class="fa fa-birthday-cake"></i>{{user.birthday}}</p>
                     <div *ngIf="user.id == loggedUser.id" class="card-footer">
-                        <a href="" class="btn btn-primary text-white">
-                            Edit profile
-                        </a>
+                        <a href="" class="btn btn-primary text-white">Edit profile</a>
                     </div>
                 </div>
             </div>
