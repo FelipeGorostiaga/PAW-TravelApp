@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './navigation/navigation.component';
@@ -15,21 +15,22 @@ import { CommentComponent } from './trip/chat/comment/comment.component';
 import { MapComponent } from './map/map.component';
 import { ProfileComponent } from './profile/profile.component';
 import { HomeComponent } from './home/home.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {AuthService} from './services/auth/auth.service';
-import {AuthGuard} from './services/auth/auth.guard';
-import {TokenInterceptor} from './services/auth/token-interceptor';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from './services/auth/auth.service';
+import { AuthGuard} from './services/auth/auth.guard';
+import { TokenInterceptor } from './services/auth/token-interceptor';
 import { TripCardComponent } from './home/trip-card/trip-card.component';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { CreateTripComponent } from './create-trip/create-trip.component';
-import {AgmCoreModule} from "@agm/core";
+import { AgmCoreModule } from "@agm/core";
 import { MapActivityComponent } from './trip/activities/map-activity/map-activity.component';
 import { IndexComponent } from './index/index.component';
-import {LoggedGuard} from "./services/auth/logged.guard";
+import { LoggedGuard } from "./services/auth/logged.guard";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MaterialModule} from "./material/material.module";
+import { MaterialModule } from "./material/material.module";
 import { CreateActivityComponent } from './create-activity/create-activity.component';
 import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.component';
+import { ModalModule } from "./modal";
 
 @NgModule({
   declarations: [
@@ -52,7 +53,7 @@ import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.co
     MapActivityComponent,
     IndexComponent,
     CreateActivityComponent,
-    PageNotFoundComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -60,6 +61,7 @@ import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.co
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    ModalModule,
     AgmCoreModule.forRoot(
         {
           apiKey: 'AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M',

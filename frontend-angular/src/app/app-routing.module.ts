@@ -12,7 +12,7 @@ import {LoggedGuard} from "./services/auth/logged.guard";
 import {ProfileComponent} from "./profile/profile.component";
 import {PageNotFoundComponent} from "./errors/page-not-found/page-not-found.component";
 import {CreateActivityComponent} from "./create-activity/create-activity.component";
-
+import {TripAdminGuard} from "./services/auth/trip-admin.guard";
 
 const routes: Routes = [
   {
@@ -33,10 +33,12 @@ const routes: Routes = [
     path: 'trip/:id',
     component: TripComponent,
     canLoad: [LoggedGuard],
-    children: [{
-        path: 'create-activity',
-        component: CreateActivityComponent
-      }]
+  },
+  {
+    path: 'trip/:id/create-activity',
+    component: CreateActivityComponent,
+    canLoad: [LoggedGuard],
+    canActivate: [TripAdminGuard]
   },
   {
     path: 'profile/:id',

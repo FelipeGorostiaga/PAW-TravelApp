@@ -10,11 +10,8 @@
         <p class="mb-1"><i class="fas fa-map-marker-alt"></i>{{activity.place.address}}</p>
     </button>
 
-    <form *ngIf="loggedUser.id == admin.id" method="post">
-        <button type="submit" class="btn float-right">
-            <i class="fas fa-trash-alt "></i>
-        </button>
-    </form>
+    <button type="button" class="btn float-right"><i class="fas fa-trash-alt "></i></button>
+
 </div>
 <!-- TODO: add marker in activity lat and long -->
 <agm-map [zoom]="zoom">

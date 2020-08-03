@@ -1,3 +1,4 @@
+<app-navigation></app-navigation>
 <div class="container-fluid" id="main-container">
     <div class="container box" style="margin-top: 20px;">
         <div class="row">
@@ -5,7 +6,6 @@
                 <div class="form-group">
                     <div class="display-4 text-white">Create Activity</div>
                 </div>
-
                 <!--todo: form group, labels and errors-->
                 <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
                     <div class="form-group">Activity name
@@ -26,17 +26,14 @@
                             <option value="Nightlife">Nightlife</option>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label class="text-white">Start date</label>
                         <input formControlName="startDate" class="form-control" type="text" placeholder="dd/mm/yyyy" name="startDate"/>
                     </div>
-
                     <div class="form-group">
                         <label p class="text-white">Finish date</label>
                         <input formControlName="endDate" class="form-control" type="text" placeholder="dd/mm/yyyy" name="endDate"/>
                     </div>
-
                     <label>Location</label>
                     <input #search formControlName="placeInput" id="place" type="text" placeholder="" class="form-control"/>
                     <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 500px;width: 1110px;">
