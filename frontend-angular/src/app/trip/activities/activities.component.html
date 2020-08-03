@@ -13,22 +13,47 @@
 </div>
 <a *ngIf="isAdmin" class="btn btn-primary text-white" (click)="createActivity()" role="button">Add Activity</a>
 
-﻿<div>
-    <h1>Home</h1>
-    <p>Hello stranger</p>
-    <button (click)="openModal('custom-modal-1')">Open Modal 1</button>
-    <button (click)="openModal('custom-modal-2')">Open Modal 2</button>
-</div>
 
+<button class="btn btn-primary" (click)="openModal('custom-modal-1')">Add activity</button>
 <jw-modal id="custom-modal-1">
-    <h1>A Custom Modal Window!</h1>
-    <p>Hello... showing some modal text</p>
-    <button (click)="closeModal('custom-modal-1');">Close</button>
-</jw-modal>
-
-<jw-modal id="custom-modal-2">
-    <h1 style="height:1000px">A Tall Custom Modal Window!</h1>
-    <button (click)="closeModal('custom-modal-2');">Close</button>
+    <h1>New activity</h1>
+    <form [formGroup]="activityForm" (ngSubmit)="createActivity()">
+        <div class="form-group">Activity name
+            <input formControlName="name" type="text" placeholder=""  class="form-control"/>
+        </div>
+        <div class="form-group">Category
+            <select formControlName="category" name="category" class="form-control" style="margin-bottom: 10px;">
+                <option disabled selected>Select category</option>
+                <option value="Cultural">Cultural</option>
+                <option value="Sports">Sports</option>
+                <option value="Social">Social</option>
+                <option value="Romantic">Romantic</option>
+                <option value="Adventure">Adventure</option>
+                <option value="Family">Family time</option>
+                <option value="Friends">Friends</option>
+                <option value="Business">Business</option>
+                <option value="Relaxation">Relax</option>
+                <option value="Nightlife">Nightlife</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="text-white">Start date</label>
+            <input formControlName="startDate" class="form-control" type="text" placeholder="dd/mm/yyyy" name="startDate"/>
+        </div>
+        <div class="form-group">
+            <label p class="text-white">Finish date</label>
+            <input formControlName="endDate" class="form-control" type="text" placeholder="dd/mm/yyyy" name="endDate"/>
+        </div>
+        <label>Location</label>
+        <input #search formControlName="placeInput" id="place" type="text" placeholder="" class="form-control"/>
+        <agm-map>
+            <agm-marker></agm-marker>
+        </agm-map>
+        <div class="text-center flex-fill">
+            <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Create</button>
+            <button class="btn btn-secondary" (click)="closeModal('custom-modal-1');">Close</button>
+        </div>
+    </form>
 </jw-modal>
 
 
