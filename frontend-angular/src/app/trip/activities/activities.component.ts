@@ -27,7 +27,6 @@ export class ActivitiesComponent implements OnInit {
   longitude: number;
   latlongs: any = [];
   submittedPlace: boolean;
-
   activityForm: FormGroup;
   submitted = false;
 
@@ -40,9 +39,8 @@ export class ActivitiesComponent implements OnInit {
     if (!this.activities || this.activities.length === 0) {
       this.isEmpty = true;
     }
-
     this.activityForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30) ]],
+      name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30)]],
       category: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
@@ -59,7 +57,6 @@ export class ActivitiesComponent implements OnInit {
               {
                 types: [],
               });
-
           autocomplete.addListener('place_changed', () => {
             this.ngZone.run(() => {
               const place: google.maps.places.PlaceResult = autocomplete.getPlace();
@@ -76,21 +73,21 @@ export class ActivitiesComponent implements OnInit {
               this.zoom = 16;
               this.latlongs.push(latlong);
               this.activityForm.get('placeInput').setValue(place.formatted_address);
-
             });
           });
         });
-
   }
 
   createActivity() {
-    console.log("in create activity");
     const values = this.activityForm.value;
     this.submitted = true;
     if (this.activityForm.invalid) {
+      console.log("form is invalid");
+      console.log(JSON.stringify(values));
+      console.log(this.activityForm.errors);
       return;
     }
-
+    console.log(JSON.stringify(values));
     // TODO: api call and receive
   }
 
