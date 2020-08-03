@@ -46,8 +46,8 @@
         </div>
         <label>Location</label>
         <input #search formControlName="placeInput" id="place" type="text" placeholder="" class="form-control"/>
-        <agm-map>
-            <agm-marker></agm-marker>
+        <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 300px;width: 500px;">
+            <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
         </agm-map>
         <div class="text-center flex-fill">
             <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Create</button>

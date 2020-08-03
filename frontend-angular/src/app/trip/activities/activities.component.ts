@@ -53,7 +53,6 @@ export class ActivitiesComponent implements OnInit {
     this.zoom = 14;
     this.searchControl = new FormControl();
     this.setCurrentPosition();
-
     this.mapsAPILoader.load().then(
         () => {
           const autocomplete = new google.maps.places.Autocomplete(this.searchElement.nativeElement,
@@ -101,6 +100,16 @@ export class ActivitiesComponent implements OnInit {
 
   closeModal(id: string) {
     this.modalService.close(id);
+    this.resetFormData();
+  }
+
+  private resetFormData() {
+    this.submitted = false;
+    this.submittedPlace = false;
+    this.activityForm.reset();
+    this.setCurrentPosition();
+    this.latlongs = [];
+    this.zoom = 14;
   }
 
   get f() { return this.activityForm.controls; }
