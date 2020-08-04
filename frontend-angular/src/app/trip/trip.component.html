@@ -48,7 +48,7 @@
                             'show':selectedIndex == 1,
                             'active':selectedIndex == 1}"
                          id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                        <app-activities [activities]="activities" [loggedUser]="loggedUser" [isAdmin]="isAdmin"></app-activities>
+                        <app-activities [activities]="activities" [loggedUser]="loggedUser" [isAdmin]="isAdmin" [tripId]="tripId"></app-activities>
                     </div>
                     <div *ngIf="selectedIndex == 2"
                          class="tab-pane fade"

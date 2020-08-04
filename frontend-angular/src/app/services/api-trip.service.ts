@@ -93,8 +93,9 @@ export class ApiTripService {
     return this.http.get(url);
   }
 
-  createTripActivity(id: number, activityForm: ActivityForm) {
+  createTripActivity(id: number, activityForm: ActivityForm): Observable<any> {
     const url = this.tripsBaseURL + '/' + id + '/activities/create';
+    return this.http.post(url, activityForm);
   }
 
   deleteTripActivity(tripId: number, activityId: number): Observable<any> {

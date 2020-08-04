@@ -34,7 +34,7 @@ export class RegisterComponent implements OnInit {
             birthDate: ['', Validators.required],
             nationality: ['', Validators.required]
         }, {
-            validators: MustMatch('password', 'confirmPassword')
+            validators: [MustMatch('password', 'confirmPassword'), ValidDate('birthday')]
         });
     }
 
@@ -67,7 +67,6 @@ export class RegisterComponent implements OnInit {
                 alert("Error registering user");
             });
     }
-
 
     onReset() {
         this.submitted = false;

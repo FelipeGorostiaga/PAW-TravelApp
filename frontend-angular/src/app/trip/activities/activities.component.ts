@@ -6,6 +6,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MapsAPILoader} from "@agm/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ApiTripService} from "../../services/api-trip.service";
+import {ActivityForm} from "../../model/forms/activity-form";
 
 @Component({
   selector: 'app-activities',
@@ -17,7 +18,7 @@ export class ActivitiesComponent implements OnInit {
   @Input() activities: Activity[];
   @Input() isAdmin: boolean;
   @Input() loggedUser: User;
-
+  @Input() tripId: number;
   @ViewChild('search')
   public searchElement: ElementRef;
   searchControl: FormControl;
@@ -45,8 +46,9 @@ export class ActivitiesComponent implements OnInit {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       placeInput: ['', Validators.required]
+    }, {
+      validators: InvalidDate('startDate', 'endDate')
     });
-
     this.submittedPlace = false;
     this.zoom = 14;
     this.searchControl = new FormControl();
@@ -88,7 +90,16 @@ export class ActivitiesComponent implements OnInit {
       return;
     }
     console.log(JSON.stringify(values));
-    // TODO: api call and receive
+    this.ts.createTripActivity(this.tripId,
+        new ActivityForm(values.name, values.category, values.placeInput, values.startDate, values.endDate))
+        .subscribe(
+            data => {
+              console.log(data);
+            },
+            error => {
+              console.log(error);
+            }
+        );
   }
 
   openModal(id: string) {
@@ -101,12 +112,12 @@ export class ActivitiesComponent implements OnInit {
   }
 
   private resetFormData() {
+    this.activityForm.reset();
     this.submitted = false;
     this.submittedPlace = false;
-    this.activityForm.reset();
-    this.setCurrentPosition();
     this.latlongs = [];
     this.zoom = 14;
+    this.setCurrentPosition();
   }
 
   get f() { return this.activityForm.controls; }
@@ -122,5 +133,26 @@ export class ActivitiesComponent implements OnInit {
       this.longitude = -58.381592;
     }
   }
+}
 
+// custom validator to check that two fields match
+export function InvalidDate(startDateControlName: string, endDateControlName: string) {
+  return (formGroup: FormGroup) => {
+    const startControl = formGroup.controls[startDateControlName];
+    const endControl = formGroup.controls[endDateControlName];
+    if (startControl.errors || endControl.errors) {
+      // return if another validator has already found an error
+      return;
+    }
+    // set error on matchingControl if validation fails
+    if (isBeforeOrEqual(startControl.value, endControl.value)) {
+      startControl.setErrors({ invalidDate: true });
+    } else {
+      startControl.setErrors(null);
+    }
+  };
+}
+
+export function isBeforeOrEqual(startDate: string, endDate: string): boolean {
+  return new Date(endDate) >= new Date(startDate);
 }

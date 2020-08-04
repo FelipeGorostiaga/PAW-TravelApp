@@ -6,13 +6,10 @@
 <div *ngIf="activities.length !== 0">
     <div class="list-group" style="margin-bottom: 20px">
         <app-map-activity
-                *ngFor="let activity in activities"
-                [activity]="activity">
+                *ngFor="let activity in activities" [activity]="activity">
         </app-map-activity>
     </div>
 </div>
-<a *ngIf="isAdmin" class="btn btn-primary text-white" (click)="createActivity()" role="button">Add Activity</a>
-
 
 <button class="btn btn-primary" (click)="openModal('custom-modal-1')">Add activity</button>
 <jw-modal id="custom-modal-1">
@@ -54,6 +51,7 @@
                 <input formControlName="startDate" class="form-control" type="text" placeholder="dd/mm/yyyy" name="startDate" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors }"/>
                 <div *ngIf="submitted && f.startDate.errors" class="invalid-feedback">
                     <p *ngIf="f.startDate.errors.required">Field is required</p>
+                    <p *ngIf="f.startDate.errors.invalidDate">Activity must start the same date or before end date</p>
                 </div>
             </div>
             <div class="form-group col-6">
@@ -67,11 +65,12 @@
         <div class="form-group">
             <label>Location</label>
             <input #search formControlName="placeInput" id="place" type="text" placeholder="" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.placeInput.errors }"/>
-            <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 400px;width: 700px;">
+            <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 400px;width: 900px;">
                 <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
             </agm-map>
             <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
                 <p *ngIf="f.placeInput.errors.required">Field is required</p>
+                <p *ngIf="f.placeInput.errors.required">Invalid google maps</p>
             </div>
         </div>
         <div class="text-center flex-fill">
