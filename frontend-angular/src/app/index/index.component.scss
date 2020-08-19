@@ -1,6 +1,14 @@
-#main-container {
-  min-height: 100vh;
+#background {
   background-image: url("../../assets/images/trekkingcouple.jpg");
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+#main-container {
+  min-height: 100vh;
+}
+
+#index-card {
+  width: 80%;
+  opacity: 0.95;
 }

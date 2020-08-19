@@ -27,7 +27,6 @@ import { MapActivityComponent } from './trip/activities/map-activity/map-activit
 import { IndexComponent } from './index/index.component';
 import { LoggedGuard } from "./services/auth/logged.guard";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from "./material/material.module";
 import { CreateActivityComponent } from './create-activity/create-activity.component';
 import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.component';
 import { ModalModule } from "./modal";
@@ -68,7 +67,6 @@ import { ModalModule } from "./modal";
           libraries: ["places"]
         }
     ),
-    MaterialModule,
     BrowserAnimationsModule
   ],
   providers: [AuthService, AuthGuard, {
