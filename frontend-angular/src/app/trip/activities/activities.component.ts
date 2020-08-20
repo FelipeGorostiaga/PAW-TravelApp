@@ -32,6 +32,7 @@ export class ActivitiesComponent implements OnInit {
   submitted = false;
 
   isEmpty: boolean;
+  bsConfig =  Object.assign({}, { containerClass: 'theme-dark-blue' });
 
   constructor(private modalService: ModalService, private mapsAPILoader: MapsAPILoader, private  ngZone: NgZone, private router: Router,
               private ts: ApiTripService, private formBuilder: FormBuilder, private route: ActivatedRoute) { }

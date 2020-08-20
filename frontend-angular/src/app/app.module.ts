@@ -30,6 +30,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateActivityComponent } from './create-activity/create-activity.component';
 import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.component';
 import { ModalModule } from "./modal";
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { ModalModule } from "./modal";
     FormsModule,
     ReactiveFormsModule,
     ModalModule,
+    BsDatepickerModule.forRoot(),
     AgmCoreModule.forRoot(
         {
           apiKey: 'AIzaSyDf5BlyQV8TN06oWY_U7Z_MnqWjIci2k2M',
