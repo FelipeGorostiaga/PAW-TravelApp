@@ -17,6 +17,8 @@ export class RegisterComponent implements OnInit {
     registerForm: FormGroup;
     submitted = false;
 
+    bsConfig =  Object.assign({}, { containerClass: 'theme-dark-blue' });
+
     constructor(private http: HttpClient,
                 private authService: AuthService,
                 private router: Router,

@@ -51,7 +51,13 @@
                         <div class="form-row">
                             <div class="form-group col">
                                 <label>Date of birth</label>
-                                <input type="date" class="form-control" placeholder="dd/mm/yyyy" formControlName="birthDate" [ngClass]="{ 'is-invalid': submitted && f.birthDate.errors }">
+                                <input formControlName="birthDate"
+                                       type="text"
+                                       class="form-control"
+                                       [ngClass]="{ 'is-invalid': submitted && f.birthDate.errors }"
+                                       bsDatepicker
+                                       [bsConfig]="bsConfig"
+                                       placeholder="Enter a valid birthday">
                                 <div *ngIf="submitted && f.birthDate.errors" class="invalid-feedback">
                                     <div *ngIf="f.birthDate.errors.required">Date of birth is required</div>
                                     <div *ngIf="f.birthDate.errors.invalidDate">Must be a valid date format 'dd/mm/yyy'</div>

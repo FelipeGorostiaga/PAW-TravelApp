@@ -27,7 +27,6 @@ import { MapActivityComponent } from './trip/activities/map-activity/map-activit
 import { IndexComponent } from './index/index.component';
 import { LoggedGuard } from "./services/auth/logged.guard";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CreateActivityComponent } from './create-activity/create-activity.component';
 import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.component';
 import { ModalModule } from "./modal";
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -52,7 +51,6 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     CreateTripComponent,
     MapActivityComponent,
     IndexComponent,
-    CreateActivityComponent,
     PageNotFoundComponent
   ],
   imports: [

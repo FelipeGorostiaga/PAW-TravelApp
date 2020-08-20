@@ -30,7 +30,7 @@ export class NavigationComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(["/login"]);
+    this.router.navigate(["/"]);
   }
 
   navigateToProfile() {
@@ -44,7 +44,6 @@ export class NavigationComponent implements OnInit {
   }
 
   myTrips() {
-
     this.router.navigate(["/home"]);
   }
 }

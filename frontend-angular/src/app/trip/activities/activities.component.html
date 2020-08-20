@@ -13,14 +13,9 @@
 
 <button class="btn btn-primary" (click)="openModal('custom-modal-1')">Add activity</button>
 <jw-modal id="custom-modal-1">
-
     <h4 class="text-center text-white" style="margin-bottom: 30px; padding: 20px; background-color: dodgerblue">Add activity</h4>
     <form [formGroup]="activityForm" (ngSubmit)="createActivity()">
-
-
         <div class="form-row">
-
-
             <div class="form-group col-6">
                 <label>Name</label>
                 <input formControlName="name" type="text" placeholder="Give your activity a name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"/>
