@@ -7,6 +7,10 @@ import java.util.*;
 @Table(name = "users")
 public class User {
 
+    /* package */ User() {
+        // Just for Hibernate
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
     @SequenceGenerator(sequenceName = "user_id_seq", name = "user_id_seq", allocationSize = 1)
@@ -42,6 +46,11 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripComment> comments;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ratedUser",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRate> myRates;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ratedByUser",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRate> othersRates;
 
     @Column(length = 100, nullable = false)
     private String nationality;
@@ -61,9 +70,6 @@ public class User {
         this.nationality = nationality;
     }
 
-    /* package */ User() {
-        // Just for Hibernate
-    }
 
     public long getId() {
         return id;
@@ -179,5 +185,21 @@ public class User {
 
     public void setAdminTrips(Set<Trip> adminTrips) {
         this.adminTrips = adminTrips;
+    }
+
+    public List<UserRate> getMyRates() {
+        return myRates;
+    }
+
+    public void setMyRates(List<UserRate> myRates) {
+        this.myRates = myRates;
+    }
+
+    public List<UserRate> getOthersRates() {
+        return othersRates;
+    }
+
+    public void setOthersRates(List<UserRate> othersRates) {
+        this.othersRates = othersRates;
     }
 }

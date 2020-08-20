@@ -6,6 +6,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "trip_comments")
 public class TripComment implements Comparable<TripComment>{
+
+    /* package */ TripComment() {
+        // Just for Hibernate
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_comments_id_seq")
     @SequenceGenerator(sequenceName = "trip_comments_id_seq", name = "trip_comments_id_seq", allocationSize = 1)
@@ -23,9 +28,6 @@ public class TripComment implements Comparable<TripComment>{
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private User user;
 
-    /* package */ TripComment() {
-        // Just for Hibernate
-    }
 
     public TripComment(Trip trip, String comment, User user, LocalDateTime createdOn) {
         this.trip = trip;
