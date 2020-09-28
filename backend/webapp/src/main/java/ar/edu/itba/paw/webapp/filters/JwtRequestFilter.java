@@ -52,7 +52,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 }
             }
         }
-        catch (Exception ignored) {
+        catch (Exception e) {
+            System.out.println("access token expired");
             LOGGER.debug("Jwt expired");
         }
         response.setHeader("Access-Control-Allow-Origin","*");

@@ -40,6 +40,8 @@ public class UserControllerREST {
 
     private static final int DEFAULT_PAGE_SIZE = 9;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserControllerREST.class);
+    private static final int JWT_ACCESS_EXPIRATION = 60 * 60 * 1000; //3600 seconds
+    private static final int JWT_REFRESH_EXPIRATION = 900000 * 1000; //more than 10 days
 
     @Autowired
     Validator validator;
@@ -70,14 +72,35 @@ public class UserControllerREST {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
                             authenticationRequest.getPassword()));
-        }
-        catch (AuthenticationException e) {
+        } catch (AuthenticationException e) {
             LOGGER.debug("Invalid username or password");
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String jwt = jwtUtil.generateToken(userDetails);
-        return Response.ok(new AuthenticationResponseDTO(jwt)).build();
+        final String accessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
+        final String refreshToken = jwtUtil.generateToken(userDetails, JWT_REFRESH_EXPIRATION);
+        return Response.ok(new AuthenticationResponseDTO(accessToken, refreshToken)).build();
+    }
+
+    @GET
+    @Path("/refresh")
+    public Response refreshJwtToken(@HeaderParam("x-refresh-token") String refreshToken) {
+        if(refreshToken != null) {
+            try {
+                String username = jwtUtil.extractUsername(refreshToken);
+                if(username != null) {
+                    UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                    if(jwtUtil.validateToken(refreshToken, userDetails)) {
+                        final String newAccessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
+                        // todo check response type
+                        return Response.ok(newAccessToken).build();
+                    }
+                }
+            } catch (Exception ignored) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+        }
+        return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @GET
@@ -98,7 +121,7 @@ public class UserControllerREST {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(@Valid UserCreateForm userForm) {
         Set<ConstraintViolation<UserCreateForm>> violations = validator.validate(userForm);
-        if(!violations.isEmpty()) {
+        if (!violations.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ConstraintViolationsDTO(violations)).build();
         }
         final User user = us.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
@@ -132,12 +155,11 @@ public class UserControllerREST {
         User user = userOptional.get();
         List<TripDTO> trips = ts.getAllUserTrips(user).stream().map(TripDTO::new).collect(Collectors.toList());
         System.out.println(trips);
-        if(trips.isEmpty()) {
+        if (trips.isEmpty()) {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
         return Response.ok(trips).build();
     }
-
 
 }
 

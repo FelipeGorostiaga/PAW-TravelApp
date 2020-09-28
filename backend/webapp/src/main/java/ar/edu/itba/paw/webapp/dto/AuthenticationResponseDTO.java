@@ -6,18 +6,27 @@ public class AuthenticationResponseDTO {
         // Empty constructor needed by JAX-RS
     }
 
-    private String jwt;
+    private String accessToken;
+    private String refreshToken;
 
-    public AuthenticationResponseDTO(String jwt) {
-        this.jwt = jwt;
+    public AuthenticationResponseDTO(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 
-    public String getJwt() {
-        return jwt;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setJwt(String jwt) {
-        this.jwt = jwt;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }

@@ -38,9 +38,16 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/api/users/authenticate", "/api/users/create").anonymous()
-                .anyRequest().authenticated()
+                        .antMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll()
+                        .and()
+                .authorizeRequests()
+                        .antMatchers("/api/users/authenticate", "/api/users/create", "/api/users/refresh")
+                        .permitAll()
+                        .and()
+                .authorizeRequests()
+                        .anyRequest()
+                        .authenticated()
                 .and().exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
