@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
@@ -27,8 +28,8 @@ public class SearchControllerREST {
     @GET
     @Path("/name")
     public Response searchByName(@QueryParam("nameInput") String name) {
-        List<Trip> resultTrips = tripService.findByName(name);
-        return Response.ok(resultTrips.stream().map(TripDTO::new).collect(Collectors.toList())).build();
+        List<TripDTO> resultTrips = tripService.findByName(name).stream().map(TripDTO::new).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TripDTO>>(resultTrips){}).build();
     }
 
     @GET
@@ -44,8 +45,8 @@ public class SearchControllerREST {
         filterMap.put("placeName", placeName);
         filterMap.put("startDate", DateManipulation.stringToLocalDate(startDate));
         filterMap.put("endDate", DateManipulation.stringToLocalDate(endDate));
-        List<Trip> resultTrips = tripService.findWithFilters(filterMap);
-        return Response.ok(resultTrips.stream().map(TripDTO::new).collect(Collectors.toList())).build();
+        List<TripDTO> resultTrips = tripService.findWithFilters(filterMap).stream().map(TripDTO::new).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TripDTO>>(resultTrips){}).build();
     }
 
 }

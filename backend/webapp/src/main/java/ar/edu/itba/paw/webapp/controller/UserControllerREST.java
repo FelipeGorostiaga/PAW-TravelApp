@@ -25,9 +25,11 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -73,13 +75,13 @@ public class UserControllerREST {
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
                             authenticationRequest.getPassword()));
         } catch (AuthenticationException e) {
-            LOGGER.debug("Invalid username or password");
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String accessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
         final String refreshToken = jwtUtil.generateToken(userDetails, JWT_REFRESH_EXPIRATION);
-        return Response.ok(new AuthenticationResponseDTO(accessToken, refreshToken)).build();
+        final UserDTO user = new UserDTO(Objects.requireNonNull(us.findByUsername(userDetails.getUsername()).orElse(null)));
+        return Response.ok(new AuthenticationResponseDTO(accessToken, refreshToken, user)).build();
     }
 
     @GET
@@ -92,7 +94,6 @@ public class UserControllerREST {
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
                     if(jwtUtil.validateToken(refreshToken, userDetails)) {
                         final String newAccessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
-                        // todo check response type
                         return Response.ok(newAccessToken).build();
                     }
                 }
@@ -107,11 +108,9 @@ public class UserControllerREST {
     @Path("/{id}")
     public Response getUserById(@PathParam("id") final int id) {
         final Optional<User> userOptional = us.findById(id);
-        LOGGER.debug("Accessed getUserById with id {}", id);
         if (userOptional.isPresent()) {
             return Response.ok(new UserDTO(userOptional.get())).build();
         } else {
-            LOGGER.warn("Cannot render user profile, user with id {} not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
@@ -129,36 +128,32 @@ public class UserControllerREST {
         return Response.ok(new UserDTO(user)).build();
     }
 
-    //Todo: check if it works with db picture
     @GET
     @Path("/{id}/picture")
     @Produces(value = {"image/png", "image/jpeg"})
     public Response getUserProfilePicture(@PathParam("id") final int id) {
-        LOGGER.debug("In getUserProfilePicture() with id {}", id);
         final Optional<UserPicture> pictureOpt = ups.findByUserId(id);
         if (!pictureOpt.isPresent()) {
-            LOGGER.warn("Cannot render user profile picture, user with id {} not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(new ImageDTO(pictureOpt.get())).build();
     }
 
-    //Todo: check if it works with existing trips
     @GET
     @Path("/{userId}/trips")
     public Response getUserTrips(@PathParam("userId") final int id, @DefaultValue("1") @QueryParam("page") int page) {
         final Optional<User> userOptional = us.findById(id);
         if (!userOptional.isPresent()) {
-            LOGGER.debug("Failed to get trips of user with id {} , user not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         User user = userOptional.get();
         List<TripDTO> trips = ts.getAllUserTrips(user).stream().map(TripDTO::new).collect(Collectors.toList());
-        System.out.println(trips);
         if (trips.isEmpty()) {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-        return Response.ok(trips).build();
+        GenericEntity<List<TripDTO>> genericEntity = new GenericEntity<List<TripDTO>>(trips) {
+        };//needs empty body to preserve generic type
+        return Response.ok(genericEntity).build();
     }
 
 }

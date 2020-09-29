@@ -10,6 +10,7 @@ public class TripDTO {
     private long adminId;
     private long startPlaceId;
     private boolean isPrivate;
+    private int membersAmount;
     private String name;
     private String description;
     private LocalDate startDate;
@@ -28,6 +29,15 @@ public class TripDTO {
         this.adminId = trip.getAdminId();
         this.startPlaceId = trip.getStartPlaceId();
         this.isPrivate = trip.isPrivate();
+        this.membersAmount = trip.getUsers().size();
+    }
+
+    public int getMembersAmount() {
+        return membersAmount;
+    }
+
+    public void setMembersAmount(int membersAmount) {
+        this.membersAmount = membersAmount;
     }
 
     public boolean isPrivate() {

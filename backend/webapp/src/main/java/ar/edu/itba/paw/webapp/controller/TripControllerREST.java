@@ -24,6 +24,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -83,8 +84,8 @@ public class TripControllerREST {
         if(!trip.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        List<User> users = this.tripService.getTripAdmins(tripId);
-        return Response.ok(new UserListDTO(users)).build();
+        List<UserDTO> users = this.tripService.getTripAdmins(tripId).stream().map(UserDTO::new).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<UserDTO>>(users) {}).build();
     }
 
     @GET
@@ -94,8 +95,8 @@ public class TripControllerREST {
         if(!trip.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        List<User> users = this.tripService.getTripUsers(tripId);
-        return Response.ok(new UserListDTO(users)).build();
+        List<UserDTO> users = this.tripService.getTripUsers(tripId).stream().map(UserDTO::new).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<UserDTO>>(users) {}).build();
     }
 
     @GET
@@ -109,29 +110,20 @@ public class TripControllerREST {
     }
 
     @GET
-    @Path("/{id}/users/amount")
-    public Response getTripUsersAmount(@PathParam("id") final long tripId) {
-        Optional<Trip> tripOptional = this.tripService.findById(tripId);
-        if(!tripOptional.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        Trip t = tripOptional.get();
-        return Response.ok(new IntegerDTO(t.getUsers().size())).build();
-    }
-
-    @GET
     @Path("/all/{page}")
     public Response getAllTripsForPage(@PathParam("page") final int pageNum) {
-        List<Trip> trips = tripService.getAllTripsPerPage(pageNum);
-        return Response.ok(new TripListDTO(trips)).build();
+        List<TripDTO> trips = tripService.getAllTripsPerPage(pageNum).stream().map(TripDTO::new).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TripDTO>>(trips) {}).build();
     }
 
     @GET
     @Path("/all")
     public Response getAllTrips() {
-        List<Trip> trips = tripService.getAllTrips();
-        List<Trip> publicTrips = trips.stream().filter(trip -> !trip.isPrivate()).collect(Collectors.toList());
-        return Response.ok(new TripListDTO(publicTrips)).build();
+        List<TripDTO> trips = tripService.getAllTrips().stream()
+                                        .filter(trip -> !trip.isPrivate())
+                                        .map(TripDTO::new)
+                                        .collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TripDTO>>(trips) {}).build();
     }
 
     @PUT
@@ -152,7 +144,7 @@ public class TripControllerREST {
             imageBytes = ImageValidator.validateImage(constraintViolationsDTO,  form.getImageUpload());
         } catch (IOException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ErrorDTO("Server couldn´t get image bytes"))
+                    .entity(new ErrorDTO("Server couldn't get image bytes"))
                     .build();
         }
         if(constraintViolationsDTO.getErrors().size() > 0) {
@@ -202,8 +194,8 @@ public class TripControllerREST {
     public Response getTripPlaces(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if(tripOptional.isPresent()) {
-            List<ar.edu.itba.paw.model.Place> places = tripService.findTripPlaces(tripOptional.get());
-            return Response.ok(places.stream().map(PlaceDTO::new).collect(Collectors.toList())).build();
+            List<PlaceDTO> places = tripService.findTripPlaces(tripOptional.get()).stream().map(PlaceDTO::new).collect(Collectors.toList());
+            return Response.ok(new GenericEntity<List<PlaceDTO>>(places) {}).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
@@ -282,8 +274,8 @@ public class TripControllerREST {
         if(tripOptional.isPresent()) {
             Trip t = tripOptional.get();
             if(t.getUsers().contains(loggedUser)) {
-                List<TripComment> comments = tripService.getTripComments(tripId);
-                return Response.ok(new TripCommentListDTO(comments)).build();
+                List<TripCommentDTO> comments = tripService.getTripComments(tripId).stream().map(TripCommentDTO::new).collect(Collectors.toList());
+                return Response.ok(new GenericEntity<List<TripCommentDTO>>(comments){}).build();
             }
             return Response.status(Response.Status.FORBIDDEN).build();
         }
@@ -316,8 +308,8 @@ public class TripControllerREST {
     public Response getTripActivities(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if(tripOptional.isPresent()) {
-            List<Activity> activities = activityService.getTripActivities(tripId);
-            return Response.ok(new ActivityListDTO(activities)).build();
+            List<ActivityDTO> activities = activityService.getTripActivities(tripId).stream().map(ActivityDTO::new).collect(Collectors.toList());
+            return Response.ok(new GenericEntity<List<ActivityDTO>>(activities){}).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
