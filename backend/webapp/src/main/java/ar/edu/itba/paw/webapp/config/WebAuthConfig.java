@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
@@ -34,6 +35,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AuthenticationEntryPoint restAuthenticationEntryPoint;
+
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -48,7 +52,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                         .anyRequest()
                         .authenticated()
-                .and().exceptionHandling().and().sessionManagement()
+                .and().exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }

@@ -42,7 +42,7 @@ public class UserControllerREST {
 
     private static final int DEFAULT_PAGE_SIZE = 9;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserControllerREST.class);
-    private static final int JWT_ACCESS_EXPIRATION = 60 * 60 * 1000; //3600 seconds
+    private static final int JWT_ACCESS_EXPIRATION = 10 * 1000; //10 seconds
     private static final int JWT_REFRESH_EXPIRATION = 900000 * 1000; //more than 10 days
 
     @Autowired

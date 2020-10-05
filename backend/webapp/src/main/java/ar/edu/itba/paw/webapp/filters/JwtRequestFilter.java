@@ -36,11 +36,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         final String authorizationHeader = request.getHeader("Authorization");
         String username = null;
         String jwt = null;
+        try {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
         }
-        try {
             if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
                 if(jwtUtil.validateToken(jwt, userDetails)) {
@@ -53,7 +53,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
         catch (Exception e) {
-            System.out.println("access token expired");
+            System.out.println("Access token expired");
             LOGGER.debug("Jwt expired");
         }
         response.setHeader("Access-Control-Allow-Origin","*");
