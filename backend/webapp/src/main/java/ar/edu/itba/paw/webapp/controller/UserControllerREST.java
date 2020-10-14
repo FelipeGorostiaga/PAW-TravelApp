@@ -10,7 +10,9 @@ import ar.edu.itba.paw.model.UserPicture;
 import ar.edu.itba.paw.webapp.auth.JwtUtil;
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationDTO;
 import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
+import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +30,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -122,11 +121,18 @@ public class UserControllerREST {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(@Valid UserCreateForm userForm) {
         Set<ConstraintViolation<UserCreateForm>> violations = validator.validate(userForm);
-        if (!violations.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ConstraintViolationsDTO(violations)).build();
+        if (violations.size() > 0) {
+            List<ErrorDTO> errors = violations.stream().map(violation -> new ErrorDTO(violation.getMessage())).collect(Collectors.toList());
+            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<List<ErrorDTO>>(errors) {}).build();
         }
-        final User user = us.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
-                userForm.getPassword(), DateManipulation.stringToLocalDate(userForm.getBirthday()), userForm.getNationality());
+        User user;
+        try {
+            user = us.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
+                    userForm.getPassword(), DateManipulation.stringToLocalDate(userForm.getBirthday()), userForm.getNationality());
+        }
+        catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Username already in use")).build();
+        }
         return Response.ok(new UserDTO(user)).build();
     }
 

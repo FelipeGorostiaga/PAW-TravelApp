@@ -18,9 +18,9 @@ public class BirthdayValidator implements ConstraintValidator<ValidBirthday, Use
     @Override
     public boolean isValid(UserCreateForm value, ConstraintValidatorContext context) {
         LocalDate birthday = DateManipulation.stringToLocalDate(value.getBirthday());
+        if(birthday == null) return false;
         context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
                 .addNode("birthday").addConstraintViolation().disableDefaultConstraintViolation();
-        if(birthday == null) return false;
         return birthday.isBefore(LocalDate.now());
     }
 

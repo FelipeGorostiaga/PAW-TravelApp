@@ -7,7 +7,6 @@ import {User} from '../../model/user';
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
 import {tap} from "rxjs/operators";
-import {error} from "util";
 import {RefreshTokenResponse} from "../../model/RefreshTokenResponse";
 
 @Injectable({

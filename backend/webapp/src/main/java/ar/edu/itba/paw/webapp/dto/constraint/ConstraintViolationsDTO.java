@@ -33,5 +33,4 @@ public class ConstraintViolationsDTO {
         return errors;
     }
 
-
 }
