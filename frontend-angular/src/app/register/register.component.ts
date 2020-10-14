@@ -51,22 +51,15 @@ export class RegisterComponent implements OnInit {
         }
         const formData = new UserForm(values.firstName, values.lastName, values.email,
             values.password, values.confirmPassword, values.nationality, values.birthDate);
+
         this.authService.register(formData).subscribe(
-            res => {
-                    console.log(res);
-                    this.authService.login(new UserAuth(formData.email, formData.password)).subscribe(
-                        data => {
-                            this.authService.setJwtToken(data);
-                        },
-                        error => {
-                            alert("Error redirecting to login");
-                        }
-                    );
-                    this.authService.setLoggedUser(res);
+            data => {
+                    console.log(data);
+                    this.authService.createSession(data.accessToken, data.refreshToken, data.user);
                     this.router.navigate(["/home"]);
             },
             err => {
-                alert("Error registering user");
+                console.log(err);
             });
     }
 

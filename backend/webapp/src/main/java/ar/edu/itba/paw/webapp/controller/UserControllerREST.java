@@ -88,13 +88,15 @@ public class UserControllerREST {
     @Path("/refresh")
     public Response refreshJwtToken(@HeaderParam("x-refresh-token") String refreshToken) {
         if(refreshToken != null) {
+            System.out.println("Refreshing token...");
             try {
                 String username = jwtUtil.extractUsername(refreshToken);
                 if(username != null) {
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
                     if(jwtUtil.validateToken(refreshToken, userDetails)) {
                         final String newAccessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
-                        return Response.ok(newAccessToken).build();
+                        System.out.println("Returning new access token: " + newAccessToken);
+                        return Response.ok(new RefreshResponseDTO(newAccessToken)).build();
                     }
                 }
             } catch (Exception ignored) {

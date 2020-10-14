@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   };
 
   rememberMe: boolean;
-  message: string;
+  errMessage: string;
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -24,26 +24,15 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    console.log("performing login");
-    console.log(this.user);
     this.authService.login(this.user).subscribe(
-        res => {
-          console.log(res);
-          this.authService.setJwtToken(res.jwt);
-          this.authService.getUserFromServer().subscribe(
-              data => {
-                  console.log(data);
-                  this.authService.setLoggedUser(data);
-                  this.router.navigate(["/home"]);
-              },
-              error => {
-                this.message = "Error from server, try again...";
-              }
-          );
+        data => {
+            console.log(data);
+            this.authService.createSession(data.accessToken, data.refreshToken, data.user);
+            this.router.navigate(["/home"]);
         },
         err => {
-          alert("Error in login");
-          this.message = "Invalid username or password";
+          console.log("Error in login");
+          this.errMessage = "Invalid username or password";
         }
     );
   }

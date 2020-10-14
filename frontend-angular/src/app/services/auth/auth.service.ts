@@ -1,59 +1,89 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {UserForm} from '../../model/forms/user-form';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {UserAuth} from '../../model/user-auth';
 import {Observable} from 'rxjs';
 import {User} from '../../model/user';
+import {Router} from "@angular/router";
+import {environment} from "../../../environments/environment";
+import {tap} from "rxjs/operators";
+import {error} from "util";
+import {RefreshTokenResponse} from "../../model/RefreshTokenResponse";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-    private baseURL = 'http://localhost:8080/api';
-    private usersBaseURL = `${this.baseURL}/users`;
-    private authBaseURL = `${this.baseURL}/user`;
+    private usersBaseURL = `${environment.apiURL}/users`;
+    private authBaseURL = `${environment.apiURL}/user`;
 
-    constructor(private http: HttpClient) { }
-
+    constructor(private http: HttpClient, private router: Router) { }
 
     isLoggedIn() {
-        return !!localStorage.getItem('token');
+        return !!localStorage.getItem('accessToken');
     }
 
-    getJwtToken() {
-        return localStorage.getItem('token');
-    }
-
-    setJwtToken(jwt: string) {
-        localStorage.setItem('token', jwt);
-    }
-
-    register(userForm: UserForm): Observable<User> {
+    register(userForm: UserForm): Observable<any> {
         const url = this.usersBaseURL + '/create';
         return this.http.post<User>(url, userForm);
     }
 
-    login(userAuth: UserAuth): Observable<any>  {
+    login(userAuth: UserAuth): Observable<any> {
         const url = this.usersBaseURL + '/authenticate';
         return this.http.post<string>(url, userAuth);
     }
 
-    setLoggedUser(u: User) {
-        localStorage.setItem('loggedUser', JSON.stringify(u));
+    refreshToken() {
+        console.log("Reached refreshToken()");
+        return this.http.get(`${this.usersBaseURL}/refresh`, {
+            headers: {
+                'x-refresh-token': this.getRefreshToken()
+            }
+        }).pipe(
+            tap((data: RefreshTokenResponse) => {
+                console.log("Received new access token!!")
+                console.log(data);
+                this.setAccessToken(data.accessToken);
+            })
+        );
     }
 
     logout() {
-        localStorage.removeItem('token');
+        this.removeSession();
+        this.router.navigate(["/login"]);
+    }
+
+    removeSession() {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         localStorage.removeItem('loggedUser');
+    }
+
+    createSession(accessToken: string, refreshToken: string, user: any) {
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('loggedUser', JSON.stringify(user));
     }
 
     getLoggedUser(): User {
         return JSON.parse(localStorage.getItem('loggedUser'));
     }
 
-    getUserFromServer(): Observable<User> {
-        const url = this.authBaseURL + '/logged';
-        return this.http.get<User>('http://localhost:8080/api/user/logged');
+    getAccessToken(): string {
+        return localStorage.getItem('accessToken');
     }
+
+    setAccessToken(accessToken: string) {
+        localStorage.setItem('accessToken', accessToken);
+    }
+
+    getRefreshToken(): string {
+        return localStorage.getItem('refreshToken');
+    }
+
+    setRefreshToken(refreshToken: string) {
+        localStorage.setItem('refreshToken', refreshToken);
+    }
+
 }

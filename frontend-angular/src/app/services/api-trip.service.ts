@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {Trip} from "../model/trip";
 import {TripForm} from "../model/forms/trip-form";
-import {Place} from "../model/place";
 import {ImageDTO} from "../model/image-dto";
-import {Activity} from "../model/activity";
 import {ActivityForm} from "../model/forms/activity-form";
 import {HttpClient} from "@angular/common/http";
-import {User} from "../model/user";
 import {Comment} from "../model/comment";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +15,7 @@ export class ApiTripService {
 
   constructor(private http: HttpClient) {}
 
-  private baseURL = 'http://localhost:8080/api';
-  private tripsBaseURL = `${this.baseURL}/trips`;
+  private tripsBaseURL = `${environment.apiURL}/trips`;
 
   getTripUsersAmount(id: number): Observable<any> {
     const url = this.tripsBaseURL + '/' + id + '/users/amount';

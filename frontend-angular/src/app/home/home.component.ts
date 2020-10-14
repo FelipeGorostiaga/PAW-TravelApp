@@ -19,8 +19,9 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
       this.ts.getAllTrips().subscribe(
         res => {
+            console.log(res);
             this.currentPage = 0;
-            this.trips = this.chopList(res.trips);
+            this.trips = this.chopList(res);
             this.numberOfPages = Math.ceil(this.trips.length / this.tripsPerPage);
         },
         err => {
@@ -30,7 +31,7 @@ export class HomeComponent implements OnInit {
   }
 
   chopList(arr: Trip[]) {
-      const newarr = new Array();
+      const newarr = [];
       for (let i = 0; i < arr.length; i = i + this.tripsPerPage) {
           newarr.push(arr.slice(i, i + this.tripsPerPage));
       }
@@ -41,4 +42,11 @@ export class HomeComponent implements OnInit {
       this.currentPage = newPage;
   }
 
+    activateHttpInterceptor() {
+        this.ts.getTrip(4).subscribe(
+            res => console.log(res),
+            error => console.log(error)
+
+        )
+    }
 }
