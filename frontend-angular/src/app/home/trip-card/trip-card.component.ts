@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Trip} from "../../model/trip";
 import {ApiUserService} from "../../services/api-user.service";
 import {ApiTripService} from "../../services/api-trip.service";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-trip-card',
@@ -16,23 +17,11 @@ export class TripCardComponent implements OnInit {
   isImageLoading: boolean;
 
 
-  constructor(private ts: ApiTripService) { }
+  constructor(private ts: ApiTripService, private router: Router) { }
 
   ngOnInit() {
-    console.log("Recieved trip: " + JSON.stringify(this.trip));
-    this.getUserNumber();
     this.getTripImage();
-  }
-
-  getUserNumber() {
-    this.ts.getTripUsersAmount(this.trip.id).subscribe(
-        res => {
-          this.usersAmount = res.value;
-        },
-        err => {
-          this.usersAmount = 0;
-        }
-    );
+    this.usersAmount = this.trip.membersAmount;
   }
 
   getTripImage() {
@@ -60,7 +49,8 @@ export class TripCardComponent implements OnInit {
     }
   }
 
-  tripClicked() {
-    console.log("clicked trip" + this.trip.id);
+  navigateToTrip() {
+    const url = '/trip/' + this.trip.id;
+    this.router.navigate([url])
   }
 }

@@ -62,6 +62,9 @@ public class Trip implements Comparable<Trip>{
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
     private List<TripComment> comments = new LinkedList<>();
 
+    /* package */ Trip() {
+        // Just for Hibernate
+    }
 
     public Trip(long id, long adminId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate,
                 boolean isPrivate) {
@@ -87,10 +90,6 @@ public class Trip implements Comparable<Trip>{
 
     public void setAdminId(long adminId) {
         this.adminId = adminId;
-    }
-
-    /* package */ Trip() {
-        // Just for Hibernate
     }
 
     public long getStartPlaceId() {

@@ -102,11 +102,12 @@ public class TripControllerREST {
     @GET
     @Path("/{id}")
     public Response getTrip(@PathParam("id") final long tripId) {
-        Optional<Trip> trip = tripService.findById(tripId);
-        if(!trip.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(new TripDTO(trip.get())).build();
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        if(!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        Trip trip = tripOptional.get();
+        ar.edu.itba.paw.model.Place startPlace = placeService.findById(trip.getId()).orElse(null);
+        if(startPlace == null) return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO("Internal server error")).build();
+        return Response.ok(new FullTripDTO(trip, new PlaceDTO(startPlace))).build();
     }
 
     @GET
@@ -335,6 +336,7 @@ public class TripControllerREST {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         Trip trip = tripOptional.get();
+        // todo add error dtos instead of violations
         if(loggedUser.getId() == trip.getAdminId()) {
             activityCreateForm.setTrip(tripOptional.get());
             Set<ConstraintViolation<ActivityCreateForm>> violations = validator.validate(activityCreateForm);
@@ -377,5 +379,4 @@ public class TripControllerREST {
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
-
 }

@@ -8,7 +8,7 @@ public class TripDTO {
 
     private long id;
     private long adminId;
-    private long startPlaceId;
+    private PlaceDTO startPlace;
     private boolean isPrivate;
     private int membersAmount;
     private String name;
@@ -20,16 +20,23 @@ public class TripDTO {
         // Empty constructor needed by JAX-RS
     }
 
-    public TripDTO(Trip trip) {
+    public TripDTO(Trip trip, PlaceDTO place) {
         this.id = trip.getId();
         this.name = trip.getName();
         this.description = trip.getDescription();
         this.startDate = trip.getStartDate();
         this.endDate = trip.getEndDate();
         this.adminId = trip.getAdminId();
-        this.startPlaceId = trip.getStartPlaceId();
+        this.startPlace = place;
         this.isPrivate = trip.isPrivate();
-        this.membersAmount = trip.getUsers().size();
+    }
+
+    public PlaceDTO getStartPlace() {
+        return startPlace;
+    }
+
+    public void setStartPlace(PlaceDTO startPlace) {
+        this.startPlace = startPlace;
     }
 
     public int getMembersAmount() {
@@ -62,14 +69,6 @@ public class TripDTO {
 
     public void setAdminId(long adminId) {
         this.adminId = adminId;
-    }
-
-    public long getStartPlaceId() {
-        return startPlaceId;
-    }
-
-    public void setStartPlaceId(long startPlaceId) {
-        this.startPlaceId = startPlaceId;
     }
 
     public String getName() {
