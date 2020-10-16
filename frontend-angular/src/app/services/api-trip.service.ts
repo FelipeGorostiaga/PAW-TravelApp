@@ -43,7 +43,7 @@ export class ApiTripService {
     return this.http.post<Trip>(url, tripForm);
   }
 
-  getTrip(id: number): Observable<Trip> {
+  getTrip(id: number): Observable<any> {
     const url = this.tripsBaseURL + '/' + id;
     return this.http.get<Trip>(url);
   }

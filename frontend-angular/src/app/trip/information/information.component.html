@@ -1,5 +1,5 @@
 
-    <img *ngIf="hasImage" class="img-container" src="">
+    <img *ngIf="hasImage" class="img-container" src="" alt="Trip image">
 
     <div>
         <div class="d-flex justify-content-between">
@@ -9,16 +9,16 @@
                 </a>
             </div>
         </div>
-        <div class="display-4 ">{{trip.name}}</div>
-        <p class="text-justify" style="font-size: 150%;">{{trip.description}}}</p>
+        <div class="display-4 ">{{trip?.name}}</div>
+        <p class="text-justify" style="font-size: 150%;">{{trip?.description}}}</p>
         <div id="rate-bar" class="card-text"style="font-size: 150%; margin-bottom: 15px;"></div>
-        <p class="card-text"><i class="far fa-calendar-alt"></i>{{trip.startDate}} - {{trip.endDate}}</p>
+        <p class="card-text"><i class="far fa-calendar-alt"></i>{{trip?.startDate}} - {{trip?.endDate}}</p>
     </div>
 
     <h3 class="margin-class">Starting place</h3>
-    <p>{{startPlace.name}}</p>
-    <agm-map [latitude]="startPlace.latitude" [longitude]="startPlace.longitude" [zoom]="14" style="height: 400px;width: 700px;">
-        <agm-marker [latitude]="startPlace.latitude" [longitude]="startPlace.longitude"></agm-marker>
+    <p>{{startPlace?.name}}</p>
+    <agm-map [latitude]="startPlace?.latitude" [longitude]="startPlace?.longitude" [zoom]="14" style="height: 400px;width: 700px;">
+        <agm-marker [latitude]="startPlace?.latitude" [longitude]="startPlace?.longitude"></agm-marker>
     </agm-map>
     <h3 class="margin-class">
         Members
@@ -27,14 +27,14 @@
         <a *ngFor="let admin of admins" class="list-group-item list-group-item-action flex-column align-items-start" href="">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1"><i class="fa fa-user" style="margin-right: 5px;"></i>
-                    {{admin.firstname}} {{admin.lastname}}</h5>
+                    {{admin?.firstname}} {{admin?.lastname}}</h5>
                 <small>Administrator</small>
             </div>
         </a>
         <a *ngFor="let user of users" class="list-group-item list-group-item-action flex-column align-items-start" href="">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1"><i class="fa fa-user" style="margin-right: 5px;"></i>
-                    {{user.firstname}} {{user.lastname}}</h5>
+                    {{user?.firstname}} {{user?.lastname}}</h5>
             </div>
         </a>
     </div>

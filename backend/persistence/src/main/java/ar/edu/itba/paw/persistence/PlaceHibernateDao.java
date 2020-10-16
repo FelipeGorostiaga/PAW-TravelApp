@@ -24,7 +24,7 @@ public class PlaceHibernateDao implements PlaceDao {
 
     @Override
     public Optional<Place> findById(long id) {
-        return Optional.of(em.find(Place.class, id));
+        return Optional.ofNullable(em.find(Place.class, id));
     }
 
     @Override

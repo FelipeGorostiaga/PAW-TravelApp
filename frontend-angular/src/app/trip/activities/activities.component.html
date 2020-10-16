@@ -1,12 +1,13 @@
 <h3 class="margin-class ">Activities</h3>
 
-<div *ngIf="activities.length == 0">
+<div *ngIf="activities?.length == 0">
     <div class="alert alert-primary" role="alert">This trip has no activities</div>
 </div>
-<div *ngIf="activities.length !== 0">
+<div *ngIf="activities?.length !== 0">
     <div class="list-group" style="margin-bottom: 20px">
         <app-map-activity
-                *ngFor="let activity in activities" [activity]="activity">
+                *ngFor="let activity in activities"
+                [activity]="activity">
         </app-map-activity>
     </div>
 </div>

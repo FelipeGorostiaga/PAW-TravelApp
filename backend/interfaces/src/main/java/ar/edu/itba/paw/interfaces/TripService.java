@@ -8,7 +8,7 @@ import java.util.*;
 
 public interface TripService {
 
-    Trip create(long createdBy, long place, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate);
+    Trip create(long createdBy, Place place, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate);
     Optional<Trip> findById(long id);
     List<Trip> getAllTripsPerPage(int pageNum);
     List<Trip> getAllTrips();

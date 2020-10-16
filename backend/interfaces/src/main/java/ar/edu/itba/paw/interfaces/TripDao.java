@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 
+import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.User;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 public interface TripDao {
 
-     Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate);
+     Trip create(long userId, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate);
      Optional<Trip> findById(long id);
      List<Trip> findByName(String name);
      List<Trip> findUserCreatedTrips(long userId);

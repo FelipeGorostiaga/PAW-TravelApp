@@ -20,14 +20,14 @@ public class TripDTO {
         // Empty constructor needed by JAX-RS
     }
 
-    public TripDTO(Trip trip, PlaceDTO place) {
+    public TripDTO(Trip trip) {
         this.id = trip.getId();
         this.name = trip.getName();
         this.description = trip.getDescription();
         this.startDate = trip.getStartDate();
         this.endDate = trip.getEndDate();
         this.adminId = trip.getAdminId();
-        this.startPlace = place;
+        this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
     }
 

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.PlaceService;
 import ar.edu.itba.paw.model.Place;
+import ar.edu.itba.paw.webapp.dto.ErrorDTO;
 import ar.edu.itba.paw.webapp.dto.PlaceDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +31,10 @@ public class PlaceControllerREST {
 
     @GET
     @Path("/{id}")
-    public Response getTripStartingPlace(@PathParam("id") final long placeId) {
-        LOGGER.debug("Getting place with id: {}", placeId);
+    public Response getPlace(@PathParam("id") final long placeId) {
         Optional<Place> placeOptional = this.placeService.findById(placeId);
         if(!placeOptional.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid place id")).build();
         }
         return Response.ok(new PlaceDTO(placeOptional.get())).build();
     }

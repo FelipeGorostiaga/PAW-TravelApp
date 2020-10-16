@@ -1,7 +1,7 @@
 
 
     <h3 class="margin-class">Chat</h3>
-    <div *ngIf="comments.length == 0">
+    <div *ngIf="comments?.length == 0">
         <div class="alert alert-primary" role="alert">This trip has no messages yet</div>
     </div>
     <app-comment *ngFor="let comment in comments" [comment]="comment"></app-comment>

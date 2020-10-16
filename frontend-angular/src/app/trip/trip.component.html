@@ -41,7 +41,7 @@
                             'show':selectedIndex == 0,
                             'active':selectedIndex == 0}"
                             id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                        <app-information [trip]="trip" [users]="users" [admins]="admins" [loggedUser]="loggedUser" [startPlace]="startPlace"></app-information>
+                        <app-information [trip]="trip" [users]="users" [admins]="admins" [loggedUser]="loggedUser" [startPlace]="trip.startPlace"></app-information>
                     </div>
                     <div *ngIf="selectedIndex == 1" class="tab-pane fade"
                          [ngClass]="{

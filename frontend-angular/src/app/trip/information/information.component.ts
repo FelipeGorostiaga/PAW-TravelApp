@@ -23,17 +23,19 @@ export class InformationComponent implements OnInit {
   constructor(private ts: ApiTripService) { }
 
   ngOnInit() {
-    const tripId = this.trip.id;
-    this.ts.getTripImage(tripId).subscribe(
-        data => {
-          this.tripImage = data.image;
-          this.hasImage = true;
-        },
-        error => {
-          this.hasImage = false;
-        }
-    );
-    this.isAdmin = this.admins.includes(this.loggedUser);
+    if(this.trip != null) {
+      const tripId = this.trip.id;
+      this.ts.getTripImage(tripId).subscribe(
+          data => {
+            this.tripImage = data.image;
+            this.hasImage = true;
+          },
+          error => {
+            this.hasImage = false;
+          }
+      );
+      this.isAdmin = this.admins.includes(this.loggedUser);
+    }
   }
 
   leaveTrip() {

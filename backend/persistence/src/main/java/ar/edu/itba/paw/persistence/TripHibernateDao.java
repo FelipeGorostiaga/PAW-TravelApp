@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TripDao;
+import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.User;
@@ -24,8 +25,8 @@ public class TripHibernateDao implements TripDao {
     EntityManager em;
 
     @Override
-    public Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) {
-        Trip trip = new Trip(userId, startPlaceId, name, description, startDate, endDate, isPrivate);
+    public Trip create(long userId, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) {
+        Trip trip = new Trip(userId, startPlace, name, description, startDate, endDate, isPrivate);
         em.persist(trip);
         return trip;
     }

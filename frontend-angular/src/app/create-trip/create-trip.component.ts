@@ -108,12 +108,13 @@ export class CreateTripComponent implements OnInit {
     if (this.tripForm.invalid) {
       return;
     }
-    const formData = new TripForm(values.name, values.description, values.startDate, values.endDate, values.placeInput, !values.isPrivate);
+    const formData = new TripForm(values.name, values.description, values.startDate, values.endDate, values.placeInput, !!values.isPrivate);
+    console.log(JSON.stringify(formData));
     this.ts.createTrip(formData).subscribe(
         res => {
           console.log("Trip created successfully");
-          console.log(res);
-          const tripUrl = "/trip/" + res.id;
+          const tripId = res.id;
+          const tripUrl = "/trip/" + tripId;
           this.router.navigate([tripUrl]);
         },
         err => {

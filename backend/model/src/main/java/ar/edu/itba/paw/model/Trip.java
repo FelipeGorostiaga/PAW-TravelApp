@@ -16,8 +16,8 @@ public class Trip implements Comparable<Trip>{
     @SequenceGenerator(sequenceName = "trip_id_seq", name = "trip_id_seq", allocationSize = 1)
     private long id;
 
-    @Column
-    private long startPlaceId;
+    /*@Column
+    private long startPlaceId;*/
 
     @Column
     private long adminId;
@@ -36,6 +36,10 @@ public class Trip implements Comparable<Trip>{
 
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name="place_id")
+    private Place startPlace;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
     @JoinTable(
@@ -66,22 +70,30 @@ public class Trip implements Comparable<Trip>{
         // Just for Hibernate
     }
 
-    public Trip(long id, long adminId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate,
+    public Trip(long id, long adminId, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate,
                 boolean isPrivate) {
-        this(adminId, startPlaceId, name, description, startDate, endDate, isPrivate);
+        this(adminId, startPlace, name, description, startDate, endDate, isPrivate);
         this.id = id;
     }
 
-    public Trip(long adminId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate,
+    public Trip(long adminId, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate,
                 boolean isPrivate) {
         super();
         this.adminId = adminId;
-        this.startPlaceId = startPlaceId;
+        this.startPlace = startPlace;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
         this.isPrivate = isPrivate;
+    }
+
+    public Place getStartPlace() {
+        return startPlace;
+    }
+
+    public void setStartPlace(Place startPlace) {
+        this.startPlace = startPlace;
     }
 
     public long getAdminId() {
@@ -92,13 +104,13 @@ public class Trip implements Comparable<Trip>{
         this.adminId = adminId;
     }
 
-    public long getStartPlaceId() {
+    /*public long getStartPlaceId() {
         return startPlaceId;
     }
 
     public void setStartPlaceId(long startPlaceId) {
         this.startPlaceId = startPlaceId;
-    }
+    }*/
 
     public long getId() {
         return id;

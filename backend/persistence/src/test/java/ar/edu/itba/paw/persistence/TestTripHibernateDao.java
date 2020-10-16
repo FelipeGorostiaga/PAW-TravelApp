@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.model.Place;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
 import org.junit.Assert;
@@ -24,6 +25,7 @@ public class TestTripHibernateDao {
     private static final long tripId = 2;
     private static final long userId = 1;
     private static final long placeId = 3;
+    private static final Place place = new Place(placeId,"google-id","test",10,10,"address");
     private static final String COMMENT = "test comment";
     private static final String TEST_NAME = "test name";
     private static final String NAME = "Triping under the stars";
@@ -37,7 +39,7 @@ public class TestTripHibernateDao {
 
     @Test
     public void testCreate() {
-        Trip trip = td.create(userId, placeId, NAME, DESC, START_DATE, END_DATE, IS_PRIVATE);
+        Trip trip = td.create(userId, place, NAME, DESC, START_DATE, END_DATE, IS_PRIVATE);
         Assert.assertNotNull(trip);
         Assert.assertEquals(NAME, trip.getName());
         Assert.assertEquals(DESC, trip.getDescription());

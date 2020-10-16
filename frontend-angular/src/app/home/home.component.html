@@ -1,17 +1,17 @@
 <app-navigation></app-navigation>
 <div class="container-fluid mt-4">
-    <div class="card-deck">
+    <div class="alert alert-primary" role="alert" *ngIf="trips?.length == 0">There are no available trips</div>
+    <div class="card-deck" *ngIf="trips?.length > 0">
         <div class="row justify-content-center">
-            <!--<h1>{{trips[0][0]?.name}}</h1>-->
-            <button (click)="activateHttpInterceptor()">Send http Request</button>
-            <!--<app-trip-card
+            <app-trip-card
                     *ngFor="let trip of trips[currentPage]"
                     [trip]="trip">
-            </app-trip-card>-->
+            </app-trip-card>
         </div>
     </div>
 </div>
 <app-paginator
+        *ngIf="trips?.length === 0"
         [numberOfPages]="numberOfPages"
         (pageNumberClick)="updatePage($event)">
 </app-paginator>

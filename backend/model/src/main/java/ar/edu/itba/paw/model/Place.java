@@ -30,6 +30,9 @@ public class Place {
     @Column(length = 500, nullable = false)
     private String address;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "startPlace")
+    private List<Trip> trips;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "place")
     private List<Activity> activities = new LinkedList<>();
 
@@ -49,6 +52,14 @@ public class Place {
 
     /* package */ Place() {
         // Just for Hibernate
+    }
+
+    public List<Trip> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
     }
 
     public List<Activity> getActivities() {

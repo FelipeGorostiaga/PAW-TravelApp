@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -14,7 +15,9 @@ public class DateManipulation {
 
     public static LocalDate stringToLocalDate(String dateString) {
         try {
-            return LocalDate.parse(dateString, formatter);
+            LocalDate date = LocalDate.parse(dateString);
+            System.out.println("Returning valid date:" + date);
+            return date;
         }
         catch (DateTimeParseException e){
             return null;

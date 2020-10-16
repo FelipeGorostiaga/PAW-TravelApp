@@ -78,6 +78,15 @@ public class TripControllerREST {
     Validator validator;
 
     @GET
+    @Path("/{id}")
+    public Response getTrip(@PathParam("id") final long tripId) {
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        if(!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.ok(new FullTripDTO(tripOptional.get())).build();
+    }
+
+
+    @GET
     @Path("/{id}/admins")
     public Response getTripAdmins(@PathParam("id") final long tripId) {
         Optional<Trip> trip = tripService.findById(tripId);
@@ -99,16 +108,7 @@ public class TripControllerREST {
         return Response.ok(new GenericEntity<List<UserDTO>>(users) {}).build();
     }
 
-    @GET
-    @Path("/{id}")
-    public Response getTrip(@PathParam("id") final long tripId) {
-        Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        Trip trip = tripOptional.get();
-        ar.edu.itba.paw.model.Place startPlace = placeService.findById(trip.getId()).orElse(null);
-        if(startPlace == null) return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO("Internal server error")).build();
-        return Response.ok(new FullTripDTO(trip, new PlaceDTO(startPlace))).build();
-    }
+
 
     @GET
     @Path("/all/{page}")
@@ -163,6 +163,7 @@ public class TripControllerREST {
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
+
         User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
         ConstraintViolationsDTO violationsDTO = new ConstraintViolationsDTO(violations);
@@ -177,16 +178,21 @@ public class TripControllerREST {
         if(violationsDTO.getErrors().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(violationsDTO).build();
         }
+
+        System.out.println(tripCreateForm);
+
         ar.edu.itba.paw.model.Place customPlace = createGooglePlaceReference(places);
         if(customPlace == null) {
+            System.out.println("Place is null");
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        Trip trip = tripService.create(loggedUser.getId(), customPlace.getId(), tripCreateForm.getName(),
+        Trip trip = tripService.create(loggedUser.getId(), customPlace, tripCreateForm.getName(),
                 tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
                 DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());
         if(trip != null) {
             return Response.ok(new TripDTO(trip)).build();
         }
+        System.out.println("trip is null");
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
@@ -213,7 +219,7 @@ public class TripControllerREST {
             }
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid trip id")).build();
     }
 
     @PUT
@@ -280,7 +286,7 @@ public class TripControllerREST {
             }
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid trip id")).build();
     }
 
     @POST
@@ -301,7 +307,7 @@ public class TripControllerREST {
             }
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid trip id")).build();
     }
 
     @GET
@@ -312,7 +318,7 @@ public class TripControllerREST {
             List<ActivityDTO> activities = activityService.getTripActivities(tripId).stream().map(ActivityDTO::new).collect(Collectors.toList());
             return Response.ok(new GenericEntity<List<ActivityDTO>>(activities){}).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid trip id")).build();
     }
 
     private ar.edu.itba.paw.model.Place createGooglePlaceReference(List<Place> googlePlaces) {

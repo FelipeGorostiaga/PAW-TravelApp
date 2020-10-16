@@ -10,9 +10,6 @@ import ar.edu.itba.paw.model.UserPicture;
 import ar.edu.itba.paw.webapp.auth.JwtUtil;
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationDTO;
-import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
-import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +27,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -39,10 +39,10 @@ import java.util.stream.Collectors;
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class UserControllerREST {
 
-    private static final int DEFAULT_PAGE_SIZE = 9;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserControllerREST.class);
-    private static final int JWT_ACCESS_EXPIRATION = 10 * 1000; //10 seconds
-    private static final int JWT_REFRESH_EXPIRATION = 900000 * 1000; //more than 10 days
+
+    private static final int JWT_ACCESS_EXPIRATION = 3600 * 1000; //1 hour
+    private static final int JWT_REFRESH_EXPIRATION = 900000 * 1000; //10+ days
 
     @Autowired
     Validator validator;

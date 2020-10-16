@@ -9,7 +9,7 @@ import {Trip} from "../model/trip";
 })
 export class HomeComponent implements OnInit {
 
-  trips: Trip[][];
+  trips: any[][];
   currentPage: number;
   numberOfPages: number;
   tripsPerPage = 6;
@@ -17,23 +17,26 @@ export class HomeComponent implements OnInit {
   constructor(private ts: ApiTripService) { }
 
   ngOnInit() {
+      this.currentPage = 0;
       this.ts.getAllTrips().subscribe(
         res => {
-            console.log(res);
-            this.currentPage = 0;
             this.trips = this.chopList(res);
+            console.log(this.trips);
+            console.log(this.trips.length);
+            console.log(this.trips[0]);
             this.numberOfPages = Math.ceil(this.trips.length / this.tripsPerPage);
         },
         err => {
-            console.log("ERROR: couldn't get trips from server");
+            console.log("Error: couldn't get trips from server");
         }
     );
   }
 
-  chopList(arr: Trip[]) {
-      const newarr = [];
+  chopList(arr: any) {
+      const newarr = new Array();
       for (let i = 0; i < arr.length; i = i + this.tripsPerPage) {
-          newarr.push(arr.slice(i, i + this.tripsPerPage));
+          let tempArray = arr.slice(i, i + this.tripsPerPage)
+          newarr.push(tempArray);
       }
       return newarr;
   }
@@ -42,11 +45,4 @@ export class HomeComponent implements OnInit {
       this.currentPage = newPage;
   }
 
-    activateHttpInterceptor() {
-        this.ts.getTrip(4).subscribe(
-            res => console.log(res),
-            error => console.log(error)
-
-        )
-    }
 }

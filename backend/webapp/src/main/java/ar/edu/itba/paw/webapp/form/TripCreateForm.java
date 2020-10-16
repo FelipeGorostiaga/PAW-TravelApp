@@ -91,5 +91,15 @@ public class TripCreateForm {
         return  now.isBefore(sDate) && sDate.isBefore(eDate);
     }
 
-
+    @Override
+    public String toString() {
+        return "TripCreateForm{" +
+                "placeInput='" + placeInput + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", isPrivate=" + isPrivate +
+                '}';
+    }
 }

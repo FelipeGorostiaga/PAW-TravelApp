@@ -1,11 +1,25 @@
+import {Place} from "./place";
+import {Activity} from "./activity";
+import {User} from "./user";
+
 export class Trip {
-    adminId: number;
-    description: string;
-    endDate: string;
+
     id: number;
     name: string;
-    private: boolean;
+    description: string;
     startDate: string;
-    startPlaceId: number;
+    endDate: string;
+    adminId: number;
+    private: boolean;
+    startPlace: Place;
     membersAmount: number;
+}
+
+export class FullTrip extends Trip {
+
+    activities: Activity[];
+    comments: Comment[];
+    users: User[];
+    admins: User[];
+
 }

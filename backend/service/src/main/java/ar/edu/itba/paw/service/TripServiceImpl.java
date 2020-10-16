@@ -30,11 +30,11 @@ public class TripServiceImpl implements TripService {
     private UserDao ud;
 
     @Override
-    public Trip create(long userId, long startPlaceId, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) {
+    public Trip create(long userId, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) {
         Trip t;
         Optional<User> u = ud.findById(userId);
         if(u.isPresent()) {
-            t = td.create(userId, startPlaceId, name, description, startDate, endDate, isPrivate);
+            t = td.create(userId, startPlace, name, description, startDate, endDate, isPrivate);
             t.getUsers().add(u.get());
             t.getAdmins().add(u.get());
             return t;
