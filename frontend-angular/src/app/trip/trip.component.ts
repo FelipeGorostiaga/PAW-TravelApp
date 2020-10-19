@@ -1,10 +1,9 @@
-import {AfterContentInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FullTrip} from "../model/trip";
 import {ActivatedRoute, Router} from "@angular/router";
 import {User} from "../model/user";
 import {AuthService} from "../services/auth/auth.service";
 import {ApiTripService} from "../services/api-trip.service";
-import {ApiPlaceService} from "../services/api-place.service";
 
 @Component({
   selector: 'app-trip',

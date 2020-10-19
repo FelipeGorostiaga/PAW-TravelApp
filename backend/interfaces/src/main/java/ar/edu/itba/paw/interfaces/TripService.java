@@ -13,7 +13,7 @@ public interface TripService {
     List<Trip> getAllTripsPerPage(int pageNum);
     List<Trip> getAllTrips();
     List<Trip> findByName(String name);
-    List<Trip> getAllUserTrips(User user);
+    Set<Trip> getAllUserTrips(User user);
     List<Place> findTripPlaces(Trip trip);
     void addActivityToTrip(long actId, long tripId);
     void addUserToTrip(long userId, long tripId);

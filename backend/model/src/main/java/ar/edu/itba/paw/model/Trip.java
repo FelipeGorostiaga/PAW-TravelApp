@@ -2,10 +2,7 @@ package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "trips")
@@ -199,5 +196,18 @@ public class Trip implements Comparable<Trip>{
 
     public void setAdmins(Set<User> admins) {
         this.admins = admins;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Trip trip = (Trip) o;
+        return id == trip.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

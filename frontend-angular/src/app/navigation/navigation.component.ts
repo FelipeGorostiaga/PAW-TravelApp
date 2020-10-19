@@ -43,7 +43,4 @@ export class NavigationComponent implements OnInit {
     return;
   }
 
-  myTrips() {
-    this.router.navigate(["/home"]);
-  }
 }

@@ -149,7 +149,7 @@ public class UserControllerREST {
 
     @GET
     @Path("/{userId}/trips")
-    public Response getUserTrips(@PathParam("userId") final int id, @DefaultValue("1") @QueryParam("page") int page) {
+    public Response getUserTrips(@PathParam("userId") final int id) {
         final Optional<User> userOptional = us.findById(id);
         if (!userOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -159,9 +159,7 @@ public class UserControllerREST {
         if (trips.isEmpty()) {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-        GenericEntity<List<TripDTO>> genericEntity = new GenericEntity<List<TripDTO>>(trips) {
-        };//needs empty body to preserve generic type
-        return Response.ok(genericEntity).build();
+        return Response.ok(new GenericEntity<List<TripDTO>>(trips) {}).build();
     }
 
 }

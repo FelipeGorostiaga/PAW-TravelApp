@@ -21,8 +21,8 @@ export class ApiUserService {
         return this.http.get(url);
     }
 
-    getUserTrips(id: number, page: number): Observable<Trip[]> {
-        const url = this.usersBaseURL + '/' + id  + '/trips';
+    getUserTrips(userId: number): Observable<Trip[]> {
+        const url = this.usersBaseURL + '/' + userId  + '/trips';
         return this.http.get<Trip[]>(url);
     }
 

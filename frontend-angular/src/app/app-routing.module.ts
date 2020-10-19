@@ -10,6 +10,7 @@ import {CreateTripComponent} from "./create-trip/create-trip.component";
 import {IndexComponent} from "./index/index.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {PageNotFoundComponent} from "./errors/page-not-found/page-not-found.component";
+import {UserTripsComponent} from "./user-trips/user-trips.component";
 
 const routes: Routes = [
   {
@@ -23,6 +24,11 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'user-trips',
+    component: UserTripsComponent,
     canActivate: [AuthGuard]
   },
   {

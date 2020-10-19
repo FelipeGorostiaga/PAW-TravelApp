@@ -12,7 +12,6 @@ import { InformationComponent } from './trip/information/information.component';
 import { ActivitiesComponent } from './trip/activities/activities.component';
 import { ChatComponent } from './trip/chat/chat.component';
 import { CommentComponent } from './trip/chat/comment/comment.component';
-import { MapComponent } from './map/map.component';
 import { ProfileComponent } from './profile/profile.component';
 import { HomeComponent } from './home/home.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -30,6 +29,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.component';
 import { ModalModule } from "./modal";
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { UserTripsComponent } from './user-trips/user-trips.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +43,6 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     ActivitiesComponent,
     ChatComponent,
     CommentComponent,
-    MapComponent,
     ProfileComponent,
     HomeComponent,
     TripCardComponent,
@@ -51,7 +50,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     CreateTripComponent,
     MapActivityComponent,
     IndexComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    UserTripsComponent
   ],
   imports: [
     BrowserModule,
