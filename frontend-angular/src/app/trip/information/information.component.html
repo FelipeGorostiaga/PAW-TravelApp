@@ -16,28 +16,30 @@
     </div>
 
     <h3 class="margin-class">Starting place</h3>
-    <p>{{startPlace?.name}}</p>
-    <agm-map [latitude]="startPlace?.latitude" [longitude]="startPlace?.longitude" [zoom]="14" style="height: 400px;width: 700px;">
-        <agm-marker [latitude]="startPlace?.latitude" [longitude]="startPlace?.longitude"></agm-marker>
+    <p>{{trip?.startPlace?.name}}</p>
+    <agm-map [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude" [zoom]="14" style="height: 400px;width: 700px;">
+        <agm-marker [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude"></agm-marker>
     </agm-map>
     <h3 class="margin-class">
         Members
     </h3>
     <div class="list-group">
-        <a *ngFor="let admin of admins" class="list-group-item list-group-item-action flex-column align-items-start" href="">
+
+        <!-- todo: trips are duplicate-->
+        <a *ngFor="let admin of trip?.admins" class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1"><i class="fa fa-user" style="margin-right: 5px;"></i>
                     {{admin?.firstname}} {{admin?.lastname}}</h5>
                 <small>Administrator</small>
             </div>
         </a>
-        <a *ngFor="let user of users" class="list-group-item list-group-item-action flex-column align-items-start" href="">
+        <a *ngFor="let user of trip?.users" class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1"><i class="fa fa-user" style="margin-right: 5px;"></i>
                     {{user?.firstname}} {{user?.lastname}}</h5>
             </div>
         </a>
     </div>
-    <button class="btn-primary btn" (click)="leaveTrip()">Leave trip</button>
-    <button class="btn-primary btn" (click)="joinTrip()">Join trip</button>
+    <button class="btn-primary btn" (click)="leaveTrip()">Exit</button>
+    <button class="btn-primary btn" (click)="joinTrip()">Join</button>
 

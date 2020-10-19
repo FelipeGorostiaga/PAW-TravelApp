@@ -1,12 +1,9 @@
-<h3 class="margin-class ">Activities</h3>
-
-<div *ngIf="activities?.length == 0">
-    <div class="alert alert-primary" role="alert">This trip has no activities</div>
+<div *ngIf="trip?.activities?.length == 0">
+    <div class="alert alert-primary" role="alert" style="margin-top: 40px">This trip has no activities</div>
 </div>
-<div *ngIf="activities?.length !== 0">
+<div *ngIf="trip?.activities?.length !== 0">
     <div class="list-group" style="margin-bottom: 20px">
-        <app-map-activity
-                *ngFor="let activity in activities"
+        <app-map-activity  *ngFor="let activity of trip?.activities"
                 [activity]="activity">
         </app-map-activity>
     </div>
@@ -14,7 +11,7 @@
 
 <button class="btn btn-primary" (click)="openModal('custom-modal-1')">Add activity</button>
 <jw-modal id="custom-modal-1">
-    <h4 class="text-center text-white" style="margin-bottom: 30px; padding: 20px; background-color: dodgerblue">Add activity</h4>
+    <h4 class="text-center text-white" style="margin-bottom: 30px; padding: 20px; background-color: #1e90ff">Add activity</h4>
     <form [formGroup]="activityForm" (ngSubmit)="createActivity()">
         <div class="form-row">
             <div class="form-group col-6">
@@ -28,7 +25,7 @@
             </div>
             <div class="form-group col-6">
                 <label>Category</label>
-                <select formControlName="category" name="category" class="form-control" style="margin-bottom: 10px;" [ngClass]="{ 'is-invalid': submitted && f.category.errors }">
+                <select formControlName="category" name="category" class="form-control" style="margin-bottom: 10px;" [ngClass]="{ 'is-invalid': (submitted && f.category.errors) }">
                     <option disabled selected>Select category</option>
                     <option value="Cultural">Cultural</option>
                     <option value="Sports">Sports</option>

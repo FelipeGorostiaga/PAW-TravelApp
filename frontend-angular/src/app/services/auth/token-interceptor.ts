@@ -21,15 +21,8 @@ export class TokenInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError((error: HttpErrorResponse) => {
 
-
-                console.log("In http interceptor...");
-                console.log(error);
-
                 //Unauthorized
-                console.log(error.status === 401);
                 if(error.status === 401 && !this.refreshingAccessToken) {
-
-                    console.log("Got error 401");
 
                     //refresh the access token
                     return this.refreshAccessToken()
@@ -66,7 +59,6 @@ export class TokenInterceptor implements HttpInterceptor {
             // we want to call a method in the auth service to send a request to refresh the access token
             return this.authService.refreshToken().pipe(
                 tap(() => {
-                    console.log("AccessToken Refreshed!");
                     this.refreshingAccessToken = false;
                     this.accessTokenRefreshed.next();
                 })

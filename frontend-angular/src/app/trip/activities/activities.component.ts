@@ -1,12 +1,11 @@
 import {Component, ElementRef, Input, NgZone, OnInit, ViewChild} from '@angular/core';
-import {Activity} from "../../model/activity";
-import {User} from "../../model/user";
 import {ModalService} from "../../modal";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MapsAPILoader} from "@agm/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ApiTripService} from "../../services/api-trip.service";
 import {ActivityForm} from "../../model/forms/activity-form";
+import {FullTrip} from "../../model/trip";
 
 @Component({
   selector: 'app-activities',
@@ -15,11 +14,10 @@ import {ActivityForm} from "../../model/forms/activity-form";
 })
 export class ActivitiesComponent implements OnInit {
 
-  @Input() activities: Activity[];
+  @Input() trip: FullTrip;
   @Input() isAdmin: boolean;
-  @Input() loggedUser: User;
-  @Input() tripId: number;
   @ViewChild('search')
+
   public searchElement: ElementRef;
   searchControl: FormControl;
 
@@ -38,9 +36,6 @@ export class ActivitiesComponent implements OnInit {
               private ts: ApiTripService, private formBuilder: FormBuilder, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    if (!this.activities || this.activities.length === 0) {
-      this.isEmpty = true;
-    }
     this.activityForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30)]],
       category: ['', Validators.required],
@@ -91,7 +86,7 @@ export class ActivitiesComponent implements OnInit {
       return;
     }
     console.log(JSON.stringify(values));
-    this.ts.createTripActivity(this.tripId,
+    this.ts.createTripActivity(this.trip.id,
         new ActivityForm(values.name, values.category, values.placeInput, values.startDate, values.endDate))
         .subscribe(
             data => {

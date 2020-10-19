@@ -47,6 +47,5 @@ export class TripComponent implements OnInit {
 
     switchTab(index: number) {
         this.selectedIndex = index;
-        console.log(index);
     }
 }

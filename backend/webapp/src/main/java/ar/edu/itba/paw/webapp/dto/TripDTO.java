@@ -29,6 +29,7 @@ public class TripDTO {
         this.adminId = trip.getAdminId();
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
+        this.membersAmount = trip.getUsers().size();
     }
 
     public PlaceDTO getStartPlace() {

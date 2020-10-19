@@ -1,4 +1,4 @@
-<a (click)="tripClicked()" class="custom-card">
+<a (click)="navigateToTrip()" class="custom-card">
     <div class="col-auto mb-3">
         <div class="card trip-card" style="width: 30rem;">
             <img
@@ -10,18 +10,17 @@
                     src="./assets/images/trip-default.jpg"
                     class="card-img-top"
                     height="250" width="400">
-
             <div class="card-body">
-                <h5 class="card-title" style="font-size: 35px;">{{trip.name}}</h5>
-                <p class="card-text">{{trip.description}}</p>
+                <h5 class="card-title" style="font-size: 35px;">{{trip?.name}}</h5>
+                <p class="card-text">{{trip?.description}}</p>
                 <p class="card-text"><i class="fas fa-map-marker-alt"></i> </p>
                 <p class="card-text">
-                    <i class="far fa-calendar-alt"></i>{{trip.startDate | date}} - {{trip.endDate | date}}
+                    <i class="far fa-calendar-alt"></i>{{trip?.startDate | date}} - {{trip?.endDate | date}}
                 </p>
             </div>
             <div class="card-footer">
                 <i class="fa fa-users"></i>
-                <small style="margin-left: 4px;font-size: 20px;"><b>{{usersAmount}}</b></small>
+                <small style="margin-left: 4px;font-size: 20px;"><b>{{trip?.membersAmount}}</b></small>
             </div>
         </div>
     </div>

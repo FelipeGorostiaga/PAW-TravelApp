@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {UserForm} from '../../model/forms/user-form';
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {UserAuth} from '../../model/user-auth';
 import {Observable} from 'rxjs';
 import {User} from '../../model/user';
@@ -15,7 +15,6 @@ import {RefreshTokenResponse} from "../../model/RefreshTokenResponse";
 export class AuthService {
 
     private usersBaseURL = `${environment.apiURL}/users`;
-    private authBaseURL = `${environment.apiURL}/user`;
 
     constructor(private http: HttpClient, private router: Router) { }
 
@@ -34,15 +33,13 @@ export class AuthService {
     }
 
     refreshToken() {
-        console.log("Reached refreshToken()");
         return this.http.get(`${this.usersBaseURL}/refresh`, {
             headers: {
                 'x-refresh-token': this.getRefreshToken()
             }
         }).pipe(
             tap((data: RefreshTokenResponse) => {
-                console.log("Received new access token!!")
-                console.log(data);
+                console.log("JWT token refreshed")
                 this.setAccessToken(data.accessToken);
             })
         );

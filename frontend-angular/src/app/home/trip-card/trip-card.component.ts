@@ -20,6 +20,7 @@ export class TripCardComponent implements OnInit {
   constructor(private ts: ApiTripService, private router: Router) { }
 
   ngOnInit() {
+    console.log(this.trip.membersAmount);
     this.getTripImage();
     this.usersAmount = this.trip.membersAmount;
   }
@@ -53,4 +54,5 @@ export class TripCardComponent implements OnInit {
     const url = '/trip/' + this.trip.id;
     this.router.navigate([url])
   }
+
 }

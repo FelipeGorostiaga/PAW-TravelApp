@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from "../../model/user";
 import {Comment} from "../../model/comment";
+import {FullTrip, Trip} from "../../model/trip";
 
 
 @Component({
@@ -10,10 +11,9 @@ import {Comment} from "../../model/comment";
 })
 export class ChatComponent implements OnInit {
 
-  @Input() loggedUser: User;
-  @Input() users: User[];
-  @Input() admins: User[];
-  @Input() comments: Comment[];
+  @Input() trip: FullTrip;
+  @Input() isAdmin: boolean;
+
 
   constructor() { }
 

@@ -1,7 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {User} from "../../model/user";
-import {Trip} from "../../model/trip";
-import {Place} from "../../model/place";
+import {FullTrip, Trip} from "../../model/trip";
 import {ApiTripService} from "../../services/api-trip.service";
 
 @Component({
@@ -11,14 +9,10 @@ import {ApiTripService} from "../../services/api-trip.service";
 })
 export class InformationComponent implements OnInit {
 
-  @Input() loggedUser: User;
-  @Input() trip: Trip;
-  @Input() users: User[];
-  @Input() admins: User[];
-  @Input() startPlace: Place;
+  @Input() trip: FullTrip;
+  @Input() isAdmin: boolean;
   hasImage: boolean;
   tripImage: any;
-  isAdmin: boolean;
 
   constructor(private ts: ApiTripService) { }
 
@@ -34,7 +28,6 @@ export class InformationComponent implements OnInit {
             this.hasImage = false;
           }
       );
-      this.isAdmin = this.admins.includes(this.loggedUser);
     }
   }
 
