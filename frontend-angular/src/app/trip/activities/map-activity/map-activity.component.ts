@@ -11,11 +11,16 @@ export class MapActivityComponent implements OnInit {
 
   @Input() activity: Activity;
   zoom: number;
+  showMap: boolean;
 
   constructor() { }
 
   ngOnInit(): void {
     this.zoom = 14;
+  }
+
+  toggle() {
+    this.showMap = !this.showMap;
   }
 
 }
