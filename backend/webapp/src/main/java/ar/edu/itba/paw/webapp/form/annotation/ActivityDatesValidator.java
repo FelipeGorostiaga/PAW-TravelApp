@@ -32,10 +32,11 @@ public class ActivityDatesValidator implements ConstraintValidator<ValidDates, A
         context.buildConstraintViolationWithTemplate(errorMessage).addConstraintViolation();
         LocalDate sDate = DateManipulation.stringToLocalDate(form.getStartDate());
         LocalDate eDate = DateManipulation.stringToLocalDate(form.getEndDate());
-        LocalDate now = LocalDate.now();
-        return  (sDate.isAfter(form.getTrip().getStartDate()) || sDate.isEqual(form.getTrip().getStartDate()))
-                && (eDate.isBefore(form.getTrip().getEndDate()) || eDate.isEqual(form.getTrip().getEndDate()))
-                && now.isBefore(sDate) && sDate.isBefore(eDate);
+        if(sDate == null || eDate == null) {
+            System.out.println("Couldn't parse dates, returning false...");
+            return false;
+        }
+        return (sDate.isBefore(eDate) || sDate.isEqual(eDate));
     }
 
 

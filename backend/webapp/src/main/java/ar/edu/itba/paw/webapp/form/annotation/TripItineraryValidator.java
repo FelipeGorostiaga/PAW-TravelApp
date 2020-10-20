@@ -31,6 +31,7 @@ public class TripItineraryValidator implements ConstraintValidator<ValidTripItin
         context.disableDefaultConstraintViolation();
         //build new violation message and add it
         context.buildConstraintViolationWithTemplate(errorMessage).addConstraintViolation();
+
         LocalDate sDate = DateManipulation.stringToLocalDate(form.getStartDate());
         LocalDate eDate = DateManipulation.stringToLocalDate(form.getEndDate());
         for(Activity activity : form.getTrip().getActivities()) {

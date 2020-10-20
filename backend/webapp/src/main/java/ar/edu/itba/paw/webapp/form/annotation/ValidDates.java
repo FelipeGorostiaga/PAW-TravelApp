@@ -17,6 +17,4 @@ public @interface ValidDates {
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
-
-
 }

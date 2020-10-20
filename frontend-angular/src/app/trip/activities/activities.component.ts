@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ApiTripService} from "../../services/api-trip.service";
 import {ActivityForm} from "../../model/forms/activity-form";
 import {FullTrip} from "../../model/trip";
+import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
 
 @Component({
   selector: 'app-activities',
@@ -30,14 +31,14 @@ export class ActivitiesComponent implements OnInit {
   submitted = false;
 
   isEmpty: boolean;
-  bsConfig =  Object.assign({}, { containerClass: 'theme-dark-blue' });
+  bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY' });
 
   constructor(private modalService: ModalService, private mapsAPILoader: MapsAPILoader, private  ngZone: NgZone, private router: Router,
               private ts: ApiTripService, private formBuilder: FormBuilder, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.activityForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30)]],
+      name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(60)]],
       category: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
@@ -85,18 +86,36 @@ export class ActivitiesComponent implements OnInit {
       console.log(this.activityForm.errors);
       return;
     }
-    console.log(JSON.stringify(values));
-    this.ts.createTripActivity(this.trip.id,
-        new ActivityForm(values.name, values.category, values.placeInput, values.startDate, values.endDate))
-        .subscribe(
+    let startDateString = this.convertToDateString(values.startDate);
+    let endDateString = this.convertToDateString(values.endDate);
+    let form = new ActivityForm(values.name, values.category, values.placeInput, startDateString, endDateString);
+    console.log(JSON.stringify(form));
+    this.ts.createTripActivity(this.trip.id, form).subscribe(
             data => {
               console.log(data);
+              this.trip.activities.push(data);
+              console.log("Added new activity to trip!");
+              this.closeModal('custom-modal-1');
             },
             error => {
               console.log(error);
             }
         );
   }
+
+  convertToDateString(date): string {
+    let dateString = "";
+    let day = date.getDate()
+    let month = date.getMonth() + 1
+    let year = date.getFullYear()
+    if(month < 10){
+      dateString = `${day}/0${month}/${year}`;
+    }else{
+      dateString = `${day}/${month}/${year}`;
+    }
+    return dateString;
+  }
+
 
   openModal(id: string) {
     this.modalService.open(id);
@@ -141,7 +160,7 @@ export function InvalidDate(startDateControlName: string, endDateControlName: st
       return;
     }
     // set error on matchingControl if validation fails
-    if (isBeforeOrEqual(startControl.value, endControl.value)) {
+    if (!isBeforeOrEqual(startControl.value, endControl.value)) {
       startControl.setErrors({ invalidDate: true });
     } else {
       startControl.setErrors(null);

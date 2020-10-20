@@ -15,7 +15,7 @@ public class DateManipulation {
 
     public static LocalDate stringToLocalDate(String dateString) {
         try {
-            LocalDate date = LocalDate.parse(dateString);
+            LocalDate date = LocalDate.parse(dateString, formatter);
             System.out.println("Returning valid date:" + date);
             return date;
         }

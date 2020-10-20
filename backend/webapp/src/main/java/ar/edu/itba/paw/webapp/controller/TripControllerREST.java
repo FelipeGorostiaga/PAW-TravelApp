@@ -338,36 +338,39 @@ public class TripControllerREST {
     public Response createTripActivity(@PathParam("id") final long tripId, @Valid ActivityCreateForm activityCreateForm) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         User loggedUser = securityUserService.getLoggedUser();
+
         if(!tripOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         Trip trip = tripOptional.get();
-        // todo add error dtos instead of violations
-        if(loggedUser.getId() == trip.getAdminId()) {
-            activityCreateForm.setTrip(tripOptional.get());
-            Set<ConstraintViolation<ActivityCreateForm>> violations = validator.validate(activityCreateForm);
-            ConstraintViolationsDTO violationsDTO = new ConstraintViolationsDTO(violations);
-            List<Place> googlePlaces = null;
-            try {
-                googlePlaces = googleClient.getPlacesByQuery(activityCreateForm.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
-            }
-            catch(GooglePlacesException gpe) {
-                violationsDTO.add(new ConstraintViolationDTO("Invalid maps location", "mapInput"));
-            }
-            if(violationsDTO.getErrors().size() > 0) {
-                return Response.status(Response.Status.BAD_REQUEST).entity(violationsDTO).build();
-            }
-            ar.edu.itba.paw.model.Place customPlace = createGooglePlaceReference(googlePlaces);
-            if(customPlace == null) {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-            }
-            Activity activity = activityService.create(activityCreateForm.getName(), activityCreateForm.getCategory(), customPlace,
+        if(loggedUser.getId() != trip.getAdminId()) return Response.status(Response.Status.FORBIDDEN).build();
+
+        System.out.println("Start date:" + activityCreateForm.getStartDate());
+        System.out.println("End date:" + activityCreateForm.getEndDate());
+
+        activityCreateForm.setTrip(trip);
+        Set<ConstraintViolation<ActivityCreateForm>> violations = validator.validate(activityCreateForm);
+
+        ConstraintViolationsDTO violationsDTO = new ConstraintViolationsDTO(violations);
+        List<Place> googlePlaces = null;
+        try {
+            googlePlaces = googleClient.getPlacesByQuery(activityCreateForm.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
+        }
+        catch(GooglePlacesException gpe) {
+            violationsDTO.add(new ConstraintViolationDTO("Invalid maps location", "mapInput"));
+        }
+        if(violationsDTO.getErrors().size() > 0) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(violationsDTO).build();
+        }
+        ar.edu.itba.paw.model.Place customPlace = createGooglePlaceReference(googlePlaces);
+        if(customPlace == null) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        Activity activity = activityService.create(activityCreateForm.getName(), activityCreateForm.getCategory(), customPlace,
                     trip, DateManipulation.stringToLocalDate(activityCreateForm.getStartDate()),
                     DateManipulation.stringToLocalDate(activityCreateForm.getEndDate()));
-            tripService.addActivityToTrip(activity.getId(), tripId);
-            return Response.ok(new ActivityDTO(activity)).build();
-        }
-        return Response.status(Response.Status.FORBIDDEN).build();
+        tripService.addActivityToTrip(activity.getId(), tripId);
+        return Response.ok(new ActivityDTO(activity)).build();
     }
 
     @DELETE
