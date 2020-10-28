@@ -30,17 +30,6 @@ export class NavigationComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(["/"]);
-  }
-
-  navigateToProfile() {
-    if (this.isLoggedIn && this.loggedUser) {
-      // TODO
-      return;
-      const profileUrl = "profile/" + this.loggedUser.id;
-      this.router.navigate([profileUrl]);
-    }
-    return;
   }
 
 }

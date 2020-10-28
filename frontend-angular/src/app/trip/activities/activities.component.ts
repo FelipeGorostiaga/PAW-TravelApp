@@ -7,6 +7,7 @@ import {ApiTripService} from "../../services/api-trip.service";
 import {ActivityForm} from "../../model/forms/activity-form";
 import {FullTrip} from "../../model/trip";
 import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
+import {DateUtilService} from "../../services/date-util.service";
 
 @Component({
   selector: 'app-activities',
@@ -34,7 +35,8 @@ export class ActivitiesComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY' });
 
   constructor(private modalService: ModalService, private mapsAPILoader: MapsAPILoader, private  ngZone: NgZone, private router: Router,
-              private ts: ApiTripService, private formBuilder: FormBuilder, private route: ActivatedRoute) { }
+              private ts: ApiTripService, private formBuilder: FormBuilder, private route: ActivatedRoute,
+              private dateUtilService: DateUtilService) { }
 
   ngOnInit() {
     this.activityForm = this.formBuilder.group({
@@ -86,8 +88,8 @@ export class ActivitiesComponent implements OnInit {
       console.log(this.activityForm.errors);
       return;
     }
-    let startDateString = this.convertToDateString(values.startDate);
-    let endDateString = this.convertToDateString(values.endDate);
+    let startDateString = this.dateUtilService.convertToDateString(values.startDate);
+    let endDateString = this.dateUtilService.convertToDateString(values.endDate);
     let form = new ActivityForm(values.name, values.category, values.placeInput, startDateString, endDateString);
     console.log(JSON.stringify(form));
     this.ts.createTripActivity(this.trip.id, form).subscribe(
@@ -102,21 +104,6 @@ export class ActivitiesComponent implements OnInit {
             }
         );
   }
-
-  convertToDateString(date): string {
-    let dateString = "";
-    let day = date.getDate()
-    let month = date.getMonth() + 1
-    let year = date.getFullYear()
-    if(month < 10){
-      dateString = `${day}/0${month}/${year}`;
-    }else{
-      dateString = `${day}/${month}/${year}`;
-    }
-    return dateString;
-  }
-
-
   openModal(id: string) {
     this.modalService.open(id);
   }

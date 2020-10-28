@@ -7,8 +7,9 @@ export class UserForm {
     pswrepeat: string;
     birthday: string;
     nationality: string;
+    sex: string;
 
-    constructor(firstname, lastname, email, password, pswrepeat, nationality, birthday) {
+    constructor(firstname, lastname, email, password, pswrepeat, nationality, birthday, sex) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -16,6 +17,7 @@ export class UserForm {
         this.pswrepeat = pswrepeat;
         this.nationality = nationality;
         this.birthday = birthday;
+        this.sex = sex;
     }
 }
 

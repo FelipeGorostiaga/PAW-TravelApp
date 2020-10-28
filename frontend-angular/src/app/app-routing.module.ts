@@ -55,6 +55,10 @@ const routes: Routes = [
     path: '',
     component: IndexComponent
   },
+  {
+    path: '404',
+    component: PageNotFoundComponent
+  },
   { path: '**', component: PageNotFoundComponent },
 ];
 

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {User} from "../model/user";
 import {ApiUserService} from "../services/api-user.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {AuthService} from "../services/auth/auth.service";
 
 @Component({
   selector: 'app-profile',
@@ -12,26 +13,22 @@ export class ProfileComponent implements OnInit {
 
   loggedUser: User;
   user: User;
-  hasProfilePicture: boolean;
   profilePicture: any;
 
-
-
-  constructor(private us: ApiUserService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private us: ApiUserService, private authService: AuthService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    const profileId = Number(this.route.snapshot.paramMap.get("id"));
-    this.us.getUserById(profileId).subscribe(
-        data => {
-          console.log("user data:");
-          this.user = data;
-          console.log(data);
-        },
-        error => {
-          // todo: not found error
-          console.log(error);
-        }
-    );
+      this.loggedUser = this.authService.getLoggedUser();
+      const profileId = Number(this.route.snapshot.paramMap.get("id"));
+      this.us.getUserById(profileId).subscribe(
+            data => {
+                console.log(data);
+                this.user = data;
+            },
+            error => {
+                console.log(error);
+                this.router.navigate(['/404']);
+            });
   }
 
 }

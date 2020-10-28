@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {UserAuth} from "../model/user-auth";
 import {UserForm} from "../model/forms/user-form";
 import {AuthService} from "../services/auth/auth.service";
 import {Router} from "@angular/router";
@@ -34,9 +33,10 @@ export class RegisterComponent implements OnInit {
             confirmPassword: ['', Validators.required],
             acceptTerms: [false, Validators.requiredTrue],
             birthDate: ['', Validators.required],
-            nationality: ['', Validators.required]
+            nationality: ['', Validators.required],
+            customRadioInline1: ['', Validators.required]
         }, {
-            validators: [MustMatch('password', 'confirmPassword'), ValidDate('birthday')]
+            validators: [MustMatch('password', 'confirmPassword'), ValidDate('birthDate')]
         });
     }
 
@@ -50,7 +50,7 @@ export class RegisterComponent implements OnInit {
             return;
         }
         const formData = new UserForm(values.firstName, values.lastName, values.email,
-            values.password, values.confirmPassword, values.nationality, values.birthDate);
+            values.password, values.confirmPassword, values.nationality, values.birthDate, values.customRadioInline1);
 
         this.authService.register(formData).subscribe(
             data => {
