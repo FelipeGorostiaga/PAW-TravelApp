@@ -33,8 +33,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality) {
-        return userDao.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality);
+    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex) {
+        return userDao.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality, sex);
     }
 
     @Override

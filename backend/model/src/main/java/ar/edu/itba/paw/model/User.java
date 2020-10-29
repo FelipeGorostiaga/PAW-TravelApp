@@ -31,6 +31,9 @@ public class User {
     @Column(nullable = false)
     private LocalDate birthday;
 
+    @Column(length = 1, nullable = false)
+    private String sex;
+
     @Column(length = 500)
     private String biography;
 
@@ -55,12 +58,12 @@ public class User {
     @Column(length = 100, nullable = false)
     private String nationality;
 
-    public User(long id, String firstname, String lastname, String email, String password, LocalDate birthday, String nationality) {
-        this(firstname, lastname, email, password, birthday, nationality);
+    public User(long id, String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex) {
+        this(firstname, lastname, email, password, birthday, nationality, sex);
         this.id = id;
     }
 
-    public User(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality) {
+    public User(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex) {
         super();
         this.firstname = firstname;
         this.lastname = lastname;
@@ -68,8 +71,16 @@ public class User {
         this.password = password;
         this.birthday = birthday;
         this.nationality = nationality;
+        this.sex = sex;
     }
 
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
 
     public long getId() {
         return id;

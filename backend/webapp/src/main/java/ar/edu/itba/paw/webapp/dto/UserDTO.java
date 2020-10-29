@@ -15,6 +15,7 @@ public class UserDTO {
     private LocalDate birthday;
     private String biography = null;
     private String nationality;
+    private String sex;
 
     public UserDTO() {
         // Empty constructor needed by JAX-RS
@@ -28,6 +29,7 @@ public class UserDTO {
         birthday = user.getBirthday();
         nationality = user.getNationality();
         biography = user.getBiography();
+        sex = user.getSex();
     }
 
     public long getId() {
@@ -36,6 +38,14 @@ public class UserDTO {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public String getFirstname() {

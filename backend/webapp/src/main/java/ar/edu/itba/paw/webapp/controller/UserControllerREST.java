@@ -128,7 +128,8 @@ public class UserControllerREST {
         User user;
         try {
             user = us.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
-                    userForm.getPassword(), DateManipulation.stringToLocalDate(userForm.getBirthday()), userForm.getNationality());
+                    userForm.getPassword(), DateManipulation.stringToLocalDate(userForm.getBirthday()),
+                    userForm.getNationality(), userForm.getSex());
         }
         catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Username already in use")).build();

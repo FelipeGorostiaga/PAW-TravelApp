@@ -28,6 +28,7 @@ public class TestUserHibernateDao {
     private static final String EMAIL = "fgorostiaga@itba.edu.ar";
     private static final String EMAIL2 = "test@mail.com2";
     private static final String NATIONALITY = "ARG";
+    private static final String SEX = "M";
 
     private static final long ID = 1;
     private static final long ID2 = 2;
@@ -37,7 +38,7 @@ public class TestUserHibernateDao {
 
     @Test
     public void testCreate() {
-        final User user = ud.create(FIRSTNAME, LASTNAME, EMAIL2, PASSWORD, LocalDate.now(), NATIONALITY);
+        final User user = ud.create(FIRSTNAME, LASTNAME, EMAIL2, PASSWORD, LocalDate.now(), NATIONALITY, SEX);
         Assert.assertNotNull(user);
         Assert.assertEquals(FIRSTNAME, user.getFirstname());
         Assert.assertEquals(LASTNAME, user.getLastname());

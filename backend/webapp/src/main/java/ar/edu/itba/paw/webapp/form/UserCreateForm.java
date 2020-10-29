@@ -44,6 +44,17 @@ public class UserCreateForm {
     @Size(min = 2, max = 5)
     private String nationality;
 
+    @NotNull
+    private String sex;
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
     public String getBirthday() {
         return birthday;
     }
