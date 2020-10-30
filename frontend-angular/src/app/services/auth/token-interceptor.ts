@@ -20,10 +20,8 @@ export class TokenInterceptor implements HttpInterceptor {
 
         return next.handle(request).pipe(
             catchError((error: HttpErrorResponse) => {
-
                 //Unauthorized
                 if(error.status === 401 && !this.refreshingAccessToken) {
-
                     //refresh the access token
                     return this.refreshAccessToken()
                         .pipe(
@@ -38,7 +36,6 @@ export class TokenInterceptor implements HttpInterceptor {
                             })
                         )
                 }
-
                 return throwError(error);
             })
         )

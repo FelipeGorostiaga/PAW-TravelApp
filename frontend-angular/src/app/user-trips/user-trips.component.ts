@@ -23,16 +23,12 @@ export class UserTripsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggedUser = this.authService.getLoggedUser();
-    console.log("Showing trips of user: " + JSON.stringify(this.loggedUser));
     this.userService.getUserTrips(this.loggedUser.id).subscribe(
         res => {
           this.trips = this.chopList(res);
-          console.log(this.trips);
           this.numberOfPages = Math.ceil(this.trips.length / this.tripsPerPage);
         },
-        err => {
-          console.log("Error: couldn't get user trips from server");
-        }
+        error => {}
     );
   }
 

@@ -158,7 +158,7 @@ public class UserControllerREST {
         User user = userOptional.get();
         List<TripDTO> trips = ts.getAllUserTrips(user).stream().map(TripDTO::new).collect(Collectors.toList());
         if (trips.isEmpty()) {
-            return Response.status(Response.Status.NO_CONTENT).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(new GenericEntity<List<TripDTO>>(trips) {}).build();
     }
