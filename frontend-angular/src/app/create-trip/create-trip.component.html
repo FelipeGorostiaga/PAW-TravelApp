@@ -6,7 +6,6 @@
             <div class="col-12">
                 <h1 style="margin-top: 30px;margin-bottom: 20px;">Create trip</h1>
                 <form [formGroup]="tripForm" (ngSubmit)="onSubmit()">
-
                     <div class="form-group">
                         <label>Name</label>
                         <input formControlName="name"
@@ -21,12 +20,13 @@
                             <div *ngIf="f.name.errors.maxLength">Maximum length is 30</div>
                         </div>
                     </div>
-
                     <div class="form-group">
-                        <label>Description</label>
+                        <label for="descriptionBox">Description</label>
                         <textarea formControlName="description"
                                   class="form-control"
                                   type="text"
+                                  id="descriptionBox"
+                                  rows="3"
                                   placeholder="Write a description for your new adventure!"
                                   style="margin-bottom: 10px;"
                                   [ngClass]="{ 'is-invalid': submitted && f.description.errors }">
@@ -37,29 +37,51 @@
                             <div *ngIf="f.description.errors.maxLength">Maximum length is 100</div>
                         </div>
                     </div>
-
                     <div class="form-row">
-                        <div class="form-group col">
-                            <label>Starting date</label>
+                        <div class="form-group col-4">
+                            <label for="startDate">Start date</label>
                             <input formControlName="startDate"
+                                   type="text"
                                    class="form-control"
-                                   type="date"
+                                   id="startDate"
+                                   autocomplete="off"
                                    [ngClass]="{ 'is-invalid': submitted && f.startDate.errors }"
-                            />
+                                   bsDatepicker
+                                   [bsConfig]="bsConfig">
                             <div *ngIf="submitted && f.startDate.errors" class="invalid-feedback">
-                                <div *ngIf="f.startDate.errors.required">Field is required</div>
+                                <p *ngIf="f.startDate.errors.required">Field is required</p>
+                                <p *ngIf="f.startDate.errors.invalidDate">Activity must start the same date or before end date</p>
                             </div>
                         </div>
-                        <div class="form-group col">
-                            <label>Finish date</label>
+                        <div class="form-group col-4">
+                            <label for="endDate">End date</label>
                             <input formControlName="endDate"
+                                   type="text"
                                    class="form-control"
-                                   type="date"
-                                   placeholder="dd-MM-yyyy"
+                                   autocomplete="off"
                                    [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }"
-                            />
+                                   bsDatepicker
+                                   id="endDate"
+                                   [bsConfig]="bsConfig">
                             <div *ngIf="submitted && f.endDate.errors" class="invalid-feedback">
-                                <div *ngIf="f.endDate.errors.required">Field is required</div>
+                                <p *ngIf="f.endDate.errors.required">Field is required</p>
+                            </div>
+                        </div>
+                        <div class="col-4" style="padding-top: 15px; padding-left: 40px;" >
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-sm-2" style="margin-right: 30px">
+                                    <h4>{{tripStatus}}</h4>
+                                </div>
+                                <div class="col">
+                                    <label class="switch" for="checkbox">
+                                        <input formControlName="isPrivate"
+                                               type="checkbox"
+                                               id="checkbox"
+                                               (click)="changeTripStatus()"
+                                        />
+                                        <div class="slider round"></div>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -76,25 +98,10 @@
                     <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
                         <div *ngIf="f.placeInput.errors.required">Field is required</div>
                     </div>
-                    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 500px;width: 1110px;">
+                    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 500px;width: 100%;">
                         <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
                     </agm-map>
-                    <div class="row" style="margin-top: 15px;">
-                        <div class="col-sm-2">
-                            <h4>{{tripStatus}}</h4>
-                        </div>
-                        <div class="col">
-                            <label class="switch" for="checkbox">
-                                <input formControlName="isPrivate"
-                                       type="checkbox"
-                                       id="checkbox"
-                                       (click)="changeTripStatus()"
-                                />
-                                <div class="slider round"></div>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="text-center flex-fill" style="margin-bottom: 20px;">
+                    <div class="text-center flex-fill" style="margin-bottom: 20px; margin-top: 10px;">
                         <button type="submit" class="btn-primary btn">Create</button>
                         <button class="btn btn-secondary" type="reset" (click)="onReset()" style="margin-left: 10px;">Cancel</button>
                     </div>

@@ -12,7 +12,6 @@ import {User} from "../model/user";
 })
 export class UserTripsComponent implements OnInit {
 
-
   trips: Trip[][];
   currentPage = 0;
   tripsPerPage = 6;
@@ -33,7 +32,7 @@ export class UserTripsComponent implements OnInit {
   }
 
   chopList(arr: any) {
-    const newarr = new Array();
+    const newarr = [];
     for (let i = 0; i < arr.length; i = i + this.tripsPerPage) {
       let tempArray = arr.slice(i, i + this.tripsPerPage)
       newarr.push(tempArray);

@@ -315,6 +315,7 @@
                                 <input formControlName="birthDate"
                                        type="text"
                                        class="form-control"
+                                       autocomplete="off"
                                        [ngClass]="{ 'is-invalid': submitted && f.birthDate?.errors }"
                                        bsDatepicker
                                        [bsConfig]="bsConfig"
