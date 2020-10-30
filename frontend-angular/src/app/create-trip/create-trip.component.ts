@@ -7,6 +7,8 @@ import {NavigationExtras, Router} from "@angular/router";
 import {ApiUserService} from "../services/api-user.service";
 import {TripForm} from "../model/forms/trip-form";
 import {ApiTripService} from "../services/api-trip.service";
+import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
+import {DateUtilService} from "../services/date-util.service";
 
 @Component({
   selector: 'app-create-trip',
@@ -29,17 +31,19 @@ export class CreateTripComponent implements OnInit {
   tripForm: FormGroup;
   submitted = false;
 
-  // todo: add errors from backend
+  bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY' });
+
+  // TODO: add errors from backend
   constraintViolations: any;
   receivedErrors: boolean;
 
   constructor(private mapsAPILoader: MapsAPILoader, private  ngZone: NgZone, private router: Router,
-              private ts: ApiTripService, private formBuilder: FormBuilder) { }
+              private ts: ApiTripService, private formBuilder: FormBuilder, private dateUtilService: DateUtilService) { }
 
   ngOnInit() {
 
     this.tripForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30) ]],
+      name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50) ]],
       description: ['', [ Validators.required, Validators.minLength(25), Validators.maxLength(100) ]],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
@@ -76,7 +80,6 @@ export class CreateTripComponent implements OnInit {
               this.zoom = 16;
               this.latlongs.push(latlong);
               this.tripForm.get('placeInput').setValue(place.formatted_address);
-
             });
           });
         });
@@ -108,7 +111,8 @@ export class CreateTripComponent implements OnInit {
     if (this.tripForm.invalid) {
       return;
     }
-    const formData = new TripForm(values.name, values.description, values.startDate, values.endDate, values.placeInput, !!values.isPrivate);
+    const formData = new TripForm(values.name, values.description, this.dateUtilService.convertToDateString(values.startDate),
+        this.dateUtilService.convertToDateString(values.endDate), values.placeInput, !!values.isPrivate, this.latitude, this.longitude);
     console.log(JSON.stringify(formData));
     this.ts.createTrip(formData).subscribe(
         res => {

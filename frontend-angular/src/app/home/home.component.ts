@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiTripService} from "../services/api-trip.service";
-import {Trip} from "../model/trip";
 
 @Component({
   selector: 'app-home',
@@ -21,9 +20,6 @@ export class HomeComponent implements OnInit {
       this.ts.getAllTrips().subscribe(
         res => {
             this.trips = this.chopList(res);
-            console.log(this.trips);
-            console.log(this.trips.length);
-            console.log(this.trips[0]);
             this.numberOfPages = Math.ceil(this.trips.length / this.tripsPerPage);
         },
         err => {

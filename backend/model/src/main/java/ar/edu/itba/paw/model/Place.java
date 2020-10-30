@@ -27,7 +27,7 @@ public class Place {
     @Column
     private double longitude;
 
-    @Column(length = 500, nullable = false)
+    @Column(length = 500)
     private String address;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "startPlace")

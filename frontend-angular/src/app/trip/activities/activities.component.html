@@ -3,12 +3,11 @@
 </div>
 <div *ngIf="trip?.activities?.length !== 0">
     <div class="list-group" style="margin-bottom: 20px">
-        <app-map-activity  *ngFor="let activity of trip?.activities"
+        <app-map-activity *ngFor="let activity of trip?.activities"
                 [activity]="activity">
         </app-map-activity>
     </div>
 </div>
-
 <button class="btn btn-primary" (click)="openModal('custom-modal-1')">Add activity</button>
 <jw-modal id="custom-modal-1">
     <h4 class="text-center text-white" style="margin-bottom: 30px; padding: 20px; background-color: #1e90ff">Add activity</h4>

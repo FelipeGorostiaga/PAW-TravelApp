@@ -13,9 +13,6 @@ public class TripCreateForm {
         // Empty constructor needed by JAX-RS
     }
 
-    @Size(min = 5, max = 100)
-    private String placeInput;
-
     @Size(min = 5, max = 50)
     private String name;
 
@@ -23,15 +20,40 @@ public class TripCreateForm {
     private String description;
 
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String startDate;
 
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String endDate;
 
     @NotNull
     private boolean isPrivate;
+
+    @Size(min = 5, max = 100)
+    private String placeInput;
+
+    @NotNull
+    private double latitude;
+
+    @NotNull
+    private double longitude;
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     public boolean isPrivate() {
         return isPrivate;
@@ -94,12 +116,14 @@ public class TripCreateForm {
     @Override
     public String toString() {
         return "TripCreateForm{" +
-                "placeInput='" + placeInput + '\'' +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
                 ", isPrivate=" + isPrivate +
+                ", placeInput='" + placeInput + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 '}';
     }
 }

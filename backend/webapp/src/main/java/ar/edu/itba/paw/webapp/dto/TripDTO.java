@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
-
-import java.time.LocalDate;
 
 public class TripDTO {
 
@@ -13,19 +12,23 @@ public class TripDTO {
     private int membersAmount;
     private String name;
     private String description;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private String startDate;
+    private String endDate;
 
     public TripDTO() {
         // Empty constructor needed by JAX-RS
     }
 
     public TripDTO(Trip trip) {
+        System.out.println(trip.getStartDate().toString());
+        System.out.println(trip.getEndDate().toString());
+        System.out.println(DateManipulation.changeDateFormat(trip.getStartDate()));
+        System.out.println(DateManipulation.changeDateFormat(trip.getEndDate()));
         this.id = trip.getId();
         this.name = trip.getName();
         this.description = trip.getDescription();
-        this.startDate = trip.getStartDate();
-        this.endDate = trip.getEndDate();
+        this.startDate = DateManipulation.changeDateFormat(trip.getStartDate());
+        this.endDate = DateManipulation.changeDateFormat(trip.getEndDate());
         this.adminId = trip.getAdminId();
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
@@ -88,20 +91,19 @@ public class TripDTO {
         this.description = description;
     }
 
-    public LocalDate getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
-
 }

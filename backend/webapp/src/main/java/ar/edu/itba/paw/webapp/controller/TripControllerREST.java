@@ -28,6 +28,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -46,6 +47,8 @@ public class TripControllerREST {
     private static final String DELETE = "Delete";
 
     private static final int TRIPS_PER_PAGE = 9;
+    private static final double RADAR_RADIO = 1000; //meters
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Autowired
     SecurityUserService securityUserService;
@@ -109,7 +112,6 @@ public class TripControllerREST {
     }
 
 
-
     @GET
     @Path("/all/{page}")
     public Response getAllTripsForPage(@PathParam("page") final int pageNum) {
@@ -163,29 +165,31 @@ public class TripControllerREST {
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
-
         User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
         ConstraintViolationsDTO violationsDTO = new ConstraintViolationsDTO(violations);
         List<Place> places = null;
+        System.out.println(tripCreateForm);
         try {
-            places = googleClient.getPlacesByQuery(tripCreateForm.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
+            places = googleClient.getNearbyPlacesRankedByDistance(tripCreateForm.getLatitude(), tripCreateForm.getLongitude());
+            //places = googleClient.getPlacesByRadar(tripCreateForm.getLatitude(), tripCreateForm.getLongitude(), RADAR_RADIO);
+            System.out.println(places);
+            //places = googleClient.getPlacesByQuery(tripCreateForm.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
         }
         catch(GooglePlacesException gpe) {
-            LOGGER.debug("Invalid google maps query location");
+            System.out.println("Invalid google maps query location");
             violationsDTO.add(new ConstraintViolationDTO("Invalid google maps location", "mapInput"));
         }
         if(violationsDTO.getErrors().size() > 0) {
+            System.out.println(violationsDTO.getErrors());
             return Response.status(Response.Status.BAD_REQUEST).entity(violationsDTO).build();
         }
-
-        System.out.println(tripCreateForm);
-
         ar.edu.itba.paw.model.Place customPlace = createGooglePlaceReference(places);
         if(customPlace == null) {
             System.out.println("Place is null");
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+        System.out.println("Dates: " + tripCreateForm.getStartDate() + " " + tripCreateForm.getEndDate());
         Trip trip = tripService.create(loggedUser.getId(), customPlace, tripCreateForm.getName(),
                 tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
                 DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());

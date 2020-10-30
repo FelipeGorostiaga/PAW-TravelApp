@@ -41,7 +41,7 @@ public class UserControllerREST {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserControllerREST.class);
 
-    private static final int JWT_ACCESS_EXPIRATION = 3600 * 1000; //1 hour
+    private static final int JWT_ACCESS_EXPIRATION = 3600 * 2 * 1000; //2 hours
     private static final int JWT_REFRESH_EXPIRATION = 900000 * 1000; //10+ days
 
     @Autowired

@@ -88,15 +88,12 @@ export class ActivitiesComponent implements OnInit {
       console.log(this.activityForm.errors);
       return;
     }
-    let startDateString = this.dateUtilService.convertToDateString(values.startDate);
-    let endDateString = this.dateUtilService.convertToDateString(values.endDate);
-    let form = new ActivityForm(values.name, values.category, values.placeInput, startDateString, endDateString);
+    let form = new ActivityForm(values.name, values.category, values.placeInput, this.dateUtilService.convertToDateString(values.startDate),
+        this.dateUtilService.convertToDateString(values.endDate));
     console.log(JSON.stringify(form));
     this.ts.createTripActivity(this.trip.id, form).subscribe(
             data => {
-              console.log(data);
               this.trip.activities.push(data);
-              console.log("Added new activity to trip!");
               this.closeModal('custom-modal-1');
             },
             error => {

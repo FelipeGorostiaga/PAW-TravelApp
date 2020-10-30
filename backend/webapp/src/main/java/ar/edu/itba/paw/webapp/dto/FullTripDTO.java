@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
 
 import java.time.LocalDate;
@@ -13,8 +14,8 @@ public class FullTripDTO {
     private Boolean isPrivate;
     private String name;
     private String description;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private String startDate;
+    private String endDate;
     private PlaceDTO startPlace;
     private List<TripCommentDTO> comments;
     private List<UserDTO> users;
@@ -29,8 +30,8 @@ public class FullTripDTO {
         this.id = trip.getId();
         this.name = trip.getName();
         this.description = trip.getDescription();
-        this.startDate = trip.getStartDate();
-        this.endDate = trip.getEndDate();
+        this.startDate = DateManipulation.changeDateFormat(trip.getStartDate());
+        this.endDate = DateManipulation.changeDateFormat(trip.getEndDate());
         this.adminId = trip.getAdminId();
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
@@ -80,22 +81,6 @@ public class FullTripDTO {
         this.description = description;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
     public PlaceDTO getStartPlace() {
         return startPlace;
     }
@@ -134,5 +119,21 @@ public class FullTripDTO {
 
     public void setActivities(List<ActivityDTO> activities) {
         this.activities = activities;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }
