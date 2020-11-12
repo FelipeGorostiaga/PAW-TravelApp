@@ -4,9 +4,10 @@ import {Trip} from "../model/trip";
 import {TripForm} from "../model/forms/trip-form";
 import {ImageDTO} from "../model/image-dto";
 import {ActivityForm} from "../model/forms/activity-form";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Comment} from "../model/comment";
 import {environment} from "../../environments/environment";
+import {CommentForm} from "../model/forms/comment-form";
 
 @Injectable({
   providedIn: 'root'
@@ -79,10 +80,10 @@ export class ApiTripService {
     return this.http.get(url);
   }
 
-  // Todo: TripCommentForm? and fix SENDING USER ID in API
-  postComment(tripId: number, userId: number, comment: Comment): Observable<Comment> {
-    const url = this.tripsBaseURL + '/' + tripId + '/comments/add/' + userId;
-    return this.http.post<Comment>(url, comment);
+  postComment(tripId: number, form: CommentForm): Observable<any> {
+    const url = this.tripsBaseURL + '/' + tripId + '/comments/add';
+    console.log(JSON.stringify(form))
+    return this.http.post(url, form);
   }
 
   getTripActivities(id: number): Observable<any> {

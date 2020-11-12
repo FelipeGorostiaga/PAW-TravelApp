@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
@@ -28,7 +27,6 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -48,7 +46,6 @@ public class TripControllerREST {
 
     private static final int TRIPS_PER_PAGE = 9;
     private static final double RADAR_RADIO = 1000; //meters
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Autowired
     SecurityUserService securityUserService;
@@ -294,24 +291,26 @@ public class TripControllerREST {
     }
 
     @POST
-    @Path("/{id}/comments/add/{userId}")
+    @Path("/{id}/comments/add")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response addCommentToTripChat(@PathParam("id") final long tripId, @Valid TripCommentForm tripCommentForm) {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
+        if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        if (tripCommentForm == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        Trip trip = tripOptional.get();
         Set<ConstraintViolation<TripCommentForm>> violations = validator.validate(tripCommentForm);
         if(!violations.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ConstraintViolationsDTO(violations)).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCommentForm>>>(violations){}).build();
         }
-        if(tripOptional.isPresent()) {
-            Trip t = tripOptional.get();
-            if(t.getUsers().contains(loggedUser) || t.getAdminId() == loggedUser.getId()) {
-                TripComment tripComment = tripCommentsService.create(loggedUser, t, tripCommentForm.getComment());
-                tripService.addCommentToTrip(tripComment.getId(), tripId);
-                return Response.ok(new TripCommentDTO(tripComment)).build();
-            }
-            return Response.status(Response.Status.FORBIDDEN).build();
+        if(trip.getUsers().contains(loggedUser) || trip.getAdminId() == loggedUser.getId()) {
+            TripComment tripComment = tripCommentsService.create(loggedUser, trip, tripCommentForm.getComment());
+            tripService.addCommentToTrip(tripComment.getId(), tripId);
+            return Response.ok(new TripCommentDTO(tripComment)).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid trip id")).build();
+        return Response.status(Response.Status.FORBIDDEN).build();
     }
 
     @GET

@@ -2,8 +2,10 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripComment;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +39,7 @@ public class FullTripDTO {
         this.isPrivate = trip.isPrivate();
         this.users = trip.getUsers().stream().map(UserDTO::new).collect(Collectors.toList());
         this.admins = trip.getAdmins().stream().map(UserDTO::new).collect(Collectors.toList());
-        this.comments = trip.getComments().stream().map(TripCommentDTO::new).collect(Collectors.toList());
+        this.comments =  trip.getComments().stream().sorted().map(TripCommentDTO::new).collect(Collectors.toList());
         this.activities = trip.getActivities().stream().map(ActivityDTO::new).collect(Collectors.toList());
     }
 

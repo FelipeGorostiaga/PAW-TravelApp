@@ -1,6 +1,5 @@
 
     <img *ngIf="hasImage" class="img-container" src="" alt="Trip image">
-
     <div>
         <div class="d-flex justify-content-between">
             <div *ngIf="isAdmin" class="p-2">
@@ -24,7 +23,6 @@
         Members
     </h3>
     <div class="list-group">
-
         <!-- todo: users are duplicate-->
         <a *ngFor="let admin of trip?.admins" class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">

@@ -1,6 +1,7 @@
 import {Place} from "./place";
 import {Activity} from "./activity";
 import {User} from "./user";
+import {Comment} from "./comment";
 
 export class Trip {
 
