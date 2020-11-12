@@ -24,11 +24,11 @@ export class ChatComponent implements OnInit {
   sendMessage(input) {
     let inputValue = input.value;
     if(inputValue.length === 0) return;
+    input.value = "";
     this.tripService.postComment(this.trip.id, new CommentForm(String(inputValue))).subscribe(
         data => {
           console.log(data);
           this.trip.comments.push(data);
-          input.value = "";
         },
         error => {
           console.log(error);

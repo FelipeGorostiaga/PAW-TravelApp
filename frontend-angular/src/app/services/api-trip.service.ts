@@ -4,10 +4,10 @@ import {Trip} from "../model/trip";
 import {TripForm} from "../model/forms/trip-form";
 import {ImageDTO} from "../model/image-dto";
 import {ActivityForm} from "../model/forms/activity-form";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Comment} from "../model/comment";
+import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CommentForm} from "../model/forms/comment-form";
+import {shareReplay} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -82,8 +82,7 @@ export class ApiTripService {
 
   postComment(tripId: number, form: CommentForm): Observable<any> {
     const url = this.tripsBaseURL + '/' + tripId + '/comments/add';
-    console.log(JSON.stringify(form))
-    return this.http.post(url, form);
+    return this.http.post(url, form).pipe(shareReplay());
   }
 
   getTripActivities(id: number): Observable<any> {
@@ -101,13 +100,4 @@ export class ApiTripService {
     return this.http.delete(url);
   }
 
-  getTripAdmins(tripId: number): Observable<any> {
-    const url = this.tripsBaseURL + '/' + tripId + '/admins';
-    return this.http.get(url);
-  }
-
-  getTripUsers(tripId: number): Observable<any> {
-    const url = this.tripsBaseURL + '/' + tripId + '/users';
-    return this.http.get(url);
-  }
 }
