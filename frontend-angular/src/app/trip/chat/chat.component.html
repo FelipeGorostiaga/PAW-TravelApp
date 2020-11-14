@@ -5,7 +5,8 @@
     <app-comment *ngFor="let comment of trip?.comments" [comment]="comment"></app-comment>
     <div class="input-group">
         <input type="text" #comment class="form-control" placeholder="Write a comment...">
-        <span class="input-group-btn"><button class="btn btn-primary" type="button" (click)="sendMessage(comment)">Send</button></span>
+        <span class="input-group-btn"><button class="btn btn-primary" type="button"
+                                              (click)="sendMessage(comment)">Send</button></span>
     </div>
 </div>
 

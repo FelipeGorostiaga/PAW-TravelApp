@@ -37,10 +37,10 @@ public class FullTripDTO {
         this.adminId = trip.getAdminId();
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
-        this.users = trip.getUsers().stream().map(UserDTO::new).collect(Collectors.toList());
-        this.admins = trip.getAdmins().stream().map(UserDTO::new).collect(Collectors.toList());
         this.comments =  trip.getComments().stream().sorted().map(TripCommentDTO::new).collect(Collectors.toList());
         this.activities = trip.getActivities().stream().map(ActivityDTO::new).collect(Collectors.toList());
+        this.admins = trip.getAdmins().stream().map(UserDTO::new).collect(Collectors.toList());
+        this.users = trip.getUsers().stream().filter(user -> !trip.getAdmins().contains(user)).map(UserDTO::new).collect(Collectors.toList());
     }
 
     public Long getId() {
