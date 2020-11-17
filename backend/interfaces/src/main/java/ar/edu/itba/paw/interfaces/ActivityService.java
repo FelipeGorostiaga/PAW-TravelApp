@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ActivityService {
     public Optional<Activity> findById(long id);
     public Optional<Activity> findByName(String name);
-    public Activity create(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate);
+    public Activity create(String name, String category, double latitude, double longitude, Trip trip, LocalDate startDate, LocalDate endDate);
     public Optional<Activity> findByCategory(String category);
 
     List<Activity> getTripActivities(long tripId);

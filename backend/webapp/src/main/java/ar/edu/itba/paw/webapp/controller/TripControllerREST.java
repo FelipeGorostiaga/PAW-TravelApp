@@ -41,11 +41,9 @@ public class TripControllerREST {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TripControllerREST.class);
 
+    // TODO: wtf...
     private static final String ADD = "Add";
     private static final String DELETE = "Delete";
-
-    private static final int TRIPS_PER_PAGE = 9;
-    private static final double RADAR_RADIO = 1000; //meters
 
     @Autowired
     SecurityUserService securityUserService;
@@ -81,7 +79,7 @@ public class TripControllerREST {
     @Path("/{id}")
     public Response getTrip(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         return Response.ok(new FullTripDTO(tripOptional.get())).build();
     }
 
@@ -90,22 +88,24 @@ public class TripControllerREST {
     @Path("/{id}/admins")
     public Response getTripAdmins(@PathParam("id") final long tripId) {
         Optional<Trip> trip = tripService.findById(tripId);
-        if(!trip.isPresent()) {
+        if (!trip.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         List<UserDTO> users = this.tripService.getTripAdmins(tripId).stream().map(UserDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<UserDTO>>(users) {}).build();
+        return Response.ok(new GenericEntity<List<UserDTO>>(users) {
+        }).build();
     }
 
     @GET
     @Path("/{id}/users")
     public Response getTripUsers(@PathParam("id") final long tripId) {
         Optional<Trip> trip = tripService.findById(tripId);
-        if(!trip.isPresent()) {
+        if (!trip.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         List<UserDTO> users = this.tripService.getTripUsers(tripId).stream().map(UserDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<UserDTO>>(users) {}).build();
+        return Response.ok(new GenericEntity<List<UserDTO>>(users) {
+        }).build();
     }
 
 
@@ -113,17 +113,19 @@ public class TripControllerREST {
     @Path("/all/{page}")
     public Response getAllTripsForPage(@PathParam("page") final int pageNum) {
         List<TripDTO> trips = tripService.getAllTripsPerPage(pageNum).stream().map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripDTO>>(trips) {}).build();
+        return Response.ok(new GenericEntity<List<TripDTO>>(trips) {
+        }).build();
     }
 
     @GET
     @Path("/all")
     public Response getAllTrips() {
         List<TripDTO> trips = tripService.getAllTrips().stream()
-                                        .filter(trip -> !trip.isPrivate())
-                                        .map(TripDTO::new)
-                                        .collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripDTO>>(trips) {}).build();
+                .filter(trip -> !trip.isPrivate())
+                .map(TripDTO::new)
+                .collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TripDTO>>(trips) {
+        }).build();
     }
 
     @PUT
@@ -132,25 +134,25 @@ public class TripControllerREST {
     public Response editTrip(@Valid final EditTripForm form, @PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         User loggedUser = securityUserService.getLoggedUser();
-        if(!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         Trip trip = tripOptional.get();
-        if(loggedUser.getId() != trip.getAdminId()) {
+        if (loggedUser.getId() != trip.getAdminId()) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         Set<ConstraintViolation<EditTripForm>> violations = validator.validate(form);
         ConstraintViolationsDTO constraintViolationsDTO = new ConstraintViolationsDTO(violations);
         byte[] imageBytes;
         try {
-            imageBytes = ImageValidator.validateImage(constraintViolationsDTO,  form.getImageUpload());
+            imageBytes = ImageValidator.validateImage(constraintViolationsDTO, form.getImageUpload());
         } catch (IOException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(new ErrorDTO("Server couldn't get image bytes"))
                     .build();
         }
-        if(constraintViolationsDTO.getErrors().size() > 0) {
+        if (constraintViolationsDTO.getErrors().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(constraintViolationsDTO).build();
         }
-        if(tripPicturesService.findByTripId(tripId).isPresent()) {
+        if (tripPicturesService.findByTripId(tripId).isPresent()) {
             tripPicturesService.deleteByTripId(tripId);
         }
         TripPicture picture = tripPicturesService.create(trip, imageBytes);
@@ -164,36 +166,22 @@ public class TripControllerREST {
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
         User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
-        ConstraintViolationsDTO violationsDTO = new ConstraintViolationsDTO(violations);
-        List<Place> places = null;
-        System.out.println(tripCreateForm);
+        if (!violations.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCreateForm>>>(violations) {
+            }).build();
+        }
+        Trip trip;
         try {
-            places = googleClient.getNearbyPlacesRankedByDistance(tripCreateForm.getLatitude(), tripCreateForm.getLongitude());
-            //places = googleClient.getPlacesByRadar(tripCreateForm.getLatitude(), tripCreateForm.getLongitude(), RADAR_RADIO);
-            System.out.println(places);
-            //places = googleClient.getPlacesByQuery(tripCreateForm.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
+            trip = tripService.create(loggedUser.getId(), tripCreateForm.getLatitude(), tripCreateForm.getLongitude(), tripCreateForm.getName(),
+                    tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
+                    DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());
+        } catch (GooglePlacesException exception) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorDTO("There was an error connecting to the GoogleMaps API")).build();
         }
-        catch(GooglePlacesException gpe) {
-            System.out.println("Invalid google maps query location");
-            violationsDTO.add(new ConstraintViolationDTO("Invalid google maps location", "mapInput"));
-        }
-        if(violationsDTO.getErrors().size() > 0) {
-            System.out.println(violationsDTO.getErrors());
-            return Response.status(Response.Status.BAD_REQUEST).entity(violationsDTO).build();
-        }
-        ar.edu.itba.paw.model.Place customPlace = createGooglePlaceReference(places);
-        if(customPlace == null) {
-            System.out.println("Place is null");
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-        System.out.println("Dates: " + tripCreateForm.getStartDate() + " " + tripCreateForm.getEndDate());
-        Trip trip = tripService.create(loggedUser.getId(), customPlace, tripCreateForm.getName(),
-                tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
-                DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());
-        if(trip != null) {
+        if (trip != null) {
             return Response.ok(new TripDTO(trip)).build();
         }
-        System.out.println("trip is null");
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
@@ -201,9 +189,10 @@ public class TripControllerREST {
     @Path("/{id}/places")
     public Response getTripPlaces(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(tripOptional.isPresent()) {
+        if (tripOptional.isPresent()) {
             List<PlaceDTO> places = tripService.findTripPlaces(tripOptional.get()).stream().map(PlaceDTO::new).collect(Collectors.toList());
-            return Response.ok(new GenericEntity<List<PlaceDTO>>(places) {}).build();
+            return Response.ok(new GenericEntity<List<PlaceDTO>>(places) {
+            }).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
@@ -213,8 +202,8 @@ public class TripControllerREST {
     public Response deleteTrip(@PathParam("id") final long tripId) {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(tripOptional.isPresent()) {
-            if(loggedUser.getId() == tripOptional.get().getAdminId()) {
+        if (tripOptional.isPresent()) {
+            if (loggedUser.getId() == tripOptional.get().getAdminId()) {
                 tripService.deleteTrip(tripId);
                 return Response.ok().build();
             }
@@ -239,10 +228,10 @@ public class TripControllerREST {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<User> userOptional = userService.findById(userId);
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(userOptional.isPresent() && tripOptional.isPresent()) {
+        if (userOptional.isPresent() && tripOptional.isPresent()) {
             User u = userOptional.get();
             Trip t = tripOptional.get();
-            if(t.getAdminId() == loggedUser.getId()) {
+            if (t.getAdminId() == loggedUser.getId()) {
                 switch (type) {
                     case ADD:
                         tripService.addUserToTrip(userId, tripId);
@@ -279,11 +268,12 @@ public class TripControllerREST {
     public Response getTripComments(@PathParam("id") final long tripId) {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(tripOptional.isPresent()) {
+        if (tripOptional.isPresent()) {
             Trip t = tripOptional.get();
-            if(t.getUsers().contains(loggedUser)) {
+            if (t.getUsers().contains(loggedUser)) {
                 List<TripCommentDTO> comments = tripService.getTripComments(tripId).stream().map(TripCommentDTO::new).collect(Collectors.toList());
-                return Response.ok(new GenericEntity<List<TripCommentDTO>>(comments){}).build();
+                return Response.ok(new GenericEntity<List<TripCommentDTO>>(comments) {
+                }).build();
             }
             return Response.status(Response.Status.FORBIDDEN).build();
         }
@@ -302,10 +292,11 @@ public class TripControllerREST {
         }
         Trip trip = tripOptional.get();
         Set<ConstraintViolation<TripCommentForm>> violations = validator.validate(tripCommentForm);
-        if(!violations.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCommentForm>>>(violations){}).build();
+        if (!violations.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCommentForm>>>(violations) {
+            }).build();
         }
-        if(trip.getUsers().contains(loggedUser) || trip.getAdminId() == loggedUser.getId()) {
+        if (trip.getUsers().contains(loggedUser) || trip.getAdminId() == loggedUser.getId()) {
             TripComment tripComment = tripCommentsService.create(loggedUser, trip, tripCommentForm.getComment());
             tripService.addCommentToTrip(tripComment.getId(), tripId);
             return Response.ok(new TripCommentDTO(tripComment)).build();
@@ -317,24 +308,14 @@ public class TripControllerREST {
     @Path("/{id}/activities")
     public Response getTripActivities(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if(tripOptional.isPresent()) {
+        if (tripOptional.isPresent()) {
             List<ActivityDTO> activities = activityService.getTripActivities(tripId).stream().map(ActivityDTO::new).collect(Collectors.toList());
-            return Response.ok(new GenericEntity<List<ActivityDTO>>(activities){}).build();
+            return Response.ok(new GenericEntity<List<ActivityDTO>>(activities) {
+            }).build();
         }
         return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid trip id")).build();
     }
 
-    private ar.edu.itba.paw.model.Place createGooglePlaceReference(List<Place> googlePlaces) {
-        if(googlePlaces != null && !googlePlaces.isEmpty()) {
-            Place googlePlace = googlePlaces.get(0);
-            LOGGER.debug("Google Place name is {}", googlePlace.getName());
-            Optional<ar.edu.itba.paw.model.Place> maybePlace = placeService.findByGoogleId(googlePlace.getPlaceId());
-            return maybePlace.orElseGet(() -> placeService
-                    .create(googlePlace.getPlaceId(), googlePlace.getName(), googlePlace.getLatitude(),
-                    googlePlace.getLongitude(), googlePlace.getAddress()));
-        }
-        return null;
-    }
 
     @POST
     @Path("/{id}/activities/create")
@@ -342,37 +323,20 @@ public class TripControllerREST {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         User loggedUser = securityUserService.getLoggedUser();
 
-        if(!tripOptional.isPresent()) {
+        if (!tripOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         Trip trip = tripOptional.get();
-        if(loggedUser.getId() != trip.getAdminId()) return Response.status(Response.Status.FORBIDDEN).build();
-
-        System.out.println("Start date:" + activityCreateForm.getStartDate());
-        System.out.println("End date:" + activityCreateForm.getEndDate());
-
+        if (loggedUser.getId() != trip.getAdminId()) return Response.status(Response.Status.FORBIDDEN).build();
         activityCreateForm.setTrip(trip);
         Set<ConstraintViolation<ActivityCreateForm>> violations = validator.validate(activityCreateForm);
-
-        ConstraintViolationsDTO violationsDTO = new ConstraintViolationsDTO(violations);
-        List<Place> googlePlaces = null;
-        try {
-            googlePlaces = googleClient.getPlacesByQuery(activityCreateForm.getPlaceInput(), GooglePlaces.MAXIMUM_RESULTS);
+        if (!violations.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<ActivityCreateForm>>>(violations) {
+            }).build();
         }
-        catch(GooglePlacesException gpe) {
-            violationsDTO.add(new ConstraintViolationDTO("Invalid maps location", "mapInput"));
-        }
-        if(violationsDTO.getErrors().size() > 0) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(violationsDTO).build();
-        }
-        ar.edu.itba.paw.model.Place customPlace = createGooglePlaceReference(googlePlaces);
-        if(customPlace == null) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-        Activity activity = activityService.create(activityCreateForm.getName(), activityCreateForm.getCategory(), customPlace,
-                    trip, DateManipulation.stringToLocalDate(activityCreateForm.getStartDate()),
-                    DateManipulation.stringToLocalDate(activityCreateForm.getEndDate()));
-        tripService.addActivityToTrip(activity.getId(), tripId);
+        Activity activity = activityService.create(activityCreateForm.getName(), activityCreateForm.getCategory(), activityCreateForm.getLatitude(),
+                activityCreateForm.getLongitude(), trip, DateManipulation.stringToLocalDate(activityCreateForm.getStartDate()),
+                DateManipulation.stringToLocalDate(activityCreateForm.getEndDate()));
         return Response.ok(new ActivityDTO(activity)).build();
     }
 
@@ -381,9 +345,9 @@ public class TripControllerREST {
     public Response deleteTripActivity(@PathParam("id") final long tripId, @PathParam("activityId") final long activityId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         User loggedUser = securityUserService.getLoggedUser();
-        if(tripOptional.isPresent()) {
+        if (tripOptional.isPresent()) {
             Trip trip = tripOptional.get();
-            if(trip.getAdminId() == loggedUser.getId()) {
+            if (trip.getAdminId() == loggedUser.getId()) {
                 tripService.deleteTripActivity(activityId, tripId);
                 return Response.ok().build();
             }

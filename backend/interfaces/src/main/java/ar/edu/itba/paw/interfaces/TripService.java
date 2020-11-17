@@ -2,13 +2,14 @@ package ar.edu.itba.paw.interfaces;
 
 
 import ar.edu.itba.paw.model.*;
+import se.walkercrou.places.exception.GooglePlacesException;
 
 import java.time.LocalDate;
 import java.util.*;
 
 public interface TripService {
 
-    Trip create(long createdBy, Place place, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate);
+    Trip create(long createdBy, double latitude, double longitude, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) throws GooglePlacesException;
     Optional<Trip> findById(long id);
     List<Trip> getAllTripsPerPage(int pageNum);
     List<Trip> getAllTrips();

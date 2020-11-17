@@ -2,9 +2,9 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.webapp.form.annotation.ValidDates;
-import ar.edu.itba.paw.webapp.form.annotation.ValidTripItinerary;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -25,6 +25,12 @@ public class ActivityCreateForm {
     @Size(min = 3, max = 100)
     private String placeInput;
 
+    @NotNull
+    private double latitude;
+
+    @NotNull
+    private double longitude;
+
     @Size(min = 8, max = 10)
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String startDate;
@@ -34,6 +40,22 @@ public class ActivityCreateForm {
     private String endDate;
 
     private Trip trip;
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     public Trip getTrip() {
         return trip;

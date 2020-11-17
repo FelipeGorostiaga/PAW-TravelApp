@@ -27,6 +27,10 @@
     <version>4.11</version>
     <scope>test</scope>
    </dependency>
+      <dependency>
+          <groupId>se.walkercrou</groupId>
+          <artifactId>google-places-api-java</artifactId>
+      </dependency>
   </dependencies>
 
 </project>

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import se.walkercrou.places.GooglePlaces;
+import se.walkercrou.places.exception.GooglePlacesException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -29,8 +31,14 @@ public class TripServiceImpl implements TripService {
     @Autowired
     private UserDao ud;
 
+    @Autowired
+    private GoogleMapsService googleMapsService;
+
     @Override
-    public Trip create(long userId, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) {
+    public Trip create(long userId, double latitude, double longitude, String name, String description,
+                       LocalDate startDate, LocalDate endDate, boolean isPrivate) throws GooglePlacesException{
+        List<se.walkercrou.places.Place> googleMapsPlaces = googleMapsService.queryGoogleMapsPlaces(latitude, longitude);
+        Place startPlace = googleMapsService.createGooglePlaceReference(googleMapsPlaces);
         Trip t;
         Optional<User> u = ud.findById(userId);
         if(u.isPresent()) {

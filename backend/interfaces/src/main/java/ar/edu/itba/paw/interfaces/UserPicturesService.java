@@ -7,8 +7,8 @@ import java.util.Optional;
 
 public interface UserPicturesService {
 
-    public UserPicture create(User user, byte[] image);
-    public Optional<UserPicture> findByUserId(long userId);
-    public boolean deleteByUserId(long userId);
+    UserPicture create(User user, byte[] image);
+    Optional<UserPicture> findByUserId(long userId);
+    boolean deleteByUserId(long userId);
 
 }

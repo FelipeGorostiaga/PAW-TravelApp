@@ -88,7 +88,7 @@ export class ActivitiesComponent implements OnInit {
       console.log(this.activityForm.errors);
       return;
     }
-    let form = new ActivityForm(values.name, values.category, values.placeInput, this.dateUtilService.convertToDateString(values.startDate),
+    let form = new ActivityForm(values.name, values.category, values.placeInput, this.latitude, this.longitude, this.dateUtilService.convertToDateString(values.startDate),
         this.dateUtilService.convertToDateString(values.endDate));
     console.log(JSON.stringify(form));
     this.ts.createTripActivity(this.trip.id, form).subscribe(

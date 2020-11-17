@@ -26,12 +26,10 @@ export class LoginComponent implements OnInit {
   login() {
     this.authService.login(this.user).subscribe(
         data => {
-            console.log(data);
             this.authService.createSession(data.accessToken, data.refreshToken, data.user);
             this.router.navigate(["/home"]);
         },
         err => {
-          console.log("Error in login");
           this.errMessage = "Invalid username or password";
         }
     );

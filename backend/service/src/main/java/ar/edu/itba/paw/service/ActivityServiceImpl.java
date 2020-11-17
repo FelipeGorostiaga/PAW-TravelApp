@@ -3,6 +3,8 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.ActivityDao;
 import ar.edu.itba.paw.interfaces.ActivityService;
+import ar.edu.itba.paw.interfaces.GoogleMapsService;
+import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.model.Activity;
 import ar.edu.itba.paw.model.DataPair;
 import ar.edu.itba.paw.model.Place;
@@ -10,6 +12,7 @@ import ar.edu.itba.paw.model.Trip;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import se.walkercrou.places.exception.GooglePlacesException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,6 +27,12 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     ActivityDao ad;
 
+    @Autowired
+    TripService tripService;
+
+    @Autowired
+    GoogleMapsService googleMapsService;
+
     @Override
     public Optional<Activity> findById(final long id) {
         return ad.findById(id);
@@ -35,8 +44,12 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Activity create(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
-        return ad.create(name, category, place, trip, startDate, endDate);
+    public Activity create(String name, String category, double latitude, double longitude, Trip trip, LocalDate startDate, LocalDate endDate) throws GooglePlacesException {
+        List<se.walkercrou.places.Place> googleMapsPlaces = googleMapsService.queryGoogleMapsPlaces(latitude, longitude);
+        Place place = googleMapsService.createGooglePlaceReference(googleMapsPlaces);
+        Activity activity =  ad.create(name, category, place, trip, startDate, endDate);
+        tripService.addActivityToTrip(activity.getId(), trip.getId());
+        return activity;
     }
 
     @Override
