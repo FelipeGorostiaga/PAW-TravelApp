@@ -63,6 +63,12 @@ public class Trip implements Comparable<Trip>{
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
     private List<TripComment> comments = new LinkedList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripInvitation> pendingConfirmations;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripInvitation> invitations;
+
     /* package */ Trip() {
         // Just for Hibernate
     }
@@ -83,6 +89,22 @@ public class Trip implements Comparable<Trip>{
         this.startDate = startDate;
         this.endDate = endDate;
         this.isPrivate = isPrivate;
+    }
+
+    public List<TripInvitation> getPendingConfirmations() {
+        return pendingConfirmations;
+    }
+
+    public void setPendingConfirmations(List<TripInvitation> pendingConfirmations) {
+        this.pendingConfirmations = pendingConfirmations;
+    }
+
+    public List<TripInvitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(List<TripInvitation> invitations) {
+        this.invitations = invitations;
     }
 
     public Place getStartPlace() {

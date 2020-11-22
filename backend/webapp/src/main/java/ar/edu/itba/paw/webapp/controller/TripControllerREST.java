@@ -4,19 +4,14 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationDTO;
 import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
-import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
-import ar.edu.itba.paw.webapp.form.EditTripForm;
-import ar.edu.itba.paw.webapp.form.TripCommentForm;
-import ar.edu.itba.paw.webapp.form.TripCreateForm;
+import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.webapp.utils.ImageValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import se.walkercrou.places.GooglePlaces;
-import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
 
 import javax.validation.ConstraintViolation;
@@ -354,5 +349,33 @@ public class TripControllerREST {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @POST
+    @Path("/{id}/invitation/pending/{token}")
+    public Response acceptOrDenyTripPendingConfirmation(@Valid PendingConfirmationForm form, @PathParam("id") final long tripId) {
+        User loggedUser = securityUserService.getLoggedUser();
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        Set<ConstraintViolation<PendingConfirmationForm>> violations = validator.validate(form);
+        if (!violations.isEmpty())
+            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<PendingConfirmationForm>>>(violations) {
+            }).build();
+        if (!tripOptional.get().getAdmins().contains(loggedUser)) return Response.status(Response.Status.UNAUTHORIZED).build();
+        return form.isAccepted()? acceptTripPendingConfirmation(form) : denyTripPendingConfirmation(form);
+    }
+
+    private Response acceptTripPendingConfirmation(PendingConfirmationForm form) {
+
+        // todo: trip service -> accept user to trip
+
+        return Response.ok().entity(Boolean.TRUE).build();
+    }
+
+    private Response denyTripPendingConfirmation(PendingConfirmationForm form) {
+
+        // todo: trip service -> deny user to trip
+
+        return Response.ok().entity(Boolean.FALSE).build();
     }
 }

@@ -1,12 +1,12 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -18,8 +18,8 @@ public class UserHibernateDao implements UserDao {
     private EntityManager em;
 
     @Override
-    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex) {
-       final User user = new User(firstname, lastname, email, password, birthday, nationality, sex);
+    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex, String verificationCode) {
+       final User user = new User(firstname, lastname, email, password, birthday, nationality, sex, verificationCode);
        em.persist(user);
        return user;
     }
@@ -27,6 +27,13 @@ public class UserHibernateDao implements UserDao {
     @Override
     public boolean update(User u) {
         return em.merge(u) != null;
+    }
+
+    @Override
+    public void verify(User u) {
+        Query query = em.createQuery("update User set verified = true where id = :userId");
+        query.setParameter("userId", u.getId());
+        query.executeUpdate();
     }
 
     @Override
@@ -38,6 +45,13 @@ public class UserHibernateDao implements UserDao {
     public Optional<User> findByUsername(String email) {
         final TypedQuery<User> query = em.createQuery("from User as u where u.email = :email", User.class);
         query.setParameter("email", email);
+        return query.getResultList().stream().findFirst();
+    }
+
+    @Override
+    public Optional<User> findByVerificationCode(String verificationCode) {
+        final TypedQuery<User> query = em.createQuery("from User as u where u.verificationCode = :verificationCode", User.class);
+        query.setParameter("verificationCode", verificationCode);
         return query.getResultList().stream().findFirst();
     }
 

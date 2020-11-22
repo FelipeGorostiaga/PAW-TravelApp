@@ -31,14 +31,23 @@ public class UserServiceImpl implements UserService {
         return userDao.findByUsername(email);
     }
 
+    @Override
+    public Optional<User> findByVerificationCode(String verificationCode) {
+        return userDao.findByVerificationCode(verificationCode);
+    }
 
     @Override
-    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex) {
-        return userDao.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality, sex);
+    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex, String verificationCode) {
+        return userDao.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality, sex, verificationCode);
     }
 
     @Override
     public boolean update(User user) {
         return userDao.update(user);
+    }
+
+    @Override
+    public void verify(User user) {
+        userDao.verify(user);
     }
 }

@@ -47,6 +47,17 @@ public class UserCreateForm {
     @NotNull
     private String sex;
 
+    @NotNull
+    private String verificationURL;
+
+    public String getVerificationURL() {
+        return verificationURL;
+    }
+
+    public void setVerificationURL(String verificationURL) {
+        this.verificationURL = verificationURL;
+    }
+
     public String getSex() {
         return sex;
     }

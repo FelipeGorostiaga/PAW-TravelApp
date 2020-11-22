@@ -29,6 +29,7 @@ public class TestUserHibernateDao {
     private static final String EMAIL2 = "test@mail.com2";
     private static final String NATIONALITY = "ARG";
     private static final String SEX = "M";
+    private static final String VERIFICATION_CODE = "tXF7a0CH2rrknEfOkNd8HJfjbjKRaPLQ7Xj6Z3UfcopuKW8ggRbPAmoTLCY76frW";
 
     private static final long ID = 1;
     private static final long ID2 = 2;
@@ -38,7 +39,7 @@ public class TestUserHibernateDao {
 
     @Test
     public void testCreate() {
-        final User user = ud.create(FIRSTNAME, LASTNAME, EMAIL2, PASSWORD, LocalDate.now(), NATIONALITY, SEX);
+        final User user = ud.create(FIRSTNAME, LASTNAME, EMAIL2, PASSWORD, LocalDate.now(), NATIONALITY, SEX, VERIFICATION_CODE );
         Assert.assertNotNull(user);
         Assert.assertEquals(FIRSTNAME, user.getFirstname());
         Assert.assertEquals(LASTNAME, user.getLastname());

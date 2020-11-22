@@ -34,6 +34,12 @@ public class User {
     @Column(length = 1, nullable = false)
     private String sex;
 
+    @Column
+    private boolean verified;
+
+    @Column(updatable = false, length = 64)
+    private String verificationCode;
+
     @Column(length = 500)
     private String biography;
 
@@ -55,15 +61,24 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ratedByUser",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserRate> othersRates;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "requestingUser",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripPendingConfirmation> pendingConfirmations;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "invitee",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripInvitation> receivedTripInvitations;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "inviter",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripInvitation> sentTripInvitations;
+
     @Column(length = 100, nullable = false)
     private String nationality;
 
-    public User(long id, String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex) {
-        this(firstname, lastname, email, password, birthday, nationality, sex);
+    public User(long id, String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex, String verificationCode) {
+        this(firstname, lastname, email, password, birthday, nationality, sex, verificationCode);
         this.id = id;
     }
 
-    public User(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex) {
+    public User(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex, String verificationCode) {
         super();
         this.firstname = firstname;
         this.lastname = lastname;
@@ -72,6 +87,48 @@ public class User {
         this.birthday = birthday;
         this.nationality = nationality;
         this.sex = sex;
+        this.verified = false;
+        this.verificationCode = verificationCode;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public List<TripPendingConfirmation> getPendingConfirmations() {
+        return pendingConfirmations;
+    }
+
+    public void setPendingConfirmations(List<TripPendingConfirmation> pendingConfirmations) {
+        this.pendingConfirmations = pendingConfirmations;
+    }
+
+    public List<TripInvitation> getReceivedTripInvitations() {
+        return receivedTripInvitations;
+    }
+
+    public void setReceivedTripInvitations(List<TripInvitation> receivedTripInvitations) {
+        this.receivedTripInvitations = receivedTripInvitations;
+    }
+
+    public List<TripInvitation> getSentTripInvitations() {
+        return sentTripInvitations;
+    }
+
+    public void setSentTripInvitations(List<TripInvitation> sentTripInvitations) {
+        this.sentTripInvitations = sentTripInvitations;
     }
 
     public String getSex() {

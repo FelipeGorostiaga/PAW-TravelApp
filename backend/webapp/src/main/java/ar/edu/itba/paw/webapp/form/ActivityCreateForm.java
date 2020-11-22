@@ -105,5 +105,17 @@ public class ActivityCreateForm {
         this.placeInput = placeInput;
     }
 
-
+    @Override
+    public String toString() {
+        return "ActivityCreateForm{" +
+                "name='" + name + '\'' +
+                ", category='" + category + '\'' +
+                ", placeInput='" + placeInput + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", trip=" + trip +
+                '}';
+    }
 }

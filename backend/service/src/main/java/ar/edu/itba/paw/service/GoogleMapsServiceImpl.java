@@ -3,6 +3,8 @@ package ar.edu.itba.paw.service;
 import ar.edu.itba.paw.interfaces.GoogleMapsService;
 import ar.edu.itba.paw.interfaces.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.Place;
 import se.walkercrou.places.exception.GooglePlacesException;
@@ -10,6 +12,8 @@ import se.walkercrou.places.exception.GooglePlacesException;
 import java.util.List;
 import java.util.Optional;
 
+@Service
+@Transactional
 public class GoogleMapsServiceImpl implements GoogleMapsService {
 
     @Autowired

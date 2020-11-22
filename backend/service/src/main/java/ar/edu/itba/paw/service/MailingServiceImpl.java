@@ -2,6 +2,7 @@
 package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.MailingService;
+import ar.edu.itba.paw.model.User;
 import org.simplejavamail.MailException;
 import org.simplejavamail.email.Email;
 import org.simplejavamail.email.EmailBuilder;
@@ -17,9 +18,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 
-
 import java.util.Locale;
-
 
 
 @Service
@@ -43,17 +42,18 @@ public class MailingServiceImpl implements MailingService {
     private static final String EXIT_TRIP_TEMPLATE = "templates/exitTripMail.html";
     private static final String DELETE_TRIP_TEMPLATE = "templates/deleteTripMail.html";
 
-
     @Async
     @Override
-    public void sendRegisterMail(String emailName, String name, String lastname, Locale locale) {
+    public void sendRegisterMail(User user, Locale locale, String contextURL) {
         String subject = applicationContext.getMessage("mailRegisterSubject", null, locale);
+        String verifyURL = contextURL + "/verify?code=" + user.getVerificationCode();
         final Context ctx = new Context(locale);
-        ctx.setVariable("email", emailName);
-        ctx.setVariable("name", name);
-        ctx.setVariable("lastname", lastname);
+        ctx.setVariable("email", user.getEmail());
+        ctx.setVariable("name", user.getFirstname());
+        ctx.setVariable("lastname", user.getLastname());
+        ctx.setVariable("verificationURL", verifyURL);
         String html = htmlTemplateEngine.process(REGISTER_TEMPLATE, ctx);
-        sendMail(name + " " + lastname, emailName, html, subject, ctx);
+        sendMail(user.getFirstname() + " " + user.getLastname(), user.getEmail(), html, subject, ctx);
     }
 
     private void sendMail(String recieverName, String recieverEmail, String html, String subject, Context ctx) {
@@ -66,7 +66,7 @@ public class MailingServiceImpl implements MailingService {
                     .buildEmail();
 
             Mailer mailer = MailerBuilder
-                    .withSMTPServer(EMAIL_SERVER, PORT, EMAIL_NAME , EMAIL_PASS)
+                    .withSMTPServer(EMAIL_SERVER, PORT, EMAIL_NAME, EMAIL_PASS)
                     .withTransportStrategy(TransportStrategy.SMTP_TLS)
                     .withSessionTimeout(10 * 1000)
                     .clearEmailAddressCriteria()
@@ -75,7 +75,7 @@ public class MailingServiceImpl implements MailingService {
 
             mailer.sendMail(email, true);
         } catch (MailException ignored) {
-
+            System.out.println("Failed to send register confirmation email");
         }
     }
 

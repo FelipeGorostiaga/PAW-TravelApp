@@ -5,8 +5,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <h1 th:text="#{mailRegisterHeader1(${name})}"></h1>
+    <h1 th:text="#{mailRegisterHeader1(${name}, ${lastname})}"></h1>
     <h3 th:text="#{mailRegisterHeader2}" ></h3>
     <p  th:text="#{mailRegisterBody}" ></p>
+    <a th:href="${verificationURL}">Verify Account</a>
 </body>
 </html>

@@ -46,7 +46,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         .permitAll()
                         .and()
                 .authorizeRequests()
-                        .antMatchers("/api/users/authenticate", "/api/users/create", "/api/users/refresh")
+                        .antMatchers("/api/users/authenticate", "/api/users/create", "/api/users/refresh", "/api/users/test")
                         .permitAll()
                         .and()
                 .authorizeRequests()

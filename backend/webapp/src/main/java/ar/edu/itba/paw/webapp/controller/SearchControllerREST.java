@@ -3,12 +3,14 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.model.DateManipulation;
-import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.webapp.dto.TripDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -38,7 +40,6 @@ public class SearchControllerREST {
                                            @QueryParam("startDate") String startDate,
                                            @QueryParam("endDate") String endDate,
                                            @QueryParam("category") String category) {
-
         Map<String, Object> filterMap = new HashMap<>();
         // TODO - validate inputs
         filterMap.put("category", category);
