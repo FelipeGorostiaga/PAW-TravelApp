@@ -46,7 +46,7 @@ public class MailingServiceImpl implements MailingService {
     @Override
     public void sendRegisterMail(User user, Locale locale, String contextURL) {
         String subject = applicationContext.getMessage("mailRegisterSubject", null, locale);
-        String verifyURL = contextURL + "/verify?code=" + user.getVerificationCode();
+        String verifyURL = contextURL + "/" + user.getVerificationCode();
         final Context ctx = new Context(locale);
         ctx.setVariable("email", user.getEmail());
         ctx.setVariable("name", user.getFirstname());

@@ -30,6 +30,9 @@ import { PageNotFoundComponent } from './errors/page-not-found/page-not-found.co
 import { ModalModule } from "./modal";
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { UserTripsComponent } from './user-trips/user-trips.component';
+import { VerificationComponent } from './register/verification/verification.component';
+import { VerificationResultComponent } from './register/verification-result/verification-result.component';
+
 
 @NgModule({
   declarations: [
@@ -51,7 +54,9 @@ import { UserTripsComponent } from './user-trips/user-trips.component';
     MapActivityComponent,
     IndexComponent,
     PageNotFoundComponent,
-    UserTripsComponent
+    UserTripsComponent,
+    VerificationComponent,
+    VerificationResultComponent
   ],
   imports: [
     BrowserModule,

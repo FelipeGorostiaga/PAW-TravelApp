@@ -4,24 +4,27 @@ import {UserForm} from "../model/forms/user-form";
 import {AuthService} from "../services/auth/auth.service";
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {DateUtilService} from "../services/date-util.service";
+import {environment} from "../../environments/environment";
 
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
 
     registerForm: FormGroup;
     submitted = false;
 
-    bsConfig =  Object.assign({}, { containerClass: 'theme-dark-blue' });
+    bsConfig = Object.assign({}, {containerClass: 'theme-dark-blue'});
 
     constructor(private http: HttpClient,
                 private authService: AuthService,
                 private router: Router,
-                private formBuilder: FormBuilder) {
+                private formBuilder: FormBuilder,
+                private dateUtilService: DateUtilService) {
     }
 
     ngOnInit() {
@@ -41,7 +44,9 @@ export class RegisterComponent implements OnInit {
     }
 
     // convenience getter for easy access to form fields
-    get f() { return this.registerForm.controls; }
+    get f() {
+        return this.registerForm.controls;
+    }
 
     onSubmit() {
         const values = this.registerForm.value;
@@ -49,14 +54,16 @@ export class RegisterComponent implements OnInit {
         if (this.registerForm.invalid) {
             return;
         }
-        const formData = new UserForm(values.firstName, values.lastName, values.email,
-            values.password, values.confirmPassword, values.nationality, values.birthDate, values.customRadioInline1);
+        let url = `${environment.frontEndURL}` + '/verify';
+        const formData = new UserForm(values.firstName, values.lastName, values.email, values.password, values.confirmPassword,
+            values.nationality, this.dateUtilService.convertToDateString(values.birthDate), values.customRadioInline1, url);
 
         this.authService.register(formData).subscribe(
             data => {
-                    console.log(data);
-                    this.authService.createSession(data.accessToken, data.refreshToken, data.user);
-                    this.router.navigate(["/home"]);
+                console.log(data);
+                this.router.navigate(['verification']);
+                /* this.authService.createSession(data.accessToken, data.refreshToken, data.user);
+                 this.router.navigate(["/home"]);*/
             },
             err => {
                 console.log(err);
@@ -82,7 +89,7 @@ export function MustMatch(controlName: string, matchingControlName: string) {
         }
         // set error on matchingControl if validation fails
         if (control.value !== matchingControl.value) {
-            matchingControl.setErrors({ mustMatch: true });
+            matchingControl.setErrors({mustMatch: true});
         } else {
             matchingControl.setErrors(null);
         }
@@ -98,7 +105,7 @@ export function ValidDate(controlName: string) {
         }
         // set error on matchingControl if validation fails
         if (validDate(control.value)) {
-            control.setErrors({ invalidDate: true });
+            control.setErrors({invalidDate: true});
         } else {
             control.setErrors(null);
         }
@@ -119,7 +126,7 @@ export function validDate(date: string): boolean {
     if (year < 1000 || year > 3000 || month === 0 || month > 12) {
         return false;
     }
-    const monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+    const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     // Adjust for leap years
     if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
         monthLength[1] = 29;

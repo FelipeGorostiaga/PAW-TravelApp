@@ -8,8 +8,10 @@ export class UserForm {
     birthday: string;
     nationality: string;
     sex: string;
+    verificationURL: string;
 
-    constructor(firstname, lastname, email, password, pswrepeat, nationality, birthday, sex) {
+
+    constructor(firstname, lastname, email, password, pswrepeat, nationality, birthday, sex, verificationURL) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -18,6 +20,7 @@ export class UserForm {
         this.nationality = nationality;
         this.birthday = birthday;
         this.sex = sex;
+        this.verificationURL = verificationURL;
     }
 }
 

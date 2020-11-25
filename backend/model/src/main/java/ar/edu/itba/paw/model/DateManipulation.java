@@ -16,10 +16,8 @@ public class DateManipulation {
     public static LocalDate stringToLocalDate(String dateString) {
         try {
             LocalDate date = LocalDate.parse(dateString, formatter);
-            System.out.println("Returning valid date:" + date);
             return date;
-        }
-        catch (DateTimeParseException e){
+        } catch (DateTimeParseException e) {
             return null;
         }
     }
@@ -31,8 +29,7 @@ public class DateManipulation {
     public static boolean validate(String dateString) {
         try {
             LocalDate date = LocalDate.parse(dateString, formatter);
-        }
-        catch(DateTimeParseException e) {
+        } catch (DateTimeParseException e) {
             return false;
         }
         return true;

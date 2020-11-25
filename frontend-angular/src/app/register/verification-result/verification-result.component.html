@@ -1,0 +1,11 @@
+<div class="container">
+
+    <div *ngIf="successfullyVerified">
+        <p>Congratulations! Your account has been successfully verified.</p>
+        <button class=" btn-lg btn-primary"><a routerLink="/login">Login</a></button>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert-danger">
+        <p>{{errorMessage}}</p>
+    </div>
+</div>

@@ -11,59 +11,70 @@ import {IndexComponent} from "./index/index.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {PageNotFoundComponent} from "./errors/page-not-found/page-not-found.component";
 import {UserTripsComponent} from "./user-trips/user-trips.component";
+import {VerificationComponent} from "./register/verification/verification.component";
+import {VerificationResultComponent} from "./register/verification-result/verification-result.component";
 
 const routes: Routes = [
-  {
-    path: 'login',
-    component: LoginComponent
-  },
-  {
-    path: 'register',
-    component: RegisterComponent
-  },
-  {
-    path: 'home',
-    component: HomeComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'user-trips',
-    component: UserTripsComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'trip/:id',
-    component: TripComponent,
-    canLoad: [AuthGuard],
-  },
-  {
-    path: 'profile/:id',
-    component: ProfileComponent,
-    canLoad: [AuthGuard]
-  },
-  {
-    path: 'about',
-    component: AboutComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'create-trip',
-    component: CreateTripComponent,
-    canLoad: [AuthGuard]
-  },
-  {
-    path: '',
-    component: IndexComponent
-  },
-  {
-    path: '404',
-    component: PageNotFoundComponent
-  },
-  { path: '**', component: PageNotFoundComponent },
+    {
+        path: 'login',
+        component: LoginComponent
+    },
+    {
+        path: 'register',
+        component: RegisterComponent
+    },
+    {
+        path: 'verification',
+        component: VerificationComponent
+    },
+    {
+        path: 'verify/:code',
+        component: VerificationResultComponent
+    },
+    {
+        path: 'home',
+        component: HomeComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'user-trips',
+        component: UserTripsComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'trip/:id',
+        component: TripComponent,
+        canLoad: [AuthGuard],
+    },
+    {
+        path: 'profile/:id',
+        component: ProfileComponent,
+        canLoad: [AuthGuard]
+    },
+    {
+        path: 'about',
+        component: AboutComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'create-trip',
+        component: CreateTripComponent,
+        canLoad: [AuthGuard]
+    },
+    {
+        path: '',
+        component: IndexComponent
+    },
+    {
+        path: '404',
+        component: PageNotFoundComponent
+    },
+    {path: '**', component: PageNotFoundComponent},
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

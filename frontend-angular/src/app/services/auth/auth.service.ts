@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {UserForm} from '../../model/forms/user-form';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {UserAuth} from '../../model/user-auth';
 import {Observable} from 'rxjs';
 import {User} from '../../model/user';
@@ -82,4 +82,9 @@ export class AuthService {
         localStorage.setItem('refreshToken', refreshToken);
     }
 
+    verifyAccount(verificationCode: string) {
+        const url = this.usersBaseURL + '/verify';
+        let params = new HttpParams().set("code", verificationCode);
+        return this.http.get(url, {params: params});
+    }
 }

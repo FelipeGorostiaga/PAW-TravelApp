@@ -45,8 +45,6 @@ public class UserControllerREST {
     private static final int JWT_ACCESS_EXPIRATION = 3600 * 2 * 1000; //2 hours
     private static final int JWT_REFRESH_EXPIRATION = 900000 * 1000; //10+ days
 
-    private static final String frontEndURL = "http://localhost:4200/";
-
     @Autowired
     Validator validator;
 
@@ -64,9 +62,6 @@ public class UserControllerREST {
 
     @Autowired
     private MailingService mailService;
-
-    @Autowired
-    private ServletContext servletContext;
 
     @Autowired
     private TravelUserDetailsService userDetailsService;
@@ -93,25 +88,15 @@ public class UserControllerREST {
     }
 
     @GET
-    @Path("/test")
-    public Response test() {
-        String contextPath = servletContext.getContextPath();
-        System.out.println(contextPath);
-        return Response.ok(new GenericEntity<String>(contextPath){}).build();
-    }
-
-    @GET
     @Path("/refresh")
     public Response refreshJwtToken(@HeaderParam("x-refresh-token") String refreshToken) {
         if(refreshToken != null) {
-            System.out.println("Refreshing token...");
             try {
                 String username = jwtUtil.extractUsername(refreshToken);
                 if(username != null) {
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
                     if(jwtUtil.validateToken(refreshToken, userDetails)) {
                         final String newAccessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
-                        System.out.println("Returning new access token: " + newAccessToken);
                         return Response.ok(new RefreshResponseDTO(newAccessToken)).build();
                     }
                 }
@@ -125,8 +110,10 @@ public class UserControllerREST {
     @GET
     @Path("/verify")
     public Response verifyUserRegistration(@QueryParam("code") final String verificationCode) {
+        System.out.println(verificationCode);
         Optional<User> userOptional = us.findByVerificationCode(verificationCode);
         if(!userOptional.isPresent() || userOptional.get().isVerified()) {
+            System.out.println("User optional is present: " + userOptional.isPresent());
             return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid user verification code or user is already verified")).build();
         }
         us.verify(userOptional.get());
