@@ -29,8 +29,8 @@ export class LoginComponent implements OnInit {
             this.authService.createSession(data.accessToken, data.refreshToken, data.user);
             this.router.navigate(["/home"]);
         },
-        err => {
-          this.errMessage = "Invalid username or password";
+        error => {
+          this.errMessage = error.error.message;
         }
     );
   }

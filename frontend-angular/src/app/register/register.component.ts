@@ -61,9 +61,7 @@ export class RegisterComponent implements OnInit {
         this.authService.register(formData).subscribe(
             data => {
                 console.log(data);
-                this.router.navigate(['verification']);
-                /* this.authService.createSession(data.accessToken, data.refreshToken, data.user);
-                 this.router.navigate(["/home"]);*/
+                this.router.navigate(['/verification']);
             },
             err => {
                 console.log(err);

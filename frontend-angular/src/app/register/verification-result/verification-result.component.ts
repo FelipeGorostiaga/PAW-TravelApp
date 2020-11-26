@@ -23,7 +23,7 @@ export class VerificationResultComponent implements OnInit {
             },
             error => {
                 console.log(error);
-                this.errorMessage = error.message;
+                this.errorMessage = error.error.message;
             }
         );
     }

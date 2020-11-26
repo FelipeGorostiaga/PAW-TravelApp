@@ -1,11 +1,11 @@
-<div class="container">
-
-    <div *ngIf="successfullyVerified">
-        <p>Congratulations! Your account has been successfully verified.</p>
-        <button class=" btn-lg btn-primary"><a routerLink="/login">Login</a></button>
+<app-navigation></app-navigation>
+<div class="container align-content-center text-center">
+    <div *ngIf="successfullyVerified" style="margin-top: 50px;">
+        <h1>Congratulations! Your account has been successfully verified.</h1>
+        <button class=" btn-lg btn-primary" style="margin-top: 20px;"><a routerLink="/login">Sign in</a></button>
     </div>
-
-    <div *ngIf="errorMessage" class="alert-danger">
-        <p>{{errorMessage}}</p>
+    <div *ngIf="errorMessage" style="margin-top: 60px;">
+        <img src="assets/images/red_cross.png">
+        <p class="text-danger" style="margin-top: 10px;">{{errorMessage}}</p>
     </div>
 </div>

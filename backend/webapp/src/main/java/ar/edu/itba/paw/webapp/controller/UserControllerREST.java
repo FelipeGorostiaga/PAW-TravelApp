@@ -72,18 +72,22 @@ public class UserControllerREST {
     @POST
     @Path("/authenticate")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createAuthenticationToken(@Valid AuthenticationRequestDTO authenticationRequest) {
+    public Response login(@Valid AuthenticationRequestDTO authenticationRequest) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
                             authenticationRequest.getPassword()));
         } catch (AuthenticationException e) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Invalid username or password")).build();
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        Optional<User> userOptional = us.findByUsername(userDetails.getUsername());
+        if (!userOptional.isPresent() || !userOptional.get().isVerified()) {
+            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Please verify your email before login in")).build();
+        }
+        final UserDTO user = new UserDTO(userOptional.get());
         final String accessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
         final String refreshToken = jwtUtil.generateToken(userDetails, JWT_REFRESH_EXPIRATION);
-        final UserDTO user = new UserDTO(Objects.requireNonNull(us.findByUsername(userDetails.getUsername()).orElse(null)));
         return Response.ok(new AuthenticationResponseDTO(accessToken, refreshToken, user)).build();
     }
 
