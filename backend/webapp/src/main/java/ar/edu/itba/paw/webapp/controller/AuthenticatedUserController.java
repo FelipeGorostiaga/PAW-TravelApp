@@ -55,7 +55,6 @@ public class AuthenticatedUserController {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response editUserProfile(@Valid EditProfileForm editProfileForm) {
         User loggedUser = securityUserService.getLoggedUser();
-        LOGGER.debug("Accessed edit profile for user {}", loggedUser.getId());
         Set<ConstraintViolation<EditProfileForm>> violations = validator.validate(editProfileForm);
         ConstraintViolationsDTO constraintViolationsDTO = new ConstraintViolationsDTO(violations);
         byte[] imageBytes;
@@ -63,7 +62,7 @@ public class AuthenticatedUserController {
             imageBytes = ImageValidator.validateImage(constraintViolationsDTO, editProfileForm.getImageUpload());
         } catch (IOException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ErrorDTO("Server couldn´t get image bytes"))
+                    .entity(new ErrorDTO("Server could not get image bytes", "image"))
                     .build();
         }
         if(constraintViolationsDTO.getErrors().size() > 0) {

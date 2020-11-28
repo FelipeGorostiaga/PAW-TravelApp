@@ -78,12 +78,12 @@ public class UserControllerREST {
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
                             authenticationRequest.getPassword()));
         } catch (AuthenticationException e) {
-            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Invalid username or password")).build();
+            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Invalid username or password", "credentials")).build();
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         Optional<User> userOptional = us.findByUsername(userDetails.getUsername());
         if (!userOptional.isPresent() || !userOptional.get().isVerified()) {
-            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Please verify your email before login in")).build();
+            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Please verify your email before login in", "verification")).build();
         }
         final UserDTO user = new UserDTO(userOptional.get());
         final String accessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
@@ -94,12 +94,12 @@ public class UserControllerREST {
     @GET
     @Path("/refresh")
     public Response refreshJwtToken(@HeaderParam("x-refresh-token") String refreshToken) {
-        if(refreshToken != null) {
+        if (refreshToken != null) {
             try {
                 String username = jwtUtil.extractUsername(refreshToken);
-                if(username != null) {
+                if (username != null) {
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-                    if(jwtUtil.validateToken(refreshToken, userDetails)) {
+                    if (jwtUtil.validateToken(refreshToken, userDetails)) {
                         final String newAccessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
                         return Response.ok(new RefreshResponseDTO(newAccessToken)).build();
                     }
@@ -116,9 +116,9 @@ public class UserControllerREST {
     public Response verifyUserRegistration(@QueryParam("code") final String verificationCode) {
         System.out.println(verificationCode);
         Optional<User> userOptional = us.findByVerificationCode(verificationCode);
-        if(!userOptional.isPresent() || userOptional.get().isVerified()) {
+        if (!userOptional.isPresent() || userOptional.get().isVerified()) {
             System.out.println("User optional is present: " + userOptional.isPresent());
-            return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid user verification code or user is already verified")).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid user verification code or user is already verified", "verification")).build();
         }
         us.verify(userOptional.get());
         return Response.ok().build();
@@ -141,19 +141,20 @@ public class UserControllerREST {
     public Response createUser(@Valid UserCreateForm userForm) {
         Set<ConstraintViolation<UserCreateForm>> violations = validator.validate(userForm);
         if (violations.size() > 0) {
-            List<ErrorDTO> errors = violations.stream().map(violation -> new ErrorDTO(violation.getMessage())).collect(Collectors.toList());
-            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<List<ErrorDTO>>(errors) {}).build();
+            List<ErrorDTO> errors = violations.stream().map(violation -> new ErrorDTO(violation.getMessage(),
+                    violation.getPropertyPath().toString())).collect(Collectors.toList());
+            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<List<ErrorDTO>>(errors) {
+            }).build();
         }
         User user;
         try {
-            String verificationToken = RandomStringUtils.random(64,true,true);
+            String verificationToken = RandomStringUtils.random(64, true, true);
             user = us.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
                     userForm.getPassword(), DateManipulation.stringToLocalDate(userForm.getBirthday()),
                     userForm.getNationality(), userForm.getSex(), verificationToken);
             mailService.sendRegisterMail(user, LocaleContextHolder.getLocale(), userForm.getVerificationURL());
-        }
-        catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Username already in use")).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Email already in use", "email")).build();
         }
         return Response.ok(new UserDTO(user)).build();
     }
@@ -181,7 +182,8 @@ public class UserControllerREST {
         if (trips.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(new GenericEntity<List<TripDTO>>(trips) {}).build();
+        return Response.ok(new GenericEntity<List<TripDTO>>(trips) {
+        }).build();
     }
 
 }

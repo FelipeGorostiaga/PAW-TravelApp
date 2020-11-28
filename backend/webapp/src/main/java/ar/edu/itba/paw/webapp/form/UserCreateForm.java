@@ -41,7 +41,6 @@ public class UserCreateForm {
     private String birthday;
 
     @NotNull
-    @Size(min = 2, max = 5)
     private String nationality;
 
     @NotNull

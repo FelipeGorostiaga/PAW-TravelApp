@@ -44,12 +44,12 @@ const routes: Routes = [
     {
         path: 'trip/:id',
         component: TripComponent,
-        canLoad: [AuthGuard],
+        canActivate: [AuthGuard],
     },
     {
         path: 'profile/:id',
         component: ProfileComponent,
-        canLoad: [AuthGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'about',
@@ -59,7 +59,7 @@ const routes: Routes = [
     {
         path: 'create-trip',
         component: CreateTripComponent,
-        canLoad: [AuthGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: '',

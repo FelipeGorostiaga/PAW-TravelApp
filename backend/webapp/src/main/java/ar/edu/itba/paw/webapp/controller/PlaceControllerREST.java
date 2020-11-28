@@ -34,7 +34,7 @@ public class PlaceControllerREST {
     public Response getPlace(@PathParam("id") final long placeId) {
         Optional<Place> placeOptional = this.placeService.findById(placeId);
         if(!placeOptional.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid place id")).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(new PlaceDTO(placeOptional.get())).build();
     }

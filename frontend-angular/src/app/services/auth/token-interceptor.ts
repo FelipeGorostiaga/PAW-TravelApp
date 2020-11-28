@@ -21,7 +21,7 @@ export class TokenInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError((error: HttpErrorResponse) => {
                 //Unauthorized
-                if(error.status === 401 && !this.refreshingAccessToken) {
+                if (error.status === 401 && !this.refreshingAccessToken) {
                     //refresh the access token
                     return this.refreshAccessToken()
                         .pipe(
@@ -29,16 +29,17 @@ export class TokenInterceptor implements HttpInterceptor {
                                 request = this.addAuthHeader(request);
                                 return next.handle(request);
                             }),
-                            catchError((err: any ) => {
+                            catchError((err: any) => {
                                 console.log(err);
+                                console.log("login out");
                                 this.authService.logout();
                                 return empty();
                             })
-                        )
+                        );
                 }
                 return throwError(error);
             })
-        )
+        );
 
     }
 
@@ -49,8 +50,8 @@ export class TokenInterceptor implements HttpInterceptor {
                     // this code will run when the access token has been refreshed
                     observer.next();
                     observer.complete();
-                })
-            })
+                });
+            });
         } else {
             this.refreshingAccessToken = true;
             // we want to call a method in the auth service to send a request to refresh the access token
@@ -59,7 +60,7 @@ export class TokenInterceptor implements HttpInterceptor {
                     this.refreshingAccessToken = false;
                     this.accessTokenRefreshed.next();
                 })
-            )
+            );
         }
 
     }
@@ -72,7 +73,7 @@ export class TokenInterceptor implements HttpInterceptor {
             return request.clone({
                 headers: request.headers.set("Authorization",
                     "Bearer " + token)
-            })
+            });
         }
         return request;
     }

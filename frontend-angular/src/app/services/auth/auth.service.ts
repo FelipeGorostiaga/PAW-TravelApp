@@ -2,11 +2,11 @@ import {Injectable} from '@angular/core';
 import {UserForm} from '../../model/forms/user-form';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UserAuth} from '../../model/user-auth';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {User} from '../../model/user';
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
-import {tap} from "rxjs/operators";
+import {catchError, tap} from "rxjs/operators";
 import {RefreshTokenResponse} from "../../model/RefreshTokenResponse";
 
 @Injectable({
@@ -24,12 +24,20 @@ export class AuthService {
 
     register(userForm: UserForm): Observable<any> {
         const url = this.usersBaseURL + '/create';
-        return this.http.post<User>(url, userForm);
+        return this.http.post<User>(url, userForm).pipe(
+            catchError(err => {
+                return throwError(err.error);
+            })
+        )
     }
 
     login(userAuth: UserAuth): Observable<any> {
         const url = this.usersBaseURL + '/authenticate';
-        return this.http.post<string>(url, userAuth);
+        return this.http.post<string>(url, userAuth).pipe(
+            catchError(err => {
+                return throwError(err.error.message);
+            })
+        )
     }
 
     refreshToken() {
@@ -76,10 +84,6 @@ export class AuthService {
 
     getRefreshToken(): string {
         return localStorage.getItem('refreshToken');
-    }
-
-    setRefreshToken(refreshToken: string) {
-        localStorage.setItem('refreshToken', refreshToken);
     }
 
     verifyAccount(verificationCode: string) {

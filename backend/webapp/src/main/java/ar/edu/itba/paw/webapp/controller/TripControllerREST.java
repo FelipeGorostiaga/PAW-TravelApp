@@ -141,7 +141,7 @@ public class TripControllerREST {
             imageBytes = ImageValidator.validateImage(constraintViolationsDTO, form.getImageUpload());
         } catch (IOException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ErrorDTO("Server couldn't get image bytes"))
+                    .entity(new ErrorDTO("Server couldn't get image bytes", "image"))
                     .build();
         }
         if (constraintViolationsDTO.getErrors().size() > 0) {
@@ -172,7 +172,7 @@ public class TripControllerREST {
                     DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());
         } catch (GooglePlacesException exception) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ErrorDTO("There was an error connecting to the GoogleMaps API")).build();
+                    .entity(new ErrorDTO("There was an error connecting to the GoogleMaps API", "googleMaps")).build();
         }
         if (trip != null) {
             return Response.ok(new TripDTO(trip)).build();
@@ -204,7 +204,7 @@ public class TripControllerREST {
             }
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid trip id")).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @PUT
@@ -272,7 +272,7 @@ public class TripControllerREST {
             }
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid trip id")).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @POST
@@ -308,7 +308,7 @@ public class TripControllerREST {
             return Response.ok(new GenericEntity<List<ActivityDTO>>(activities) {
             }).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid trip id")).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
 

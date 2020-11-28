@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DateUtilService} from "../services/date-util.service";
 import {environment} from "../../environments/environment";
+import {ErrorDTO} from "../model/ErrorDTO";
 
 
 @Component({
@@ -19,6 +20,8 @@ export class RegisterComponent implements OnInit {
     submitted = false;
 
     bsConfig = Object.assign({}, {containerClass: 'theme-dark-blue'});
+
+    errors: ErrorDTO[];
 
     constructor(private http: HttpClient,
                 private authService: AuthService,
@@ -63,8 +66,10 @@ export class RegisterComponent implements OnInit {
                 console.log(data);
                 this.router.navigate(['/verification']);
             },
-            err => {
-                console.log(err);
+            error => {
+                console.error(error);
+                this.errors = error;
+                console.log(this.errors);
             });
     }
 
