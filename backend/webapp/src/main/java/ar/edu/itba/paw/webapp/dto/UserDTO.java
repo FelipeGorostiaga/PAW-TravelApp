@@ -5,7 +5,6 @@ import ar.edu.itba.paw.model.User;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
 
-@XmlRootElement
 public class UserDTO {
 
     private long id;

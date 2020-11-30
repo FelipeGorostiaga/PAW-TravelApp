@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
 import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.webapp.utils.ImageValidator;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -231,12 +232,12 @@ public class TripControllerREST {
                     case ADD:
                         tripService.addUserToTrip(userId, tripId);
                         mailingService.sendJoinTripMail(u.getEmail(), u.getFirstname(), t.getName(), loggedUser.getFirstname(),
-                                loggedUser.getLastname(), getLocale());
+                                loggedUser.getLastname());
                         break;
                     case DELETE:
                         tripService.removeUserFromTrip(userId, tripId);
                         mailingService.sendExitTripMail(u.getEmail(), u.getFirstname(), t.getName(), loggedUser.getFirstname(),
-                                loggedUser.getLastname(), getLocale());
+                                loggedUser.getLastname());
                         break;
                 }
                 return Response.ok().build();
@@ -352,6 +353,27 @@ public class TripControllerREST {
     }
 
     @POST
+    @Path("/{id}/request/invite")
+    public Response requestJoinTrip(@Valid JoinRequestForm joinRequestForm, @PathParam("id") final long tripId) {
+        Optional<Trip> tripOpt = tripService.findById(tripId);
+        User user = securityUserService.getLoggedUser();
+        Set<ConstraintViolation<JoinRequestForm>> violations = validator.validate(joinRequestForm);
+        if (!tripOpt.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        Trip t = tripOpt.get();
+        if (user.getId() != joinRequestForm.getUserId()) return Response.status(Response.Status.FORBIDDEN).build();
+        if (!violations.isEmpty() || t.getAdmins().contains(user) || t.getUsers().contains(user)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        } else {
+            String token = RandomStringUtils.random(64, true, true);
+            if (tripService.createJoinRequest(t, user, token)) {
+                mailingService.sendJoinRequestMail(t, user, token);
+                return Response.ok().build();
+            }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @POST
     @Path("/{id}/invitation/pending/{token}")
     public Response acceptOrDenyTripPendingConfirmation(@Valid PendingConfirmationForm form, @PathParam("id") final long tripId) {
         User loggedUser = securityUserService.getLoggedUser();
@@ -361,8 +383,9 @@ public class TripControllerREST {
         if (!violations.isEmpty())
             return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<PendingConfirmationForm>>>(violations) {
             }).build();
-        if (!tripOptional.get().getAdmins().contains(loggedUser)) return Response.status(Response.Status.UNAUTHORIZED).build();
-        return form.isAccepted()? acceptTripPendingConfirmation(form) : denyTripPendingConfirmation(form);
+        if (!tripOptional.get().getAdmins().contains(loggedUser))
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        return form.isAccepted() ? acceptTripPendingConfirmation(form) : denyTripPendingConfirmation(form);
     }
 
     private Response acceptTripPendingConfirmation(PendingConfirmationForm form) {

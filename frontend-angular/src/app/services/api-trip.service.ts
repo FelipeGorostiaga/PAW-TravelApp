@@ -76,20 +76,12 @@ export class ApiTripService {
         return this.http.get<ImageDTO>(url);
     }
 
-    getTripComments(id: number): Observable<any> {
-        const url = this.tripsBaseURL + '/' + id + '/comments';
-        return this.http.get(url);
-    }
 
     postComment(tripId: number, form: CommentForm): Observable<any> {
         const url = this.tripsBaseURL + '/' + tripId + '/comments/add';
         return this.http.post(url, form).pipe(shareReplay());
     }
 
-    getTripActivities(id: number): Observable<any> {
-        const url = this.tripsBaseURL + '/' + id + '/activities';
-        return this.http.get(url);
-    }
 
     createTripActivity(id: number, activityForm: ActivityForm): Observable<any> {
         const url = this.tripsBaseURL + '/' + id + '/activities/create';
@@ -101,4 +93,8 @@ export class ApiTripService {
         return this.http.delete(url);
     }
 
+    sendJoinRequest(tripId: number, userId: number) {
+        const url = this.tripsBaseURL + '/' + tripId + '/request/invite';
+        return this.http.post(url, {userId: userId, tripId: tripId});
+    }
 }

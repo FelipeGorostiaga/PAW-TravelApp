@@ -4,16 +4,16 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {User} from "../model/user";
 import {AuthService} from "../services/auth/auth.service";
 import {ApiTripService} from "../services/api-trip.service";
+import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 
 @Component({
-  selector: 'app-trip',
-  templateUrl: './trip.component.html',
-  styleUrls: ['./trip.component.scss']
+    selector: 'app-trip',
+    templateUrl: './trip.component.html',
+    styleUrls: ['./trip.component.scss']
 })
 export class TripComponent implements OnInit {
 
     loggedUser: User;
-
     trip: FullTrip;
 
     tripImage: any;
@@ -22,25 +22,35 @@ export class TripComponent implements OnInit {
     tripId: number;
     isAdmin: boolean;
     selectedIndex: number;
+    loading = true;
+    isMember = false;
 
-    constructor(private router: Router, private ts: ApiTripService, private route: ActivatedRoute,
-                private authService: AuthService) { }
+    constructor(private router: Router,
+                private ts: ApiTripService,
+                private route: ActivatedRoute,
+                private authService: AuthService,
+                private spinner: NgxSpinnerService) {
+    }
 
     ngOnInit() {
+        this.spinner.show();
         this.selectedIndex = 0;
-        let serverError = false;
         this.tripId = Number(this.route.snapshot.paramMap.get("id"));
         this.loggedUser = this.authService.getLoggedUser();
         this.hasImage = false;
         this.ts.getTrip(this.tripId).subscribe(
             res => {
                 this.trip = res;
-                this.isAdmin = this.trip.admins.includes(this.loggedUser);
-                console.log(res);
+                this.isAdmin =  !!this.trip.admins.find(admin => admin.id === this.loggedUser.id);
+                this.isMember = !!(this.isAdmin || this.trip.users.find(user => user.id === this.loggedUser.id));
+                this.spinner.hide();
+                this.loading = false;
+                console.log("Is admin: " + this.isAdmin);
+                console.log("Is member: " + this.isMember);
             },
             err => {
-                console.log("Error getting trip from server");
-                serverError = true;
+                this.loading = false;
+                this.spinner.hide();
             });
     }
 

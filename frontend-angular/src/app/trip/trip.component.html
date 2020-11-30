@@ -1,6 +1,7 @@
 <app-navigation></app-navigation>
 <section id="tabs" class="project-tab">
-    <div class="container" >
+    <ngx-bootstrap-spinner></ngx-bootstrap-spinner>
+    <div *ngIf="!loading" class="container">
         <div class="row">
             <div class="col-md-12">
                 <nav>
@@ -18,19 +19,16 @@
                            data-toggle="tab"
                            (click)="switchTab(1)"
                            role="tab" aria-controls="nav-profile"
-                           [ngClass]="{
-                            'active':selectedIndex == 1}"
-                           aria-selected="false">Activities
-                        </a>
-                        <a class="nav-item nav-link"
+                           [ngClass]="{'active':selectedIndex == 1}"
+                           aria-selected="false">Activities</a>
+                        <a *ngIf="isAdmin || isMember" class="nav-item nav-link"
                            id="nav-chat-tab"
                            data-toggle="tab"
                            (click)="switchTab(2)"
                            role="tab"
                            [ngClass]="{'active':selectedIndex == 2}"
                            aria-controls="nav-contact"
-                           aria-selected="false">Chat
-                        </a>
+                           aria-selected="false">Chat</a>
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent" style="margin-top: 40px;">
@@ -41,14 +39,14 @@
                             'show':selectedIndex == 0,
                             'active':selectedIndex == 0}"
                             id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                        <app-information [trip]="trip" [isAdmin]="isAdmin"></app-information>
+                        <app-information [trip]="trip" [isAdmin]="isAdmin" [isMember]="isMember"></app-information>
                     </div>
                     <div *ngIf="selectedIndex == 1" class="tab-pane fade"
                          [ngClass]="{
                             'show':selectedIndex == 1,
                             'active':selectedIndex == 1}"
                          id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                        <app-activities [trip]="trip" [isAdmin]="isAdmin"></app-activities>
+                        <app-activities [trip]="trip" [isAdmin]="isAdmin" [isMember]="isMember"></app-activities>
                     </div>
                     <div *ngIf="selectedIndex == 2"
                          class="tab-pane fade"

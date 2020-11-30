@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TripDao;
-import ar.edu.itba.paw.model.Place;
-import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.TripComment;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -12,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,6 +65,13 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
+    public TripPendingConfirmation createPendingConfirmation(Trip trip, User user, String token) {
+        TripPendingConfirmation pendingConfirmation = new TripPendingConfirmation(trip, user, token);
+        em.persist(pendingConfirmation);
+        return pendingConfirmation;
+    }
+
+    @Override
     public List<Trip> getAllTrips() {
         final TypedQuery<Trip> query = em.createQuery("From Trip", Trip.class);
         return query.getResultList();
@@ -103,7 +108,7 @@ public class TripHibernateDao implements TripDao {
     @Override
     public List<Trip> findByPlace(String placeName) {
         final TypedQuery<Trip> query = em.createQuery("select t From Trip as t, Place as p" +
-                " where t.startPlaceId = p.id and lower(p.address) like lower(:placeName)", Trip.class);
+                " where t.startPlace.id = p.id and lower(p.address) like lower(:placeName)", Trip.class);
         query.setParameter("placeName", "%" + placeName + "%");
         query.setMaxResults(MAX_ROWS);
         return query.getResultList();

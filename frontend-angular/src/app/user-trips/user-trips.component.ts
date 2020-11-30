@@ -17,6 +17,7 @@ export class UserTripsComponent implements OnInit {
   tripsPerPage = 6;
   numberOfPages: number;
   loggedUser: User;
+  loading = true;
 
   constructor(private userService: ApiUserService, private authService: AuthService, private router: Router) { }
 
@@ -26,8 +27,11 @@ export class UserTripsComponent implements OnInit {
         res => {
           this.trips = this.chopList(res);
           this.numberOfPages = Math.ceil(this.trips.length / this.tripsPerPage);
+          this.loading = false;
         },
-        error => {}
+        error => {
+          this.loading = false;
+        }
     );
   }
 

@@ -1,8 +1,13 @@
 package ar.edu.itba.paw.model;
 
 
-import javax.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+// TODO change to trip_pending_confirmations
 @Entity
 @Table(name = "trip_pending_confirmation")
 public class TripPendingConfirmation {
@@ -24,6 +29,20 @@ public class TripPendingConfirmation {
 
     @Column(nullable = false)
     private String token;
+
+    @Column(nullable = false)
+    private boolean accepted;
+
+    @Column
+    @CreationTimestamp
+    private Timestamp timestamp;
+
+    public TripPendingConfirmation(Trip trip, User user, String token) {
+        this.trip = trip;
+        this.requestingUser = user;
+        this.token = token;
+        this.accepted = false;
+    }
 
     public long getId() {
         return id;
@@ -55,5 +74,21 @@ public class TripPendingConfirmation {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 }

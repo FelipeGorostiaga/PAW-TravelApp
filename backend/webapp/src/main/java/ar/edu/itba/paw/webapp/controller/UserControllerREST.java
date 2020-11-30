@@ -152,7 +152,7 @@ public class UserControllerREST {
             user = us.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
                     userForm.getPassword(), DateManipulation.stringToLocalDate(userForm.getBirthday()),
                     userForm.getNationality(), userForm.getSex(), verificationToken);
-            mailService.sendRegisterMail(user, LocaleContextHolder.getLocale(), userForm.getVerificationURL());
+            mailService.sendRegisterMail(user, userForm.getVerificationURL());
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Email already in use", "email")).build();
         }

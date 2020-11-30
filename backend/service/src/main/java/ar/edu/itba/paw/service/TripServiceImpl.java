@@ -2,6 +2,7 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.exception.GooglePlacesException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -36,12 +38,12 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public Trip create(long userId, double latitude, double longitude, String name, String description,
-                       LocalDate startDate, LocalDate endDate, boolean isPrivate) throws GooglePlacesException{
+                       LocalDate startDate, LocalDate endDate, boolean isPrivate) throws GooglePlacesException {
         List<se.walkercrou.places.Place> googleMapsPlaces = googleMapsService.queryGoogleMapsPlaces(latitude, longitude);
         Place startPlace = googleMapsService.createGooglePlaceReference(googleMapsPlaces);
         Trip t;
         Optional<User> u = ud.findById(userId);
-        if(u.isPresent()) {
+        if (u.isPresent()) {
             t = td.create(userId, startPlace, name, description, startDate, endDate, isPrivate);
             t.getUsers().add(u.get());
             t.getAdmins().add(u.get());
@@ -82,7 +84,7 @@ public class TripServiceImpl implements TripService {
     public List<Place> findTripPlaces(Trip trip) {
         List<Activity> activities = trip.getActivities();
         List<Place> places = new LinkedList<>();
-        for(Activity activity: activities) {
+        for (Activity activity : activities) {
             places.add(activity.getPlace());
         }
         return places;
@@ -92,7 +94,7 @@ public class TripServiceImpl implements TripService {
     public void addActivityToTrip(long actId, long tripId) {
         Optional<Trip> ot = td.findById(tripId);
         Optional<Activity> oa = ad.findById(actId);
-        if(ot.isPresent() && oa.isPresent()) {
+        if (ot.isPresent() && oa.isPresent()) {
             ot.get().getActivities().add(oa.get());
         }
     }
@@ -101,7 +103,7 @@ public class TripServiceImpl implements TripService {
     public void addUserToTrip(long userId, long tripId) {
         Optional<User> ou = ud.findById(userId);
         Optional<Trip> ot = td.findById(tripId);
-        if(ou.isPresent() && ot.isPresent()) {
+        if (ou.isPresent() && ot.isPresent()) {
             ou.get().getTrips().add(ot.get());
             ot.get().getUsers().add(ou.get());
         }
@@ -111,7 +113,7 @@ public class TripServiceImpl implements TripService {
     public void removeUserFromTrip(long userId, long tripId) {
         Optional<User> ou = ud.findById(userId);
         Optional<Trip> ot = td.findById(tripId);
-        if(ou.isPresent() && ot.isPresent()) {
+        if (ou.isPresent() && ot.isPresent()) {
             ou.get().getTrips().remove(ot.get());
             ot.get().getUsers().remove(ou.get());
         }
@@ -129,7 +131,7 @@ public class TripServiceImpl implements TripService {
     public void addCommentToTrip(long commentId, long tripId) {
         Optional<TripComment> otc = tcd.findById(commentId);
         Optional<Trip> ot = td.findById(tripId);
-        if(otc.isPresent() && ot.isPresent()) {
+        if (otc.isPresent() && ot.isPresent()) {
             ot.get().getComments().add(otc.get());
         }
     }
@@ -138,7 +140,7 @@ public class TripServiceImpl implements TripService {
     public void deleteTripActivity(long activityId, long tripId) {
         Optional<Trip> ot = td.findById(tripId);
         Optional<Activity> oa = ad.findById(activityId);
-        if(ot.isPresent() && oa.isPresent()) {
+        if (ot.isPresent() && oa.isPresent()) {
             ot.get().getActivities().remove(oa.get());
             oa.get().getPlace().getActivities().remove(oa.get());
             ad.deleteActivity(activityId);
@@ -164,6 +166,7 @@ public class TripServiceImpl implements TripService {
     public List<Trip> findWithFilters(Map<String, Object> filterMap) {
         return td.findWithFilters(filterMap);
     }
+
     @Override
     public List<TripComment> getTripComments(long tripId) {
         List<TripComment> comments = td.getTripComments(tripId);
@@ -181,5 +184,10 @@ public class TripServiceImpl implements TripService {
         return td.getTripAdmins(tripId);
     }
 
+    @Override
+    public boolean createJoinRequest(Trip trip, User user, String token) {
+        TripPendingConfirmation pendingConfirmation = td.createPendingConfirmation(trip, user, token);
+        return pendingConfirmation != null;
+    }
 
 }

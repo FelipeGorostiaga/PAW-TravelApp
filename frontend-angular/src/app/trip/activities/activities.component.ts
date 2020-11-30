@@ -18,6 +18,7 @@ export class ActivitiesComponent implements OnInit {
 
   @Input() trip: FullTrip;
   @Input() isAdmin: boolean;
+  @Input() isMember: boolean;
   @ViewChild('search')
 
   public searchElement: ElementRef;

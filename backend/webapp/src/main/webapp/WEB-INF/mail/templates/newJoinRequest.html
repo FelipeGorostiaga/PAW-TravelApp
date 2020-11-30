@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all" th:text="#{mailNewJoinRequestTitle}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p th:text="#{mailNewJoinRequestBody(${username}, ${tripname})}" ></p>
+<button>Accept</button>
+<button>Deny</button>
+</body>
+</html>
+

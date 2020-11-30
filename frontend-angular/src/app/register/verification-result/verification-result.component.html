@@ -1,11 +1,12 @@
 <app-navigation></app-navigation>
 <div class="container align-content-center text-center">
     <div *ngIf="successfullyVerified" style="margin-top: 50px;">
-        <h1>Congratulations! Your account has been successfully verified.</h1>
+        <h1>Congratulations!</h1>
+        <h3>Your account has been successfully verified</h3>
         <button class=" btn-lg btn-primary" style="margin-top: 20px;"><a routerLink="/login">Sign in</a></button>
     </div>
     <div *ngIf="errorMessage" style="margin-top: 60px;">
-        <img src="assets/images/red_cross.png">
-        <p class="text-danger" style="margin-top: 10px;">{{errorMessage}}</p>
+        <img src="assets/images/red_cross.png" alt="error verification">
+        <h4 class="text-danger" style="margin-top: 10px;">{{errorMessage}}</h4>
     </div>
 </div>

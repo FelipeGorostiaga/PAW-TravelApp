@@ -1,43 +1,39 @@
-
-    <img *ngIf="hasImage" class="img-container" src="" alt="Trip image">
-    <div>
-        <div class="d-flex justify-content-between">
-            <div *ngIf="isAdmin" class="p-2">
-                <a href="" class="btn btn-primary text-white align-middle" style="margin-top: 10px;">
-                    <i class="fas fa-edit "></i>
-                </a>
-            </div>
+<img *ngIf="hasImage" class="img-container" src="" alt="Trip image">
+<div>
+    <div class="d-flex justify-content-between">
+        <div *ngIf="isAdmin" class="p-2">
+            <button class="btn btn-outline-dark" style="margin-top: 10px;">Edit</button>
         </div>
-        <div class="display-4 ">{{trip?.name}}</div>
-        <p class="text-justify" style="font-size: 150%;">{{trip?.description}}</p>
-        <div id="rate-bar" class="card-text"style="font-size: 150%; margin-bottom: 15px;"></div>
-        <p class="card-text"><i class="far fa-calendar-alt"></i>{{trip?.startDate}}  - {{trip?.endDate}}</p>
     </div>
+    <div class="display-4 ">{{trip?.name}}</div>
+    <p class="text-justify" style="font-size: 150%;">{{trip?.description}}</p>
+    <div id="rate-bar" class="card-text" style="font-size: 150%; margin-bottom: 15px;"></div>
+    <p class="card-text"><i class="far fa-calendar-alt"></i>{{trip?.startDate}}  - {{trip?.endDate}}</p>
+</div>
 
-    <h3 class="margin-class">Starting place</h3>
-    <p>{{trip?.startPlace?.name}}</p>
-    <agm-map [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude" [zoom]="14" style="height: 400px;width: 700px;">
-        <agm-marker [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude"></agm-marker>
-    </agm-map>
-    <h3 class="margin-class">
-        Members
-    </h3>
-    <div class="list-group">
-        <!-- todo: users are duplicate-->
-        <a *ngFor="let admin of trip?.admins" class="list-group-item list-group-item-action flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1"><i class="fa fa-user" style="margin-right: 5px;"></i>
-                    {{admin?.firstname}} {{admin?.lastname}}</h5>
-                <small>Administrator</small>
-            </div>
-        </a>
-        <a *ngFor="let user of trip?.users" class="list-group-item list-group-item-action flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1"><i class="fa fa-user" style="margin-right: 5px;"></i>
-                    {{user?.firstname}} {{user?.lastname}}</h5>
-            </div>
-        </a>
-    </div>
-    <button class="btn-primary btn" (click)="leaveTrip()">Exit</button>
-    <button class="btn-primary btn" (click)="joinTrip()">Join</button>
+<h3 class="margin-class">Starting place</h3>
+<p>{{trip?.startPlace?.name}}</p>
+<agm-map [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude" [zoom]="14"
+         style="height: 400px;width: 700px;">
+    <agm-marker [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude"></agm-marker>
+</agm-map>
+<div class="list-group" style="margin-top: 40px;">
+    <a *ngFor="let admin of trip?.admins" routerLink="/profile/{{admin.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1"><i class="fa fa-user" style="margin-right: 5px;"></i>
+                {{admin?.firstname}} {{admin?.lastname}}</h5>
+            <small>Administrator</small>
+        </div>
+    </a>
+    <a *ngFor="let user of trip?.users" routerLink="/profile/{{user.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1"><i class="fa fa-user" style="margin-right: 5px;"></i>
+                {{user?.firstname}} {{user?.lastname}}</h5>
+        </div>
+    </a>
+</div>
+<div style="margin-top: 20px;">
+    <button *ngIf="isAdmin || isMember" class="btn btn-danger" (click)="leaveTrip()" >Exit</button>
+    <button *ngIf="!isMember" class="btn-primary btn" (click)="requestJoinTrip()">Request to join</button>
+</div>
 
