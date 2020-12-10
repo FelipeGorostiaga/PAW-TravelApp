@@ -9,7 +9,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -72,14 +71,36 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
+    public List<TripPendingConfirmation> getTripJoinRequests(long tripId) {
+        final TypedQuery<TripPendingConfirmation> query = em.createQuery("SELECT tp FROM TripPendingConfirmation WHERE tp.trip.id = :tripId", TripPendingConfirmation.class);
+        query.setParameter("tripId", tripId);
+        return query.getResultList();
+    }
+
+    @Override
+    public boolean editJoinRequest(Trip trip, User u, String token, boolean accepted) {
+        Query query = em.createQuery("UPDATE TripPendingConfirmation set accepted = :accepted, edited = true where token = :token");
+        query.setParameter("accepted", accepted);
+        query.setParameter("token", token);
+        return query.executeUpdate() != 0;
+    }
+
+    @Override
+    public Optional<TripPendingConfirmation> findJoinRequestByToken(String token) {
+        final TypedQuery<TripPendingConfirmation> query = em.createQuery("From TripPendingConfirmation as tp where tp.token = :token", TripPendingConfirmation.class);
+        query.setParameter("token", token);
+        return query.getResultList().stream().findFirst();
+    }
+
+    @Override
     public List<Trip> getAllTrips() {
-        final TypedQuery<Trip> query = em.createQuery("From Trip", Trip.class);
+        final TypedQuery<Trip> query = em.createQuery("FROM Trip", Trip.class);
         return query.getResultList();
     }
 
     @Override
     public List<Trip> findUserCreatedTrips(long userId) {
-        final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.adminId = :userId ", Trip.class);
+        final TypedQuery<Trip> query = em.createQuery("FROM Trip as t where t.adminId = :userId ", Trip.class);
         query.setParameter("userId", userId);
         return query.getResultList();
     }

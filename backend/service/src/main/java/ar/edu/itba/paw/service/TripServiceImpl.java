@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.exception.GooglePlacesException;
 
+import javax.persistence.Query;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -35,6 +36,9 @@ public class TripServiceImpl implements TripService {
 
     @Autowired
     private GoogleMapsService googleMapsService;
+
+    @Autowired
+    private MailingService mailService;
 
     @Override
     public Trip create(long userId, double latitude, double longitude, String name, String description,
@@ -188,6 +192,26 @@ public class TripServiceImpl implements TripService {
     public boolean createJoinRequest(Trip trip, User user, String token) {
         TripPendingConfirmation pendingConfirmation = td.createPendingConfirmation(trip, user, token);
         return pendingConfirmation != null;
+    }
+
+    @Override
+    public List<TripPendingConfirmation> getTripJoinRequests(long tripId) {
+        return td.getTripJoinRequests(tripId);
+    }
+
+    @Override
+    public boolean updateJoinRequest(Trip trip, User loggedUser, String token, boolean accepted, User requester) {
+        boolean edited = td.editJoinRequest(trip, loggedUser, token, accepted);
+        if (edited) {
+            mailService.sendEditedJoinRequestMail(trip, requester, loggedUser, accepted);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Optional<TripPendingConfirmation> findJoinRequestByToken(String token) {
+        return td.findJoinRequestByToken(token);
     }
 
 }

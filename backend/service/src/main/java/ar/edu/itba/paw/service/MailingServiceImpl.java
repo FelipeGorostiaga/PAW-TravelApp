@@ -50,6 +50,8 @@ public class MailingServiceImpl implements MailingService {
     private static final String EXIT_TRIP_TEMPLATE = "templates/exitTripMail.html";
     private static final String DELETE_TRIP_TEMPLATE = "templates/deleteTripMail.html";
     private static final String JOIN_REQUEST_TEMPLATE = "templates/newJoinRequest.html";
+    private static final String JOIN_REQUEST_ACCEPTED_TEMPLATE = "templates/joinRequestAccepted.html";
+    private static final String JOIN_REQUEST_DENIED_TEMPLATE = "templates/joinRequestDenied.html";
 
     @Async
     @Override
@@ -65,29 +67,6 @@ public class MailingServiceImpl implements MailingService {
         ctx.setVariable("verificationURL", verifyURL);
         String html = htmlTemplateEngine.process(REGISTER_TEMPLATE, ctx);
         sendMail(recipients, html, subject);
-    }
-
-    private void sendMail(List<Recipient> recipients, String html, String subject) {
-        try {
-            Email email = EmailBuilder.startingBlank()
-                    .to(recipients).to()
-                    .from("Meet and Travel", "meet.travel.paw@gmail.com")
-                    .withSubject(subject)
-                    .withHTMLText(html)
-                    .buildEmail();
-
-            Mailer mailer = MailerBuilder
-                    .withSMTPServer(EMAIL_SERVER, PORT, EMAIL_NAME, EMAIL_PASS)
-                    .withTransportStrategy(TransportStrategy.SMTP_TLS)
-                    .withSessionTimeout(10 * 1000)
-                    .clearEmailAddressCriteria()
-                    .withProperty("mail.smtp.sendpartial", "true")
-                    .buildMailer();
-
-            mailer.sendMail(email, true);
-        } catch (MailException ignored) {
-            // ignored
-        }
     }
 
     @Async
@@ -153,5 +132,51 @@ public class MailingServiceImpl implements MailingService {
         sendMail(recipients, html, subject);
     }
 
+    @Async
+    @Override
+    public void sendEditedJoinRequestMail(Trip trip, User requester, User loggedUser, boolean accepted) {
+        String requesterName = requester.getFirstname() + " " + requester.getLastname();
+        List<Recipient> recipients = new ArrayList<>();
+        recipients.add(new Recipient(requesterName, requester.getEmail(), null));
+        Context ctx = new Context(locale);
+        ctx.setVariable("requester", requesterName);
+        ctx.setVariable("admin", loggedUser.getFirstname() + " " + loggedUser.getLastname());
+        ctx.setVariable("tripname", trip.getName());
+        String subject;
+        String html;
+        if (accepted) {
+            subject = applicationContext.getMessage("mailAcceptedJoinRequestSubject", null, locale);
+            html = htmlTemplateEngine.process(JOIN_REQUEST_ACCEPTED_TEMPLATE, ctx);
+        }
+        else {
+            subject = applicationContext.getMessage("mailDeniedJoinRequestSubject", null, locale);
+            html = htmlTemplateEngine.process(JOIN_REQUEST_DENIED_TEMPLATE, ctx);
+        }
+        sendMail(recipients, html, subject);
+    }
+
+
+    private void sendMail(List<Recipient> recipients, String html, String subject) {
+        try {
+            Email email = EmailBuilder.startingBlank()
+                    .to(recipients).to()
+                    .from("Meet and Travel", "meet.travel.paw@gmail.com")
+                    .withSubject(subject)
+                    .withHTMLText(html)
+                    .buildEmail();
+
+            Mailer mailer = MailerBuilder
+                    .withSMTPServer(EMAIL_SERVER, PORT, EMAIL_NAME, EMAIL_PASS)
+                    .withTransportStrategy(TransportStrategy.SMTP_TLS)
+                    .withSessionTimeout(10 * 1000)
+                    .clearEmailAddressCriteria()
+                    .withProperty("mail.smtp.sendpartial", "true")
+                    .buildMailer();
+
+            mailer.sendMail(email, true);
+        } catch (MailException ignored) {
+            // ignored
+        }
+    }
 }
 

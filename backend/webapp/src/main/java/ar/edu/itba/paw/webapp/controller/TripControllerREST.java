@@ -162,10 +162,7 @@ public class TripControllerREST {
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
         User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
-        if (!violations.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCreateForm>>>(violations) {
-            }).build();
-        }
+        if (!violations.isEmpty()) return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCreateForm>>>(violations) {}).build();
         Trip trip;
         try {
             trip = tripService.create(loggedUser.getId(), tripCreateForm.getLatitude(), tripCreateForm.getLongitude(), tripCreateForm.getName(),
@@ -318,7 +315,6 @@ public class TripControllerREST {
     public Response createTripActivity(@PathParam("id") final long tripId, @Valid ActivityCreateForm activityCreateForm) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         User loggedUser = securityUserService.getLoggedUser();
-
         if (!tripOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -354,51 +350,43 @@ public class TripControllerREST {
 
     @POST
     @Path("/{id}/request/invite")
-    public Response requestJoinTrip(@Valid JoinRequestForm joinRequestForm, @PathParam("id") final long tripId) {
+    public Response requestJoinTrip(@PathParam("id") final long tripId) {
         Optional<Trip> tripOpt = tripService.findById(tripId);
         User user = securityUserService.getLoggedUser();
-        Set<ConstraintViolation<JoinRequestForm>> violations = validator.validate(joinRequestForm);
         if (!tripOpt.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         Trip t = tripOpt.get();
-        if (user.getId() != joinRequestForm.getUserId()) return Response.status(Response.Status.FORBIDDEN).build();
-        if (!violations.isEmpty() || t.getAdmins().contains(user) || t.getUsers().contains(user)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        } else {
-            String token = RandomStringUtils.random(64, true, true);
-            if (tripService.createJoinRequest(t, user, token)) {
-                mailingService.sendJoinRequestMail(t, user, token);
-                return Response.ok().build();
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        if (t.getUsers().contains(user) || t.getAdmins().contains(user)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("User is already part of the trip", "error")).build();
         }
+        List<TripPendingConfirmation> pendingConfirmations = tripService.getTripJoinRequests(t.getId())
+                .stream()
+                .filter(pc -> pc.getRequestingUser().getId() == user.getId())
+                .collect(Collectors.toList());
+        if (!pendingConfirmations.isEmpty())
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Cannot send multiple join requests", "repeated")).build();
+        String token = RandomStringUtils.random(64, true, true);
+        if (tripService.createJoinRequest(t, user, token)) {
+            mailingService.sendJoinRequestMail(t, user, token);
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO("Error creating request, please try again...", "error")).build();
     }
 
     @POST
-    @Path("/{id}/invitation/pending/{token}")
-    public Response acceptOrDenyTripPendingConfirmation(@Valid PendingConfirmationForm form, @PathParam("id") final long tripId) {
+    @Path("/{id}/invitation/pending")
+    public Response acceptOrDenyTripPendingConfirmation(@PathParam("id") final long tripId, @QueryParam("accepted") boolean accepted, @QueryParam("token") String token) {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        Set<ConstraintViolation<PendingConfirmationForm>> violations = validator.validate(form);
-        if (!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<PendingConfirmationForm>>>(violations) {
-            }).build();
+        Optional<TripPendingConfirmation> pendingConfirmationOptional = tripService.findJoinRequestByToken(token);
+        if (!pendingConfirmationOptional.isPresent() || !tripOptional.isPresent())
+            return Response.status(Response.Status.NOT_FOUND).build();
         if (!tripOptional.get().getAdmins().contains(loggedUser))
             return Response.status(Response.Status.UNAUTHORIZED).build();
-        return form.isAccepted() ? acceptTripPendingConfirmation(form) : denyTripPendingConfirmation(form);
-    }
-
-    private Response acceptTripPendingConfirmation(PendingConfirmationForm form) {
-
-        // todo: trip service -> accept user to trip
-
-        return Response.ok().entity(Boolean.TRUE).build();
-    }
-
-    private Response denyTripPendingConfirmation(PendingConfirmationForm form) {
-
-        // todo: trip service -> deny user to trip
-
-        return Response.ok().entity(Boolean.FALSE).build();
+        if (pendingConfirmationOptional.get().isEdited())
+            return Response.status(Response.Status.CONFLICT).entity(new ErrorDTO("Request already responded by another trip admin", "edited")).build();
+        if (tripService.updateJoinRequest(tripOptional.get(), loggedUser, token, accepted, pendingConfirmationOptional.get().getRequestingUser())) {
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO("Internal Server Error", "error")).build();
     }
 }

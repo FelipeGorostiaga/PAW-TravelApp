@@ -14,4 +14,7 @@ public interface MailingService {
     void sendDeleteTripMail(String email, String firstname, String lastname, String tripName);
 
     void sendJoinRequestMail(Trip t, User user, String token);
+
+    void sendEditedJoinRequestMail(Trip trip, User requester, User loggedUser, boolean accepted);
+
 }

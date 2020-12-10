@@ -51,4 +51,10 @@ public interface TripService {
     List<User> getTripAdmins(long tripId);
 
     boolean createJoinRequest(Trip trip, User user, String token);
+
+    List<TripPendingConfirmation> getTripJoinRequests(long tripId);
+
+    boolean updateJoinRequest(Trip trip, User loggedUser, String token, boolean accepted, User requester);
+
+    Optional<TripPendingConfirmation> findJoinRequestByToken(String token);
 }

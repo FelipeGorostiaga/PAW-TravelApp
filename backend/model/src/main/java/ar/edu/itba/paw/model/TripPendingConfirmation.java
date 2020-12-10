@@ -33,6 +33,9 @@ public class TripPendingConfirmation {
     @Column(nullable = false)
     private boolean accepted;
 
+    @Column(nullable = false)
+    private boolean edited;
+
     @Column
     @CreationTimestamp
     private Timestamp timestamp;
@@ -42,6 +45,7 @@ public class TripPendingConfirmation {
         this.requestingUser = user;
         this.token = token;
         this.accepted = false;
+        this.edited = false;
     }
 
     public long getId() {
@@ -90,5 +94,13 @@ public class TripPendingConfirmation {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public boolean isEdited() {
+        return edited;
+    }
+
+    public void setEdited(boolean edited) {
+        this.edited = edited;
     }
 }

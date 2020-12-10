@@ -40,4 +40,10 @@ public interface TripDao {
     List<User> getTripAdmins(long tripId);
 
     TripPendingConfirmation createPendingConfirmation(Trip trip, User user, String token);
+
+    List<TripPendingConfirmation> getTripJoinRequests(long tripId);
+
+    boolean editJoinRequest(Trip trip, User u, String token, boolean accepted);
+
+    Optional<TripPendingConfirmation> findJoinRequestByToken(String token);
 }

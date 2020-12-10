@@ -15,4 +15,5 @@ public interface UserDao {
                 LocalDate birthday, final String nationality, final String sex, final String verificationCode);
     boolean update(User u);
     void verify(User u);
+
 }
