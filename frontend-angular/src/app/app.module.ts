@@ -33,6 +33,7 @@ import {UserTripsComponent} from './user-trips/user-trips.component';
 import {VerificationComponent} from './register/verification/verification.component';
 import {VerificationResultComponent} from './register/verification-result/verification-result.component';
 import {NgxSpinnerModule} from "ngx-bootstrap-spinner";
+import {RespondJoinReqComponent} from './trip/respond-join-req/respond-join-req.component';
 
 
 @NgModule({
@@ -57,7 +58,9 @@ import {NgxSpinnerModule} from "ngx-bootstrap-spinner";
         PageNotFoundComponent,
         UserTripsComponent,
         VerificationComponent,
-        VerificationResultComponent
+        VerificationResultComponent,
+        RespondJoinReqComponent,
+
     ],
     imports: [
         BrowserModule,
@@ -76,7 +79,7 @@ import {NgxSpinnerModule} from "ngx-bootstrap-spinner";
         ),
         BrowserAnimationsModule
     ],
-    schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [AuthService, AuthGuard, {
         provide: HTTP_INTERCEPTORS,
         useClass: TokenInterceptor,

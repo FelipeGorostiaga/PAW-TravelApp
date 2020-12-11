@@ -114,10 +114,8 @@ public class UserControllerREST {
     @GET
     @Path("/verify")
     public Response verifyUserRegistration(@QueryParam("code") final String verificationCode) {
-        System.out.println(verificationCode);
         Optional<User> userOptional = us.findByVerificationCode(verificationCode);
         if (!userOptional.isPresent() || userOptional.get().isVerified()) {
-            System.out.println("User optional is present: " + userOptional.isPresent());
             return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid user verification code or user is already verified", "verification")).build();
         }
         us.verify(userOptional.get());

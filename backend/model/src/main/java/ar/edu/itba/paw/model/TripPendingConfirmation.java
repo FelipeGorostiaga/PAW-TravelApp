@@ -7,9 +7,8 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-// TODO change to trip_pending_confirmations
 @Entity
-@Table(name = "trip_pending_confirmation")
+@Table(name = "trip_pending_confirmations")
 public class TripPendingConfirmation {
 
     /* package */ TripPendingConfirmation() {
@@ -35,10 +34,6 @@ public class TripPendingConfirmation {
 
     @Column(nullable = false)
     private boolean edited;
-
-    @Column
-    @CreationTimestamp
-    private Timestamp timestamp;
 
     public TripPendingConfirmation(Trip trip, User user, String token) {
         this.trip = trip;
@@ -86,14 +81,6 @@ public class TripPendingConfirmation {
 
     public void setAccepted(boolean accepted) {
         this.accepted = accepted;
-    }
-
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
     }
 
     public boolean isEdited() {

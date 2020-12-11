@@ -203,6 +203,7 @@ public class TripServiceImpl implements TripService {
     public boolean updateJoinRequest(Trip trip, User loggedUser, String token, boolean accepted, User requester) {
         boolean edited = td.editJoinRequest(trip, loggedUser, token, accepted);
         if (edited) {
+            addUserToTrip(requester.getId(), trip.getId());
             mailService.sendEditedJoinRequestMail(trip, requester, loggedUser, accepted);
             return true;
         }

@@ -1,30 +1,6 @@
 <app-navigation></app-navigation>
-<!--
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="card car mx-auto" style="width: 60rem;">
-                <img class="card-img" *ngIf="profilePicture"  src="" alt="User profile image">
-                <img class="rounded mb-2 img-thumbnail" *ngIf="!profilePicture"  src="/assets/images/default-user-icon.jpg" alt="Default user image">
-                <div class="card-header">
-                    <h5 class="card-title">{{user?.firstname}} {{user?.lastname}}<span class="float-right"><i class="fa fa-map-pin"></i>{{user?.nationality}}</span></h5>
-                </div>
-                <div class="card-body">
-                    <p class="card-text">{{user?.biography}}</p>
-                    <p class="card-text"><i class="fa fa-envelope"></i>{{user?.email}}</p>
-                    <p class="card-text"><i class="fa fa-birthday-cake"></i>{{user?.birthday}}</p>
-                    <div *ngIf="user?.id == loggedUser?.id" class="card-footer">
-                        <a href="" class="btn btn-primary text-white">Edit profile</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
--->
-
-
-<div class="row py-5 px-4">
+<ngx-bootstrap-spinner></ngx-bootstrap-spinner>
+<div *ngIf="!loading" class="row py-5 px-4">
     <div class="col-md-5 mx-auto">
         <!-- Profile widget -->
         <div class="bg-white shadow rounded overflow-hidden">

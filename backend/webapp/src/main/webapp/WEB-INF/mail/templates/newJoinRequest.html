@@ -5,9 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<p th:text="#{mailNewJoinRequestBody(${username}, ${tripname})}" ></p>
-<button>Accept</button>
-<button>Deny</button>
+<p th:text="#{mailNewJoinRequestBody(${username}, ${tripname})}"></p>
+<div>
+    <button><a th:href="${acceptedURL}">Accept</a></button>
+    <button><a th:href="${deniedURL}">Deny</a></button>
+</div>
 </body>
 </html>
 

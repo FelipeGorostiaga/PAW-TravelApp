@@ -1,0 +1,16 @@
+<app-navigation></app-navigation>
+<ngx-bootstrap-spinner></ngx-bootstrap-spinner>
+<div *ngIf="!loading" class="container">
+    <div *ngIf="error">
+        <p class="alert-danger">Error from server</p>
+    </div>
+    <div *ngIf="!error">
+        <div *ngIf="accepted">
+            <p class="alert-success">User was successfully added to trip.</p>
+        </div>
+        <div *ngIf="!accepted">
+            <p class="alert-info">Request to join was successfully denied.</p>
+        </div>
+    </div>
+    <a [routerLink]="">Go to Trip</a>
+</div>

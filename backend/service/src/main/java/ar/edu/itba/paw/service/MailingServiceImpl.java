@@ -38,6 +38,7 @@ public class MailingServiceImpl implements MailingService {
     private static final String EMAIL_NAME = "meet.travel.paw@gmail.com";
     private static final String EMAIL_PASS = "power123321";
     private static final Locale locale = getLocale();
+    private static final String frontEndURL = "http://localhost:4200/";
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -120,11 +121,16 @@ public class MailingServiceImpl implements MailingService {
     @Override
     public void sendJoinRequestMail(Trip t, User user, String token) {
         String subject = applicationContext.getMessage("mailNewJoinRequestSubject", null, locale);
+        String baseURL = frontEndURL + "/trip/" + t.getId() + "/joinRequest/?token=" + token;
+        String acceptURL = baseURL + "&accepted=true";
+        String denyURL = baseURL + "&accepted=false";
         Context ctx = new Context(locale);
         ctx.setVariable("username", user.getFirstname() + " " + user.getLastname());
         ctx.setVariable("userId", user.getId());
         ctx.setVariable("tripname", t.getName());
         ctx.setVariable("tripId", t.getId());
+        ctx.setVariable("acceptedURL", acceptURL);
+        ctx.setVariable("deniedURL", denyURL);
         String html = htmlTemplateEngine.process(JOIN_REQUEST_TEMPLATE, ctx);
         List<Recipient> recipients = t.getAdmins().stream()
                 .map(u -> new Recipient(u.getFirstname() + u.getLastname(), u.getEmail(), null))
