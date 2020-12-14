@@ -6,7 +6,7 @@ import {Router} from "@angular/router";
 import {ModalService} from "../../modal";
 import {ApiSearchService} from "../../services/api-search.service";
 import {Observable, Subject} from "rxjs";
-import {debounceTime, distinct, filter, switchMap} from "rxjs/operators";
+import {debounceTime, distinct, distinctUntilChanged, filter, switchMap, tap} from "rxjs/operators";
 import {User} from "../../model/user";
 
 
@@ -25,15 +25,21 @@ export class InformationComponent implements OnInit {
     waitingConfirmation: boolean;
 
     searchTerm: string;
-    userSearchResults: Observable<User>;
+    userSearchList: Observable<User>;
     latestSearch = new Subject<string>();
-
 
     constructor(private tripService: ApiTripService,
                 private authService: AuthService,
                 private router: Router,
                 private modalService: ModalService,
                 private searchService: ApiSearchService) {
+
+        this.userSearchList = this.latestSearch.pipe(
+            debounceTime(400),
+            distinctUntilChanged(),
+            filter(term => !!term),
+            tap(elem => console.log(elem)),
+            switchMap(term => this.searchService.searchUserByName(term)));
     }
 
     ngOnInit() {
@@ -60,11 +66,7 @@ export class InformationComponent implements OnInit {
                 }
             );
         }
-        this.userSearchResults = this.latestSearch.pipe(
-            debounceTime(500),
-            distinct(),
-            filter(term => !!term),
-            switchMap(term => this.searchService.searchUserByName(term)))
+
     }
 
     requestJoinTrip() {

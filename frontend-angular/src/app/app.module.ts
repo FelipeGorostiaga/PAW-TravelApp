@@ -35,7 +35,7 @@ import {VerificationResultComponent} from './register/verification-result/verifi
 import {NgxSpinnerModule} from "ngx-bootstrap-spinner";
 import {RespondJoinReqComponent} from './trip/respond-join-req/respond-join-req.component';
 import { RespondInviteComponent } from './trip/respond-invite/respond-invite.component';
-import { UserSearchComponent } from './trip/information/user-search/user-search.component';
+import { UserListItemComponent } from './trip/information/user-list-item/user-list-item.component';
 
 
 @NgModule({
@@ -63,7 +63,7 @@ import { UserSearchComponent } from './trip/information/user-search/user-search.
         VerificationResultComponent,
         RespondJoinReqComponent,
         RespondInviteComponent,
-        UserSearchComponent,
+        UserListItemComponent,
 
     ],
     imports: [

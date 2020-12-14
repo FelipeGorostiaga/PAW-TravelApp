@@ -10,7 +10,6 @@
     <div id="rate-bar" class="card-text" style="font-size: 150%; margin-bottom: 15px;"></div>
     <p class="card-text"><i class="far fa-calendar-alt"></i>{{trip?.startDate}}  - {{trip?.endDate}}</p>
 </div>
-
 <h3 class="margin-class">Starting place</h3>
 <p>{{trip?.startPlace?.name}}</p>
 <agm-map [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude" [zoom]="14"
@@ -36,7 +35,6 @@
     <button *ngIf="isAdmin || isMember" class="btn btn-danger" (click)="exitTrip()" >Exit</button>
     <button *ngIf="!isMember && !waitingConfirmation" class="btn-primary btn" (click)="requestJoinTrip()">Request to join</button>
 </div>
-
 <div>
     <button class="btn btn-primary" (click)="displaySearchUser('custom-modal-2')">Invite User</button>
 </div>
@@ -46,7 +44,9 @@
     </div>
     <section>
         <input type="search" placeholder="search user" [(ngModel)]="searchTerm" (ngModelChange)="newSearch(searchTerm)">
-        <div *ngFor="let user of userSearchResults | async">{{user.firstname}}</div>
+        <div *ngFor="let u of userSearchList | async" class="list-group">
+            <user-list-item [user]="u"></user-list-item>
+        </div>
         <button class="btn btn-secondary" (click)="closeModal('custom-modal-2')">Close</button>
     </section>
 </jw-modal>
