@@ -16,38 +16,43 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserDao userDao;
+    private UserDao ud;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
     public Optional<User> findById(long id) {
-        return userDao.findById(id);
+        return ud.findById(id);
     }
 
     @Override
     public Optional<User> findByUsername(String email) {
-        return userDao.findByUsername(email);
+        return ud.findByUsername(email);
     }
 
     @Override
     public Optional<User> findByVerificationCode(String verificationCode) {
-        return userDao.findByVerificationCode(verificationCode);
+        return ud.findByVerificationCode(verificationCode);
     }
 
     @Override
     public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex, String verificationCode) {
-        return userDao.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality, sex, verificationCode);
+        return ud.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality, sex, verificationCode);
     }
 
     @Override
     public boolean update(User user) {
-        return userDao.update(user);
+        return ud.update(user);
     }
 
     @Override
     public void verify(User user) {
-        userDao.verify(user);
+        ud.verify(user);
+    }
+
+    @Override
+    public List<User> findByName(String name) {
+        return ud.findByName(name);
     }
 }

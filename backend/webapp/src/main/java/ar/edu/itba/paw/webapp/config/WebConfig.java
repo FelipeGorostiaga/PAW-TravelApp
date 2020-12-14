@@ -35,7 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 @EnableTransactionManagement
-@ComponentScan({"ar.edu.itba.paw.webapp.controller","ar.edu.itba.paw.persistence","ar.edu.itba.paw.service"})
+@ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.service"})
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
 
@@ -57,7 +57,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public ViewResolver viewResolver(){
+    public ViewResolver viewResolver() {
         final InternalResourceViewResolver vr = new InternalResourceViewResolver();
         vr.setViewClass(JstlView.class);
         vr.setPrefix("/WEB-INF/jsp/");
@@ -102,7 +102,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public SpringResourceTemplateResolver templateResolver(){
+    public SpringResourceTemplateResolver templateResolver() {
         final SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
         templateResolver.setPrefix("/WEB-INF/mail/");
@@ -118,7 +118,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public SpringTemplateEngine templateEngine(){
+    public SpringTemplateEngine templateEngine() {
         final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
         templateEngine.setEnableSpringELCompiler(true);
@@ -140,9 +140,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedMethods("HEAD","GET", "PUT", "POST", "DELETE","OPTIONS")
+                .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "OPTIONS")
                 .allowedOrigins("*")
                 .allowedHeaders("*")
                 .allowCredentials(true).maxAge(3600);
     }
+
 }

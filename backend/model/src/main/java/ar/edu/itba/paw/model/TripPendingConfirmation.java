@@ -1,11 +1,7 @@
 package ar.edu.itba.paw.model;
 
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "trip_pending_confirmations")

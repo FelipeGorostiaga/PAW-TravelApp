@@ -2,8 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 import ar.edu.itba.paw.interfaces.TripService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.webapp.dto.TripDTO;
+import ar.edu.itba.paw.webapp.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -27,8 +29,18 @@ public class SearchControllerREST {
     @Autowired
     TripService tripService;
 
+    @Autowired
+    UserService userService;
+
     @GET
-    @Path("/name")
+    @Path("/users")
+    public Response searchUsersByName(@QueryParam("name") String name) {
+        List<UserDTO> resultUsers = userService.findByName(name).stream().map(UserDTO::new).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<UserDTO>>(resultUsers){}).build();
+    }
+
+    @GET
+    @Path("/trips/name")
     public Response searchByName(@QueryParam("nameInput") String name) {
         List<TripDTO> resultTrips = tripService.findByName(name).stream().map(TripDTO::new).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<TripDTO>>(resultTrips){}).build();

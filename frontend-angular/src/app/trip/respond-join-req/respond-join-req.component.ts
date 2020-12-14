@@ -28,16 +28,10 @@ export class RespondJoinReqComponent implements OnInit {
         this.tripId = Number(this.route.snapshot.paramMap.get("id"));
         let token = this.route.snapshot.queryParams['token'];
         this.accepted = this.route.snapshot.queryParams['accepted'];
-        console.log(token);
-        console.log(this.accepted);
-
         if (!token || !this.accepted) {
-            console.log("Error reading token or accepted");
             this.spinner.hide();
             this.error = true;
         } else {
-            console.log(this.accepted);
-            console.log(token);
             this.ts.respondJoinRequest(this.tripId, token, this.accepted).subscribe(
                 data => {
                     this.error = false;
@@ -45,6 +39,7 @@ export class RespondJoinReqComponent implements OnInit {
                     this.spinner.hide();
                 },
                 err => {
+                    this.loading = false;
                     this.spinner.hide();
                     this.error = true;
                 }

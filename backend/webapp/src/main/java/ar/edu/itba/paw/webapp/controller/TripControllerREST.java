@@ -5,7 +5,10 @@ import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
-import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
+import ar.edu.itba.paw.webapp.form.EditTripForm;
+import ar.edu.itba.paw.webapp.form.TripCommentForm;
+import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import ar.edu.itba.paw.webapp.utils.ImageValidator;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -28,18 +31,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
-
 @Path("trips")
 @Controller
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class TripControllerREST {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TripControllerREST.class);
-
-    // TODO: wtf...
-    private static final String ADD = "Add";
-    private static final String DELETE = "Delete";
 
     @Autowired
     SecurityUserService securityUserService;
@@ -162,7 +159,9 @@ public class TripControllerREST {
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
         User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
-        if (!violations.isEmpty()) return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCreateForm>>>(violations) {}).build();
+        if (!violations.isEmpty())
+            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCreateForm>>>(violations) {
+            }).build();
         Trip trip;
         try {
             trip = tripService.create(loggedUser.getId(), tripCreateForm.getLatitude(), tripCreateForm.getLongitude(), tripCreateForm.getName(),
@@ -205,43 +204,17 @@ public class TripControllerREST {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    @PUT
-    @Path("/{id}/add/{userId}")
-    public Response addUserToTrip(@PathParam("id") final long tripId, @PathParam("userId") final long userId) {
-        return addOrDeleteUserFromTrip(tripId, userId, ADD);
-    }
-
-    @PUT
+    @POST
     @Path("/{id}/remove/{userId}")
-    public Response removeUserFromTrip(@PathParam("id") final long tripId, @PathParam("userId") final long userId) {
-        return addOrDeleteUserFromTrip(tripId, userId, DELETE);
-    }
-
-    private Response addOrDeleteUserFromTrip(final long tripId, final long userId, final String type) {
+    public Response exitTrip(@PathParam("id") final long tripId) {
         User loggedUser = securityUserService.getLoggedUser();
-        Optional<User> userOptional = userService.findById(userId);
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if (userOptional.isPresent() && tripOptional.isPresent()) {
-            User u = userOptional.get();
-            Trip t = tripOptional.get();
-            if (t.getAdminId() == loggedUser.getId()) {
-                switch (type) {
-                    case ADD:
-                        tripService.addUserToTrip(userId, tripId);
-                        mailingService.sendJoinTripMail(u.getEmail(), u.getFirstname(), t.getName(), loggedUser.getFirstname(),
-                                loggedUser.getLastname());
-                        break;
-                    case DELETE:
-                        tripService.removeUserFromTrip(userId, tripId);
-                        mailingService.sendExitTripMail(u.getEmail(), u.getFirstname(), t.getName(), loggedUser.getFirstname(),
-                                loggedUser.getLastname());
-                        break;
-                }
-                return Response.ok().build();
-            }
-            return Response.status(Response.Status.FORBIDDEN).build();
+        if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        if (!tripOptional.get().getAdmins().contains(loggedUser) && !tripOptional.get().getUsers().contains(loggedUser)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("User is not part of this trip", "invalid-user")).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        tripService.removeUserFromTrip(loggedUser.getId(), tripId);
+        return Response.ok().build();
     }
 
     @GET
@@ -389,4 +362,70 @@ public class TripControllerREST {
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO("Internal Server Error", "error")).build();
     }
+
+    @GET
+    @Path("/{id}/pendingConfirmations/user")
+    public Response isWaitingTripConfirmation(@PathParam("id") final long tripId, @QueryParam("user") long userId) {
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        Optional<User> userOptional = userService.findById(userId);
+        if (!tripOptional.isPresent() || !userOptional.isPresent())
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        if (tripService.isWaitingJoinTripConfirmation(tripOptional.get(), userOptional.get())) {
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @GET
+    @Path("/{id}/pendingConfirmations")
+    public Response getTripPendingConfirmations(@PathParam("id") final long tripId) {
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        if (!tripOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
+        if (!tripService.isAdmin(tripOptional.get(), securityUserService.getLoggedUser()))
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(new ErrorDTO("Only trip admins can get pending confirmations", "permission-denied"))
+                    .build();
+        List<TripPendingConfirmationDTO> pendingConfirmations = tripService.getTripJoinRequests(tripId).stream().map(TripPendingConfirmationDTO::new).collect(Collectors.toList());
+        if (pendingConfirmations.isEmpty()) return Response.status(Response.Status.NOT_FOUND).build();
+        // TODO --> check if I need to filter {edited = false} or {accepted = false}
+        return Response.ok(new GenericEntity<List<TripPendingConfirmationDTO>>(pendingConfirmations) {
+        }).build();
+    }
+
+    @POST
+    @Path("/{id}/invite/{userId}")
+    public Response inviteUserToTrip(@PathParam("id") final long tripId, @PathParam("userId") final long userId) {
+        User loggedUser = securityUserService.getLoggedUser();
+        Optional<User> userOptional = userService.findById(userId);
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        if (!tripOptional.isPresent() || !userOptional.isPresent())
+            return Response.status(Response.Status.NOT_FOUND).build();
+        User invitedUser = userOptional.get();
+        Trip trip = tripOptional.get();
+        if (!trip.getAdmins().contains(loggedUser)) return Response.status(Response.Status.FORBIDDEN)
+                .entity(new ErrorDTO("You need to be an admin to invite users", "permission-denied")).build();
+        if (trip.getAdmins().contains(invitedUser) || trip.getUsers().contains(invitedUser)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("User is already part of the trip", "isMember")).build();
+        }
+        TripInvitation tripInvitation = tripService.inviteUserToTrip(trip, invitedUser, loggedUser);
+        return Response.ok(tripInvitation).build();
+    }
+
+    @POST
+    @Path("/{id}/invite-request/response")
+    public Response acceptOrDenyTripInvitation(@PathParam("id") final long tripId, @QueryParam("token") String token, @QueryParam("accepted") boolean accepted) {
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        User loggedUser = securityUserService.getLoggedUser();
+        Optional<TripInvitation> tripInvitation = tripService.findTripInvitationByToken(token);
+        if (!tripInvitation.isPresent() || !tripOptional.isPresent())
+            return Response.status(Response.Status.NOT_FOUND).build();
+        if (tripInvitation.get().getInvitee().getId() != loggedUser.getId())
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(new ErrorDTO("Only the invitee can accept or reject this invitation", "permission-denied"))
+                    .build();
+        tripService.acceptOrRejectTripInvitation(token, accepted, loggedUser, tripOptional.get());
+        return Response.ok().build();
+    }
+
+
 }

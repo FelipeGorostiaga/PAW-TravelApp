@@ -38,7 +38,7 @@ public class MailingServiceImpl implements MailingService {
     private static final String EMAIL_NAME = "meet.travel.paw@gmail.com";
     private static final String EMAIL_PASS = "power123321";
     private static final Locale locale = getLocale();
-    private static final String frontEndURL = "http://localhost:4200/";
+    private static final String frontEndURL = "http://localhost:4200";
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -53,6 +53,7 @@ public class MailingServiceImpl implements MailingService {
     private static final String JOIN_REQUEST_TEMPLATE = "templates/newJoinRequest.html";
     private static final String JOIN_REQUEST_ACCEPTED_TEMPLATE = "templates/joinRequestAccepted.html";
     private static final String JOIN_REQUEST_DENIED_TEMPLATE = "templates/joinRequestDenied.html";
+    private static final String INVITE_TO_TRIP_TEMPLATE = "templates/inviteToTrip.html";
 
     @Async
     @Override
@@ -153,11 +154,32 @@ public class MailingServiceImpl implements MailingService {
         if (accepted) {
             subject = applicationContext.getMessage("mailAcceptedJoinRequestSubject", null, locale);
             html = htmlTemplateEngine.process(JOIN_REQUEST_ACCEPTED_TEMPLATE, ctx);
-        }
-        else {
+        } else {
             subject = applicationContext.getMessage("mailDeniedJoinRequestSubject", null, locale);
             html = htmlTemplateEngine.process(JOIN_REQUEST_DENIED_TEMPLATE, ctx);
         }
+        sendMail(recipients, html, subject);
+    }
+
+    @Async
+    @Override
+    public void sendTripInviteMail(Trip trip, User invitedUser, User admin, String token) {
+        String invitedUserName = invitedUser.getFirstname() + " " + invitedUser.getLastname();
+        List<Recipient> recipients = new ArrayList<>();
+        recipients.add(new Recipient(invitedUserName, invitedUser.getEmail(), null));
+        Context ctx = new Context(locale);
+        String tripURL = frontEndURL + "/trip/" + trip.getId();
+        String baseResponseURL = frontEndURL + "/trip/invite?token=" + token;
+        String acceptInviteURL = baseResponseURL + "&accepted=true";
+        String denyInviteURL = baseResponseURL + "&accepted=false";
+        ctx.setVariable("invitedUserName", invitedUserName);
+        ctx.setVariable("admin", admin.getFirstname() + " " + admin.getLastname());
+        ctx.setVariable("tripName", trip.getName());
+        ctx.setVariable("acceptInviteURL", acceptInviteURL);
+        ctx.setVariable("denyInviteURL", denyInviteURL);
+        ctx.setVariable("tripURL", tripURL);
+        String subject = applicationContext.getMessage("mailInviteToTripSubject", null, locale);
+        String html = htmlTemplateEngine.process(INVITE_TO_TRIP_TEMPLATE, ctx);
         sendMail(recipients, html, subject);
     }
 
@@ -180,8 +202,8 @@ public class MailingServiceImpl implements MailingService {
                     .buildMailer();
 
             mailer.sendMail(email, true);
-        } catch (MailException ignored) {
-            // ignored
+        } catch (MailException exception) {
+            exception.printStackTrace();
         }
     }
 }

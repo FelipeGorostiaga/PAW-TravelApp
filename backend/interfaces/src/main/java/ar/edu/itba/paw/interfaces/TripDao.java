@@ -46,4 +46,12 @@ public interface TripDao {
     boolean editJoinRequest(Trip trip, User u, String token, boolean accepted);
 
     Optional<TripPendingConfirmation> findJoinRequestByToken(String token);
+
+    TripInvitation createTripInvitation(Trip trip, User invitedUser, User admin, String token);
+
+    Optional<TripPendingConfirmation> findTripConfirmationByUser(Trip trip, User user);
+
+    Optional<TripInvitation> findTripInvitationByToken(String token);
+
+    void deleteTripInvitation(String token, Trip trip);
 }

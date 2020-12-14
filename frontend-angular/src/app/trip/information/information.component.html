@@ -33,7 +33,21 @@
     </a>
 </div>
 <div style="margin-top: 20px;">
-    <button *ngIf="isAdmin || isMember" class="btn btn-danger" (click)="leaveTrip()" >Exit</button>
-    <button *ngIf="!isMember" class="btn-primary btn" (click)="requestJoinTrip()">Request to join</button>
+    <button *ngIf="isAdmin || isMember" class="btn btn-danger" (click)="exitTrip()" >Exit</button>
+    <button *ngIf="!isMember && !waitingConfirmation" class="btn-primary btn" (click)="requestJoinTrip()">Request to join</button>
 </div>
+
+<div>
+    <button class="btn btn-primary" (click)="displaySearchUser('custom-modal-2')">Invite User</button>
+</div>
+<jw-modal id="custom-modal-2">
+    <div>
+        <h3>Invite user to trip</h3>
+    </div>
+    <section>
+        <input type="search" placeholder="search user" [(ngModel)]="searchTerm" (ngModelChange)="newSearch(searchTerm)">
+        <div *ngFor="let user of userSearchResults | async">{{user.firstname}}</div>
+        <button class="btn btn-secondary" (click)="closeModal('custom-modal-2')">Close</button>
+    </section>
+</jw-modal>
 

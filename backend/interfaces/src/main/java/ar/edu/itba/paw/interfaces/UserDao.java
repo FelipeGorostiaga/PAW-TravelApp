@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.User;
 
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserDao {
@@ -15,5 +16,5 @@ public interface UserDao {
                 LocalDate birthday, final String nationality, final String sex, final String verificationCode);
     boolean update(User u);
     void verify(User u);
-
+    List<User> findByName(String name);
 }

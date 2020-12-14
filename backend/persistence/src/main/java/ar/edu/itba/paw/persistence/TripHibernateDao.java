@@ -72,7 +72,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<TripPendingConfirmation> getTripJoinRequests(long tripId) {
-        final TypedQuery<TripPendingConfirmation> query = em.createQuery("SELECT tp FROM TripPendingConfirmation tp WHERE tp.trip.id = :tripId", TripPendingConfirmation.class);
+        final TypedQuery<TripPendingConfirmation> query = em.createQuery("FROM TripPendingConfirmation as tp WHERE tp.trip.id = :tripId", TripPendingConfirmation.class);
         query.setParameter("tripId", tripId);
         return query.getResultList();
     }
@@ -90,6 +90,37 @@ public class TripHibernateDao implements TripDao {
         final TypedQuery<TripPendingConfirmation> query = em.createQuery("From TripPendingConfirmation as tp where tp.token = :token", TripPendingConfirmation.class);
         query.setParameter("token", token);
         return query.getResultList().stream().findFirst();
+    }
+
+    @Override
+    public TripInvitation createTripInvitation(Trip trip, User invitedUser, User admin, String token) {
+        TripInvitation invitation = new TripInvitation(trip, invitedUser, admin, token);
+        em.persist(invitation);
+        return invitation;
+    }
+
+    @Override
+    public Optional<TripPendingConfirmation> findTripConfirmationByUser(Trip trip, User user) {
+        final TypedQuery<TripPendingConfirmation> query = em.createQuery("From TripPendingConfirmation as tpc where tpc.trip.id = :tripId  and tpc.requestingUser.id = :userId", TripPendingConfirmation.class);
+        query.setParameter("tripId", trip.getId());
+        query.setParameter("userId", user.getId());
+        List<TripPendingConfirmation> resultList = query.getResultList();
+        return resultList.stream().findAny();
+    }
+
+    @Override
+    public Optional<TripInvitation> findTripInvitationByToken(String token) {
+        final TypedQuery<TripInvitation> query = em.createQuery("From TripInvitation as ti where ti.token = :token", TripInvitation.class);
+        query.setParameter("token", token);
+        return query.getResultList().stream().findFirst();
+    }
+
+    @Override
+    public void deleteTripInvitation(String token, Trip trip) {
+        Query query = em.createQuery("DELETE TripInvitation as ti where ti.token = :token AND ti.trip.id = :tripId");
+        query.setParameter("token", token);
+        query.setParameter("tripId", trip.getId());
+        query.executeUpdate();
     }
 
     @Override

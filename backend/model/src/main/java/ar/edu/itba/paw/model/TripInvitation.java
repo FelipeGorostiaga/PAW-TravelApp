@@ -28,6 +28,13 @@ public class TripInvitation {
     @Column(nullable = false)
     private String token;
 
+    public TripInvitation(Trip trip, User invitee, User inviter,  String token) {
+        this.trip = trip;
+        this.invitee = invitee;
+        this.inviter = inviter;
+        this.token = token;
+    }
+
     public long getId() {
         return id;
     }

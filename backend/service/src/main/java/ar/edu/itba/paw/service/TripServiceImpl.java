@@ -4,15 +4,11 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import se.walkercrou.places.GooglePlaces;
 import se.walkercrou.places.exception.GooglePlacesException;
 
-import javax.persistence.Query;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -213,6 +209,36 @@ public class TripServiceImpl implements TripService {
     @Override
     public Optional<TripPendingConfirmation> findJoinRequestByToken(String token) {
         return td.findJoinRequestByToken(token);
+    }
+
+    @Override
+    public TripInvitation inviteUserToTrip(Trip trip, User invitedUser, User admin) {
+        String token = RandomStringUtils.random(64, true, true);
+        TripInvitation invitation = td.createTripInvitation(trip, invitedUser, admin, token);
+        mailService.sendTripInviteMail(trip, invitedUser, admin, token);
+        return invitation;
+    }
+
+    @Override
+    public Boolean isWaitingJoinTripConfirmation(Trip trip, User user) {
+        Optional<TripPendingConfirmation> tripPendingConfirmationOptional = td.findTripConfirmationByUser(trip, user);
+        return tripPendingConfirmationOptional.isPresent();
+    }
+
+    @Override
+    public boolean isAdmin(Trip trip, User loggedUser) {
+        return trip.getAdmins().contains(loggedUser);
+    }
+
+    @Override
+    public Optional<TripInvitation> findTripInvitationByToken(String token) {
+        return td.findTripInvitationByToken(token);
+    }
+
+    @Override
+    public void acceptOrRejectTripInvitation(String token, boolean accepted, User invitedUser, Trip trip) {
+        addUserToTrip(invitedUser.getId(), trip.getId());
+        td.deleteTripInvitation(token, trip);
     }
 
 }

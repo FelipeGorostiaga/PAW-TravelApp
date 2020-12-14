@@ -17,4 +17,5 @@ public interface MailingService {
 
     void sendEditedJoinRequestMail(Trip trip, User requester, User loggedUser, boolean accepted);
 
+    void sendTripInviteMail(Trip trip, User invitedUser, User admin, String token);
 }

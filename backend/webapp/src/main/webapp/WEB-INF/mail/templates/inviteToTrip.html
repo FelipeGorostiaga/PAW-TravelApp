@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all" th:text="#{mailJoinTitle}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p  th:text="#{mailInviteToTripBody(${invitedUserName}, ${admin}, ${tripName})}" ></p>
+<button><a th:href="${acceptInviteURL}">Accept Invitation</a></button>
+<button><a th:href="${denyInviteURL}">Reject</a></button>
+<button><a th:href="${tripURL}">View Trip</a></button>
+</body>
+</html>

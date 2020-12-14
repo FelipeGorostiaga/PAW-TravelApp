@@ -7,7 +7,7 @@ import {ActivityForm} from "../model/forms/activity-form";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CommentForm} from "../model/forms/comment-form";
-import {shareReplay} from "rxjs/operators";
+import {mergeMap, shareReplay} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +26,7 @@ export class ApiTripService {
 
     getAllTripsPerPage(pageNum: number): Observable<any> {
         const url = this.tripsBaseURL + 'all' + pageNum;
-        // const params = new HttpParams().set('page', String(pageNum));
+        // let params = new HttpParams().set('page', String(pageNum));
         return this.http.get(this.tripsBaseURL);
     }
 
@@ -65,11 +65,6 @@ export class ApiTripService {
         return this.http.put(url, {});
     }
 
-    removeUserFromTrip(userId: number, id: number): Observable<any> {
-        const url = this.tripsBaseURL +  id + '/remove/' + userId;
-        return this.http.put(url, {});
-    }
-
     getTripImage(id: number): Observable<ImageDTO> {
         const url = this.tripsBaseURL + id + '/image';
         return this.http.get<ImageDTO>(url);
@@ -92,14 +87,36 @@ export class ApiTripService {
         return this.http.delete(url);
     }
 
-    sendJoinRequest(id: number, userId: number) {
+    sendJoinRequest(id: number, userId: number): Observable<any> {
         const url = this.tripsBaseURL + id + '/request/invite';
-        return this.http.post(url, {userId: userId, tripId: id});
+        return this.http.post(url, {});
     }
 
-    respondJoinRequest(id: number, token: string, accepted: boolean) {
+    respondJoinRequest(id: number, token: string, accepted: boolean): Observable<any> {
         const url = this.tripsBaseURL + id + "/invitation/pending";
         let params = new HttpParams().set("token", token).set("accepted", String(accepted));
         return this.http.post(url, {},{params: params});
+    }
+
+    exitTrip(id: number, userId: number): Observable<any> {
+        const url = this.tripsBaseURL + id + "/remove/" + userId;
+        return this.http.post(url, {});
+    }
+
+    getTripPendingConfirmations(id: number, userId: number): Observable<any> {
+        const url = this.tripsBaseURL + id + "/pendingConfirmations";
+        return this.http.get(url);
+    }
+
+    isWaitingTripConfirmation(id: number, userId: number) : Observable<any> {
+        const url = this.tripsBaseURL + id + "/pendingConfirmations/user";
+        let params = new HttpParams().set("user", String(userId));
+        return this.http.get(url, {params: params})
+    }
+
+    respondTripInvite(id: number, token: string, accepted: boolean): Observable<any> {
+        const url = this.tripsBaseURL + id + "/invite-request/response";
+        let params = new HttpParams().set("token", token).set("accepted", String(accepted));
+        return this.http.post(url, {}, {params: params}).pipe(mergeMap(res => this.getTrip(id)));
     }
 }

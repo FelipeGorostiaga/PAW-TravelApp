@@ -57,4 +57,14 @@ public interface TripService {
     boolean updateJoinRequest(Trip trip, User loggedUser, String token, boolean accepted, User requester);
 
     Optional<TripPendingConfirmation> findJoinRequestByToken(String token);
+
+    TripInvitation inviteUserToTrip(Trip trip, User invitedUser, User admin);
+
+    Boolean isWaitingJoinTripConfirmation(Trip trip, User user);
+
+    boolean isAdmin(Trip trip, User loggedUser);
+
+    Optional<TripInvitation> findTripInvitationByToken(String token);
+
+    void acceptOrRejectTripInvitation(String token, boolean accepted, User invitedUser, Trip trip);
 }
