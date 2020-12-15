@@ -4,18 +4,20 @@
 <div *ngIf="trip?.activities?.length !== 0">
     <div class="list-group" style="margin-bottom: 20px">
         <app-map-activity *ngFor="let activity of trip?.activities"
-                [activity]="activity">
+                          [activity]="activity">
         </app-map-activity>
     </div>
 </div>
-<button *ngIf="isAdmin || isMember" class="btn btn-primary" (click)="openModal('custom-modal-1')">Add activity</button>
+<button *ngIf="isAdmin" class="btn btn-primary" (click)="openModal('custom-modal-1')">Add activity</button>
+
 <jw-modal id="custom-modal-1">
-    <h4 class="text-center" style="margin-bottom: 30px; padding: 20px; background-color: #edeff0">Add activity</h4>
     <form [formGroup]="activityForm" (ngSubmit)="createActivity()">
         <div class="form-row">
             <div class="form-group col-6">
                 <label>Name</label>
-                <input formControlName="name" type="text" placeholder="Give your activity a name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"/>
+                <input formControlName="name" type="text" placeholder="Give your activity a name"
+                       class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.name.errors }"/>
                 <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
                     <div *ngIf="f.name.errors.required">Field is required</div>
                     <div *ngIf="f.name.errors.minlength">Min 6 characters</div>
@@ -24,7 +26,8 @@
             </div>
             <div class="form-group col-6">
                 <label>Category</label>
-                <select formControlName="category" name="category" class="form-control" style="margin-bottom: 10px;" [ngClass]="{ 'is-invalid': (submitted && f.category.errors) }">
+                <select formControlName="category" name="category" class="form-control" style="margin-bottom: 10px;"
+                        [ngClass]="{ 'is-invalid': (submitted && f.category.errors) }">
                     <option disabled selected>Select category</option>
                     <option value="Cultural">Cultural</option>
                     <option value="Sports">Sports</option>
@@ -43,18 +46,7 @@
             </div>
         </div>
         <div class="form-row">
-            <div  class="form-group col-6 ">
-                <label>Location</label>
-                <input #search formControlName="placeInput" id="place" type="text" placeholder="" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.placeInput.errors }"/>
-                <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 400px;width: 100%;">
-                    <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
-                </agm-map>
-                <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
-                    <p *ngIf="f.placeInput.errors.required">Field is required</p>
-                    <p *ngIf="f.placeInput.errors.required">Invalid google maps input</p>
-                </div>
-            </div>
-            <div class="form-group col-3">
+            <div class="form-group col-6">
                 <label for="startDate">Start date</label>
                 <input formControlName="startDate"
                        type="text"
@@ -66,10 +58,11 @@
                        [bsConfig]="bsConfig">
                 <div *ngIf="submitted && f.startDate.errors" class="invalid-feedback">
                     <p *ngIf="f.startDate.errors.required">Field is required</p>
-                    <p *ngIf="f.startDate.errors.invalidDate">Activity must start the same date or before end date</p>
+                    <p *ngIf="f.startDate.errors.invalidDate">Activity must start the same date or before end
+                        date</p>
                 </div>
             </div>
-            <div class="form-group col-3">
+            <div class="form-group col-6">
                 <label for="endDate">End date</label>
                 <input formControlName="endDate"
                        type="text"
@@ -84,11 +77,144 @@
                 </div>
             </div>
         </div>
-        <div class="text-center flex-fill" >
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Location</label>
+                <input #search
+                       formControlName="placeInput"
+                       type="text"
+                       placeholder="Enter location"
+                       class="form-control"
+                       autocomplete="off"
+                       [ngClass]="{ 'is-invalid': submitted && f.placeInput.errors }"/>
+                <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom"
+                         style="height: 400px;width: 768px;">
+                    <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
+                </agm-map>
+                <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
+                    <p *ngIf="f.placeInput.errors.required">Field is required</p>
+                    <p *ngIf="f.placeInput.errors.required">Invalid google maps input</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container text-center flex-fill">
             <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Create</button>
-            <button class="btn btn-secondary" (click)="closeModal('custom-modal-1');">Close</button>
+            <button type="button" class="btn btn-outline-secondary" (click)="closeModal('custom-modal-1')">Close</button>
         </div>
     </form>
 </jw-modal>
+
+<!--
+
+<ng-template #createActivityModal>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Create Activity</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="createActivityModalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="activityForm" (ngSubmit)="createActivity()">
+            <div class="form-row">
+                <div class="form-group col-6">
+                    <label>Name</label>
+                    <input formControlName="name" type="text" placeholder="Give your activity a name"
+                           class="form-control"
+                           [ngClass]="{ 'is-invalid': submitted && f.name.errors }"/>
+                    <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                        <div *ngIf="f.name.errors.required">Field is required</div>
+                        <div *ngIf="f.name.errors.minlength">Min 6 characters</div>
+                        <div *ngIf="f.name.errors.maxlength">Max 25 characters</div>
+                    </div>
+                </div>
+                <div class="form-group col-6">
+                    <label>Category</label>
+                    <select formControlName="category" name="category" class="form-control" style="margin-bottom: 10px;"
+                            [ngClass]="{ 'is-invalid': (submitted && f.category.errors) }">
+                        <option disabled selected>Select category</option>
+                        <option value="Cultural">Cultural</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Social">Social</option>
+                        <option value="Romantic">Romantic</option>
+                        <option value="Adventure">Adventure</option>
+                        <option value="Family">Family</option>
+                        <option value="Friends">Friends</option>
+                        <option value="Business">Business</option>
+                        <option value="Relaxation">Relax</option>
+                        <option value="Nightlife">Nightlife</option>
+                    </select>
+                    <div *ngIf="submitted && f.category.errors" class="invalid-feedback">
+                        <p *ngIf="f.category.errors.required">Field is required</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6">
+                    <label for="startDate">Start date</label>
+                    <input formControlName="startDate"
+                           type="text"
+                           class="form-control"
+                           id="startDate"
+                           autocomplete="off"
+                           [ngClass]="{ 'is-invalid': submitted && f.startDate.errors }"
+                           bsDatepicker
+                           [bsConfig]="bsConfig">
+                    <div *ngIf="submitted && f.startDate.errors" class="invalid-feedback">
+                        <p *ngIf="f.startDate.errors.required">Field is required</p>
+                        <p *ngIf="f.startDate.errors.invalidDate">Activity must start the same date or before end
+                            date</p>
+                    </div>
+                </div>
+                <div class="form-group col-6">
+                    <label for="endDate">End date</label>
+                    <input formControlName="endDate"
+                           type="text"
+                           class="form-control"
+                           autocomplete="off"
+                           [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }"
+                           bsDatepicker
+                           id="endDate"
+                           [bsConfig]="bsConfig">
+                    <div *ngIf="submitted && f.endDate.errors" class="invalid-feedback">
+                        <p *ngIf="f.endDate.errors.required">Field is required</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Location</label>
+                    <input #search
+                           formControlName="placeInput"
+                           type="text"
+                           placeholder="Enter location"
+                           class="form-control"
+                           autocomplete="off"
+                           [ngClass]="{ 'is-invalid': submitted && f.placeInput.errors }"/>
+                    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom"
+                             style="height: 400px;width: 768px;">
+                        <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
+                    </agm-map>
+                    <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
+                        <p *ngIf="f.placeInput.errors.required">Field is required</p>
+                        <p *ngIf="f.placeInput.errors.required">Invalid google maps input</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center flex-fill">
+                <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Create</button>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary" (click)="closeActivityModal()" style="margin-top: 20px;">
+            Close
+        </button>
+    </div>
+</ng-template>
+-->
 
 

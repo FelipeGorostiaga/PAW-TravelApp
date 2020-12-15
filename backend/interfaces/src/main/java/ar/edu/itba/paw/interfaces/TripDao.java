@@ -4,7 +4,6 @@ package ar.edu.itba.paw.interfaces;
 import ar.edu.itba.paw.model.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,4 +53,6 @@ public interface TripDao {
     Optional<TripInvitation> findTripInvitationByToken(String token);
 
     void deleteTripInvitation(String token, Trip trip);
+
+    Optional<TripInvitation> findTripInvitationByUser(Trip trip, User user);
 }

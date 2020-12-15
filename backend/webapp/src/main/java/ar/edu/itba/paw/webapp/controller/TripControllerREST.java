@@ -407,8 +407,10 @@ public class TripControllerREST {
         if (trip.getAdmins().contains(invitedUser) || trip.getUsers().contains(invitedUser)) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("User is already part of the trip", "isMember")).build();
         }
-        TripInvitation tripInvitation = tripService.inviteUserToTrip(trip, invitedUser, loggedUser);
-        return Response.ok(tripInvitation).build();
+        Optional<TripInvitation> tripInvitation = tripService.findTripInvitationByUser(tripOptional.get(), userOptional.get());
+        if (tripInvitation.isPresent()) return Response.status(Response.Status.CONFLICT).build();
+        tripService.inviteUserToTrip(trip, invitedUser, loggedUser);
+        return Response.ok().build();
     }
 
     @POST
@@ -426,6 +428,5 @@ public class TripControllerREST {
         tripService.acceptOrRejectTripInvitation(token, accepted, loggedUser, tripOptional.get());
         return Response.ok().build();
     }
-
 
 }

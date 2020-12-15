@@ -2,6 +2,7 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -54,5 +56,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findByName(String name) {
         return ud.findByName(name);
+    }
+
+    @Override
+    public List<User> findInvitableUsersByName(String name, Trip trip) {
+        List<User> users = findByName(name);
+        return users.stream().filter(u -> !(trip.getUsers().contains(u) || trip.getAdmins().contains(u))).collect(Collectors.toList());
     }
 }

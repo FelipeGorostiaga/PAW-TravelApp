@@ -124,6 +124,14 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
+    public Optional<TripInvitation> findTripInvitationByUser(Trip trip, User user) {
+        final TypedQuery<TripInvitation> query = em.createQuery("From TripInvitation as ti where ti.trip.id = :tripId AND ti.invitee.id = :userId", TripInvitation.class);
+        query.setParameter("tripId", trip.getId());
+        query.setParameter("userId", user.getId());
+        return query.getResultList().stream().findFirst();
+    }
+
+    @Override
     public List<Trip> getAllTrips() {
         final TypedQuery<Trip> query = em.createQuery("FROM Trip", Trip.class);
         return query.getResultList();

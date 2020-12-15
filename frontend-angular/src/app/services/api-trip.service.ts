@@ -60,9 +60,9 @@ export class ApiTripService {
         return this.http.delete(url);
     }
 
-    addUserToTrip(userId: number, id: number): Observable<any> {
-        const url = this.tripsBaseURL + id + '/add/' + userId;
-        return this.http.put(url, {});
+    inviteUserToTrip(id: number, userId: number): Observable<any> {
+        const url = this.tripsBaseURL + id + '/invite/' + userId;
+        return this.http.post(url, {});
     }
 
     getTripImage(id: number): Observable<ImageDTO> {

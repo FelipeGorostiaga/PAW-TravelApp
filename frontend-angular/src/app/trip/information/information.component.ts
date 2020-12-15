@@ -1,13 +1,13 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FullTrip, Trip} from "../../model/trip";
+import {Component, Input, OnInit, TemplateRef} from '@angular/core';
+import {FullTrip} from "../../model/trip";
 import {ApiTripService} from "../../services/api-trip.service";
 import {AuthService} from "../../services/auth/auth.service";
 import {Router} from "@angular/router";
-import {ModalService} from "../../modal";
 import {ApiSearchService} from "../../services/api-search.service";
 import {Observable, Subject} from "rxjs";
-import {debounceTime, distinct, distinctUntilChanged, filter, switchMap, tap} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, filter, switchMap, tap} from "rxjs/operators";
 import {User} from "../../model/user";
+import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 
 
 @Component({
@@ -22,32 +22,39 @@ export class InformationComponent implements OnInit {
     @Input() isMember: boolean;
     hasImage: boolean;
     tripImage: any;
-    waitingConfirmation: boolean;
+    waitingConfirmation = true;
+
+    modalRef: BsModalRef;
 
     searchTerm: string;
     userSearchList: Observable<User>;
     latestSearch = new Subject<string>();
 
+    loading: boolean;
+
+    showSuccessAlert;
+    showErrorAlert;
+
     constructor(private tripService: ApiTripService,
                 private authService: AuthService,
                 private router: Router,
-                private modalService: ModalService,
-                private searchService: ApiSearchService) {
+                private searchService: ApiSearchService,
+                private modalService: BsModalService) {
 
         this.userSearchList = this.latestSearch.pipe(
-            debounceTime(400),
+            debounceTime(300),
             distinctUntilChanged(),
             filter(term => !!term),
             tap(elem => console.log(elem)),
-            switchMap(term => this.searchService.searchUserByName(term)));
+            switchMap(term => this.searchService.searchInvitableUsersByName(term, this.trip.id)));
     }
 
     ngOnInit() {
+        this.loading = true;
         if (this.trip != null) {
             if (!this.isAdmin && !this.isMember) {
                 this.tripService.isWaitingTripConfirmation(this.trip.id, this.authService.getLoggedUser().id).subscribe(
                     data => {
-                        console.log(data);
                         this.waitingConfirmation = true;
                     },
                     error => {
@@ -66,7 +73,7 @@ export class InformationComponent implements OnInit {
                 }
             );
         }
-
+        this.loading = false;
     }
 
     requestJoinTrip() {
@@ -74,7 +81,6 @@ export class InformationComponent implements OnInit {
             this.tripService.sendJoinRequest(this.trip.id, this.authService.getLoggedUser().id).subscribe(
                 data => {
                     this.waitingConfirmation = true;
-                    console.log("Request to join trip sent");
                 },
                 error => {
                     console.log("Error sending request...");
@@ -87,7 +93,6 @@ export class InformationComponent implements OnInit {
         if (confirm("Are you sure you want to leave this trip?")) {
             this.tripService.exitTrip(this.trip.id, this.authService.getLoggedUser().id).subscribe(
                 () => {
-                    console.log("You are no longer part of this trip");
                     this.isMember = false;
                     this.isAdmin = false;
                     this.router.navigate(["/user-trips"]);
@@ -96,16 +101,45 @@ export class InformationComponent implements OnInit {
         }
     }
 
-
-    displaySearchUser(modalId: string) {
-        this.modalService.open(modalId);
+    openModal(template: TemplateRef<any>) {
+        this.modalRef = this.modalService.show(template);
     }
 
-    closeModal(modalId: string) {
-        this.modalService.close(modalId);
+    closeModal() {
+        this.modalRef.hide();
+        this.resetSearch();
     }
 
     newSearch(term: string) {
         this.latestSearch.next(term);
     }
+
+    sendInvite(user: User) {
+        if (confirm("Invite user to trip?")) {
+            this.tripService.inviteUserToTrip(this.trip.id, user.id).subscribe(
+                next => {
+                    this.showSuccessAlert = true;
+                },
+                error => {
+                    this.showErrorAlert = true;
+                }
+            );
+            this.resetSearch();
+        }
+
+    }
+
+    resetSearch()  {
+        this.searchTerm = "";
+        this.latestSearch.next(" ");
+    }
+
+    closeSuccessAlert() {
+        this.showSuccessAlert = false;
+    }
+
+    closeErrorAlert() {
+        this.showErrorAlert = false;
+    }
+
 }

@@ -241,4 +241,9 @@ public class TripServiceImpl implements TripService {
         td.deleteTripInvitation(token, trip);
     }
 
+    @Override
+    public Optional<TripInvitation> findTripInvitationByUser(Trip trip, User user) {
+        return td.findTripInvitationByUser(trip, user);
+    }
+
 }

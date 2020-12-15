@@ -28,7 +28,8 @@
                                   id="descriptionBox"
                                   rows="3"
                                   placeholder="Write a description for your new adventure!"
-                                  style="margin-bottom: 10px;"
+                                  style="margin-bottom: 10px;resize:none;"
+                                  maxlength="300"
                                   [ngClass]="{ 'is-invalid': submitted && f.description.errors }">
                         </textarea>
                         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
@@ -90,7 +91,7 @@
                         formControlName="placeInput"
                         class="form-control"
                         id="place"
-                        placeholder="Enter location..."
+                        placeholder="Enter location"
                         type="text"
                         autocomplete="off"
                         autocapitalize="off"

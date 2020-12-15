@@ -27,15 +27,17 @@ import {IndexComponent} from './index/index.component';
 import {LoggedGuard} from "./services/auth/logged.guard";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {PageNotFoundComponent} from './errors/page-not-found/page-not-found.component';
-import {ModalModule} from "./modal";
+import {ModalModuleCustom} from "./modal";
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {UserTripsComponent} from './user-trips/user-trips.component';
 import {VerificationComponent} from './register/verification/verification.component';
 import {VerificationResultComponent} from './register/verification-result/verification-result.component';
 import {NgxSpinnerModule} from "ngx-bootstrap-spinner";
 import {RespondJoinReqComponent} from './trip/respond-join-req/respond-join-req.component';
-import { RespondInviteComponent } from './trip/respond-invite/respond-invite.component';
-import { UserListItemComponent } from './trip/information/user-list-item/user-list-item.component';
+import {RespondInviteComponent} from './trip/respond-invite/respond-invite.component';
+import {UserListItemComponent} from './trip/information/user-list-item/user-list-item.component';
+import {AlertModule} from "ngx-bootstrap/alert";
+import {ModalModule} from "ngx-bootstrap/modal";
 
 
 @NgModule({
@@ -72,7 +74,7 @@ import { UserListItemComponent } from './trip/information/user-list-item/user-li
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
-        ModalModule,
+        ModalModuleCustom,
         NgxSpinnerModule,
         BsDatepickerModule.forRoot(),
         AgmCoreModule.forRoot(
@@ -81,7 +83,9 @@ import { UserListItemComponent } from './trip/information/user-list-item/user-li
                 libraries: ["places"]
             }
         ),
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        AlertModule.forRoot(),
+        ModalModule.forRoot()
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [AuthService, AuthGuard, {

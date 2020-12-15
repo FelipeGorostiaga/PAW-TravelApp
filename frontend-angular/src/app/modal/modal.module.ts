@@ -8,4 +8,4 @@ import { ModalComponent } from './modal.component';
   declarations: [ModalComponent],
   exports: [ModalComponent]
 })
-export class ModalModule { }
+export class ModalModuleCustom { }

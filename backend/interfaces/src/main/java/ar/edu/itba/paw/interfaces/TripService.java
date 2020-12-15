@@ -5,7 +5,6 @@ import ar.edu.itba.paw.model.*;
 import se.walkercrou.places.exception.GooglePlacesException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public interface TripService {
@@ -67,4 +66,6 @@ public interface TripService {
     Optional<TripInvitation> findTripInvitationByToken(String token);
 
     void acceptOrRejectTripInvitation(String token, boolean accepted, User invitedUser, Trip trip);
+
+    Optional<TripInvitation> findTripInvitationByUser(Trip trip, User user);
 }

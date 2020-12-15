@@ -3,6 +3,7 @@ import {Observable} from "rxjs";
 import {Trip} from "../model/trip";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {User} from "../model/user";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,7 @@ export class ApiSearchService {
 
   constructor(private http: HttpClient) {}
 
-  private baseURL = 'http://localhost:8080/api';
-  private searchBaseURL = `${this.baseURL}/search`;
+  private searchBaseURL = `${environment.apiURL}/search/`;
 
   searchByName(name: string): Observable<Trip[]> {
     const url = this.searchBaseURL + '/name';
@@ -20,8 +20,14 @@ export class ApiSearchService {
     return this.http.get<Trip[]>(url, {params});
   }
 
+  searchInvitableUsersByName(name: string, tripId: number): Observable<User>{
+    const url = this.searchBaseURL + tripId + "/users/invite";
+    let params = new HttpParams().set("name", name);
+    return this.http.get<User>(url, {params: params});
+  }
+
   searchUserByName(name: string): Observable<User> {
-    const url = this.searchBaseURL + "/users";
+    const url = this.searchBaseURL + "users";
     let params = new HttpParams().set("name", name);
     return this.http.get<User>(url, {params: params});
   }

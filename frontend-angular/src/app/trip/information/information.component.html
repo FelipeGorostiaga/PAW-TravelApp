@@ -17,14 +17,16 @@
     <agm-marker [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude"></agm-marker>
 </agm-map>
 <div class="list-group" style="margin-top: 40px;">
-    <a *ngFor="let admin of trip?.admins" routerLink="/profile/{{admin.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+    <a *ngFor="let admin of trip?.admins" routerLink="/profile/{{admin.id}}"
+       class="list-group-item list-group-item-action flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1"><i class="fa fa-user" style="margin-right: 5px;"></i>
                 {{admin?.firstname}} {{admin?.lastname}}</h5>
             <small>Administrator</small>
         </div>
     </a>
-    <a *ngFor="let user of trip?.users" routerLink="/profile/{{user.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+    <a *ngFor="let user of trip?.users" routerLink="/profile/{{user.id}}"
+       class="list-group-item list-group-item-action flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1"><i class="fa fa-user" style="margin-right: 5px;"></i>
                 {{user?.firstname}} {{user?.lastname}}</h5>
@@ -32,22 +34,42 @@
     </a>
 </div>
 <div style="margin-top: 20px;">
-    <button *ngIf="isAdmin || isMember" class="btn btn-danger" (click)="exitTrip()" >Exit</button>
-    <button *ngIf="!isMember && !waitingConfirmation" class="btn-primary btn" (click)="requestJoinTrip()">Request to join</button>
+    <button *ngIf="isAdmin || isMember" class="btn btn-danger" (click)="exitTrip()">Exit</button>
+    <button *ngIf="!loading && !isMember && !waitingConfirmation" class="btn-primary btn" (click)="requestJoinTrip()">
+        Request to join
+    </button>
 </div>
-<div>
-    <button class="btn btn-primary" (click)="displaySearchUser('custom-modal-2')">Invite User</button>
+<div *ngIf="isAdmin">
+    <button class="btn btn-primary" (click)="openModal(template)">Invite User</button>
 </div>
-<jw-modal id="custom-modal-2">
-    <div>
-        <h3>Invite user to trip</h3>
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Invite user</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-    <section>
-        <input type="search" placeholder="search user" [(ngModel)]="searchTerm" (ngModelChange)="newSearch(searchTerm)">
-        <div *ngFor="let u of userSearchList | async" class="list-group">
-            <user-list-item [user]="u"></user-list-item>
+    <div class="modal-body">
+        <div *ngIf="showSuccessAlert">
+            <alert [type]="'success'" [dismissible]="true" (onClosed)="closeSuccessAlert()">This is a success alert</alert>
         </div>
-        <button class="btn btn-secondary" (click)="closeModal('custom-modal-2')">Close</button>
-    </section>
-</jw-modal>
+        <div *ngIf="showErrorAlert">
+            <alert [type]="'warning'" [dismissible]="true" (onClosed)="closeErrorAlert()">There is already a pending invitation</alert>
+        </div>
+        <section>
+            <div class="input-group mb-3">
+                <input type="search" placeholder="Search by name..." class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default" [(ngModel)]="searchTerm"
+                       (ngModelChange)="newSearch(searchTerm)">
+            </div>
+            <div *ngFor="let u of userSearchList | async" class="list-group">
+                <user-list-item [user]="u" (userClickedEvent)="sendInvite($event)"></user-list-item>
+            </div>
+        </section>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary" (click)="closeModal()" style="margin-top: 20px;">Close</button>
+    </div>
+</ng-template>
+
 
