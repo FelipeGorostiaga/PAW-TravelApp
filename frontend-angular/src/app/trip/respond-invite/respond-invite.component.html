@@ -2,15 +2,15 @@
 <ngx-bootstrap-spinner></ngx-bootstrap-spinner>
 <div *ngIf="!loading" class="container" style="align-content: center; margin: 40px;">
     <div *ngIf="error">
-        <h3 class="alert-danger text-center">Invalid token or invitation does not exist/</h3>
+        <alert [type]="'warning'" [dismissible]="false">Invalid token or invitation does not exist</alert>
     </div>
     <div *ngIf="!error">
         <div *ngIf="accepted">
-            <h3 class="alert-success">You have joined the trip {{tripName}}</h3>
+            <alert [type]="'success'" [dismissible]="false">You have joined {{tripName}}</alert>
             <button class="btn btn-primary"><a [routerLink] = "['/trip/' + tripId]">Go to Trip</a></button>
         </div>
         <div *ngIf="!accepted">
-            <h3 class="alert-info">You have declined the invitation to join {{tripName}}</h3>
+            <alert [type]="'info'" [dismissible]="false">You have declined the invitation to join {{tripName}}</alert>
             <button class="btn btn-primary"><a routerLink = "/home">Home</a></button>
         </div>
     </div>

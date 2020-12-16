@@ -16,6 +16,7 @@ export class TripComponent implements OnInit {
     loggedUser: User;
     trip: FullTrip;
 
+    // TODO
     tripImage: any;
     hasImage: boolean;
 

@@ -2,7 +2,7 @@
 <div>
     <div class="d-flex justify-content-between">
         <div *ngIf="isAdmin" class="p-2">
-            <button class="btn btn-outline-dark" style="margin-top: 10px;">Edit</button>
+            <button class="btn btn-outline-dark" (click)="openEditTripModal(editTripTemplate)" style="margin-top: 10px;">Edit</button>
         </div>
     </div>
     <div class="display-4 ">{{trip?.name}}</div>
@@ -42,6 +42,41 @@
 <div *ngIf="isAdmin">
     <button class="btn btn-primary" (click)="openModal(template)">Invite User</button>
 </div>
+
+
+<ng-template #editTripTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Edit Trip</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="editTripModalRef.hide()"><span aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editTripForm">
+            <!-- Image Upload -->
+            <div class="form-group">
+                <label for="imageUpload">File input</label>
+                <input type="file" class="form-control-file" id="imageUpload">
+            </div>
+
+            <!-- Edit Trip Name -->
+            <div class="form-group">
+                <label for="tripName">Name</label>
+                <input type="text" class="form-control" id="tripName" placeholder="New trip name">
+            </div>
+
+            <!-- Edit description -->
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" rows="4"></textarea>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="submitEditTripForm()">Submit</button>
+        <button type="button" class="btn btn-outline-primary" (click)="closeEditTripModal()">Close</button>
+    </div>
+</ng-template>
+
+
 <ng-template #template>
     <div class="modal-header">
         <h4 class="modal-title pull-left">Invite user</h4>
@@ -51,10 +86,12 @@
     </div>
     <div class="modal-body">
         <div *ngIf="showSuccessAlert">
-            <alert [type]="'success'" [dismissible]="true" (onClosed)="closeSuccessAlert()">This is a success alert</alert>
+            <alert [type]="'success'" [dismissible]="true" (onClosed)="closeSuccessAlert()">User invite sent.</alert>
         </div>
         <div *ngIf="showErrorAlert">
-            <alert [type]="'warning'" [dismissible]="true" (onClosed)="closeErrorAlert()">There is already a pending invitation</alert>
+            <alert [type]="'warning'" [dismissible]="true" (onClosed)="closeErrorAlert()">Error, user was already
+                invited.
+            </alert>
         </div>
         <section>
             <div class="input-group mb-3">

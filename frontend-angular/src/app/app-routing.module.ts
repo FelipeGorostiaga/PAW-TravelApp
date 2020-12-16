@@ -14,6 +14,7 @@ import {UserTripsComponent} from "./user-trips/user-trips.component";
 import {VerificationComponent} from "./register/verification/verification.component";
 import {VerificationResultComponent} from "./register/verification-result/verification-result.component";
 import {RespondJoinReqComponent} from "./trip/respond-join-req/respond-join-req.component";
+import {RespondInviteComponent} from "./trip/respond-invite/respond-invite.component";
 
 const routes: Routes = [
     {
@@ -36,6 +37,11 @@ const routes: Routes = [
         path: 'home',
         component: HomeComponent,
         canActivate: [AuthGuard]
+    },
+    {
+        path: 'trip/:id/invite',
+        component: RespondInviteComponent,
+        canActivate: [AuthGuard],
     },
     {
         path: 'trip/:id/joinRequest',

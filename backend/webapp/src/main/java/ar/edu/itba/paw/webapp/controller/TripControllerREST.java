@@ -221,12 +221,12 @@ public class TripControllerREST {
     @Path("/{id}/image")
     @Produces(value = {"image/png", "image/jpeg"})
     public Response getTripImage(@PathParam("id") final long tripId) {
-        final Optional<TripPicture> pictureOpt = tripPicturesService.findByTripId(tripId);
-        if (!pictureOpt.isPresent()) {
+        final Optional<TripPicture> tripPictureOptional = tripPicturesService.findByTripId(tripId);
+        if (!tripPictureOptional.isPresent()) {
             LOGGER.warn("Cannot render trip picture, trip with id {} not found", tripId);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(new ImageDTO(pictureOpt.get())).build();
+        return Response.ok(new ImageDTO(tripPictureOptional.get())).build();
     }
 
     @GET

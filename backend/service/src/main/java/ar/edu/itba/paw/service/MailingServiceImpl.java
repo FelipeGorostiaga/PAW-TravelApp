@@ -169,7 +169,7 @@ public class MailingServiceImpl implements MailingService {
         recipients.add(new Recipient(invitedUserName, invitedUser.getEmail(), null));
         Context ctx = new Context(locale);
         String tripURL = frontEndURL + "/trip/" + trip.getId();
-        String baseResponseURL = frontEndURL + "/trip/invite?token=" + token;
+        String baseResponseURL = frontEndURL + "/trip/" + trip.getId() + "/invite?token=" + token;
         String acceptInviteURL = baseResponseURL + "&accepted=true";
         String denyInviteURL = baseResponseURL + "&accepted=false";
         ctx.setVariable("invitedUserName", invitedUserName);

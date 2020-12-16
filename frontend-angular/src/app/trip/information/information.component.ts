@@ -8,6 +8,7 @@ import {Observable, Subject} from "rxjs";
 import {debounceTime, distinctUntilChanged, filter, switchMap, tap} from "rxjs/operators";
 import {User} from "../../model/user";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
+import {FormGroup} from "@angular/forms";
 
 
 @Component({
@@ -25,6 +26,9 @@ export class InformationComponent implements OnInit {
     waitingConfirmation = true;
 
     modalRef: BsModalRef;
+
+    editTripModalRef: BsModalRef;
+    editTripForm: FormGroup;
 
     searchTerm: string;
     userSearchList: Observable<User>;
@@ -101,6 +105,15 @@ export class InformationComponent implements OnInit {
         }
     }
 
+    openEditTripModal(template: TemplateRef<any>) {
+        this.editTripModalRef = this.modalService.show(template);
+    }
+
+    closeEditTripModal() {
+        this.editTripModalRef.hide();
+        this.resetEditTripForm();
+    }
+
     openModal(template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template);
     }
@@ -142,4 +155,13 @@ export class InformationComponent implements OnInit {
         this.showErrorAlert = false;
     }
 
+
+    //TODO
+    submitEditTripForm() {
+
+    }
+
+    resetEditTripForm() {
+        console.log("resetting edit trip");
+    }
 }
