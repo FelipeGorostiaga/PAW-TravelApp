@@ -44,6 +44,15 @@ public class UserHibernateDao implements UserDao {
         return query.getResultList();
     }
 
+
+    @Override
+    public boolean editBiography(User user, String biography) {
+        Query query = em.createQuery("UPDATE User set biography = :biography where id = :id");
+        query.setParameter("biography", biography);
+        query.setParameter("id", user.getId());
+        return query.executeUpdate() != 0;
+    }
+
     @Override
     public Optional<User> findById(long id)  {
         return Optional.ofNullable(em.find(User.class, id));

@@ -1,4 +1,5 @@
 package ar.edu.itba.paw.model;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
@@ -52,22 +53,22 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     private UserPicture profilePicture;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripComment> comments;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ratedUser",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ratedUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserRate> myRates;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ratedByUser",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ratedByUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserRate> othersRates;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "requestingUser",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "requestingUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripPendingConfirmation> pendingConfirmations;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "invitee",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "invitee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripInvitation> receivedTripInvitations;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "inviter",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "inviter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripInvitation> sentTripInvitations;
 
     @Column(length = 100, nullable = false)
@@ -220,7 +221,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "USER = [" + id + "]" +  firstname + " " + lastname;
+        return "USER = [" + id + "]" + firstname + " " + lastname;
     }
 
     public String getBiography() {

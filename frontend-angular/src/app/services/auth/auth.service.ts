@@ -10,13 +10,14 @@ import {catchError, tap} from "rxjs/operators";
 import {RefreshTokenResponse} from "../../model/RefreshTokenResponse";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class AuthService {
 
     private usersBaseURL = `${environment.apiURL}/users`;
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(private http: HttpClient, private router: Router) {
+    }
 
     isLoggedIn() {
         return !!localStorage.getItem('accessToken');
@@ -28,7 +29,7 @@ export class AuthService {
             catchError(err => {
                 return throwError(err.error);
             })
-        )
+        );
     }
 
     login(userAuth: UserAuth): Observable<any> {
@@ -37,7 +38,7 @@ export class AuthService {
             catchError(err => {
                 return throwError(err.error.message);
             })
-        )
+        );
     }
 
     refreshToken() {
@@ -47,7 +48,7 @@ export class AuthService {
             }
         }).pipe(
             tap((data: RefreshTokenResponse) => {
-                console.log("JWT token refreshed")
+                console.log("JWT token refreshed");
                 this.setAccessToken(data.accessToken);
             })
         );

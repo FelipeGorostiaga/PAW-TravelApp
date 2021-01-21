@@ -9,22 +9,23 @@ import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
 import ar.edu.itba.paw.webapp.auth.JwtUtil;
+import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
+import ar.edu.itba.paw.webapp.form.EditProfileForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
+import ar.edu.itba.paw.webapp.utils.ImageValidator;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.ServletContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validator;
@@ -32,6 +33,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,13 +51,13 @@ public class UserControllerREST {
     Validator validator;
 
     @Autowired
-    private UserPicturesService ups;
+    private UserPicturesService userPicturesService;
 
     @Autowired
-    private UserService us;
+    private UserService userService;
 
     @Autowired
-    private TripService ts;
+    private TripService tripService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -69,6 +71,10 @@ public class UserControllerREST {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    SecurityUserService securityUserService;
+
+
     @POST
     @Path("/authenticate")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -81,7 +87,7 @@ public class UserControllerREST {
             return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Invalid username or password", "credentials")).build();
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        Optional<User> userOptional = us.findByUsername(userDetails.getUsername());
+        Optional<User> userOptional = userService.findByUsername(userDetails.getUsername());
         if (!userOptional.isPresent() || !userOptional.get().isVerified()) {
             return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Please verify your email before login in", "verification")).build();
         }
@@ -114,18 +120,18 @@ public class UserControllerREST {
     @GET
     @Path("/verify")
     public Response verifyUserRegistration(@QueryParam("code") final String verificationCode) {
-        Optional<User> userOptional = us.findByVerificationCode(verificationCode);
+        Optional<User> userOptional = userService.findByVerificationCode(verificationCode);
         if (!userOptional.isPresent() || userOptional.get().isVerified()) {
             return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid user verification code or user is already verified", "verification")).build();
         }
-        us.verify(userOptional.get());
+        userService.verify(userOptional.get());
         return Response.ok().build();
     }
 
     @GET
     @Path("/{id}")
     public Response getUserById(@PathParam("id") final int id) {
-        final Optional<User> userOptional = us.findById(id);
+        final Optional<User> userOptional = userService.findById(id);
         if (userOptional.isPresent()) {
             return Response.ok(new UserDTO(userOptional.get())).build();
         } else {
@@ -147,7 +153,7 @@ public class UserControllerREST {
         User user;
         try {
             String verificationToken = RandomStringUtils.random(64, true, true);
-            user = us.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
+            user = userService.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
                     userForm.getPassword(), DateManipulation.stringToLocalDate(userForm.getBirthday()),
                     userForm.getNationality(), userForm.getSex(), verificationToken);
             mailService.sendRegisterMail(user, userForm.getVerificationURL());
@@ -161,7 +167,7 @@ public class UserControllerREST {
     @Path("/{id}/picture")
     @Produces(value = {"image/png", "image/jpeg"})
     public Response getUserProfilePicture(@PathParam("id") final int id) {
-        final Optional<UserPicture> pictureOpt = ups.findByUserId(id);
+        final Optional<UserPicture> pictureOpt = userPicturesService.findByUserId(id);
         if (!pictureOpt.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -171,17 +177,53 @@ public class UserControllerREST {
     @GET
     @Path("/{userId}/trips")
     public Response getUserTrips(@PathParam("userId") final int id) {
-        final Optional<User> userOptional = us.findById(id);
+        final Optional<User> userOptional = userService.findById(id);
         if (!userOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         User user = userOptional.get();
-        List<TripDTO> trips = ts.getAllUserTrips(user).stream().map(TripDTO::new).collect(Collectors.toList());
+        List<TripDTO> trips = tripService.getAllUserTrips(user).stream().map(TripDTO::new).collect(Collectors.toList());
         if (trips.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(new GenericEntity<List<TripDTO>>(trips) {
         }).build();
+    }
+
+    //    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @POST
+    @Path("/{userId}/edit")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response editUserProfile(@Valid EditProfileForm editProfileForm) {
+        System.out.println(editProfileForm);
+        User loggedUser = securityUserService.getLoggedUser();
+        Set<ConstraintViolation<EditProfileForm>> violations = validator.validate(editProfileForm);
+        ConstraintViolationsDTO constraintViolationsDTO = new ConstraintViolationsDTO(violations);
+        byte[] imageBytes = new byte[0];
+        boolean editPicture = false;
+        if (editProfileForm.getImageUpload() != null) {
+            try {
+                imageBytes = ImageValidator.validateImage(constraintViolationsDTO, editProfileForm.getImageUpload());
+                editPicture = true;
+            } catch (IOException e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(new ErrorDTO("Server failed to process image", "image")).build();
+            }
+        }
+        if (constraintViolationsDTO.getErrors().size() > 0) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(constraintViolationsDTO).build();
+        }
+        if (editPicture) {
+            if (userPicturesService.findByUserId(loggedUser.getId()).isPresent()) {
+                userPicturesService.deleteByUserId(loggedUser.getId());
+            }
+        }
+        userService.editProfile(loggedUser, imageBytes, editProfileForm.getBiography(), editPicture);
+        return Response.ok().build();
+
+//        userPicturesService.create(loggedUser, imageBytes);
+//        loggedUser.setBiography(editProfileForm.getBiography());
+//        userService.update(loggedUser);
     }
 
 }

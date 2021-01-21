@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.UserDao;
+import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.UserPicture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,9 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private UserPicturesService userPicturesService;
 
     @Autowired
     private UserDao ud;
@@ -62,5 +67,11 @@ public class UserServiceImpl implements UserService {
     public List<User> findInvitableUsersByName(String name, Trip trip) {
         List<User> users = findByName(name);
         return users.stream().filter(u -> !(trip.getUsers().contains(u) || trip.getAdmins().contains(u))).collect(Collectors.toList());
+    }
+
+    @Override
+    public void editProfile(User user, byte[] imageBytes, String biography, boolean editPicture) {
+        if (editPicture) userPicturesService.create(user, imageBytes);
+        ud.editBiography(user, biography);
     }
 }

@@ -32,9 +32,9 @@ export class ProfileComponent implements OnInit {
 
     submitted;
 
-    acceptedFileTypes: string[] = ['jpeg', 'png'];
+    validExtensions: string[] = ['jpeg', 'png', 'jpg'];
 
-    constructor(private us: ApiUserService,
+    constructor(private userService: ApiUserService,
                 private authService: AuthService,
                 private router: Router,
                 private route: ActivatedRoute,
@@ -57,23 +57,19 @@ export class ProfileComponent implements OnInit {
             imageUpload: ['', Validators.required],
             biography: ['', [Validators.required, Validators.maxLength(150)]],
         }, {
-            validators: [validImgExtension('imageUpload')]
+            validators: [validImgExtension('imageUpload', this.validExtensions)]
         });
 
-        this.us.getUserById(profileId).subscribe(
+        this.userService.getUserById(profileId).subscribe(
             data => {
                 this.user = data;
-                this.loading = false;
-                this.spinner.hide();
             },
             error => {
                 console.log(error);
-                this.spinner.hide();
-                this.loading = false;
                 this.router.navigate(['/404']);
             });
 
-        this.us.getUserPicture(profileId).subscribe(
+        this.userService.getUserPicture(profileId).subscribe(
             data => {
                 console.log(data);
                 let objectURL = 'data:image/jpeg;base64,' + data.image;
@@ -87,11 +83,13 @@ export class ProfileComponent implements OnInit {
                 this.hasImage = false;
             }
         );
+        this.loading = false;
+        this.spinner.hide();
     }
 
     createImageFromBlob(image: Blob) {
         let reader = new FileReader();
-        reader.addEventListener("load", () => {
+        reader.addEventListener('load', () => {
             this.profilePicture = reader.result;
         }, false);
 
@@ -120,11 +118,14 @@ export class ProfileComponent implements OnInit {
         console.log(values);
         console.log(this.editProfileForm);
         if (this.editProfileForm.invalid) {
-            console.log("returning");
             return;
         }
-        console.log("NO ERRORS");
-
+        let imageFile = this.editProfileForm.value.imageUpload[0];
+        const formData = new FormData();
+        formData.append('image', this.editProfileForm.get('imageUpload').value);
+        formData.append('biography',this.editProfileForm.get('biography').value);
+        this.userService.
+        console.log(formData);
     }
 
     get f() {
@@ -133,16 +134,16 @@ export class ProfileComponent implements OnInit {
 
 }
 
-export function validImgExtension(controlName: string) {
+export function validImgExtension(controlName: string, validExtensions: string[]) {
     return (formGroup: FormGroup) => {
         const control = formGroup.controls[controlName];
         if (control.errors) {
             return;
         }
         const extension = control.value.split('.')[1].toLowerCase();
-        // set error on matchingControl if validation fails
-        if (extension !== 'jpg' && extension !== 'png') {
-            control.setErrors({invalidDate: true});
+        console.log(extension);
+        if (!validExtensions.includes(extension)) {
+            control.setErrors({invalidExtension: true});
         } else {
             control.setErrors(null);
         }
