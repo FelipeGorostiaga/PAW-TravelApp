@@ -30,4 +30,9 @@ export class ApiUserService {
         return this.http.get<ImageDTO>(url);
     }
 
+    editProfile(formData: FormData, id: number): Observable<any> {
+        const url = this.usersBaseURL + id + '/edit';
+        return this.http.post(url, formData);
+    }
+
 }

@@ -201,7 +201,9 @@ public class UserControllerREST {
         ConstraintViolationsDTO constraintViolationsDTO = new ConstraintViolationsDTO(violations);
         byte[] imageBytes = new byte[0];
         boolean editPicture = false;
-        if (editProfileForm.getImageUpload() != null) {
+
+        // TODO
+       /* if (editProfileForm.getImageUpload() != null) {
             try {
                 imageBytes = ImageValidator.validateImage(constraintViolationsDTO, editProfileForm.getImageUpload());
                 editPicture = true;
@@ -209,7 +211,7 @@ public class UserControllerREST {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(new ErrorDTO("Server failed to process image", "image")).build();
             }
-        }
+        }*/
         if (constraintViolationsDTO.getErrors().size() > 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity(constraintViolationsDTO).build();
         }

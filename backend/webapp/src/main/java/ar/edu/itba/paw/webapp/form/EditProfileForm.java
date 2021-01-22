@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.form;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.constraints.Size;
 
 public class EditProfileForm {
@@ -13,7 +11,7 @@ public class EditProfileForm {
     @Size(max = 500)
     private String biography;
 
-    private MultipartFile imageUpload;
+    private String imageBase64;
 
     public String getBiography() {
         return biography;
@@ -23,11 +21,11 @@ public class EditProfileForm {
         this.biography = biography;
     }
 
-    public MultipartFile getImageUpload() {
-        return imageUpload;
+    public String getImageBase64() {
+        return imageBase64;
     }
 
-    public void setImageUpload(MultipartFile imageUpload) {
-        this.imageUpload = imageUpload;
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
     }
 }
