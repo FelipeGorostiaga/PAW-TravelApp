@@ -12,11 +12,13 @@ import ar.edu.itba.paw.webapp.auth.JwtUtil;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
-import ar.edu.itba.paw.webapp.form.EditProfileForm;
+import ar.edu.itba.paw.webapp.form.EditUserBiographyForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
-import ar.edu.itba.paw.webapp.utils.ImageValidator;
+import ar.edu.itba.paw.webapp.utils.ImageUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +35,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("users")
@@ -46,6 +50,10 @@ public class UserControllerREST {
 
     private static final int JWT_ACCESS_EXPIRATION = 3600 * 4 * 1000; //4 hours
     private static final int JWT_REFRESH_EXPIRATION = 900000 * 1000; //10+ days
+
+    private static final int PROFILE_WIDTH = 220;
+    private static final int PROFILE_HEIGHT = 200;
+
 
     @Autowired
     Validator validator;
@@ -171,7 +179,7 @@ public class UserControllerREST {
         if (!pictureOpt.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(new ImageDTO(pictureOpt.get())).build();
+        return Response.ok(pictureOpt.get().getPicture()).build();
     }
 
     @GET
@@ -190,43 +198,56 @@ public class UserControllerREST {
         }).build();
     }
 
-    //    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @POST
-    @Path("/{userId}/edit")
+    @Path("/{userId}/edit/biography")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response editUserProfile(@Valid EditProfileForm editProfileForm) {
-        System.out.println(editProfileForm);
+    public Response editUserBiography(@Valid EditUserBiographyForm editBiographyForm, @PathParam("userId") final int id) {
         User loggedUser = securityUserService.getLoggedUser();
-        Set<ConstraintViolation<EditProfileForm>> violations = validator.validate(editProfileForm);
-        ConstraintViolationsDTO constraintViolationsDTO = new ConstraintViolationsDTO(violations);
-        byte[] imageBytes = new byte[0];
-        boolean editPicture = false;
-
-        // TODO
-       /* if (editProfileForm.getImageUpload() != null) {
-            try {
-                imageBytes = ImageValidator.validateImage(constraintViolationsDTO, editProfileForm.getImageUpload());
-                editPicture = true;
-            } catch (IOException e) {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(new ErrorDTO("Server failed to process image", "image")).build();
-            }
-        }*/
-        if (constraintViolationsDTO.getErrors().size() > 0) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(constraintViolationsDTO).build();
+        if (id != loggedUser.getId()) return Response.status(Response.Status.FORBIDDEN).build();
+        System.out.println(editBiographyForm.getBiography());
+        Set<ConstraintViolation<EditUserBiographyForm>> violations = validator.validate(editBiographyForm);
+        if (!violations.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Biography size can't exceed 500 characters long", "size")).build();
         }
-        if (editPicture) {
-            if (userPicturesService.findByUserId(loggedUser.getId()).isPresent()) {
-                userPicturesService.deleteByUserId(loggedUser.getId());
-            }
-        }
-        userService.editProfile(loggedUser, imageBytes, editProfileForm.getBiography(), editPicture);
+        userService.editBiography(loggedUser, editBiographyForm.getBiography());
         return Response.ok().build();
-
-//        userPicturesService.create(loggedUser, imageBytes);
-//        loggedUser.setBiography(editProfileForm.getBiography());
-//        userService.update(loggedUser);
     }
+
+    @POST
+    @Path("/{userId}/edit/picture")
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    public Response editUserProfilePicture(@FormDataParam("image") File imageFile,
+                                           @FormDataParam("image") FormDataContentDisposition fileMetaData,
+                                           @PathParam("userId") final int id) {
+
+        User loggedUser = securityUserService.getLoggedUser();
+        if (id != loggedUser.getId()) return Response.status(Response.Status.FORBIDDEN).build();
+        byte[] imageBytes;
+        try {
+            imageBytes = FileUtils.readFileToByteArray(imageFile);
+        } catch (IOException e) {
+            return Response.serverError().build();
+        }
+        if (!ImageUtils.validateImage(fileMetaData, imageBytes.length)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Invalid image extension or file size too big", "image")).build();
+        }
+        byte[] resizedImage;
+        try {
+             resizedImage = ImageUtils.resizeToProfileSize(imageBytes, PROFILE_WIDTH, PROFILE_HEIGHT);
+        } catch (IOException e) {
+            return Response.serverError().build();
+        }
+        userService.changeProfilePicture(loggedUser, resizedImage);
+        imageFile.delete();
+        return Response.ok().build();
+    }
+
+/*
+    @POST
+    @Path("/test-formdata")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response testFormData(@FormDataParam("editForm") )
+*/
 
 }
 

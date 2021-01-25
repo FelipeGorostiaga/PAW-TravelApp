@@ -8,7 +8,7 @@
                     <div class="profile mr-3">
                         <div *ngIf="!loadingImage">
                             <img *ngIf="hasImage" class="rounded mb-2 img-thumbnail" id="profilePicture"
-                                 [src]='profilePicture'/>
+                                 [src]='profilePicture' />
                             <img *ngIf="!hasImage" class="rounded mb-2 img-thumbnail" id="defaultImage"
                                  src="/assets/images/profile-default.jpg"/>
                         </div>
@@ -42,7 +42,7 @@
             </div>
             <div class="py-4 px-4">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h5 class="mb-0">Recent photos</h5><a class="btn btn-link text-muted">Show all</a>
+                    <h5 class="mb-0">Recent reviews</h5><a class="btn btn-link text-muted">Show all</a>
                 </div>
                 <div class="row">
                 </div>
@@ -51,42 +51,42 @@
     </div>
 </div>
 
-<div class="modal-header">
-    <h4 class="modal-title pull-left">Edit Trip</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()"><span
-            aria-hidden="true">&times;</span></button>
-</div>
-<div class="modal-body">
-    <form [formGroup]="editProfileForm" (ngSubmit)="submitEditProfile()">
-        <!-- Image Upload -->
-        <div class="form-group">
-            <label for="imageUpload">File input</label>
-            <input formControlName="imageUpload" type="file" class="form-control-file" id="imageUpload" (change)="onFileSelected($event)">
-        </div>
 
-        <!-- Edit Biography -->
-        <div class="form-group">
-            <label for="biography">Description</label>
-            <textarea formControlName="biography" style="resize: none" class="form-control" id="biography"
-                      rows="4"></textarea>
-        </div>
-    </form>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="submitEditProfile()">Submit</button>
-    <button type="button" class="btn btn-outline-primary" (click)="closeModal()">Close</button>
-</div>
-
-<div *ngIf="submitted && f.imageUpload?.errors" class="invalid-feedback">
-    <p *ngIf="f.imageUpload.errors.validImgExtension">Invalid file extension, only jpg and png allowed.</p>
-    <p *ngIf="f.imageUpload.errors.required">File is required</p>
-</div>
-
-<div *ngIf="submitted && f.biography?.errors" class="invalid-feedback">
-    <p *ngIf="f.biography.errors.maxLength">Max length is 150 characters</p>
-    <p *ngIf="f.biography.errors.required">Biography</p>
-</div>
 
 <ng-template #modalTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Edit Trip</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()"><span
+                aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editProfileForm" (ngSubmit)="submitEditProfile()">
+            <!-- Image Upload -->
+            <div class="form-group">
+                <label for="imageUpload">File input</label>
+                <input formControlName="imageUpload" type="file" class="form-control-file" id="imageUpload" (change)="onFileSelected($event)">
+            </div>
 
+            <!-- Edit Biography -->
+            <div class="form-group">
+                <label for="biography">Description</label>
+                <textarea formControlName="biography" style="resize: none" class="form-control" id="biography"
+                          rows="4"></textarea>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="submitEditProfile()">Submit</button>
+        <button type="button" class="btn btn-outline-primary" (click)="closeModal()">Close</button>
+    </div>
+
+    <div *ngIf="submitted && f.imageUpload?.errors" class="invalid-feedback">
+        <p *ngIf="f.imageUpload.errors.validImgExtension">Invalid file extension, only jpg and png allowed.</p>
+        <p *ngIf="f.imageUpload.errors.required">File is required</p>
+    </div>
+
+    <div *ngIf="submitted && f.biography?.errors" class="invalid-feedback">
+        <p *ngIf="f.biography.errors.maxLength">Max length is 150 characters</p>
+        <p *ngIf="f.biography.errors.required">Biography</p>
+    </div>
 </ng-template>

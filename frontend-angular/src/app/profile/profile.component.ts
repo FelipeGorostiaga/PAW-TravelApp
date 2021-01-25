@@ -32,8 +32,6 @@ export class ProfileComponent implements OnInit {
     submitted;
 
     imageError;
-    imageBase64;
-    isImageSaved = false;
     selectedFile: File;
     validExtensions: string[] = ['jpeg', 'png', 'jpg'];
 
@@ -58,7 +56,7 @@ export class ProfileComponent implements OnInit {
 
         this.editProfileForm = this.formBuilder.group({
             imageUpload: ['', Validators.required],
-            biography: ['', [Validators.required, Validators.maxLength(150)]],
+            biography: ['', Validators.maxLength(150)],
         }, {
             validators: [validImgExtension('imageUpload', this.validExtensions)]
         });
@@ -74,10 +72,14 @@ export class ProfileComponent implements OnInit {
 
         this.userService.getUserPicture(profileId).subscribe(
             data => {
-                console.log(data);
-                let objectURL = 'data:image/jpeg;base64,' + data.image;
-                this.profilePicture = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-                this.loadingImage = false;
+                console.log("received profile picture!!");
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    // @ts-ignore
+                    this.profilePicture = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
+                    this.loadingImage = false;
+                }
+                reader.readAsDataURL(new Blob([data]));
                 this.hasImage = true;
             },
             error => {
@@ -90,16 +92,6 @@ export class ProfileComponent implements OnInit {
         this.spinner.hide();
     }
 
-    createImageFromBlob(image: Blob) {
-        let reader = new FileReader();
-        reader.addEventListener('load', () => {
-            this.profilePicture = reader.result;
-        }, false);
-
-        if (image) {
-            reader.readAsDataURL(image);
-        }
-    }
 
     openModal(template: TemplateRef<any>) {
         this.modalRef = this.modalService.show(template);
@@ -117,44 +109,46 @@ export class ProfileComponent implements OnInit {
 
     submitEditProfile() {
         this.submitted = true;
-        const values = this.editProfileForm.value;
-        console.log(values);
-        console.log(this.editProfileForm);
         if (this.editProfileForm.invalid) {
             return;
         }
-        const formData = new FormData();
-        if (this.isImageSaved) {
-            formData.append('imageBase64', this.imageBase64);
+        const formDataBiography = new FormData();
+        const formDataImage = new FormData();
+        formDataBiography.append('biography', this.editProfileForm.get('biography').value);
+        formDataImage.append('image', this.selectedFile, this.selectedFile.name);
+        if (this.editProfileForm.get('biography').value) {
+            this.userService.editBiography(formDataBiography, this.loggedUser.id).subscribe(
+                data => {
+                    console.log("biography updated successfully");
+                },
+                error => {
+                    console.log(error);
+                }
+            );
         }
-        formData.append('biography', this.editProfileForm.get('biography').value);
-        this.userService.editProfile(formData, this.loggedUser.id).subscribe(
-            data => {
-                console.log("successfully updated profile picture");
-            },
-            error => {
-                console.log(error);
-            }
-        );
+        if (this.selectedFile) {
+            this.userService.editProfilePicture(formDataImage, this.loggedUser.id).subscribe(
+                data => {
+                    console.log("profile picture updated successfully");
+                    window.location.reload();
+                },
+                error => {
+                    console.log(error);
+                }
+            )
+        }
     }
 
     get f() {
         return this.editProfileForm.controls;
     }
 
-    encodeImageFileAsURL(file) {
-        let reader = new FileReader();
-        reader.onloadend = function() {
-            console.log('RESULT', reader.result)
-        }
-        reader.readAsDataURL(file);
-    }
-
     onFileSelected(event) {
-        const max_height = 15200;
-        const max_width = 25600;
         console.log(event.target.files[0]);
         this.selectedFile = event.target.files[0];
+/*
+        const max_height = 15200;
+        const max_width = 25600;
         const reader = new FileReader();
         reader.onload = (e: any) => {
             const image = new Image();
@@ -177,7 +171,7 @@ export class ProfileComponent implements OnInit {
                 }
             };
         };
-        reader.readAsDataURL(this.selectedFile);
+        reader.readAsDataURL(this.selectedFile);*/
     }
 }
 

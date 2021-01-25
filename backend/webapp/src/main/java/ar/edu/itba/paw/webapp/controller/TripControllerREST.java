@@ -9,7 +9,7 @@ import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
 import ar.edu.itba.paw.webapp.form.EditTripForm;
 import ar.edu.itba.paw.webapp.form.TripCommentForm;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
-import ar.edu.itba.paw.webapp.utils.ImageValidator;
+import ar.edu.itba.paw.webapp.utils.ImageUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,7 +136,7 @@ public class TripControllerREST {
         ConstraintViolationsDTO constraintViolationsDTO = new ConstraintViolationsDTO(violations);
         byte[] imageBytes;
         try {
-            imageBytes = ImageValidator.validateImage(constraintViolationsDTO, form.getImageUpload());
+            imageBytes = ImageUtils.validateImage(constraintViolationsDTO, form.getImageUpload());
         } catch (IOException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(new ErrorDTO("Server couldn't get image bytes", "image"))

@@ -70,8 +70,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void editProfile(User user, byte[] imageBytes, String biography, boolean editPicture) {
-        if (editPicture) userPicturesService.create(user, imageBytes);
+    public void changeProfilePicture(User user, byte[] imageBytes) {
+        if (userPicturesService.findByUserId(user.getId()).isPresent()) {
+            userPicturesService.deleteByUserId(user.getId());
+        }
+        userPicturesService.create(user, imageBytes);
+    }
+
+    @Override
+    public void editBiography(User user, String biography) {
         ud.editBiography(user, biography);
     }
 }

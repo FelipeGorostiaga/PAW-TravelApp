@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Trip} from '../model/trip';
-import {ImageDTO} from '../model/image-dto';
 import {environment} from "../../environments/environment";
 
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ApiUserService {
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+    }
 
     private usersBaseURL = `${environment.apiURL}/users/`;
 
@@ -21,17 +21,22 @@ export class ApiUserService {
     }
 
     getUserTrips(userId: number): Observable<Trip[]> {
-        const url = this.usersBaseURL + userId  + '/trips';
+        const url = this.usersBaseURL + userId + '/trips';
         return this.http.get<Trip[]>(url);
     }
 
     getUserPicture(id: number): Observable<any> {
         const url = this.usersBaseURL + id + '/picture';
-        return this.http.get<ImageDTO>(url);
+        return this.http.get(url, {responseType: 'blob'});
     }
 
-    editProfile(formData: FormData, id: number): Observable<any> {
-        const url = this.usersBaseURL + id + '/edit';
+    editBiography(formData: FormData, userId: number): Observable<any> {
+        const url = this.usersBaseURL + userId + '/edit/biography';
+        return this.http.post(url, {"biography": formData.get('biography')});
+    }
+
+    editProfilePicture(formData: FormData, userId: number) {
+        const url = this.usersBaseURL + userId + '/edit/picture';
         return this.http.post(url, formData);
     }
 

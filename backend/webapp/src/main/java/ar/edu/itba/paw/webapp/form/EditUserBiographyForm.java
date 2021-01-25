@@ -2,16 +2,14 @@ package ar.edu.itba.paw.webapp.form;
 
 import javax.validation.constraints.Size;
 
-public class EditProfileForm {
+public class EditUserBiographyForm {
 
-    public EditProfileForm() {
+    public EditUserBiographyForm() {
         // Empty constructor needed by JAX-RS
     }
 
     @Size(max = 500)
     private String biography;
-
-    private String imageBase64;
 
     public String getBiography() {
         return biography;
@@ -21,11 +19,4 @@ public class EditProfileForm {
         this.biography = biography;
     }
 
-    public String getImageBase64() {
-        return imageBase64;
-    }
-
-    public void setImageBase64(String imageBase64) {
-        this.imageBase64 = imageBase64;
-    }
 }

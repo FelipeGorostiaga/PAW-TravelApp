@@ -30,5 +30,7 @@ public interface UserService {
 
     List<User> findInvitableUsersByName(String name, Trip trip);
 
-    void editProfile(User user, byte[] imageBytes, String biography, boolean editPicture);
+    void changeProfilePicture(User loggedUser, byte[] imageBytes);
+
+    void editBiography(User loggedUser, String biography);
 }
