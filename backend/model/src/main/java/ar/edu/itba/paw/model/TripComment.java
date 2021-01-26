@@ -25,9 +25,8 @@ public class TripComment implements Comparable<TripComment>{
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Trip trip;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.MERGE)
     private User user;
-
 
     public TripComment(Trip trip, String comment, User user, LocalDateTime createdOn) {
         this.trip = trip;

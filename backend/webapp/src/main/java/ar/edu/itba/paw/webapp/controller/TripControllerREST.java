@@ -121,6 +121,9 @@ public class TripControllerREST {
         }).build();
     }
 
+
+
+    //  TODO: edit description, image, start place?, start date?
     @PUT
     @Path("/{id}/edit")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -223,10 +226,10 @@ public class TripControllerREST {
     public Response getTripImage(@PathParam("id") final long tripId) {
         final Optional<TripPicture> tripPictureOptional = tripPicturesService.findByTripId(tripId);
         if (!tripPictureOptional.isPresent()) {
-            LOGGER.warn("Cannot render trip picture, trip with id {} not found", tripId);
+            LOGGER.warn("Cannot render trip picture, trip picture for id {} not found", tripId);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(new ImageDTO(tripPictureOptional.get())).build();
+        return Response.ok(tripPictureOptional.get().getPicture()).build();
     }
 
     @GET
@@ -253,9 +256,6 @@ public class TripControllerREST {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        if (tripCommentForm == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
         Trip trip = tripOptional.get();
         Set<ConstraintViolation<TripCommentForm>> violations = validator.validate(tripCommentForm);
         if (!violations.isEmpty()) {
@@ -264,7 +264,6 @@ public class TripControllerREST {
         }
         if (trip.getUsers().contains(loggedUser) || trip.getAdminId() == loggedUser.getId()) {
             TripComment tripComment = tripCommentsService.create(loggedUser, trip, tripCommentForm.getComment());
-            tripService.addCommentToTrip(tripComment.getId(), tripId);
             return Response.ok(new TripCommentDTO(tripComment)).build();
         }
         return Response.status(Response.Status.FORBIDDEN).build();

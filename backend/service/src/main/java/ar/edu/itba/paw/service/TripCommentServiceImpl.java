@@ -20,7 +20,6 @@ public class TripCommentServiceImpl implements TripCommentsService {
 
     @Override
     public TripComment create(User user, Trip trip, String comment) {
-
         return tripCommentsDao.create(user, trip, comment);
     }
 
