@@ -12,11 +12,11 @@ import ar.edu.itba.paw.webapp.auth.JwtUtil;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.form.EditUserBiographyForm;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import ar.edu.itba.paw.webapp.utils.ImageUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
@@ -199,55 +199,41 @@ public class UserControllerREST {
     }
 
     @POST
-    @Path("/{userId}/edit/biography")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response editUserBiography(@Valid EditUserBiographyForm editBiographyForm, @PathParam("userId") final int id) {
-        User loggedUser = securityUserService.getLoggedUser();
-        if (id != loggedUser.getId()) return Response.status(Response.Status.FORBIDDEN).build();
-        System.out.println(editBiographyForm.getBiography());
-        Set<ConstraintViolation<EditUserBiographyForm>> violations = validator.validate(editBiographyForm);
-        if (!violations.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Biography size can't exceed 500 characters long", "size")).build();
-        }
-        userService.editBiography(loggedUser, editBiographyForm.getBiography());
-        return Response.ok().build();
-    }
-
-    @POST
-    @Path("/{userId}/edit/picture")
-    @Consumes({MediaType.MULTIPART_FORM_DATA})
-    public Response editUserProfilePicture(@FormDataParam("image") File imageFile,
-                                           @FormDataParam("image") FormDataContentDisposition fileMetaData,
-                                           @PathParam("userId") final int id) {
-
-        User loggedUser = securityUserService.getLoggedUser();
-        if (id != loggedUser.getId()) return Response.status(Response.Status.FORBIDDEN).build();
-        byte[] imageBytes;
-        try {
-            imageBytes = FileUtils.readFileToByteArray(imageFile);
-        } catch (IOException e) {
-            return Response.serverError().build();
-        }
-        if (!ImageUtils.validateImage(fileMetaData, imageBytes.length)) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Invalid image extension or file size too big", "image")).build();
-        }
-        byte[] resizedImage;
-        try {
-             resizedImage = ImageUtils.resizeToProfileSize(imageBytes, PROFILE_WIDTH, PROFILE_HEIGHT);
-        } catch (IOException e) {
-            return Response.serverError().build();
-        }
-        userService.changeProfilePicture(loggedUser, resizedImage);
-        imageFile.delete();
-        return Response.ok().build();
-    }
-
-/*
-    @POST
-    @Path("/test-formdata")
+    @Path("/{userId}/editProfile")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response testFormData(@FormDataParam("editForm") )
-*/
+    public Response editProfile(@FormDataParam("biography") FormDataBodyPart biography,
+                                @FormDataParam("image") File imageFile,
+                                @FormDataParam("image") FormDataContentDisposition fileMetaData,
+                                @PathParam("userId") final int id) {
+        User loggedUser = securityUserService.getLoggedUser();
+        if (id != loggedUser.getId()) return Response.status(Response.Status.FORBIDDEN).build();
+        if (biography == null && imageFile == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        if (imageFile != null) {
+            byte[] imageBytes;
+            try {
+                imageBytes = FileUtils.readFileToByteArray(imageFile);
+            } catch (IOException e) {
+                return Response.serverError().build();
+            }
+            if (!ImageUtils.validateImage(fileMetaData, imageBytes.length)) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Invalid image extension or file size too big", "image")).build();
+            }
+            byte[] resizedImage;
+            try {
+                resizedImage = ImageUtils.resizeToProfileSize(imageBytes, PROFILE_WIDTH, PROFILE_HEIGHT);
+            } catch (IOException e) {
+                return Response.serverError().build();
+            }
+            userService.changeProfilePicture(loggedUser, resizedImage);
+            imageFile.delete();
+        }
+        if (biography != null) {
+            userService.editBiography(loggedUser, biography.getValue());
+        }
+        return Response.ok().build();
+    }
 
 }
 

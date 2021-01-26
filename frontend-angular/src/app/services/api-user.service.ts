@@ -40,4 +40,8 @@ export class ApiUserService {
         return this.http.post(url, formData);
     }
 
+    editProfile(formData: FormData, userId: number): Observable<any> {
+        const url = this.usersBaseURL + userId + '/editProfile';
+        return this.http.post(url, formData);
+    }
 }

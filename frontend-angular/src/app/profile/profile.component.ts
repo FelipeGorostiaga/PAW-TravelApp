@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
+import {Component, ElementRef, OnInit, TemplateRef} from '@angular/core';
 import {User} from "../model/user";
 import {ApiUserService} from "../services/api-user.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -7,6 +7,7 @@ import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 import {DomSanitizer} from "@angular/platform-browser";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {error} from "util";
 
 @Component({
     selector: 'app-profile',
@@ -18,6 +19,8 @@ export class ProfileComponent implements OnInit {
     loggedUser: User;
     isProfileOwner: boolean;
     modalRef: BsModalRef;
+
+    bioInput;
 
     editProfileForm: FormGroup;
 
@@ -64,6 +67,7 @@ export class ProfileComponent implements OnInit {
         this.userService.getUserById(profileId).subscribe(
             data => {
                 this.user = data;
+                this.editProfileForm.get('biography').setValue(this.user.biography);
             },
             error => {
                 console.log(error);
@@ -72,7 +76,6 @@ export class ProfileComponent implements OnInit {
 
         this.userService.getUserPicture(profileId).subscribe(
             data => {
-                console.log("received profile picture!!");
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     // @ts-ignore
@@ -94,6 +97,7 @@ export class ProfileComponent implements OnInit {
 
 
     openModal(template: TemplateRef<any>) {
+        this.editProfileForm.get('biography').setValue(this.user.biography);
         this.modalRef = this.modalService.show(template);
     }
 
@@ -112,11 +116,25 @@ export class ProfileComponent implements OnInit {
         if (this.editProfileForm.invalid) {
             return;
         }
-        const formDataBiography = new FormData();
+       /* const formDataBiography = new FormData();
         const formDataImage = new FormData();
         formDataBiography.append('biography', this.editProfileForm.get('biography').value);
         formDataImage.append('image', this.selectedFile, this.selectedFile.name);
-        if (this.editProfileForm.get('biography').value) {
+        */
+        const formData = new FormData();
+        formData.append('biography', this.editProfileForm.get('biography').value);
+        formData.append('image', this.selectedFile, this.selectedFile.name);
+        this.userService.editProfile(formData, this.user.id).subscribe(
+            data => {
+                console.log("success");
+                window.location.reload();
+            },
+            error => {
+                console.log("error");
+            }
+        );
+
+      /*  if (this.editProfileForm.get('biography').value) {
             this.userService.editBiography(formDataBiography, this.loggedUser.id).subscribe(
                 data => {
                     console.log("biography updated successfully");
@@ -136,7 +154,7 @@ export class ProfileComponent implements OnInit {
                     console.log(error);
                 }
             )
-        }
+        }*/
     }
 
     get f() {
