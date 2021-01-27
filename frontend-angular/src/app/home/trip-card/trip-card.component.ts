@@ -3,6 +3,7 @@ import {Trip} from "../../model/trip";
 import {ApiUserService} from "../../services/api-user.service";
 import {ApiTripService} from "../../services/api-trip.service";
 import { Router } from '@angular/router';
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-trip-card',
@@ -12,42 +13,34 @@ import { Router } from '@angular/router';
 export class TripCardComponent implements OnInit {
 
   @Input() trip: Trip;
+
+  hasImage;
   tripImage: any;
-  usersAmount: number;
-  isImageLoading: boolean;
+  loadingImage;
 
-
-  constructor(private ts: ApiTripService, private router: Router) { }
+  constructor(private tripService: ApiTripService,
+              private sanitizer: DomSanitizer,
+              private router: Router) { }
 
   ngOnInit() {
-    console.log(this.trip.membersAmount);
-    this.getTripImage();
-    this.usersAmount = this.trip.membersAmount;
-  }
-
-  getTripImage() {
-    this.isImageLoading = true;
-    this.ts.getTripImage(this.trip.id).subscribe(
-        res => {
-          this.isImageLoading = false;
-          this.createImageFromBlob(res.image);
+    this.loadingImage = true;
+    this.tripService.getTripCardImage(this.trip.id).subscribe(
+        data => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            // @ts-ignore
+            this.tripImage = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
+            this.loadingImage = false;
+            this.hasImage = true;
+          }
+          reader.readAsDataURL(new Blob([data]));
         },
         error => {
-          this.isImageLoading = false;
-          console.log("Error loading trip image...");
+          console.log(error);
+          this.loadingImage = false;
+          this.hasImage = false;
         }
     );
-  }
-
-  createImageFromBlob(image: Blob) {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      this.tripImage = reader.result;
-    }, false);
-
-    if (image) {
-      reader.readAsDataURL(image);
-    }
   }
 
   navigateToTrip() {

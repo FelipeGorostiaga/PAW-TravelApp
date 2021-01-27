@@ -4,9 +4,7 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.dto.constraint.ConstraintViolationsDTO;
 import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
-import ar.edu.itba.paw.webapp.form.EditTripForm;
 import ar.edu.itba.paw.webapp.form.TripCommentForm;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import ar.edu.itba.paw.webapp.utils.ImageUtils;
@@ -45,6 +43,9 @@ public class TripControllerREST {
 
     private static final int TRIP_IMAGE_WIDTH = 600;
     private static final int TRIP_IMAGE_HEIGHT = 400;
+
+    private static final int TRIP_CARD_IMAGE_WIDTH = 478;
+    private static final int TRIP_CARD_IMAGE_HEIGHT = 280;
 
     @Autowired
     SecurityUserService securityUserService;
@@ -225,11 +226,12 @@ public class TripControllerREST {
 
     @POST
     @Path("/{id}/remove/{userId}")
-    public Response exitTrip(@PathParam("id") final long tripId) {
+    public Response removeFromTrip(@PathParam("id") final long tripId) {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        if (!tripOptional.get().getAdmins().contains(loggedUser) && !tripOptional.get().getUsers().contains(loggedUser)) {
+        Trip trip = tripOptional.get();;
+        if (!trip.getAdmins().contains(loggedUser) && !trip.getUsers().contains(loggedUser) && trip.getAdminId() != loggedUser.getId()) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("User is not part of this trip", "invalid-user")).build();
         }
         tripService.removeUserFromTrip(loggedUser.getId(), tripId);
@@ -244,9 +246,35 @@ public class TripControllerREST {
         if (!tripPictureOptional.isPresent()) {
             LOGGER.warn("Cannot render trip picture, trip picture for id {} not found", tripId);
             return Response.status(Response.Status.NOT_FOUND).build();
+        }byte[] resizedImage;
+        try {
+            resizedImage = ImageUtils.resizeToProfileSize(tripPictureOptional.get().getPicture(), TRIP_IMAGE_WIDTH, TRIP_IMAGE_HEIGHT);
+
+        } catch (IOException e) {
+            return Response.serverError().build();
         }
-        return Response.ok(tripPictureOptional.get().getPicture()).build();
+        return Response.ok(resizedImage).build();
     }
+
+    @GET
+    @Path("/{id}/image/card")
+    @Produces(value = {"image/png", "image/jpeg"})
+    public Response getTripCardImage(@PathParam("id") final long tripId) {
+        final Optional<TripPicture> tripPictureOptional = tripPicturesService.findByTripId(tripId);
+        if (!tripPictureOptional.isPresent()) {
+            LOGGER.warn("Cannot render trip picture, trip picture for id {} not found", tripId);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        byte[] resizedImage;
+        try {
+            resizedImage = ImageUtils.resizeToProfileSize(tripPictureOptional.get().getPicture(), TRIP_CARD_IMAGE_WIDTH, TRIP_CARD_IMAGE_HEIGHT);
+
+        } catch (IOException e) {
+            return Response.serverError().build();
+        }
+        return Response.ok(resizedImage).build();
+    }
+
 
     @GET
     @Path("/{id}/comments")

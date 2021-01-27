@@ -118,4 +118,9 @@ export class ApiTripService {
         let params = new HttpParams().set("token", token).set("accepted", String(accepted));
         return this.http.post(url, {}, {params: params}).pipe(mergeMap(res => this.getTrip(id)));
     }
+
+    getTripCardImage(tripId: number) {
+        const url = this.tripsBaseURL + tripId + '/image/card';
+        return this.http.get(url, {responseType: 'blob'});
+    }
 }

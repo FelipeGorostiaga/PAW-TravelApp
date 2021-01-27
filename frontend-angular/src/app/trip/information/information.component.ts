@@ -64,8 +64,7 @@ export class InformationComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.loading = true;
-        // todo: remove required image upload
+        // TODO: remove required image upload
         this.editTripForm = this.formBuilder.group({
             imageUpload: ['', Validators.required],
             description: ['', [Validators.required, Validators.minLength(50), Validators.maxLength(500)]],
@@ -78,10 +77,10 @@ export class InformationComponent implements OnInit {
             if (!this.isAdmin && !this.isMember) {
                 this.tripService.isWaitingTripConfirmation(this.trip.id, this.authService.getLoggedUser().id).subscribe(
                     data => {
+                        console.log("is waiting confirmation!");
                         this.waitingConfirmation = true;
                     },
                     error => {
-                        console.log(error);
                         this.waitingConfirmation = false;
                     }
                 );

@@ -1,6 +1,6 @@
 
 <div>
-    <img *ngIf="hasImage" class="img-container img-fluid" [src]="tripImage" alt="Trip image">
+    <img *ngIf="hasImage" [src]="tripImage" alt="Trip image">
     <div class="d-flex justify-content-between">
         <div *ngIf="isAdmin" class="p-2">
             <button class="btn btn-outline-dark" (click)="openEditTripModal(editTripTemplate)"
@@ -48,6 +48,9 @@
 
 
 
+
+
+
 <!-- INVITE USER TO TRIP -->
 <ng-template #template>
     <div class="modal-header">
@@ -81,6 +84,8 @@
         </button>
     </div>
 </ng-template>
+
+
 
 <!-- EDIT TRIP-->
 <ng-template #editTripTemplate>
