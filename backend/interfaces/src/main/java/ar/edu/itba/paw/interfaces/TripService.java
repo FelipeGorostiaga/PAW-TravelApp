@@ -68,4 +68,8 @@ public interface TripService {
     void acceptOrRejectTripInvitation(String token, boolean accepted, User invitedUser, Trip trip);
 
     Optional<TripInvitation> findTripInvitationByUser(Trip trip, User user);
+
+    void editTripImage(Trip trip, byte[] resizedImage);
+
+    void editTripData(String tripName, String description, long tripId);
 }

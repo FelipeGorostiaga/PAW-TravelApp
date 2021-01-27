@@ -80,6 +80,8 @@
         <button type="button" class="btn btn-outline-primary" (click)="closeModal()">Close</button>
     </div>
 
+
+    // TODO
     <div *ngIf="submitted && f.imageUpload?.errors" class="invalid-feedback">
         <p *ngIf="f.imageUpload.errors.validImgExtension">Invalid file extension, only jpg and png allowed.</p>
         <p *ngIf="f.imageUpload.errors.required">File is required</p>

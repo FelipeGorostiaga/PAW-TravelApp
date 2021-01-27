@@ -132,6 +132,16 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
+    public void updateTripData(String tripName, String description, long tripId) {
+        Query query = em.createQuery("UPDATE Trip set name = :tripName, description = :description where id = :tripId");
+        query.setParameter("tripName", tripName);
+        query.setParameter("description", description);
+        query.setParameter("tripId", tripId);
+        query.executeUpdate();
+    }
+
+
+    @Override
     public List<Trip> getAllTrips() {
         final TypedQuery<Trip> query = em.createQuery("FROM Trip", Trip.class);
         return query.getResultList();

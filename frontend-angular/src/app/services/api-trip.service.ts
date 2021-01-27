@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {Trip} from "../model/trip";
 import {TripForm} from "../model/forms/trip-form";
-import {ImageDTO} from "../model/image-dto";
 import {ActivityForm} from "../model/forms/activity-form";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
@@ -35,9 +34,9 @@ export class ApiTripService {
         return this.http.get(url);
     }
 
-    editTrip(id: number, tripForm: TripForm): Observable<Trip> {
-        const url = this.tripsBaseURL + id + '/edit';
-        return this.http.put<Trip>(url, tripForm);
+    editTrip(formData: FormData, tripId: number): Observable<any> {
+        const url = this.tripsBaseURL + tripId + '/edit';
+        return this.http.post(url, formData);
     }
 
     createTrip(tripForm: TripForm): Observable<Trip> {
@@ -65,9 +64,9 @@ export class ApiTripService {
         return this.http.post(url, {});
     }
 
-    getTripImage(id: number): Observable<ImageDTO> {
+    getTripImage(id: number): Observable<any> {
         const url = this.tripsBaseURL + id + '/image';
-        return this.http.get<ImageDTO>(url);
+        return this.http.get(url, {responseType: 'blob'});
     }
 
 

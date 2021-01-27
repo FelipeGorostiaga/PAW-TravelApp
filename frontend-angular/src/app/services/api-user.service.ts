@@ -30,16 +30,6 @@ export class ApiUserService {
         return this.http.get(url, {responseType: 'blob'});
     }
 
-    editBiography(formData: FormData, userId: number): Observable<any> {
-        const url = this.usersBaseURL + userId + '/edit/biography';
-        return this.http.post(url, {"biography": formData.get('biography')});
-    }
-
-    editProfilePicture(formData: FormData, userId: number) {
-        const url = this.usersBaseURL + userId + '/edit/picture';
-        return this.http.post(url, formData);
-    }
-
     editProfile(formData: FormData, userId: number): Observable<any> {
         const url = this.usersBaseURL + userId + '/editProfile';
         return this.http.post(url, formData);

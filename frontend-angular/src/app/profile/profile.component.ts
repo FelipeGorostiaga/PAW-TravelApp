@@ -59,7 +59,7 @@ export class ProfileComponent implements OnInit {
 
         this.editProfileForm = this.formBuilder.group({
             imageUpload: ['', Validators.required],
-            biography: ['', Validators.maxLength(150)],
+            biography: ['', Validators.maxLength(500)],
         }, {
             validators: [validImgExtension('imageUpload', this.validExtensions)]
         });
@@ -116,45 +116,20 @@ export class ProfileComponent implements OnInit {
         if (this.editProfileForm.invalid) {
             return;
         }
-       /* const formDataBiography = new FormData();
-        const formDataImage = new FormData();
-        formDataBiography.append('biography', this.editProfileForm.get('biography').value);
-        formDataImage.append('image', this.selectedFile, this.selectedFile.name);
-        */
         const formData = new FormData();
         formData.append('biography', this.editProfileForm.get('biography').value);
-        formData.append('image', this.selectedFile, this.selectedFile.name);
+        if (this.selectedFile) {
+            formData.append('image', this.selectedFile, this.selectedFile.name);
+        }
         this.userService.editProfile(formData, this.user.id).subscribe(
             data => {
-                console.log("success");
                 window.location.reload();
             },
             error => {
-                console.log("error");
+                // todo
+                this.imageError = error.message;
             }
         );
-
-      /*  if (this.editProfileForm.get('biography').value) {
-            this.userService.editBiography(formDataBiography, this.loggedUser.id).subscribe(
-                data => {
-                    console.log("biography updated successfully");
-                },
-                error => {
-                    console.log(error);
-                }
-            );
-        }
-        if (this.selectedFile) {
-            this.userService.editProfilePicture(formDataImage, this.loggedUser.id).subscribe(
-                data => {
-                    console.log("profile picture updated successfully");
-                    window.location.reload();
-                },
-                error => {
-                    console.log(error);
-                }
-            )
-        }*/
     }
 
     get f() {
@@ -164,32 +139,6 @@ export class ProfileComponent implements OnInit {
     onFileSelected(event) {
         console.log(event.target.files[0]);
         this.selectedFile = event.target.files[0];
-/*
-        const max_height = 15200;
-        const max_width = 25600;
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-            const image = new Image();
-            image.src = e.target.result;
-            image.onload = rs => {
-                const img_height = rs.currentTarget['height'];
-                const img_width = rs.currentTarget['width'];
-                console.log(img_height, img_width);
-                if (img_height > max_height && img_width > max_width) {
-                    this.imageError =
-                        'Maximum dimentions allowed ' +
-                        max_height +
-                        '*' +
-                        max_width +
-                        'px';
-                    return false;
-                } else {
-                    this.imageBase64 = e.target.result;
-                    this.isImageSaved = true;
-                }
-            };
-        };
-        reader.readAsDataURL(this.selectedFile);*/
     }
 }
 

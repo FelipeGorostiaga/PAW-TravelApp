@@ -55,4 +55,7 @@ public interface TripDao {
     void deleteTripInvitation(String token, Trip trip);
 
     Optional<TripInvitation> findTripInvitationByUser(Trip trip, User user);
+
+    void updateTripData(String tripName, String description, long tripId);
+
 }

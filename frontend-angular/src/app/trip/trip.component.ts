@@ -16,10 +16,6 @@ export class TripComponent implements OnInit {
     loggedUser: User;
     trip: FullTrip;
 
-    // TODO
-    tripImage: any;
-    hasImage: boolean;
-
     tripId: number;
     isAdmin: boolean;
     selectedIndex: number;
@@ -38,7 +34,6 @@ export class TripComponent implements OnInit {
         this.selectedIndex = 0;
         this.tripId = Number(this.route.snapshot.paramMap.get("id"));
         this.loggedUser = this.authService.getLoggedUser();
-        this.hasImage = false;
         this.ts.getTrip(this.tripId).subscribe(
             res => {
                 this.trip = res;
@@ -59,4 +54,5 @@ export class TripComponent implements OnInit {
     switchTab(index: number) {
         this.selectedIndex = index;
     }
+
 }

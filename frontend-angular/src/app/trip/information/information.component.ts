@@ -8,8 +8,10 @@ import {Observable, Subject} from "rxjs";
 import {debounceTime, distinctUntilChanged, filter, switchMap, tap} from "rxjs/operators";
 import {User} from "../../model/user";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
-import {FormGroup} from "@angular/forms";
-
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {DomSanitizer} from "@angular/platform-browser";
+import {NgxSpinnerService} from "ngx-bootstrap-spinner";
+import {validImgExtension} from "../../profile/profile.component";
 
 @Component({
     selector: 'app-information',
@@ -21,8 +23,7 @@ export class InformationComponent implements OnInit {
     @Input() trip: FullTrip;
     @Input() isAdmin: boolean;
     @Input() isMember: boolean;
-    hasImage: boolean;
-    tripImage: any;
+
     waitingConfirmation = true;
 
     modalRef: BsModalRef;
@@ -39,22 +40,40 @@ export class InformationComponent implements OnInit {
     showSuccessAlert;
     showErrorAlert;
 
+    submitted: boolean;
+    selectedFile: File;
+    tripImage;
+    loadingImage: boolean;
+    hasImage: boolean;
+    validExtensions: string[] = ['jpeg', 'png', 'jpg'];
+
     constructor(private tripService: ApiTripService,
                 private authService: AuthService,
                 private router: Router,
                 private searchService: ApiSearchService,
-                private modalService: BsModalService) {
+                private modalService: BsModalService,
+                private sanitizer: DomSanitizer,
+                private spinner: NgxSpinnerService,
+                private formBuilder: FormBuilder) {
 
         this.userSearchList = this.latestSearch.pipe(
             debounceTime(300),
             distinctUntilChanged(),
             filter(term => !!term),
-            tap(elem => console.log(elem)),
             switchMap(term => this.searchService.searchInvitableUsersByName(term, this.trip.id)));
     }
 
     ngOnInit() {
         this.loading = true;
+        // todo: remove required image upload
+        this.editTripForm = this.formBuilder.group({
+            imageUpload: ['', Validators.required],
+            description: ['', [Validators.required, Validators.minLength(50), Validators.maxLength(500)]],
+            tripName: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(25)]],
+        }, {
+            validators: [validImgExtension('imageUpload', this.validExtensions)]
+        });
+        this.populateForm();
         if (this.trip != null) {
             if (!this.isAdmin && !this.isMember) {
                 this.tripService.isWaitingTripConfirmation(this.trip.id, this.authService.getLoggedUser().id).subscribe(
@@ -69,15 +88,27 @@ export class InformationComponent implements OnInit {
             }
             this.tripService.getTripImage(this.trip.id).subscribe(
                 data => {
-                    this.tripImage = data.image;
-                    this.hasImage = true;
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        // @ts-ignore
+                        this.tripImage = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
+                        this.loadingImage = false;
+                        this.hasImage = true;
+                    }
+                    reader.readAsDataURL(new Blob([data]));
                 },
                 error => {
+                    console.log(error);
+                    this.loadingImage = false;
                     this.hasImage = false;
                 }
             );
         }
-        this.loading = false;
+    }
+
+    populateForm() {
+        this.editTripForm.get('tripName').setValue(this.trip.name);
+        this.editTripForm.get('description').setValue(this.trip.description);
     }
 
     requestJoinTrip() {
@@ -105,16 +136,8 @@ export class InformationComponent implements OnInit {
         }
     }
 
-    openEditTripModal(template: TemplateRef<any>) {
-        this.editTripModalRef = this.modalService.show(template);
-    }
-
-    closeEditTripModal() {
-        this.editTripModalRef.hide();
-        this.resetEditTripForm();
-    }
-
     openModal(template: TemplateRef<any>) {
+        this.populateForm();
         this.modalRef = this.modalService.show(template);
     }
 
@@ -156,12 +179,44 @@ export class InformationComponent implements OnInit {
     }
 
 
-    //TODO
+    openEditTripModal(template: TemplateRef<any>) {
+        this.editTripModalRef = this.modalService.show(template);
+    }
+
+    closeEditTripModal() {
+        this.editTripModalRef.hide();
+        this.resetEditTripForm();
+    }
+
+
     submitEditTripForm() {
+        this.submitted = true;
+        if (this.editTripForm.invalid) return;
+        const formData = new FormData();
+        formData.append('tripName', this.editTripForm.get('tripName').value);
+        formData.append('description', this.editTripForm.get('description').value);
+        if (this.selectedFile) {
+            formData.append('image', this.selectedFile, this.selectedFile.name);
+        }
+        this.tripService.editTrip(formData, this.trip.id).subscribe(
+            data => {
+                window.location.reload();
+            },
+            error => {
+                // todo: check for error dtos
+            }
+        );
 
     }
 
     resetEditTripForm() {
-        console.log("resetting edit trip");
+        this.submitted = false;
+        this.editTripForm.reset();
+    }
+
+    onFileSelected(event) {
+        console.log(event.target.files[0]);
+        this.selectedFile = event.target.files[0];
     }
 }
+

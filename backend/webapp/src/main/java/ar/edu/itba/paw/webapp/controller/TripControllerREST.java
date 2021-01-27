@@ -10,7 +10,11 @@ import ar.edu.itba.paw.webapp.form.EditTripForm;
 import ar.edu.itba.paw.webapp.form.TripCommentForm;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import ar.edu.itba.paw.webapp.utils.ImageUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +42,9 @@ import java.util.stream.Collectors;
 public class TripControllerREST {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TripControllerREST.class);
+
+    private static final int TRIP_IMAGE_WIDTH = 600;
+    private static final int TRIP_IMAGE_HEIGHT = 400;
 
     @Autowired
     SecurityUserService securityUserService;
@@ -122,38 +130,46 @@ public class TripControllerREST {
     }
 
 
-
-    //  TODO: edit description, image, start place?, start date?
-    @PUT
+    @POST
     @Path("/{id}/edit")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response editTrip(@Valid final EditTripForm form, @PathParam("id") final long tripId) {
-        Optional<Trip> tripOptional = tripService.findById(tripId);
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response editTrip(@FormDataParam("tripName") FormDataBodyPart name,
+                             @FormDataParam("description") FormDataBodyPart description,
+                             @FormDataParam("image") File imageFile,
+                             @FormDataParam("image") FormDataContentDisposition fileMetaData,
+                             @PathParam("id") final int id) {
+
+        Optional<Trip> tripOptional = tripService.findById(id);
         User loggedUser = securityUserService.getLoggedUser();
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         Trip trip = tripOptional.get();
-        if (loggedUser.getId() != trip.getAdminId()) {
+        Set<User> admins = trip.getAdmins();
+        Optional<User> creatorOptional = userService.findById(trip.getAdminId());
+        creatorOptional.ifPresent(admins::add);
+        if (admins.stream().noneMatch(a -> a.getId() == loggedUser.getId())) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        Set<ConstraintViolation<EditTripForm>> violations = validator.validate(form);
-        ConstraintViolationsDTO constraintViolationsDTO = new ConstraintViolationsDTO(violations);
-        byte[] imageBytes;
-        try {
-            imageBytes = ImageUtils.validateImage(constraintViolationsDTO, form.getImageUpload());
-        } catch (IOException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new ErrorDTO("Server couldn't get image bytes", "image"))
-                    .build();
+        if (imageFile != null) {
+            byte[] imageBytes;
+            try {
+                imageBytes = FileUtils.readFileToByteArray(imageFile);
+            } catch (IOException e) {
+                return Response.serverError().build();
+            }
+            if (!ImageUtils.validateImage(fileMetaData, imageBytes.length)) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Invalid image extension or file size too big", "image")).build();
+            }
+            byte[] resizedImage;
+            try {
+                resizedImage = ImageUtils.resizeToProfileSize(imageBytes, TRIP_IMAGE_WIDTH, TRIP_IMAGE_HEIGHT);
+            } catch (IOException e) {
+                return Response.serverError().build();
+            }
+            tripService.editTripImage(trip, resizedImage);
+            imageFile.delete();
         }
-        if (constraintViolationsDTO.getErrors().size() > 0) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(constraintViolationsDTO).build();
-        }
-        if (tripPicturesService.findByTripId(tripId).isPresent()) {
-            tripPicturesService.deleteByTripId(tripId);
-        }
-        TripPicture picture = tripPicturesService.create(trip, imageBytes);
-        trip.setProfilePicture(picture);
-        return Response.ok(new TripDTO(trip)).build();
+        tripService.editTripData(name.getValue(), description.getValue(), trip.getId());
+        return Response.ok().build();
     }
 
     @POST

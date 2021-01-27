@@ -36,6 +36,9 @@ public class TripServiceImpl implements TripService {
     @Autowired
     private MailingService mailService;
 
+    @Autowired
+    private TripPicturesService tripPicturesService;
+
     @Override
     public Trip create(long userId, double latitude, double longitude, String name, String description,
                        LocalDate startDate, LocalDate endDate, boolean isPrivate) throws GooglePlacesException {
@@ -244,6 +247,19 @@ public class TripServiceImpl implements TripService {
     @Override
     public Optional<TripInvitation> findTripInvitationByUser(Trip trip, User user) {
         return td.findTripInvitationByUser(trip, user);
+    }
+
+    @Override
+    public void editTripImage(Trip trip, byte[] imageBytes) {
+        if (tripPicturesService.findByTripId(trip.getId()).isPresent()) {
+            tripPicturesService.deleteByTripId(trip.getId());
+        }
+        TripPicture picture = tripPicturesService.create(trip, imageBytes);
+    }
+
+    @Override
+    public void editTripData(String tripName, String description, long tripId) {
+        td.updateTripData(tripName, description, tripId);
     }
 
 }

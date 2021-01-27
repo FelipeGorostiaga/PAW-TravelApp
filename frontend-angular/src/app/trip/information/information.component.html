@@ -1,8 +1,11 @@
-<img *ngIf="hasImage" class="img-container" src="" alt="Trip image">
+
 <div>
+    <img *ngIf="hasImage" class="img-container img-fluid" [src]="tripImage" alt="Trip image">
     <div class="d-flex justify-content-between">
         <div *ngIf="isAdmin" class="p-2">
-            <button class="btn btn-outline-dark" (click)="openEditTripModal(editTripTemplate)" style="margin-top: 10px;">Edit</button>
+            <button class="btn btn-outline-dark" (click)="openEditTripModal(editTripTemplate)"
+                    style="margin-top: 10px;">Edit
+            </button>
         </div>
     </div>
     <div class="display-4 ">{{trip?.name}}</div>
@@ -44,39 +47,8 @@
 </div>
 
 
-<ng-template #editTripTemplate>
-    <div class="modal-header">
-        <h4 class="modal-title pull-left">Edit Trip</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="editTripModalRef.hide()"><span aria-hidden="true">&times;</span></button>
-    </div>
-    <div class="modal-body">
-        <form [formGroup]="editTripForm">
-            <!-- Image Upload -->
-            <div class="form-group">
-                <label for="imageUpload">File input</label>
-                <input type="file" class="form-control-file" id="imageUpload">
-            </div>
 
-            <!-- Edit Trip Name -->
-            <div class="form-group">
-                <label for="tripName">Name</label>
-                <input type="text" class="form-control" id="tripName" placeholder="New trip name">
-            </div>
-
-            <!-- Edit description -->
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea class="form-control" id="description" rows="4"></textarea>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="submitEditTripForm()">Submit</button>
-        <button type="button" class="btn btn-outline-primary" (click)="closeEditTripModal()">Close</button>
-    </div>
-</ng-template>
-
-
+<!-- INVITE USER TO TRIP -->
 <ng-template #template>
     <div class="modal-header">
         <h4 class="modal-title pull-left">Invite user</h4>
@@ -105,8 +77,46 @@
         </section>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-primary" (click)="closeModal()" style="margin-top: 20px;">Close</button>
+        <button type="button" class="btn btn-outline-primary" (click)="closeModal()" style="margin-top: 20px;">Close
+        </button>
     </div>
 </ng-template>
+
+<!-- EDIT TRIP-->
+<ng-template #editTripTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Edit Trip</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="editTripModalRef.hide()"><span
+                aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editTripForm" (ngSubmit)="submitEditTripForm()">
+            <!-- Image Upload -->
+            <div class="form-group">
+                <label for="imageUpload">File input</label>
+                <input formControlName="imageUpload" type="file" class="form-control-file" id="imageUpload"
+                       (change)="onFileSelected($event)">
+            </div>
+
+            <!-- Edit Trip Name -->
+            <div class="form-group">
+                <label for="tripName">Name</label>
+                <input formControlName="tripName" type="text" class="form-control" id="tripName">
+            </div>
+
+            <!-- Edit description -->
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea formControlName="description" style="resize: none" class="form-control" id="description"
+                          rows="4"></textarea>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="submitEditTripForm()">Submit</button>
+        <button type="button" class="btn btn-outline-primary" (click)="closeEditTripModal()">Close</button>
+    </div>
+</ng-template>
+
 
 
