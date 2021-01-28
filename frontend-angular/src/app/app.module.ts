@@ -38,6 +38,7 @@ import {RespondInviteComponent} from './trip/respond-invite/respond-invite.compo
 import {UserListItemComponent} from './trip/information/user-list-item/user-list-item.component';
 import {AlertModule} from "ngx-bootstrap/alert";
 import {ModalModule} from "ngx-bootstrap/modal";
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 
 @NgModule({
@@ -85,7 +86,8 @@ import {ModalModule} from "ngx-bootstrap/modal";
         ),
         BrowserAnimationsModule,
         AlertModule.forRoot(),
-        ModalModule.forRoot()
+        ModalModule.forRoot(),
+        TooltipModule.forRoot()
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [AuthService, AuthGuard, {

@@ -75,5 +75,5 @@ public interface TripService {
 
     void editTripData(String tripName, String description, long tripId);
 
-    void grantAdminRole(Trip trip, User invitedUser);
+    void grantAdminRole(long tripId, long invitedUserId);
 }

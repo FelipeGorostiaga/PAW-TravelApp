@@ -217,5 +217,22 @@ export class InformationComponent implements OnInit {
         console.log(event.target.files[0]);
         this.selectedFile = event.target.files[0];
     }
+
+    grantAdminRole(event: Event, user: User) {
+        event.preventDefault();
+        if (confirm("Are you sure you want to grant administrator role to " + user.firstname + " " + user.lastname + "?")) {
+            this.tripService.grantAdminRole(this.trip, user).subscribe(
+                ok => {
+                    const index = this.trip.users.indexOf(user);
+                    this.trip.users.splice(index, 1);
+                    this.trip.admins.push(user);
+                },
+                error => {
+                    console.log(error);
+                }
+            )
+        }
+    }
+
 }
 

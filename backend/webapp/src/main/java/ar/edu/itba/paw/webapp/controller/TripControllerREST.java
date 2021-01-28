@@ -488,7 +488,7 @@ public class TripControllerREST {
         if (!tripService.isMember(trip, invitedUser)) return Response.status(Response.Status.BAD_REQUEST).build();
         if (tripService.isAdmin(trip, invitedUser))
             return Response.status(Response.Status.CONFLICT).entity(new ErrorDTO("Selected user is already a trip administrator", "duplicate")).build();
-        tripService.grantAdminRole(trip, invitedUser);
+        tripService.grantAdminRole(trip.getId(), invitedUser.getId());
         return Response.ok().build();
     }
 

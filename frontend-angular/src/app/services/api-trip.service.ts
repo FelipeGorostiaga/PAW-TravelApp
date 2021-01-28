@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
-import {Trip} from "../model/trip";
+import {FullTrip, Trip} from "../model/trip";
 import {TripForm} from "../model/forms/trip-form";
 import {ActivityForm} from "../model/forms/activity-form";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CommentForm} from "../model/forms/comment-form";
 import {mergeMap, shareReplay} from "rxjs/operators";
+import {User} from "../model/user";
 
 @Injectable({
     providedIn: 'root'
@@ -122,5 +123,10 @@ export class ApiTripService {
     getTripCardImage(tripId: number) {
         const url = this.tripsBaseURL + tripId + '/image/card';
         return this.http.get(url, {responseType: 'blob'});
+    }
+
+    grantAdminRole(trip: FullTrip, user: User) {
+        const url = this.tripsBaseURL + trip.id + '/make-admin/' + user.id;
+        return this.http.post(url, {});
     }
 }

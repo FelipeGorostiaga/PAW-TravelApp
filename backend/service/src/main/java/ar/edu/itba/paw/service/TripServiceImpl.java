@@ -258,9 +258,15 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public void grantAdminRole(Trip trip, User invitedUser) {
-        // todo: check if this works!!!
-        trip.getAdmins().add(invitedUser);
+    public void grantAdminRole(long tripId, long invitedUserId) {
+        Optional<Trip> tripOptional = findById(tripId);
+        Optional<User> userOptional = ud.findById(invitedUserId);
+        if (tripOptional.isPresent() && userOptional.isPresent()) {
+            Trip t = tripOptional.get();
+            User u = userOptional.get();
+            t.getAdmins().add(u);
+            t.getUsers().remove(u);
+        }
     }
 
     @Override
