@@ -63,6 +63,8 @@ public interface TripService {
 
     boolean isAdmin(Trip trip, User loggedUser);
 
+    boolean isMember(Trip trip, User user);
+
     Optional<TripInvitation> findTripInvitationByToken(String token);
 
     void acceptOrRejectTripInvitation(String token, boolean accepted, User invitedUser, Trip trip);
@@ -72,4 +74,6 @@ public interface TripService {
     void editTripImage(Trip trip, byte[] resizedImage);
 
     void editTripData(String tripName, String description, long tripId);
+
+    void grantAdminRole(Trip trip, User invitedUser);
 }

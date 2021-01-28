@@ -229,11 +229,6 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public boolean isAdmin(Trip trip, User loggedUser) {
-        return trip.getAdmins().contains(loggedUser);
-    }
-
-    @Override
     public Optional<TripInvitation> findTripInvitationByToken(String token) {
         return td.findTripInvitationByToken(token);
     }
@@ -260,6 +255,22 @@ public class TripServiceImpl implements TripService {
     @Override
     public void editTripData(String tripName, String description, long tripId) {
         td.updateTripData(tripName, description, tripId);
+    }
+
+    @Override
+    public void grantAdminRole(Trip trip, User invitedUser) {
+        // todo: check if this works!!!
+        trip.getAdmins().add(invitedUser);
+    }
+
+    @Override
+    public boolean isAdmin(Trip trip, User user) {
+        return trip.getAdminId() == user.getId() || trip.getAdmins().contains(user);
+    }
+
+    @Override
+    public boolean isMember(Trip trip, User user) {
+        return isAdmin(trip, user) || trip.getUsers().contains(user);
     }
 
 }

@@ -230,7 +230,8 @@ public class TripControllerREST {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        Trip trip = tripOptional.get();;
+        Trip trip = tripOptional.get();
+        ;
         if (!trip.getAdmins().contains(loggedUser) && !trip.getUsers().contains(loggedUser) && trip.getAdminId() != loggedUser.getId()) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("User is not part of this trip", "invalid-user")).build();
         }
@@ -246,7 +247,8 @@ public class TripControllerREST {
         if (!tripPictureOptional.isPresent()) {
             LOGGER.warn("Cannot render trip picture, trip picture for id {} not found", tripId);
             return Response.status(Response.Status.NOT_FOUND).build();
-        }byte[] resizedImage;
+        }
+        byte[] resizedImage;
         try {
             resizedImage = ImageUtils.resizeToProfileSize(tripPictureOptional.get().getPicture(), TRIP_IMAGE_WIDTH, TRIP_IMAGE_HEIGHT);
 
@@ -469,6 +471,24 @@ public class TripControllerREST {
                     .entity(new ErrorDTO("Only the invitee can accept or reject this invitation", "permission-denied"))
                     .build();
         tripService.acceptOrRejectTripInvitation(token, accepted, loggedUser, tripOptional.get());
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/{id}/make-admin/{userId}")
+    public Response grantAdminRole(@PathParam("id") final long tripId, @PathParam("userId") final long userId) {
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        Optional<User> userOptional = userService.findById(userId);
+        if (!tripOptional.isPresent() || !userOptional.isPresent())
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        Trip trip = tripOptional.get();
+        User invitedUser = userOptional.get();
+        User loggedUser = securityUserService.getLoggedUser();
+        if (!tripService.isAdmin(trip, loggedUser)) return Response.status(Response.Status.FORBIDDEN).build();
+        if (!tripService.isMember(trip, invitedUser)) return Response.status(Response.Status.BAD_REQUEST).build();
+        if (tripService.isAdmin(trip, invitedUser))
+            return Response.status(Response.Status.CONFLICT).entity(new ErrorDTO("Selected user is already a trip administrator", "duplicate")).build();
+        tripService.grantAdminRole(trip, invitedUser);
         return Response.ok().build();
     }
 
