@@ -145,7 +145,7 @@ export class ProfileComponent implements OnInit {
 export function validImgExtension(controlName: string, validExtensions: string[]) {
     return (formGroup: FormGroup) => {
         const control = formGroup.controls[controlName];
-        if (control.errors) {
+        if (control.errors || !!control.value) {
             return;
         }
         const extension = control.value.split('.')[1].toLowerCase();

@@ -8,7 +8,7 @@ import {Observable, Subject} from "rxjs";
 import {debounceTime, distinctUntilChanged, filter, switchMap, tap} from "rxjs/operators";
 import {User} from "../../model/user";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {DomSanitizer} from "@angular/platform-browser";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 import {validImgExtension} from "../../profile/profile.component";
@@ -64,10 +64,11 @@ export class InformationComponent implements OnInit {
     }
 
     ngOnInit() {
-        // TODO: remove required image upload
+        this.loadingImage = true;
+        // TODO: remove required image upload !!!!!!!!!!!!!!!
         this.editTripForm = this.formBuilder.group({
             imageUpload: ['', Validators.required],
-            description: ['', [Validators.required, Validators.minLength(50), Validators.maxLength(500)]],
+            description: ['', [Validators.required, Validators.minLength(25), Validators.maxLength(500)]],
             tripName: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(25)]],
         }, {
             validators: [validImgExtension('imageUpload', this.validExtensions)]
@@ -190,7 +191,10 @@ export class InformationComponent implements OnInit {
 
     submitEditTripForm() {
         this.submitted = true;
-        if (this.editTripForm.invalid) return;
+        if (this.editTripForm.invalid) {
+            console.log("form is invalid");
+            return;
+        }
         const formData = new FormData();
         formData.append('tripName', this.editTripForm.get('tripName').value);
         formData.append('description', this.editTripForm.get('description').value);
@@ -202,6 +206,7 @@ export class InformationComponent implements OnInit {
                 window.location.reload();
             },
             error => {
+                console.log(error);
                 // todo: check for error dtos
             }
         );

@@ -57,5 +57,4 @@ public interface TripDao {
     Optional<TripInvitation> findTripInvitationByUser(Trip trip, User user);
 
     void updateTripData(String tripName, String description, long tripId);
-
 }

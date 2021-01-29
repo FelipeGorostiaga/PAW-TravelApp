@@ -44,10 +44,10 @@ public class User {
     @Column(length = 500)
     private String biography;
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Trip> trips = new HashSet<>();
 
-    @ManyToMany(mappedBy = "admins", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "admins", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Trip> adminTrips = new HashSet<>();
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")

@@ -13,9 +13,6 @@ public class Trip implements Comparable<Trip>{
     @SequenceGenerator(sequenceName = "trip_id_seq", name = "trip_id_seq", allocationSize = 1)
     private long id;
 
-    /*@Column
-    private long startPlaceId;*/
-
     @Column
     private long adminId;
 

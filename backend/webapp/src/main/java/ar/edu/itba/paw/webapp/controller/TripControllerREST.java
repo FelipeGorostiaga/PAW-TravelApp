@@ -41,8 +41,8 @@ public class TripControllerREST {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TripControllerREST.class);
 
-    private static final int TRIP_IMAGE_WIDTH = 600;
-    private static final int TRIP_IMAGE_HEIGHT = 400;
+    private static final int TRIP_IMAGE_WIDTH = 480;
+    private static final int TRIP_IMAGE_HEIGHT = 360;
 
     private static final int TRIP_CARD_IMAGE_WIDTH = 478;
     private static final int TRIP_CARD_IMAGE_HEIGHT = 280;

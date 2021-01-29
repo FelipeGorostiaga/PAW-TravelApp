@@ -1,6 +1,7 @@
 
 <div>
     <img *ngIf="hasImage" [src]="tripImage" alt="Trip image">
+    <img *ngIf="!hasImage" src="./assets/images/trip-default-info.jpg" alt="Trip image">
     <div class="d-flex justify-content-between">
         <div *ngIf="isAdmin" class="p-2">
             <button class="btn btn-outline-dark" (click)="openEditTripModal(editTripTemplate)"

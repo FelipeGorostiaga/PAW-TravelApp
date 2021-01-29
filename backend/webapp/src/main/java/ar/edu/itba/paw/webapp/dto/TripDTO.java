@@ -20,10 +20,6 @@ public class TripDTO {
     }
 
     public TripDTO(Trip trip) {
-        System.out.println(trip.getStartDate().toString());
-        System.out.println(trip.getEndDate().toString());
-        System.out.println(DateManipulation.changeDateFormat(trip.getStartDate()));
-        System.out.println(DateManipulation.changeDateFormat(trip.getEndDate()));
         this.id = trip.getId();
         this.name = trip.getName();
         this.description = trip.getDescription();
@@ -32,7 +28,7 @@ public class TripDTO {
         this.adminId = trip.getAdminId();
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
-        this.membersAmount = trip.getUsers().size();
+        this.membersAmount = trip.getUsers().size() + trip.getAdmins().size();
     }
 
     public PlaceDTO getStartPlace() {
