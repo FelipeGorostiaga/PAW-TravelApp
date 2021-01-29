@@ -1,19 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
-import ar.edu.itba.paw.interfaces.MailingService;
-import ar.edu.itba.paw.interfaces.TripService;
-import ar.edu.itba.paw.interfaces.UserPicturesService;
-import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.model.DateManipulation;
-import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.UserPicture;
+import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.auth.JwtUtil;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
+import ar.edu.itba.paw.webapp.form.UserRateForm;
 import ar.edu.itba.paw.webapp.utils.ImageUtils;
+import ar.edu.itba.paw.model.TripStatus;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
@@ -75,6 +72,9 @@ public class UserControllerREST {
 
     @Autowired
     private TravelUserDetailsService userDetailsService;
+
+    @Autowired
+    private UserRatesService userRatesService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -204,7 +204,7 @@ public class UserControllerREST {
     public Response editProfile(@FormDataParam("biography") FormDataBodyPart biography,
                                 @FormDataParam("image") File imageFile,
                                 @FormDataParam("image") FormDataContentDisposition fileMetaData,
-                                @PathParam("userId") final int id) {
+                                @PathParam("userId") final long id) {
         User loggedUser = securityUserService.getLoggedUser();
         if (id != loggedUser.getId()) return Response.status(Response.Status.FORBIDDEN).build();
         if (biography == null && imageFile == null) {
@@ -233,6 +233,80 @@ public class UserControllerREST {
             userService.editBiography(loggedUser, biography.getValue());
         }
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/{userId}/rates")
+    public Response getUserRates(@PathParam("userId") final long userId) {
+        Optional<User> userOptional = userService.findById(userId);
+        if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
+        List<RateDTO> rateDTOs = userService.getUserRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
+        if (rateDTOs.isEmpty()) return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.ok(new GenericEntity<List<RateDTO>>(rateDTOs) {
+        }).build();
+    }
+
+    @POST
+    @Path("/rateUser")
+    public Response rateUser(@Valid UserRateForm form) {
+        Set<ConstraintViolation<UserRateForm>> violations = validator.validate(form);
+        if (!violations.isEmpty()) {
+            List<ErrorDTO> errors = violations.stream().map(violation -> new ErrorDTO(violation.getMessage(),
+                    violation.getPropertyPath().toString())).collect(Collectors.toList());
+            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<List<ErrorDTO>>(errors) {
+            }).build();
+        }
+        Optional<Trip> tripOptional = tripService.findById(form.getTripId());
+        Optional<User> ratedByUserOp = userService.findById(form.getRatedById());
+        Optional<User> ratedUserOptional = userService.findById(form.getRatedUserId());
+        if (!tripOptional.isPresent() || !ratedByUserOp.isPresent() || !ratedUserOptional.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        Trip trip = tripOptional.get();
+        User ratedUser = ratedUserOptional.get();
+        User ratedBy = ratedByUserOp.get();
+
+        if (trip.getStatus() != TripStatus.COMPLETED.ordinal()) {
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
+
+        if (!tripService.traveledTogether(trip, ratedUser, ratedBy)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        UserRate userRate = userRatesService.createRate(trip, ratedBy, ratedUser, form.getRate(), form.getComment());
+        return Response.ok(new RateDTO(userRate)).build();
+    }
+
+    @GET
+    @Path("/{userId}/trips/due")
+    public Response getDueTrips(@PathParam("userId") final long userId) {
+        //get active trips (status == 0) IN PROGRESS
+        Optional<User> userOptional = userService.findById(userId);
+        if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
+        Set<Trip> userTrips = tripService.getAllUserTrips(userOptional.get());
+        List<TripDTO> activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.DUE.ordinal() && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TripDTO>>(activeTrips) {}).build();
+    }
+
+    @GET
+    @Path("/{userId}/trips/active")
+    public Response getActiveTrips(@PathParam("userId") final long userId) {
+        //get active trips (status == 1) IN PROGRESS
+        Optional<User> userOptional = userService.findById(userId);
+        if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
+        Set<Trip> userTrips = tripService.getAllUserTrips(userOptional.get());
+        List<TripDTO> activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.IN_PROGRESS.ordinal() && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TripDTO>>(activeTrips) {}).build();
+    }
+
+    @GET
+    @Path("/{userId}/trips/completed")
+    public Response getCompletedTrips(@PathParam("userId") final long userId) {
+        Optional<User> userOptional = userService.findById(userId);
+        if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
+        Set<Trip> userTrips = tripService.getAllUserTrips(userOptional.get());
+        List<TripDTO> activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED.ordinal() && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TripDTO>>(activeTrips) {}).build();
     }
 
 }

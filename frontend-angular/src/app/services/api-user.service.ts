@@ -34,4 +34,19 @@ export class ApiUserService {
         const url = this.usersBaseURL + userId + '/editProfile';
         return this.http.post(url, formData);
     }
+
+    getUserActiveTrips(userId: number): Observable<any> {
+        const url = this.usersBaseURL + userId + "/trips/active";
+        return this.http.get(url);
+    }
+
+    getUserCompletedTrips(userId: number) {
+        const url = this.usersBaseURL + userId + "/trips/completed";
+        return this.http.get(url);
+    }
+
+    getUserDueTrips(userId: number) {
+        const url = this.usersBaseURL + userId + "/trips/due";
+        return this.http.get(url);
+    }
 }

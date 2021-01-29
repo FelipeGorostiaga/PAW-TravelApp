@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.UserRate;
 
 
 import java.time.LocalDate;
@@ -33,4 +34,6 @@ public interface UserService {
     void changeProfilePicture(User loggedUser, byte[] imageBytes);
 
     void editBiography(User loggedUser, String biography);
+
+    List<UserRate> getUserRates(long userId);
 }

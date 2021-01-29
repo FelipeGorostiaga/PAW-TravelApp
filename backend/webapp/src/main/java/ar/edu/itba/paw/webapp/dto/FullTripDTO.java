@@ -3,8 +3,12 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
+import ar.edu.itba.paw.model.TripStatus;
+import ar.edu.itba.paw.webapp.utils.TripDateUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +22,7 @@ public class FullTripDTO {
     private String description;
     private String startDate;
     private String endDate;
+    private int status;
     private PlaceDTO startPlace;
     private List<TripCommentDTO> comments;
     private List<UserDTO> users;
@@ -37,10 +42,11 @@ public class FullTripDTO {
         this.adminId = trip.getAdminId();
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
-        this.comments =  trip.getComments().stream().sorted().map(TripCommentDTO::new).collect(Collectors.toList());
+        this.comments = trip.getComments().stream().sorted().map(TripCommentDTO::new).collect(Collectors.toList());
         this.activities = trip.getActivities().stream().map(ActivityDTO::new).collect(Collectors.toList());
         this.admins = trip.getAdmins().stream().map(UserDTO::new).collect(Collectors.toList());
         this.users = trip.getUsers().stream().filter(user -> !trip.getAdmins().contains(user)).map(UserDTO::new).collect(Collectors.toList());
+        this.status = TripDateUtils.getTripStatus(trip);
     }
 
     public Long getId() {
@@ -49,6 +55,14 @@ public class FullTripDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public Long getAdminId() {

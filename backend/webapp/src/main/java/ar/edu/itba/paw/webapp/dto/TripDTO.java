@@ -2,6 +2,11 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripStatus;
+import ar.edu.itba.paw.webapp.utils.TripDateUtils;
+
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 
 public class TripDTO {
 
@@ -14,6 +19,7 @@ public class TripDTO {
     private String description;
     private String startDate;
     private String endDate;
+    private int status;
 
     public TripDTO() {
         // Empty constructor needed by JAX-RS
@@ -29,6 +35,16 @@ public class TripDTO {
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
         this.membersAmount = trip.getUsers().size() + trip.getAdmins().size();
+        this.status = TripDateUtils.getTripStatus(trip);
+
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public PlaceDTO getStartPlace() {

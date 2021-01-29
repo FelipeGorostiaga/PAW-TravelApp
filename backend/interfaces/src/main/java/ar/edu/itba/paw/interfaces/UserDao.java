@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.interfaces;
 
+import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.UserRate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,4 +26,8 @@ public interface UserDao {
     List<User> findByName(String name);
 
     boolean editBiography(User user, String biography);
+
+    List<UserRate> getUserRates(long userId);
+
+    UserRate createRate(Trip trip, User ratedBy, User ratedUser, int rate, String comment);
 }

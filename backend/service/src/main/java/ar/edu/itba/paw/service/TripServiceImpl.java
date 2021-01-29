@@ -48,7 +48,7 @@ public class TripServiceImpl implements TripService {
         Optional<User> u = ud.findById(userId);
         if (u.isPresent()) {
             t = td.create(userId, startPlace, name, description, startDate, endDate, isPrivate);
-            t.getUsers().add(u.get());
+            // t.getUsers().add(u.get());
             t.getAdmins().add(u.get());
             return t;
         }
@@ -267,6 +267,11 @@ public class TripServiceImpl implements TripService {
             t.getAdmins().add(u);
             t.getUsers().remove(u);
         }
+    }
+
+    @Override
+    public boolean traveledTogether(Trip trip, User ratedUser, User ratedBy) {
+        return isMember(trip, ratedUser) && isMember(trip, ratedBy);
     }
 
     @Override

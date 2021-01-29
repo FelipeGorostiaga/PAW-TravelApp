@@ -13,10 +13,13 @@ public class Trip implements Comparable<Trip>{
     @SequenceGenerator(sequenceName = "trip_id_seq", name = "trip_id_seq", allocationSize = 1)
     private long id;
 
-    @Column
+    @Column(nullable = false)
+    private int status;
+
+    @Column(nullable = false)
     private long adminId;
 
-    @Column
+    @Column(nullable = false)
     private boolean isPrivate;
 
     @Column(length = 100, nullable = false)
@@ -86,6 +89,7 @@ public class Trip implements Comparable<Trip>{
         this.startDate = startDate;
         this.endDate = endDate;
         this.isPrivate = isPrivate;
+        this.status = TripStatus.DUE.ordinal();
     }
 
     public List<TripInvitation> getPendingConfirmations() {
@@ -215,6 +219,14 @@ public class Trip implements Comparable<Trip>{
 
     public void setAdmins(Set<User> admins) {
         this.admins = admins;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Override

@@ -28,13 +28,13 @@ export class ProfileComponent implements OnInit {
 
     loading: boolean;
 
-    loadingImage;
+    loadingImage: boolean;
     profilePicture;
-    hasImage;
+    hasImage: boolean;
 
-    submitted;
+    submitted: boolean;
 
-    imageError;
+    imageError: string;
     selectedFile: File;
     validExtensions: string[] = ['jpeg', 'png', 'jpg'];
 
@@ -81,7 +81,7 @@ export class ProfileComponent implements OnInit {
                     // @ts-ignore
                     this.profilePicture = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
                     this.loadingImage = false;
-                }
+                };
                 reader.readAsDataURL(new Blob([data]));
                 this.hasImage = true;
             },

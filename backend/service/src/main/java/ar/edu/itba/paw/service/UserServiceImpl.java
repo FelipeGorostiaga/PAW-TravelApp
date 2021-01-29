@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserPicture;
+import ar.edu.itba.paw.model.UserRate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -80,5 +81,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void editBiography(User user, String biography) {
         ud.editBiography(user, biography);
+    }
+
+    @Override
+    public List<UserRate> getUserRates(long userId) {
+        return ud.getUserRates(userId);
     }
 }

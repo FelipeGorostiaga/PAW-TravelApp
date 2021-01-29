@@ -76,4 +76,6 @@ public interface TripService {
     void editTripData(String tripName, String description, long tripId);
 
     void grantAdminRole(long tripId, long invitedUserId);
+
+    boolean traveledTogether(Trip trip, User ratedUser, User ratedBy);
 }

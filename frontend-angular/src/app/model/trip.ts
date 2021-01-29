@@ -14,6 +14,7 @@ export class Trip {
     private: boolean;
     startPlace: Place;
     membersAmount: number;
+    status: number;
 }
 
 export class FullTrip extends Trip {

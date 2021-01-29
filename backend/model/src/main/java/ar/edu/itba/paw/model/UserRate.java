@@ -39,4 +39,47 @@ public class UserRate {
 
     private LocalDateTime createdOn;
 
+    public long getId() {
+        return id;
+    }
+
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+
+    public User getRatedByUser() {
+        return ratedByUser;
+    }
+
+    public void setRatedByUser(User ratedByUser) {
+        this.ratedByUser = ratedByUser;
+    }
+
+    public User getRatedUser() {
+        return ratedUser;
+    }
+
+    public void setRatedUser(User ratedUser) {
+        this.ratedUser = ratedUser;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
 }
