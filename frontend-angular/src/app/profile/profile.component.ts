@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, TemplateRef} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {User} from "../model/user";
 import {ApiUserService} from "../services/api-user.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -7,7 +7,7 @@ import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 import {DomSanitizer} from "@angular/platform-browser";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {error} from "util";
+import {UserProfile} from "../model/UserProfile";
 
 @Component({
     selector: 'app-profile',
@@ -25,6 +25,9 @@ export class ProfileComponent implements OnInit {
     editProfileForm: FormGroup;
 
     user: User;
+    userProfile: UserProfile;
+    userRate: number;
+    hasRates: boolean;
 
     loading: boolean;
 
@@ -64,7 +67,7 @@ export class ProfileComponent implements OnInit {
             validators: [validImgExtension('imageUpload', this.validExtensions)]
         });
 
-        this.userService.getUserById(profileId).subscribe(
+      /*  this.userService.getUserById(profileId).subscribe(
             data => {
                 this.user = data;
                 this.editProfileForm.get('biography').setValue(this.user.biography);
@@ -73,6 +76,21 @@ export class ProfileComponent implements OnInit {
                 console.log(error);
                 this.router.navigate(['/404']);
             });
+*/
+        this.userService.getUserProfileData(profileId).subscribe(
+            data => {
+                this.userProfile = data;
+                console.log(data);
+                this.user = data.user;
+                this.editProfileForm.get('biography').setValue(this.userProfile.user.biography);
+                this.calculateUserRate();
+            },
+            error => {
+                console.log(error);
+                this.router.navigate(['/404']);
+            }
+        )
+
 
         this.userService.getUserPicture(profileId).subscribe(
             data => {
@@ -86,11 +104,13 @@ export class ProfileComponent implements OnInit {
                 this.hasImage = true;
             },
             error => {
-                console.log(error);
                 this.loadingImage = false;
                 this.hasImage = false;
             }
         );
+
+
+        this;
         this.loading = false;
         this.spinner.hide();
     }
@@ -139,6 +159,18 @@ export class ProfileComponent implements OnInit {
     onFileSelected(event) {
         console.log(event.target.files[0]);
         this.selectedFile = event.target.files[0];
+    }
+
+    private calculateUserRate() {
+        let totalRate = 0;
+        const len = this.userProfile.rates.length;
+        if (len == 0) {
+            this.hasRates = false;
+            return;
+        }
+        this.hasRates = true;
+        this.userProfile.rates.forEach(rate => totalRate += rate.rate);
+        this.userRate = Math.round(totalRate / len);
     }
 }
 

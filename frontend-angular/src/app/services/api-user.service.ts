@@ -3,6 +3,7 @@ import {Observable} from 'rxjs';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Trip} from '../model/trip';
 import {environment} from "../../environments/environment";
+import {UserProfile} from "../model/UserProfile";
 
 
 @Injectable({
@@ -48,5 +49,10 @@ export class ApiUserService {
     getUserDueTrips(userId: number) {
         const url = this.usersBaseURL + userId + "/trips/due";
         return this.http.get(url);
+    }
+
+    getUserProfileData(userId: number): Observable<UserProfile> {
+        const url = this.usersBaseURL + userId + '/profile';
+        return this.http.get<UserProfile>(url);
     }
 }

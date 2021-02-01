@@ -43,6 +43,7 @@ export class TripComponent implements OnInit {
                 this.loading = false;
                 console.log("Is admin: " + this.isAdmin);
                 console.log("Is member: " + this.isMember);
+                console.log(this.trip);
             },
             err => {
                 this.loading = false;

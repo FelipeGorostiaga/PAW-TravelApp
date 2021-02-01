@@ -285,30 +285,55 @@ public class UserControllerREST {
         if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
         Set<Trip> userTrips = tripService.getAllUserTrips(userOptional.get());
         List<TripDTO> activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.DUE.ordinal() && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripDTO>>(activeTrips) {}).build();
+        return Response.ok(new GenericEntity<List<TripDTO>>(activeTrips) {
+        }).build();
     }
 
     @GET
     @Path("/{userId}/trips/active")
     public Response getActiveTrips(@PathParam("userId") final long userId) {
-        //get active trips (status == 1) IN PROGRESS
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
         Set<Trip> userTrips = tripService.getAllUserTrips(userOptional.get());
         List<TripDTO> activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.IN_PROGRESS.ordinal() && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripDTO>>(activeTrips) {}).build();
+        return Response.ok(new GenericEntity<List<TripDTO>>(activeTrips) {
+        }).build();
     }
 
     @GET
     @Path("/{userId}/trips/completed")
     public Response getCompletedTrips(@PathParam("userId") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
-        if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
+        if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         Set<Trip> userTrips = tripService.getAllUserTrips(userOptional.get());
         List<TripDTO> activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED.ordinal() && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripDTO>>(activeTrips) {}).build();
+        return Response.ok(new GenericEntity<List<TripDTO>>(activeTrips) {
+        }).build();
     }
 
+    @GET
+    @Path("/{userId}/profile")
+    public Response getUserProfileData(@PathParam("userId") final long userId) {
+        Optional<User> userOptional = userService.findById(userId);
+        if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        boolean isProfileOwner = securityUserService.getLoggedUser().getId() == userOptional.get().getId();
+        Set<Trip> userTrips = tripService.getAllUserTrips(userOptional.get());
+        List<TripDTO> dueTrips;
+        List<TripDTO> activeTrips;
+        List<TripDTO> completedTrips;
+        List<RateDTO> rates = this.userService.getUserRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
+        if (isProfileOwner) {
+            dueTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED.ordinal()).map(TripDTO::new).collect(Collectors.toList());
+            activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED.ordinal()).map(TripDTO::new).collect(Collectors.toList());
+            completedTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED.ordinal()).map(TripDTO::new).collect(Collectors.toList());
+        }
+        else {
+            dueTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED.ordinal() && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
+            activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED.ordinal() && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
+            completedTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED.ordinal() && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
+        }
+        return Response.ok(new ProfileDataDTO(userOptional.get(), rates, dueTrips, activeTrips, completedTrips)).build();
+    }
 }
 
 

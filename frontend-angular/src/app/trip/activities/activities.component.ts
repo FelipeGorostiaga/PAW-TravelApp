@@ -8,6 +8,7 @@ import {FullTrip} from "../../model/trip";
 import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
 import {DateUtilService} from "../../services/date-util.service";
 import {ModalService} from "../../modal";
+import {Activity} from "../../model/activity";
 
 @Component({
     selector: 'app-activities',
@@ -141,6 +142,18 @@ export class ActivitiesComponent implements OnInit {
             this.latitude = -34.603722;
             this.longitude = -58.381592;
         }
+    }
+
+    deleteActivity(activity: Activity) {
+        this.ts.deleteTripActivity(this.trip.id, activity.id).subscribe(
+            res => {
+                let index = this.trip.activities.indexOf(activity);
+                this.trip.activities.splice(index, 1);
+            },
+            error => {
+                console.log(error);
+            }
+        )
     }
 }
 

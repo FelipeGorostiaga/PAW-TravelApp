@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.UserRate;
-
-import java.time.LocalDateTime;
 
 public class RateDTO {
 
@@ -16,10 +15,10 @@ public class RateDTO {
 
     private String comment;
 
-    private LocalDateTime createdOn;
+    private String createdOn;
 
     public RateDTO() {
-
+        // Empty constructor needed by JAX-RS
     }
 
     public RateDTO(UserRate rate) {
@@ -27,7 +26,7 @@ public class RateDTO {
         this.rate = rate.getRate();
         this.ratedBy = new UserDTO(rate.getRatedByUser());
         this.ratedUser = new UserDTO(rate.getRatedUser());
-        this.createdOn = rate.getCreatedOn();
+        this.createdOn = DateManipulation.changeDateTimeFormat(rate.getCreatedOn());
         this.comment = rate.getComment();
     }
 
@@ -71,11 +70,11 @@ public class RateDTO {
         this.comment = comment;
     }
 
-    public LocalDateTime getCreatedOn() {
+    public String getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(LocalDateTime createdOn) {
+    public void setCreatedOn(String createdOn) {
         this.createdOn = createdOn;
     }
 }

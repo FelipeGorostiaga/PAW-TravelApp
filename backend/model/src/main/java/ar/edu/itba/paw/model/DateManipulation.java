@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -11,7 +12,7 @@ public class DateManipulation {
     }
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm");
 
     public static LocalDate stringToLocalDate(String dateString) {
         try {
@@ -25,8 +26,11 @@ public class DateManipulation {
     public static String changeDateFormat(LocalDate date) {
         return date.format(formatter);
     }
+    public static String changeDateTimeFormat(LocalDateTime date) {
+        return date.format(formatter);
+    }
 
-    public static boolean validate(String dateString) {
+        public static boolean validate(String dateString) {
         try {
             LocalDate date = LocalDate.parse(dateString, formatter);
         } catch (DateTimeParseException e) {

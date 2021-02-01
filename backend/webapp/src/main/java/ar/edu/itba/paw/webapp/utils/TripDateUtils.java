@@ -3,8 +3,7 @@ package ar.edu.itba.paw.webapp.utils;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripStatus;
 
-import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
+import java.time.LocalDate;
 
 public class TripDateUtils {
 
@@ -13,7 +12,7 @@ public class TripDateUtils {
 
     public static int getTripStatus(Trip trip) {
         if (trip.getStatus() == TripStatus.COMPLETED.ordinal()) return trip.getStatus();
-        return LocalDateTime.now().isBefore(ChronoLocalDateTime.from(trip.getStartDate())) ?
+        return LocalDate.now().isBefore(trip.getStartDate()) ?
                 TripStatus.DUE.ordinal() : TripStatus.IN_PROGRESS.ordinal();
 
     }

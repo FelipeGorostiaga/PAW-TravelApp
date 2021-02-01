@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {Activity} from "../../../model/activity";
-import {User} from "../../../model/user";
+import {ApiTripService} from "../../../services/api-trip.service";
 
 @Component({
   selector: 'app-map-activity',
@@ -10,10 +10,12 @@ import {User} from "../../../model/user";
 export class MapActivityComponent implements OnInit {
 
   @Input() activity: Activity;
+  @Output()
+  deleteActivityEvent: EventEmitter<number> = new EventEmitter<number>();
   zoom: number;
   showMap: boolean;
 
-  constructor() { }
+  constructor(tripService: ApiTripService) { }
 
   ngOnInit(): void {
     this.zoom = 14;
@@ -23,4 +25,10 @@ export class MapActivityComponent implements OnInit {
     this.showMap = !this.showMap;
   }
 
+    deleteActivity() {
+      if (confirm("Are you sure you want to delete activity " + this.activity.name + " ?")) {
+        // @ts-ignore
+        this.deleteActivityEvent.emit(this.activity);
+      }
+    }
 }

@@ -46,6 +46,7 @@ export class InformationComponent implements OnInit {
     loadingImage: boolean;
     hasImage: boolean;
     validExtensions: string[] = ['jpeg', 'png', 'jpg'];
+    status;
 
     constructor(private tripService: ApiTripService,
                 private authService: AuthService,
@@ -64,6 +65,7 @@ export class InformationComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.getTripStatus();
         this.loadingImage = true;
         // TODO: remove required image upload !!!!!!!!!!!!!!!
         this.editTripForm = this.formBuilder.group({
@@ -239,5 +241,18 @@ export class InformationComponent implements OnInit {
         }
     }
 
+    private getTripStatus() {
+        switch (this.trip.status) {
+            case (0):
+                this.status = "DUE";
+                break;
+            case (1):
+                this.status = "IN PROGRESS";
+                break;
+            case (2):
+                this.status = "COMPLETED";
+                break;
+        }
+    }
 }
 

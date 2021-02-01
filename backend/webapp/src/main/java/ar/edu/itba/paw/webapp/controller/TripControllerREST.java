@@ -357,7 +357,7 @@ public class TripControllerREST {
         User loggedUser = securityUserService.getLoggedUser();
         if (tripOptional.isPresent()) {
             Trip trip = tripOptional.get();
-            if (trip.getAdminId() == loggedUser.getId()) {
+            if (tripService.isAdmin(trip, loggedUser)) {
                 tripService.deleteTripActivity(activityId, tripId);
                 return Response.ok().build();
             }
