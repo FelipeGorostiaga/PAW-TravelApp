@@ -47,7 +47,6 @@ public class TripServiceImpl implements TripService {
         Place startPlace = googleMapsService.createGooglePlaceReference(googleMapsPlaces);
         Optional<User> u = ud.findById(userId);
         if (u.isPresent()) {
-            System.out.println("User is present");
             return td.create(u.get(), startPlace, name, description, startDate, endDate, isPrivate);
         }
         return null;

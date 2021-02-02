@@ -8,6 +8,8 @@ public class TripMemberDTO {
 
     private UserDTO user;
 
+    private long tripId;
+
     public TripMemberDTO() {
         // needed by JAX-RS
     }
@@ -15,7 +17,7 @@ public class TripMemberDTO {
     public TripMemberDTO(TripMember member) {
         this.role = member.getRole().name();
         this.user = new UserDTO(member.getUser());
-
+        this.tripId = member.getTrip().getId();
     }
 
     public String getRole() {
@@ -32,5 +34,13 @@ public class TripMemberDTO {
 
     public void setUser(UserDTO user) {
         this.user = user;
+    }
+
+    public long getTripId() {
+        return tripId;
+    }
+
+    public void setTripId(long tripId) {
+        this.tripId = tripId;
     }
 }

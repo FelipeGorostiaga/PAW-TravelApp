@@ -27,7 +27,11 @@ public class TripCommentServiceImpl implements TripCommentsService {
     @Override
     public TripComment create(User user, Trip trip, String comment) {
         TripMember member = tripMemberService.find(trip, user);
-        return tripCommentsDao.create(member, trip, comment);
+        if( member != null) {
+            return tripCommentsDao.create(member, trip, comment);
+        }
+        return null;
+
     }
 
     @Override

@@ -1,8 +1,9 @@
 import {User} from "./user";
+import {TripMember} from "./TripMember";
 
 export class Comment {
 
-    user: User;
+    user: TripMember;
     comment: string;
     createOn: string;
 

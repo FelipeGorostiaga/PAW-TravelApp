@@ -4,13 +4,13 @@ import {Trip} from "./trip";
 export class TripMember {
 
     user: User;
-    trip: Trip;
+    tripId: number;
     role: TripRole;
 
 
-    constructor(user: User, trip: Trip, role: TripRole  ) {
+    constructor(user: User, tripId: number, role: TripRole) {
         this.user = user;
-        this.trip = trip;
+        this.tripId = tripId;
         this.role = role;
     }
 }

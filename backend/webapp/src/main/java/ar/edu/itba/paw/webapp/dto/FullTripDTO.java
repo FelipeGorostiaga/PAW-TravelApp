@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 public class FullTripDTO {
 
     private Long id;
-    //private Long adminId;
     private Boolean isPrivate;
     private String name;
     private String description;
@@ -20,7 +19,6 @@ public class FullTripDTO {
     private PlaceDTO startPlace;
     private List<TripCommentDTO> comments;
     private List<TripMemberDTO> members;
-    //private List<UserDTO> admins;
     private List<ActivityDTO> activities;
 
     public FullTripDTO() {
@@ -33,15 +31,12 @@ public class FullTripDTO {
         this.description = trip.getDescription();
         this.startDate = DateManipulation.changeDateFormat(trip.getStartDate());
         this.endDate = DateManipulation.changeDateFormat(trip.getEndDate());
-        //this.adminId = trip.getAdminId();
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
         this.comments = comments.stream().map(TripCommentDTO::new).collect(Collectors.toList());
         //this.comments = trip.getComments().stream().sorted().map(TripCommentDTO::new).collect(Collectors.toList());
         this.activities = trip.getActivities().stream().map(ActivityDTO::new).collect(Collectors.toList());
         this.members = trip.getMembers().stream().map(TripMemberDTO::new).collect(Collectors.toList());
-        //this.admins = trip.getAdmins().stream().map(UserDTO::new).collect(Collectors.toList());
-        //this.users = trip.getUsers().stream().filter(user -> !trip.getAdmins().contains(user)).map(UserDTO::new).collect(Collectors.toList());
         this.status = trip.getStatus().name();
     }
 
@@ -108,22 +103,6 @@ public class FullTripDTO {
     public void setComments(List<TripCommentDTO> comments) {
         this.comments = comments;
     }
-
-/*    public List<UserDTO> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserDTO> users) {
-        this.users = users;
-    }
-
-    public List<UserDTO> getAdmins() {
-        return admins;
-    }
-
-    public void setAdmins(List<UserDTO> admins) {
-        this.admins = admins;
-    }*/
 
     public List<ActivityDTO> getActivities() {
         return activities;

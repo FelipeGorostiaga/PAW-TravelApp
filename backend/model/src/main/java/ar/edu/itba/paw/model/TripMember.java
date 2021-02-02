@@ -88,5 +88,16 @@ public class TripMember {
     public int hashCode() {
         return Objects.hash(getTrip(), getUser(), getRole());
     }
+
+    @Override
+    public String toString() {
+        return "TripMember{" +
+                "id=" + id +
+                ", trip=" + trip.getId() +
+                ", user=" + user.getId() +
+                ", role=" + role +
+                ", comments=" + comments +
+                '}';
+    }
 }
 

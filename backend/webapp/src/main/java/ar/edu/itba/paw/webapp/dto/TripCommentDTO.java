@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class TripCommentDTO {
 
     private String comment;
-    private UserDTO user;
+    private TripMemberDTO member;
     private LocalDateTime createdOn;
 
     public TripCommentDTO() {
@@ -16,7 +16,7 @@ public class TripCommentDTO {
 
     public TripCommentDTO(TripComment tripComment) {
         comment = tripComment.getComment();
-        user = new UserDTO(tripComment.getMember().getUser());
+        member = new TripMemberDTO(tripComment.getMember());
         createdOn = tripComment.getCreatedOn();
     }
 
@@ -28,12 +28,12 @@ public class TripCommentDTO {
         this.comment = comment;
     }
 
-    public UserDTO getUser() {
-        return user;
+    public TripMemberDTO getMember() {
+        return member;
     }
 
-    public void setUser(UserDTO user) {
-        this.user = user;
+    public void setMember(TripMemberDTO member) {
+        this.member = member;
     }
 
     public LocalDateTime getCreatedOn() {

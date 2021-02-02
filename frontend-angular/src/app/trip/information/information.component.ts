@@ -5,13 +5,14 @@ import {AuthService} from "../../services/auth/auth.service";
 import {Router} from "@angular/router";
 import {ApiSearchService} from "../../services/api-search.service";
 import {Observable, Subject} from "rxjs";
-import {debounceTime, distinctUntilChanged, filter, switchMap, tap} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, filter, switchMap} from "rxjs/operators";
 import {User} from "../../model/user";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DomSanitizer} from "@angular/platform-browser";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 import {validImgExtension} from "../../profile/profile.component";
+import {TripRole} from "../../model/TripMember";
 
 @Component({
     selector: 'app-information',
@@ -229,9 +230,8 @@ export class InformationComponent implements OnInit {
         if (confirm("Are you sure you want to grant administrator role to " + user.firstname + " " + user.lastname + "?")) {
             this.tripService.grantAdminRole(this.trip, user).subscribe(
                 ok => {
-                    const index = this.trip.users.indexOf(user);
-                    this.trip.users.splice(index, 1);
-                    this.trip.admins.push(user);
+                    const index = this.trip.members.findIndex(member => member.user.id === user.id);
+                    this.trip.members[index].role = TripRole.ADMIN;
                 },
                 error => {
                     console.log(error);

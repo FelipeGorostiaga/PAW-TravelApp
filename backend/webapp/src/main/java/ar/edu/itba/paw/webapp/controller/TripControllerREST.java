@@ -187,14 +187,12 @@ public class TripControllerREST {
                     tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
                     DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());
         } catch (GooglePlacesException exception) {
-            System.out.println("Google maps exception");
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(new ErrorDTO("There was an error connecting to the GoogleMaps API", "googleMaps")).build();
         }
         if (trip != null) {
             return Response.ok(new TripDTO(trip)).build();
         }
-        System.out.println("Trip is NULL");
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
@@ -312,7 +310,6 @@ public class TripControllerREST {
             }).build();
         }
         if (tripService.isAdmin(trip, loggedUser)) {
-            //
             TripComment tripComment = tripCommentsService.create(loggedUser, trip, tripCommentForm.getComment());
             return Response.ok(new TripCommentDTO(tripComment)).build();
         }
