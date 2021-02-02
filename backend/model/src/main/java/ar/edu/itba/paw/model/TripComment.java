@@ -22,25 +22,17 @@ public class TripComment implements Comparable<TripComment>{
     @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Trip trip;
+/*    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Trip trip;*/
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.MERGE)
-    private User user;
+    private TripMember member;
 
-    public TripComment(Trip trip, String comment, User user, LocalDateTime createdOn) {
-        this.trip = trip;
+    public TripComment(Trip trip, String comment, TripMember member, LocalDateTime createdOn) {
+
         this.comment = comment;
-        this.user = user;
+        this.member = member;
         this.createdOn = createdOn;
-    }
-
-    public Trip getTrip() {
-        return trip;
-    }
-
-    public void setTrip(Trip trip) {
-        this.trip = trip;
     }
 
     public String getComment() {
@@ -51,12 +43,20 @@ public class TripComment implements Comparable<TripComment>{
         this.comment = comment;
     }
 
-    public User getUser() {
+/*    public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }*/
+
+    public TripMember getMember() {
+        return member;
+    }
+
+    public void setMember(TripMember member) {
+        this.member = member;
     }
 
     public long getId() {

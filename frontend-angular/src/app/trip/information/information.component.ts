@@ -100,7 +100,6 @@ export class InformationComponent implements OnInit {
                     reader.readAsDataURL(new Blob([data]));
                 },
                 error => {
-                    console.log(error);
                     this.loadingImage = false;
                     this.hasImage = false;
                 }

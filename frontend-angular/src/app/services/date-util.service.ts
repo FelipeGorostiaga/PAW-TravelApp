@@ -9,13 +9,23 @@ export class DateUtilService {
 
   convertToDateString(date): string {
     let dateString = "";
-    let day = date.getDate()
-    let month = date.getMonth() + 1
-    let year = date.getFullYear()
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
     if(month < 10){
-      dateString = `${day}/0${month}/${year}`;
+      if(day < 10) {
+        dateString = `0${day}/0${month}/${year}`;
+      }
+      else {
+        dateString = `${day}/0${month}/${year}`;
+      }
     }else{
-      dateString = `${day}/${month}/${year}`;
+      if(day < 10) {
+        dateString = `0${day}/${month}/${year}`;
+      }
+      else {
+        dateString = `${day}/0${month}/${year}`;
+      }
     }
     return dateString;
   }

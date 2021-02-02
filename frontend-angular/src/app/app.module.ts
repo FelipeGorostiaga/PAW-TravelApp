@@ -39,6 +39,7 @@ import {UserListItemComponent} from './trip/information/user-list-item/user-list
 import {AlertModule} from "ngx-bootstrap/alert";
 import {ModalModule} from "ngx-bootstrap/modal";
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
 
 
 @NgModule({
@@ -67,6 +68,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
         RespondJoinReqComponent,
         RespondInviteComponent,
         UserListItemComponent,
+        AdvancedSearchComponent,
 
     ],
     imports: [

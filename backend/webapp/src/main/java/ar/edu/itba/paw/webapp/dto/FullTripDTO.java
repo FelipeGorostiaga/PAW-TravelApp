@@ -3,50 +3,46 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
-import ar.edu.itba.paw.model.TripStatus;
-import ar.edu.itba.paw.webapp.utils.TripDateUtils;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class FullTripDTO {
 
     private Long id;
-    private Long adminId;
+    //private Long adminId;
     private Boolean isPrivate;
     private String name;
     private String description;
     private String startDate;
     private String endDate;
-    private int status;
+    private String status;
     private PlaceDTO startPlace;
     private List<TripCommentDTO> comments;
-    private List<UserDTO> users;
-    private List<UserDTO> admins;
+    private List<TripMemberDTO> members;
+    //private List<UserDTO> admins;
     private List<ActivityDTO> activities;
 
     public FullTripDTO() {
         // Empty constructor needed by JAX-RS
     }
 
-    public FullTripDTO(Trip trip) {
+    public FullTripDTO(Trip trip, List<TripComment> comments) {
         this.id = trip.getId();
         this.name = trip.getName();
         this.description = trip.getDescription();
         this.startDate = DateManipulation.changeDateFormat(trip.getStartDate());
         this.endDate = DateManipulation.changeDateFormat(trip.getEndDate());
-        this.adminId = trip.getAdminId();
+        //this.adminId = trip.getAdminId();
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
-        this.comments = trip.getComments().stream().sorted().map(TripCommentDTO::new).collect(Collectors.toList());
+        this.comments = comments.stream().map(TripCommentDTO::new).collect(Collectors.toList());
+        //this.comments = trip.getComments().stream().sorted().map(TripCommentDTO::new).collect(Collectors.toList());
         this.activities = trip.getActivities().stream().map(ActivityDTO::new).collect(Collectors.toList());
-        this.admins = trip.getAdmins().stream().map(UserDTO::new).collect(Collectors.toList());
-        this.users = trip.getUsers().stream().filter(user -> !trip.getAdmins().contains(user)).map(UserDTO::new).collect(Collectors.toList());
-        this.status = TripDateUtils.getTripStatus(trip);
+        this.members = trip.getMembers().stream().map(TripMemberDTO::new).collect(Collectors.toList());
+        //this.admins = trip.getAdmins().stream().map(UserDTO::new).collect(Collectors.toList());
+        //this.users = trip.getUsers().stream().filter(user -> !trip.getAdmins().contains(user)).map(UserDTO::new).collect(Collectors.toList());
+        this.status = trip.getStatus().name();
     }
 
     public Long getId() {
@@ -57,20 +53,20 @@ public class FullTripDTO {
         this.id = id;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Long getAdminId() {
-        return adminId;
+    public List<TripMemberDTO> getMembers() {
+        return members;
     }
 
-    public void setAdminId(Long adminId) {
-        this.adminId = adminId;
+    public void setMembers(List<TripMemberDTO> members) {
+        this.members = members;
     }
 
     public Boolean getPrivate() {
@@ -113,7 +109,7 @@ public class FullTripDTO {
         this.comments = comments;
     }
 
-    public List<UserDTO> getUsers() {
+/*    public List<UserDTO> getUsers() {
         return users;
     }
 
@@ -127,7 +123,7 @@ public class FullTripDTO {
 
     public void setAdmins(List<UserDTO> admins) {
         this.admins = admins;
-    }
+    }*/
 
     public List<ActivityDTO> getActivities() {
         return activities;

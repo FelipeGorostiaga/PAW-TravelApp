@@ -2,16 +2,11 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.TripStatus;
-import ar.edu.itba.paw.webapp.utils.TripDateUtils;
-
-import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
 
 public class TripDTO {
 
     private long id;
-    private long adminId;
+    //private long adminId;
     private PlaceDTO startPlace;
     private boolean isPrivate;
     private int membersAmount;
@@ -19,7 +14,7 @@ public class TripDTO {
     private String description;
     private String startDate;
     private String endDate;
-    private int status;
+    private String status;
 
     public TripDTO() {
         // Empty constructor needed by JAX-RS
@@ -31,19 +26,19 @@ public class TripDTO {
         this.description = trip.getDescription();
         this.startDate = DateManipulation.changeDateFormat(trip.getStartDate());
         this.endDate = DateManipulation.changeDateFormat(trip.getEndDate());
-        this.adminId = trip.getAdminId();
+        //this.adminId = trip.getAdminId();
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
-        this.membersAmount = trip.getUsers().size() + trip.getAdmins().size();
-        this.status = TripDateUtils.getTripStatus(trip);
+        this.membersAmount = trip.getMembers().size();
+        this.status = trip.getStatus().name();
 
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -79,13 +74,13 @@ public class TripDTO {
         this.id = id;
     }
 
-    public long getAdminId() {
+/*    public long getAdminId() {
         return adminId;
     }
 
     public void setAdminId(long adminId) {
         this.adminId = adminId;
-    }
+    }*/
 
     public String getName() {
         return name;

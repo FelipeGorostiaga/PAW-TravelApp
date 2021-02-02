@@ -3,10 +3,7 @@ package ar.edu.itba.paw.service;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.interfaces.UserService;
-import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.UserPicture;
-import ar.edu.itba.paw.model.UserRate;
+import ar.edu.itba.paw.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -67,7 +64,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findInvitableUsersByName(String name, Trip trip) {
         List<User> users = findByName(name);
-        return users.stream().filter(u -> !(trip.getUsers().contains(u) || trip.getAdmins().contains(u))).collect(Collectors.toList());
+        List<User> tripUsers = trip.getMembers().stream().map(TripMember::getUser).collect(Collectors.toList());
+        return users.stream().filter(u -> !tripUsers.contains(u)).collect(Collectors.toList());
     }
 
     @Override

@@ -2,22 +2,25 @@ package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "trips")
-public class Trip implements Comparable<Trip>{
+public class Trip implements Comparable<Trip> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trip_id_seq")
     @SequenceGenerator(sequenceName = "trip_id_seq", name = "trip_id_seq", allocationSize = 1)
     private long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private int status;
+    private TripStatus status;
 
-    @Column(nullable = false)
-    private long adminId;
+/*    @Column(nullable = false)
+    private long adminId;*/
 
     @Column(nullable = false)
     private boolean isPrivate;
@@ -35,10 +38,16 @@ public class Trip implements Comparable<Trip>{
     private LocalDate endDate;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name="place_id")
+    @JoinColumn(name = "place_id")
     private Place startPlace;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
+    private List<TripMember> members = new LinkedList<>();
+
+/*    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
+    private List<TripComment> comments = new LinkedList<>();*/
+
+/*    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
     @JoinTable(
             name = "Trip_Users",
             joinColumns = { @JoinColumn(name = "trip_id") },
@@ -53,6 +62,7 @@ public class Trip implements Comparable<Trip>{
             inverseJoinColumns = { @JoinColumn(name = "user_id") }
     )
     private Set<User> admins = new HashSet<>();
+    */
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
     private List<Activity> activities = new LinkedList<>();
@@ -60,36 +70,24 @@ public class Trip implements Comparable<Trip>{
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip")
     private TripPicture profilePicture;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
-    private List<TripComment> comments = new LinkedList<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripInvitation> pendingConfirmations;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripInvitation> invitations;
 
     /* package */ Trip() {
         // Just for Hibernate
     }
 
-    public Trip(long id, long adminId, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate,
-                boolean isPrivate) {
-        this(adminId, startPlace, name, description, startDate, endDate, isPrivate);
-        this.id = id;
-    }
-
-    public Trip(long adminId, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate,
-                boolean isPrivate) {
-        super();
-        this.adminId = adminId;
-        this.startPlace = startPlace;
+    public Trip(Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) {
         this.name = name;
         this.description = description;
+        this.startPlace = startPlace;
         this.startDate = startDate;
         this.endDate = endDate;
         this.isPrivate = isPrivate;
-        this.status = TripStatus.DUE.ordinal();
+        this.status = TripStatus.DUE;
     }
 
     public List<TripInvitation> getPendingConfirmations() {
@@ -116,13 +114,13 @@ public class Trip implements Comparable<Trip>{
         this.startPlace = startPlace;
     }
 
-    public long getAdminId() {
+  /*  public long getAdminId() {
         return adminId;
     }
 
     public void setAdminId(long adminId) {
         this.adminId = adminId;
-    }
+    }*/
 
     /*public long getStartPlaceId() {
         return startPlaceId;
@@ -192,20 +190,20 @@ public class Trip implements Comparable<Trip>{
         this.profilePicture = profilePicture;
     }
 
-    public List<TripComment> getComments() {
+/*    public List<TripComment> getComments() {
         return comments;
     }
 
     public void setComments(List<TripComment> comments) {
         this.comments = comments;
-    }
+    }*/
 
     @Override
     public int compareTo(Trip o) {
         return (this.startDate.isBefore(o.startDate)) ? -1 : 1;
     }
 
-    public Set<User> getUsers() {
+/*    public Set<User> getUsers() {
         return users;
     }
 
@@ -219,13 +217,13 @@ public class Trip implements Comparable<Trip>{
 
     public void setAdmins(Set<User> admins) {
         this.admins = admins;
-    }
+    }*/
 
-    public int getStatus() {
+    public TripStatus getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(TripStatus status) {
         this.status = status;
     }
 
@@ -240,5 +238,13 @@ public class Trip implements Comparable<Trip>{
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public List<TripMember> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<TripMember> members) {
+        this.members = members;
     }
 }

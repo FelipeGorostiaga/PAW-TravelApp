@@ -2,7 +2,10 @@ package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -44,17 +47,20 @@ public class User {
     @Column(length = 500)
     private String biography;
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<TripMember> trips = new LinkedList<>();
+
+    /*@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripComment> comments;*/
+
+    /*@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Trip> trips = new HashSet<>();
 
     @ManyToMany(mappedBy = "admins", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Trip> adminTrips = new HashSet<>();
+    private Set<Trip> adminTrips = new HashSet<>();*/
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     private UserPicture profilePicture;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TripComment> comments;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ratedUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserRate> myRates;
@@ -232,15 +238,23 @@ public class User {
         this.biography = biography;
     }
 
-    public List<TripComment> getComments() {
+    public List<TripMember> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(List<TripMember> trips) {
+        this.trips = trips;
+    }
+
+    /*public List<TripComment> getComments() {
         return comments;
     }
 
     public void setComments(List<TripComment> comments) {
         this.comments = comments;
-    }
+    }*/
 
-    public Set<Trip> getTrips() {
+    /*public Set<Trip> getTrips() {
         return trips;
     }
 
@@ -254,7 +268,7 @@ public class User {
 
     public void setAdminTrips(Set<Trip> adminTrips) {
         this.adminTrips = adminTrips;
-    }
+    }*/
 
     public List<UserRate> getMyRates() {
         return myRates;

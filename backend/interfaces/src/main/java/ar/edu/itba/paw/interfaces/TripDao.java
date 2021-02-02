@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface TripDao {
 
-    Trip create(long userId, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate);
+    Trip create(User creator, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate);
 
     Optional<Trip> findById(long id);
 
@@ -57,4 +57,8 @@ public interface TripDao {
     Optional<TripInvitation> findTripInvitationByUser(Trip trip, User user);
 
     void updateTripData(String tripName, String description, long tripId);
+
+    TripMember createTripMember(Trip trip, User user, TripMemberRole role);
+
+    void updateRoleToAdmin(long tripId, long invitedUserId);
 }

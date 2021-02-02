@@ -19,7 +19,7 @@ public interface TripService {
 
     List<Trip> findByName(String name);
 
-    Set<Trip> getAllUserTrips(User user);
+    // Set<Trip> getAllUserTrips(User user);
 
     List<Place> findTripPlaces(Trip trip);
 
@@ -61,10 +61,6 @@ public interface TripService {
 
     Boolean isWaitingJoinTripConfirmation(Trip trip, User user);
 
-    boolean isAdmin(Trip trip, User loggedUser);
-
-    boolean isMember(Trip trip, User user);
-
     Optional<TripInvitation> findTripInvitationByToken(String token);
 
     void acceptOrRejectTripInvitation(String token, boolean accepted, User invitedUser, Trip trip);
@@ -78,4 +74,12 @@ public interface TripService {
     void grantAdminRole(long tripId, long invitedUserId);
 
     boolean traveledTogether(Trip trip, User ratedUser, User ratedBy);
+
+    boolean isCreator(Trip trip, User loggedUser);
+
+    boolean isAdmin(Trip trip, User loggedUser);
+
+    boolean isMember(Trip trip, User user);
+
+    List<Trip> getUserTrips(User user);
 }

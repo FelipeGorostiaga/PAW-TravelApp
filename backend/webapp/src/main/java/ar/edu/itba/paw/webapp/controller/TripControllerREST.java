@@ -82,7 +82,7 @@ public class TripControllerREST {
     public Response getTrip(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        return Response.ok(new FullTripDTO(tripOptional.get())).build();
+        return Response.ok(new FullTripDTO(tripOptional.get(), tripService.getTripComments(tripOptional.get().getId()))).build();
     }
 
 
@@ -144,10 +144,8 @@ public class TripControllerREST {
         User loggedUser = securityUserService.getLoggedUser();
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         Trip trip = tripOptional.get();
-        Set<User> admins = trip.getAdmins();
-        Optional<User> creatorOptional = userService.findById(trip.getAdminId());
-        creatorOptional.ifPresent(admins::add);
-        if (admins.stream().noneMatch(a -> a.getId() == loggedUser.getId())) {
+        // OR IS ADMIN?
+        if (!tripService.isCreator(trip, loggedUser)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         if (imageFile != null) {
@@ -179,21 +177,24 @@ public class TripControllerREST {
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
         User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
-        if (!violations.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCreateForm>>>(violations) {
-            }).build();
+        if (!violations.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCreateForm>>>(violations) {}).build();
+        }
+        System.out.println(tripCreateForm);
         Trip trip;
         try {
             trip = tripService.create(loggedUser.getId(), tripCreateForm.getLatitude(), tripCreateForm.getLongitude(), tripCreateForm.getName(),
                     tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
                     DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());
         } catch (GooglePlacesException exception) {
+            System.out.println("Google maps exception");
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(new ErrorDTO("There was an error connecting to the GoogleMaps API", "googleMaps")).build();
         }
         if (trip != null) {
             return Response.ok(new TripDTO(trip)).build();
         }
+        System.out.println("Trip is NULL");
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
@@ -215,7 +216,7 @@ public class TripControllerREST {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (tripOptional.isPresent()) {
-            if (loggedUser.getId() == tripOptional.get().getAdminId()) {
+            if (tripService.isCreator(tripOptional.get(), loggedUser)) {
                 tripService.deleteTrip(tripId);
                 return Response.ok().build();
             }
@@ -224,21 +225,26 @@ public class TripControllerREST {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
+
+    // TODO: front-end
     @POST
-    @Path("/{id}/remove/{userId}")
-    public Response removeFromTrip(@PathParam("id") final long tripId) {
+    @Path("/{id}/exit")
+    public Response exitTrip(@PathParam("id") final long tripId) {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         Trip trip = tripOptional.get();
-        ;
-        if (!trip.getAdmins().contains(loggedUser) && !trip.getUsers().contains(loggedUser) && trip.getAdminId() != loggedUser.getId()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("User is not part of this trip", "invalid-user")).build();
+        if (tripService.isMember(trip, loggedUser)) {
+            tripService.removeUserFromTrip(loggedUser.getId(), tripId);
+            return Response.ok().build();
         }
-        tripService.removeUserFromTrip(loggedUser.getId(), tripId);
-        return Response.ok().build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("User is not part of this trip", "invalid-user")).build();
     }
 
+    /*  public Response kickUserFromTrip() {
+        // TODO
+      }
+  */
     @GET
     @Path("/{id}/image")
     @Produces(value = {"image/png", "image/jpeg"})
@@ -283,17 +289,14 @@ public class TripControllerREST {
     public Response getTripComments(@PathParam("id") final long tripId) {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if (tripOptional.isPresent()) {
-            Trip t = tripOptional.get();
-            if (t.getUsers().contains(loggedUser)) {
-                List<TripCommentDTO> comments = tripService.getTripComments(tripId).stream().map(TripCommentDTO::new).collect(Collectors.toList());
-                return Response.ok(new GenericEntity<List<TripCommentDTO>>(comments) {
-                }).build();
-            }
-            return Response.status(Response.Status.FORBIDDEN).build();
-        }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        Trip t = tripOptional.get();
+        if (!tripService.isMember(t, loggedUser)) return Response.status(Response.Status.FORBIDDEN).build();
+        List<TripCommentDTO> comments = tripService.getTripComments(tripId).stream().map(TripCommentDTO::new).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TripCommentDTO>>(comments) {
+        }).build();
     }
+
 
     @POST
     @Path("/{id}/comments/add")
@@ -308,7 +311,8 @@ public class TripControllerREST {
             return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCommentForm>>>(violations) {
             }).build();
         }
-        if (trip.getUsers().contains(loggedUser) || trip.getAdminId() == loggedUser.getId()) {
+        if (tripService.isAdmin(trip, loggedUser)) {
+            //
             TripComment tripComment = tripCommentsService.create(loggedUser, trip, tripCommentForm.getComment());
             return Response.ok(new TripCommentDTO(tripComment)).build();
         }
@@ -337,7 +341,7 @@ public class TripControllerREST {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         Trip trip = tripOptional.get();
-        if (loggedUser.getId() != trip.getAdminId()) return Response.status(Response.Status.FORBIDDEN).build();
+        if (!tripService.isAdmin(trip, loggedUser)) return Response.status(Response.Status.FORBIDDEN).build();
         activityCreateForm.setTrip(trip);
         Set<ConstraintViolation<ActivityCreateForm>> violations = validator.validate(activityCreateForm);
         if (!violations.isEmpty()) {
@@ -373,7 +377,7 @@ public class TripControllerREST {
         User user = securityUserService.getLoggedUser();
         if (!tripOpt.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         Trip t = tripOpt.get();
-        if (t.getUsers().contains(user) || t.getAdmins().contains(user)) {
+        if (tripService.isMember(t, user)) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("User is already part of the trip", "error")).build();
         }
         List<TripPendingConfirmation> pendingConfirmations = tripService.getTripJoinRequests(t.getId())
@@ -398,8 +402,8 @@ public class TripControllerREST {
         Optional<TripPendingConfirmation> pendingConfirmationOptional = tripService.findJoinRequestByToken(token);
         if (!pendingConfirmationOptional.isPresent() || !tripOptional.isPresent())
             return Response.status(Response.Status.NOT_FOUND).build();
-        if (!tripOptional.get().getAdmins().contains(loggedUser))
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+        if (tripService.isAdmin(tripOptional.get(), loggedUser))
+            return Response.status(Response.Status.FORBIDDEN).build();
         if (pendingConfirmationOptional.get().isEdited())
             return Response.status(Response.Status.CONFLICT).entity(new ErrorDTO("Request already responded by another trip admin", "edited")).build();
         if (tripService.updateJoinRequest(tripOptional.get(), loggedUser, token, accepted, pendingConfirmationOptional.get().getRequestingUser())) {
@@ -447,9 +451,9 @@ public class TripControllerREST {
             return Response.status(Response.Status.NOT_FOUND).build();
         User invitedUser = userOptional.get();
         Trip trip = tripOptional.get();
-        if (!trip.getAdmins().contains(loggedUser)) return Response.status(Response.Status.FORBIDDEN)
+        if (!tripService.isAdmin(trip, loggedUser)) return Response.status(Response.Status.FORBIDDEN)
                 .entity(new ErrorDTO("You need to be an admin to invite users", "permission-denied")).build();
-        if (trip.getAdmins().contains(invitedUser) || trip.getUsers().contains(invitedUser)) {
+        if (tripService.isMember(trip, invitedUser)) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("User is already part of the trip", "isMember")).build();
         }
         Optional<TripInvitation> tripInvitation = tripService.findTripInvitationByUser(tripOptional.get(), userOptional.get());

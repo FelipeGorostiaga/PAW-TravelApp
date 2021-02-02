@@ -22,9 +22,11 @@ public class TripHibernateDao implements TripDao {
     EntityManager em;
 
     @Override
-    public Trip create(long userId, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) {
-        Trip trip = new Trip(userId, startPlace, name, description, startDate, endDate, isPrivate);
+    public Trip create(User creator, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) {
+        Trip trip = new Trip(startPlace, name, description, startDate, endDate, isPrivate);
         em.persist(trip);
+        TripMember creatorMember = new TripMember(trip, creator, TripMemberRole.CREATOR);
+        em.persist(creatorMember);
         return trip;
     }
 
@@ -137,6 +139,23 @@ public class TripHibernateDao implements TripDao {
         query.setParameter("tripName", tripName);
         query.setParameter("description", description);
         query.setParameter("tripId", tripId);
+        query.executeUpdate();
+    }
+
+
+    @Override
+    public TripMember createTripMember(Trip trip, User user, TripMemberRole role) {
+        TripMember member = new TripMember(trip, user, role);
+        em.persist(member);
+        return member;
+    }
+
+    @Override
+    public void updateRoleToAdmin(long tripId, long userId) {
+        Query query = em.createQuery("UPDATE TripMember set role = :adminRole where trip.id = :tripId and user.id = :userId");
+        query.setParameter("adminRole", TripMemberRole.MEMBER.name());
+        query.setParameter("tripId", tripId);
+        query.setParameter("userId", userId);
         query.executeUpdate();
     }
 
@@ -265,7 +284,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<TripComment> getTripComments(long tripId) {
-        final TypedQuery<TripComment> query = em.createQuery("From TripComment as tc where tc.trip.id = :tripId", TripComment.class);
+        final TypedQuery<TripComment> query = em.createQuery("From TripComment as tc where tc.member.trip.id = :tripId", TripComment.class);
         query.setParameter("tripId", tripId);
         return query.getResultList();
     }

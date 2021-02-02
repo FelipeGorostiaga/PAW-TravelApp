@@ -22,27 +22,21 @@
     <agm-marker [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude"></agm-marker>
 </agm-map>
 
-<!-- todo: user tile component-->
-<div class="list-group" style="margin-top: 40px;">
-    <div *ngFor="let admin of trip?.admins" class="list-group-item list-group-item-action flex-column align-items-start">
+<div class="list-group" style="margin-top: 40px">
+    <div *ngFor="let member of trip?.members" class="list-group-item">
         <div class="d-flex w-100 justify-content-between">
-            <a routerLink="/profile/{{admin.id}}"><h5 class="mb-1"><i class="fa fa-user" style="margin-right: 15px;"></i>{{admin?.firstname}} {{admin?.lastname}}</h5></a>
-            <small style="color: darkgreen">Administrator</small>
-        </div>
-    </div>
-    <div *ngFor="let user of trip?.users"
-       class="list-group-item list-group-item-action flex-column align-items-start">
-        <div class="d-flex w-100 justify-content-between">
-            <a routerLink="/profile/{{user.id}}"><h5 class="mb-1"><i class="fa fa-user" style="margin-right: 15px;"></i>{{user?.firstname}} {{user?.lastname}}</h5></a>
-            <button *ngIf="isAdmin" (click)="grantAdminRole($event, user)" tooltip="Make trip administrator"><!--<i class="fa fa-plus-circle"></i>--><i class="fa fa-user-plus"></i></button>
+            <a routerLink="/profile/{{member.user.id}}"><h5 class="mb-1"><i class="fa fa-user" style="margin-right: 15px;"></i>{{member.user.firstname}} {{member.user.lastname}}</h5></a>
+            <small *ngIf="member.role === 'CREATOR'" style="color: darkorange">{{member.role}}</small>
+            <small *ngIf="member.role === 'ADMIN'" style="color: darkgreen">{{member.role}}</small>
+            <button *ngIf="isAdmin && member.role === 'MEMBER'" (click)="grantAdminRole($event, member.user)" tooltip="Make trip administrator"><i class="fa fa-user-plus"></i></button>
         </div>
     </div>
 </div>
+
+
 <div style="margin-top: 20px;">
     <button *ngIf="isAdmin || isMember" class="btn btn-danger" (click)="exitTrip()">Exit</button>
-    <button *ngIf="!loading && !isMember && !waitingConfirmation" class="btn-primary btn" (click)="requestJoinTrip()">
-        Request to join
-    </button>
+    <button *ngIf="!loading && !isMember && !waitingConfirmation" class="btn-primary btn" (click)="requestJoinTrip()">Request to join</button>
 </div>
 <div *ngIf="isAdmin">
     <button class="btn btn-primary" (click)="openModal(template)">Invite User</button>

@@ -17,8 +17,10 @@ public class DateManipulation {
     public static LocalDate stringToLocalDate(String dateString) {
         try {
             LocalDate date = LocalDate.parse(dateString, formatter);
+            System.out.println("String converted to date correctly");
             return date;
         } catch (DateTimeParseException e) {
+            System.out.println("Date manipulation exception");
             return null;
         }
     }
@@ -26,11 +28,12 @@ public class DateManipulation {
     public static String changeDateFormat(LocalDate date) {
         return date.format(formatter);
     }
+
     public static String changeDateTimeFormat(LocalDateTime date) {
-        return date.format(formatter);
+        return date.format(timeFormatter);
     }
 
-        public static boolean validate(String dateString) {
+    public static boolean validate(String dateString) {
         try {
             LocalDate date = LocalDate.parse(dateString, formatter);
         } catch (DateTimeParseException e) {

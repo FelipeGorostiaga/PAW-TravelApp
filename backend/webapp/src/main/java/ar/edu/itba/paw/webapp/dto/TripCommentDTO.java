@@ -16,7 +16,7 @@ public class TripCommentDTO {
 
     public TripCommentDTO(TripComment tripComment) {
         comment = tripComment.getComment();
-        user = new UserDTO(tripComment.getUser());
+        user = new UserDTO(tripComment.getMember().getUser());
         createdOn = tripComment.getCreatedOn();
     }
 

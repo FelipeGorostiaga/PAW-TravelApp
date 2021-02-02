@@ -10,6 +10,7 @@ import se.walkercrou.places.exception.GooglePlacesException;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -44,13 +45,10 @@ public class TripServiceImpl implements TripService {
                        LocalDate startDate, LocalDate endDate, boolean isPrivate) throws GooglePlacesException {
         List<se.walkercrou.places.Place> googleMapsPlaces = googleMapsService.queryGoogleMapsPlaces(latitude, longitude);
         Place startPlace = googleMapsService.createGooglePlaceReference(googleMapsPlaces);
-        Trip t;
         Optional<User> u = ud.findById(userId);
         if (u.isPresent()) {
-            t = td.create(userId, startPlace, name, description, startDate, endDate, isPrivate);
-            // t.getUsers().add(u.get());
-            t.getAdmins().add(u.get());
-            return t;
+            System.out.println("User is present");
+            return td.create(u.get(), startPlace, name, description, startDate, endDate, isPrivate);
         }
         return null;
     }
@@ -76,11 +74,8 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public Set<Trip> getAllUserTrips(User user) {
-        Set<Trip> trips = new HashSet<>(user.getTrips());
-        List<Trip> createdTrips = td.findUserCreatedTrips(user.getId());
-        trips.addAll(createdTrips);
-        return trips;
+    public List<Trip> getUserTrips(User user) {
+        return user.getTrips().stream().map(TripMember::getTrip).collect(Collectors.toList());
     }
 
     @Override
@@ -94,9 +89,9 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public void addActivityToTrip(long actId, long tripId) {
+    public void addActivityToTrip(long activityId, long tripId) {
         Optional<Trip> ot = td.findById(tripId);
-        Optional<Activity> oa = ad.findById(actId);
+        Optional<Activity> oa = ad.findById(activityId);
         if (ot.isPresent() && oa.isPresent()) {
             ot.get().getActivities().add(oa.get());
         }
@@ -104,21 +99,28 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void addUserToTrip(long userId, long tripId) {
-        Optional<User> ou = ud.findById(userId);
-        Optional<Trip> ot = td.findById(tripId);
-        if (ou.isPresent() && ot.isPresent()) {
-            ou.get().getTrips().add(ot.get());
-            ot.get().getUsers().add(ou.get());
+        Optional<User> userOptional = ud.findById(userId);
+        Optional<Trip> tripOptional = td.findById(tripId);
+        if (userOptional.isPresent() && tripOptional.isPresent()) {
+            Trip trip = tripOptional.get();
+            User user = userOptional.get();
+            TripMember tripMember = createTripMember(trip, user, TripMemberRole.MEMBER);
+            trip.getMembers().add(tripMember);
+            user.getTrips().add(tripMember);
         }
+    }
+
+    private TripMember createTripMember(Trip trip, User user, TripMemberRole role) {
+        return td.createTripMember(trip, user, role);
     }
 
     @Override
     public void removeUserFromTrip(long userId, long tripId) {
-        Optional<User> ou = ud.findById(userId);
-        Optional<Trip> ot = td.findById(tripId);
-        if (ou.isPresent() && ot.isPresent()) {
-            ou.get().getTrips().remove(ot.get());
-            ot.get().getUsers().remove(ou.get());
+        Optional<User> userOptional = ud.findById(userId);
+        Optional<Trip> tripOptional = td.findById(tripId);
+        if (userOptional.isPresent() && tripOptional.isPresent()) {
+            tripOptional.get().getMembers().removeIf(member -> member.getUser().equals(userOptional.get()));
+            userOptional.get().getTrips().removeIf(member -> member.getTrip().equals(tripOptional.get()));
         }
     }
 
@@ -132,12 +134,16 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void addCommentToTrip(long commentId, long tripId) {
+    }
+/*
+    @Override
+    public void addCommentToTrip(long commentId, long tripId) {
         Optional<TripComment> otc = tcd.findById(commentId);
         Optional<Trip> ot = td.findById(tripId);
         if (otc.isPresent() && ot.isPresent()) {
             ot.get().getComments().add(otc.get());
         }
-    }
+    }*/
 
     @Override
     public void deleteTripActivity(long activityId, long tripId) {
@@ -259,14 +265,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void grantAdminRole(long tripId, long invitedUserId) {
-        Optional<Trip> tripOptional = findById(tripId);
-        Optional<User> userOptional = ud.findById(invitedUserId);
-        if (tripOptional.isPresent() && userOptional.isPresent()) {
-            Trip t = tripOptional.get();
-            User u = userOptional.get();
-            t.getAdmins().add(u);
-            t.getUsers().remove(u);
-        }
+        td.updateRoleToAdmin(tripId, invitedUserId);
     }
 
     @Override
@@ -274,14 +273,19 @@ public class TripServiceImpl implements TripService {
         return isMember(trip, ratedUser) && isMember(trip, ratedBy);
     }
 
+    public boolean isCreator(Trip trip, User user) {
+        return trip.getMembers().stream().anyMatch(member -> member.getUser().equals(user) && member.getRole().equals(TripMemberRole.CREATOR));
+    }
+
     @Override
     public boolean isAdmin(Trip trip, User user) {
-        return trip.getAdminId() == user.getId() || trip.getAdmins().contains(user);
+        return trip.getMembers().stream().anyMatch(member -> member.getUser().equals(user) && (
+                member.getRole().equals(TripMemberRole.ADMIN) || member.getRole().equals(TripMemberRole.CREATOR)));
     }
 
     @Override
     public boolean isMember(Trip trip, User user) {
-        return isAdmin(trip, user) || trip.getUsers().contains(user);
+        return trip.getMembers().stream().anyMatch(member -> member.getUser().equals(user));
     }
 
 }

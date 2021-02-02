@@ -5,6 +5,7 @@ import {User} from "../model/user";
 import {AuthService} from "../services/auth/auth.service";
 import {ApiTripService} from "../services/api-trip.service";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
+import {TripRole} from "../model/TripMember";
 
 @Component({
     selector: 'app-trip',
@@ -30,15 +31,18 @@ export class TripComponent implements OnInit {
     }
 
     ngOnInit() {
+
         this.spinner.show();
         this.selectedIndex = 0;
         this.tripId = Number(this.route.snapshot.paramMap.get("id"));
         this.loggedUser = this.authService.getLoggedUser();
         this.ts.getTrip(this.tripId).subscribe(
             res => {
+                console.log(res);
                 this.trip = res;
-                this.isAdmin =  !!this.trip.admins.find(admin => admin.id === this.loggedUser.id);
-                this.isMember = !!(this.isAdmin || this.trip.users.find(user => user.id === this.loggedUser.id));
+                let members = this.trip.members;
+                this.isAdmin = !!members.find(member => member.role === TripRole.ADMIN && member.user.id === this.loggedUser.id);
+                this.isMember = !!(this.isAdmin || members.find(member => member.user.id === this.loggedUser.id));
                 this.spinner.hide();
                 this.loading = false;
                 console.log("Is admin: " + this.isAdmin);

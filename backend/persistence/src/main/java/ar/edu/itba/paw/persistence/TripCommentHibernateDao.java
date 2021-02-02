@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.TripCommentsDao;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
+import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
@@ -18,8 +19,8 @@ public class TripCommentHibernateDao implements TripCommentsDao {
     EntityManager em;
 
     @Override
-    public TripComment create(User user, Trip trip, String comment) {
-        TripComment tc = new TripComment(trip, comment, user, LocalDateTime.now());
+    public TripComment create(TripMember member, Trip trip, String comment) {
+        TripComment tc = new TripComment(trip, comment, member, LocalDateTime.now());
         em.persist(tc);
         return tc;
     }

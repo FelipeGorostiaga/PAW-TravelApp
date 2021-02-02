@@ -3,6 +3,7 @@ package ar.edu.itba.paw.service;
 
 import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.User;
 import org.simplejavamail.MailException;
 import org.simplejavamail.email.Email;
@@ -133,8 +134,8 @@ public class MailingServiceImpl implements MailingService {
         ctx.setVariable("acceptedURL", acceptURL);
         ctx.setVariable("deniedURL", denyURL);
         String html = htmlTemplateEngine.process(JOIN_REQUEST_TEMPLATE, ctx);
-        List<Recipient> recipients = t.getAdmins().stream()
-                .map(u -> new Recipient(u.getFirstname() + u.getLastname(), u.getEmail(), null))
+        List<Recipient> recipients = t.getMembers().stream()
+                .map(TripMember::getUser).map(u -> new Recipient(u.getFirstname() + u.getLastname(), u.getEmail(), null))
                 .collect(Collectors.toList());
         sendMail(recipients, html, subject);
     }
