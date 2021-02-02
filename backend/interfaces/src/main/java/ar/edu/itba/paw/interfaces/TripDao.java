@@ -34,10 +34,6 @@ public interface TripDao {
 
     List<Trip> getAllTripsPerPage(int pageNum);
 
-    List<User> getTripUsers(long tripId);
-
-    List<User> getTripAdmins(long tripId);
-
     TripPendingConfirmation createPendingConfirmation(Trip trip, User user, String token);
 
     List<TripPendingConfirmation> getTripJoinRequests(long tripId);

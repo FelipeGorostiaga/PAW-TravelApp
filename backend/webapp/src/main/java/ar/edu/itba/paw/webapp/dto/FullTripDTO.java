@@ -4,7 +4,9 @@ import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class FullTripDTO {
@@ -18,7 +20,7 @@ public class FullTripDTO {
     private String status;
     private PlaceDTO startPlace;
     private List<TripCommentDTO> comments;
-    private List<TripMemberDTO> members;
+    private Set<TripMemberDTO> members;
     private List<ActivityDTO> activities;
 
     public FullTripDTO() {
@@ -34,9 +36,8 @@ public class FullTripDTO {
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
         this.comments = comments.stream().map(TripCommentDTO::new).collect(Collectors.toList());
-        //this.comments = trip.getComments().stream().sorted().map(TripCommentDTO::new).collect(Collectors.toList());
         this.activities = trip.getActivities().stream().map(ActivityDTO::new).collect(Collectors.toList());
-        this.members = trip.getMembers().stream().map(TripMemberDTO::new).collect(Collectors.toList());
+        this.members = trip.getMembers().stream().map(TripMemberDTO::new).collect(Collectors.toSet());
         this.status = trip.getStatus().name();
     }
 
@@ -56,11 +57,11 @@ public class FullTripDTO {
         this.status = status;
     }
 
-    public List<TripMemberDTO> getMembers() {
+    public Set<TripMemberDTO> getMembers() {
         return members;
     }
 
-    public void setMembers(List<TripMemberDTO> members) {
+    public void setMembers(Set<TripMemberDTO> members) {
         this.members = members;
     }
 

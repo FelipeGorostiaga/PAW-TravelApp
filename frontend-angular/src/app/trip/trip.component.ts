@@ -38,10 +38,10 @@ export class TripComponent implements OnInit {
         this.loggedUser = this.authService.getLoggedUser();
         this.ts.getTrip(this.tripId).subscribe(
             res => {
-                console.log(res);
                 this.trip = res;
                 let members = this.trip.members;
-                this.isAdmin = !!members.find(member => member.role === TripRole.ADMIN && member.user.id === this.loggedUser.id);
+                this.isAdmin = !!members.find(member => (member.role === TripRole.CREATOR || member.role === TripRole.ADMIN) &&
+                    member.user.id === this.loggedUser.id);
                 this.isMember = !!(this.isAdmin || members.find(member => member.user.id === this.loggedUser.id));
                 this.spinner.hide();
                 this.loading = false;

@@ -46,10 +46,7 @@ public class TripServiceImpl implements TripService {
         List<se.walkercrou.places.Place> googleMapsPlaces = googleMapsService.queryGoogleMapsPlaces(latitude, longitude);
         Place startPlace = googleMapsService.createGooglePlaceReference(googleMapsPlaces);
         Optional<User> u = ud.findById(userId);
-        if (u.isPresent()) {
-            return td.create(u.get(), startPlace, name, description, startDate, endDate, isPrivate);
-        }
-        return null;
+        return u.map(user -> td.create(user, startPlace, name, description, startDate, endDate, isPrivate)).orElse(null);
     }
 
     @Override
@@ -74,7 +71,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<Trip> getUserTrips(User user) {
-        return user.getTrips().stream().map(TripMember::getTrip).collect(Collectors.toList());
+        return user.getTrips().stream().map(TripMember::getTrip).distinct().collect(Collectors.toList());
     }
 
     @Override
@@ -132,19 +129,6 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public void addCommentToTrip(long commentId, long tripId) {
-    }
-/*
-    @Override
-    public void addCommentToTrip(long commentId, long tripId) {
-        Optional<TripComment> otc = tcd.findById(commentId);
-        Optional<Trip> ot = td.findById(tripId);
-        if (otc.isPresent() && ot.isPresent()) {
-            ot.get().getComments().add(otc.get());
-        }
-    }*/
-
-    @Override
     public void deleteTripActivity(long activityId, long tripId) {
         Optional<Trip> ot = td.findById(tripId);
         Optional<Activity> oa = ad.findById(activityId);
@@ -180,16 +164,6 @@ public class TripServiceImpl implements TripService {
         List<TripComment> comments = td.getTripComments(tripId);
         Collections.sort(comments);
         return comments;
-    }
-
-    @Override
-    public List<User> getTripUsers(long tripId) {
-        return this.td.getTripUsers(tripId);
-    }
-
-    @Override
-    public List<User> getTripAdmins(long tripId) {
-        return td.getTripAdmins(tripId);
     }
 
     @Override

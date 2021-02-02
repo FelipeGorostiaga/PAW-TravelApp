@@ -18,10 +18,8 @@ export class Trip {
 }
 
 export class FullTrip extends Trip {
-
     activities: Activity[];
     comments: Comment[];
     members: TripMember[];
     admins: User[];
-
 }

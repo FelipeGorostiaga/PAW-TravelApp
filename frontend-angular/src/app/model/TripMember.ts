@@ -16,7 +16,7 @@ export class TripMember {
 }
 
 export enum TripRole {
-    CREATOR,
-    ADMIN,
-    MEMBER
+    CREATOR = "CREATOR",
+    ADMIN = "ADMIN",
+    MEMBER = "MEMBER"
 }

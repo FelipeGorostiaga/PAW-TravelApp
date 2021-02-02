@@ -19,9 +19,6 @@ public class Trip implements Comparable<Trip> {
     @Column(nullable = false)
     private TripStatus status;
 
-/*    @Column(nullable = false)
-    private long adminId;*/
-
     @Column(nullable = false)
     private boolean isPrivate;
 
@@ -43,26 +40,6 @@ public class Trip implements Comparable<Trip> {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
     private List<TripMember> members = new LinkedList<>();
-
-/*    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
-    private List<TripComment> comments = new LinkedList<>();*/
-
-/*    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "Trip_Users",
-            joinColumns = { @JoinColumn(name = "trip_id") },
-            inverseJoinColumns = { @JoinColumn(name = "user_id") }
-    )
-    private Set<User> users = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "Trip_Admins",
-            joinColumns = { @JoinColumn(name = "trip_id") },
-            inverseJoinColumns = { @JoinColumn(name = "user_id") }
-    )
-    private Set<User> admins = new HashSet<>();
-    */
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
     private List<Activity> activities = new LinkedList<>();
@@ -113,22 +90,6 @@ public class Trip implements Comparable<Trip> {
     public void setStartPlace(Place startPlace) {
         this.startPlace = startPlace;
     }
-
-  /*  public long getAdminId() {
-        return adminId;
-    }
-
-    public void setAdminId(long adminId) {
-        this.adminId = adminId;
-    }*/
-
-    /*public long getStartPlaceId() {
-        return startPlaceId;
-    }
-
-    public void setStartPlaceId(long startPlaceId) {
-        this.startPlaceId = startPlaceId;
-    }*/
 
     public long getId() {
         return id;
@@ -190,34 +151,10 @@ public class Trip implements Comparable<Trip> {
         this.profilePicture = profilePicture;
     }
 
-/*    public List<TripComment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<TripComment> comments) {
-        this.comments = comments;
-    }*/
-
     @Override
     public int compareTo(Trip o) {
         return (this.startDate.isBefore(o.startDate)) ? -1 : 1;
     }
-
-/*    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
-    public Set<User> getAdmins() {
-        return admins;
-    }
-
-    public void setAdmins(Set<User> admins) {
-        this.admins = admins;
-    }*/
 
     public TripStatus getStatus() {
         return status;

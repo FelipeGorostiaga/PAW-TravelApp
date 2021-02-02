@@ -82,32 +82,8 @@ public class TripControllerREST {
     public Response getTrip(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        System.out.println(tripOptional.get());
         return Response.ok(new FullTripDTO(tripOptional.get(), tripService.getTripComments(tripOptional.get().getId()))).build();
-    }
-
-
-    @GET
-    @Path("/{id}/admins")
-    public Response getTripAdmins(@PathParam("id") final long tripId) {
-        Optional<Trip> trip = tripService.findById(tripId);
-        if (!trip.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        List<UserDTO> users = this.tripService.getTripAdmins(tripId).stream().map(UserDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<UserDTO>>(users) {
-        }).build();
-    }
-
-    @GET
-    @Path("/{id}/users")
-    public Response getTripUsers(@PathParam("id") final long tripId) {
-        Optional<Trip> trip = tripService.findById(tripId);
-        if (!trip.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        List<UserDTO> users = this.tripService.getTripUsers(tripId).stream().map(UserDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<UserDTO>>(users) {
-        }).build();
     }
 
 
@@ -130,7 +106,6 @@ public class TripControllerREST {
         }).build();
     }
 
-
     @POST
     @Path("/{id}/edit")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -144,7 +119,6 @@ public class TripControllerREST {
         User loggedUser = securityUserService.getLoggedUser();
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         Trip trip = tripOptional.get();
-        // OR IS ADMIN?
         if (!tripService.isCreator(trip, loggedUser)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
@@ -243,6 +217,7 @@ public class TripControllerREST {
         // TODO
       }
   */
+
     @GET
     @Path("/{id}/image")
     @Produces(value = {"image/png", "image/jpeg"})

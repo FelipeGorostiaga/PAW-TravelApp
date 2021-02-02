@@ -31,8 +31,6 @@ public interface TripService {
 
     void deleteTrip(long tripId);
 
-    void addCommentToTrip(long commentId, long tripId);
-
     void deleteTripActivity(long activityId, long tripId);
 
     int countAllTrips();
@@ -44,10 +42,6 @@ public interface TripService {
     List<Trip> findWithFilters(Map<String, Object> filterMap);
 
     List<TripComment> getTripComments(long tripId);
-
-    List<User> getTripUsers(long tripId);
-
-    List<User> getTripAdmins(long tripId);
 
     boolean createJoinRequest(Trip trip, User user, String token);
 

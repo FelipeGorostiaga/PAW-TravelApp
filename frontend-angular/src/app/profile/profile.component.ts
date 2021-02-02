@@ -52,10 +52,10 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.spinner.show();
         this.submitted = false;
         this.loadingImage = true;
         this.loading = true;
-        this.spinner.show();
         this.loggedUser = this.authService.getLoggedUser();
         const profileId = Number(this.route.snapshot.paramMap.get("id"));
         this.isProfileOwner = this.loggedUser.id === profileId;
@@ -84,6 +84,7 @@ export class ProfileComponent implements OnInit {
                 this.user = data.user;
                 this.editProfileForm.get('biography').setValue(this.userProfile.user.biography);
                 this.calculateUserRate();
+                this.spinner.hide();
             },
             error => {
                 console.log(error);
@@ -108,11 +109,7 @@ export class ProfileComponent implements OnInit {
                 this.hasImage = false;
             }
         );
-
-
-        this;
         this.loading = false;
-        this.spinner.hide();
     }
 
 

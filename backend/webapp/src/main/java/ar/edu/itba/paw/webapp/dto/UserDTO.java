@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.User;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class UserDTO {
 
@@ -93,5 +94,18 @@ public class UserDTO {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserDTO)) return false;
+        UserDTO userDTO = (UserDTO) o;
+        return getId() == userDTO.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
