@@ -334,19 +334,27 @@ public class UserControllerREST {
 
     @GET
     @Path("/{userId}/pending/invitations")
-    public Response getUserPendingInvitations(@PathParam("userId") final long userId) {
-        return Response.ok().build();
+    public Response getUserInvitations(@PathParam("userId") final long userId) {
+        Optional<User> userOptional = userService.findById(userId);
+        if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        if (!userOptional.get().equals(securityUserService.getLoggedUser()))
+            return Response.status(Response.Status.FORBIDDEN).build();
+        List<TripInvitationDTO> tripInvitations = userService.getTripInvitations(userId).stream()
+                .filter(tripInvitation -> !tripInvitation.isResponded())
+                .map(TripInvitationDTO::new)
+                .collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<TripInvitationDTO>>(tripInvitations) {}).build();
     }
-
 
     @GET
-    @Path("/{userId}/pending/trip-rates")
-    public Response getUserPendingTripRates(@PathParam("userId") final long userId) {
-        return Response.ok().build();
+    @Path("/{userId}/pending/rates")
+    public Response getUserPendingRates(@PathParam("userId") final long userId) {
+        Optional<User> userOptional = userService.findById(userId);
+        if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        if (!userOptional.get().equals(securityUserService.getLoggedUser())) return Response.status(Response.Status.FORBIDDEN).build();
+        List<RateDTO> rates = userService.getUserPendingRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<RateDTO>>(rates) {}).build();
     }
-
-
-
 }
 
  

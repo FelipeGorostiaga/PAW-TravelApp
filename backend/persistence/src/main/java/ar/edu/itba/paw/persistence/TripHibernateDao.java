@@ -106,7 +106,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public void deleteTripInvitation(String token, Trip trip) {
-        Query query = em.createQuery("DELETE TripInvitation as ti where ti.token = :token AND ti.trip.id = :tripId");
+        Query query = em.createQuery("DELETE TripInvitation AS ti WHERE ti.token = :token AND ti.trip.id = :tripId");
         query.setParameter("token", token);
         query.setParameter("tripId", trip.getId());
         query.executeUpdate();
@@ -114,7 +114,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public Optional<TripInvitation> findTripInvitationByUser(Trip trip, User user) {
-        final TypedQuery<TripInvitation> query = em.createQuery("From TripInvitation as ti where ti.trip.id = :tripId AND ti.invitee.id = :userId", TripInvitation.class);
+        final TypedQuery<TripInvitation> query = em.createQuery("FROM TripInvitation AS ti WHERE ti.trip.id = :tripId AND ti.invitee.id = :userId", TripInvitation.class);
         query.setParameter("tripId", trip.getId());
         query.setParameter("userId", user.getId());
         return query.getResultList().stream().findFirst();
@@ -122,7 +122,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public void updateTripData(String tripName, String description, long tripId) {
-        Query query = em.createQuery("UPDATE Trip set name = :tripName, description = :description where id = :tripId");
+        Query query = em.createQuery("UPDATE Trip SET name = :tripName, description = :description WHERE id = :tripId");
         query.setParameter("tripName", tripName);
         query.setParameter("description", description);
         query.setParameter("tripId", tripId);
@@ -139,10 +139,18 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public void updateRoleToAdmin(long tripId, long userId) {
-        Query query = em.createQuery("UPDATE TripMember set role = :adminRole where trip.id = :tripId and user.id = :userId");
+        Query query = em.createQuery("UPDATE TripMember SET role = :adminRole WHERE trip.id = :tripId AND user.id = :userId");
         query.setParameter("adminRole", TripMemberRole.MEMBER.name());
         query.setParameter("tripId", tripId);
         query.setParameter("userId", userId);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void markTripAsCompleted(long tripId) {
+        Query query = em.createQuery("UPDATE Trip SET status = :completed WHERE id = :tripId");
+        query.setParameter("completed", "COMPLETED");
+        query.setParameter("tripId", tripId);
         query.executeUpdate();
     }
 
@@ -155,27 +163,27 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> findUserCreatedTrips(long userId) {
-        final TypedQuery<Trip> query = em.createQuery("FROM Trip as t where t.adminId = :userId ", Trip.class);
+        final TypedQuery<Trip> query = em.createQuery("FROM Trip AS t WHERE t.adminId = :userId ", Trip.class);
         query.setParameter("userId", userId);
         return query.getResultList();
     }
 
     @Override
     public void deleteTrip(long tripId) {
-        Query tripDelete = em.createQuery("delete Trip as t where t.id = :id");
+        Query tripDelete = em.createQuery("DELETE Trip AS t WHERE t.id = :id");
         tripDelete.setParameter("id", tripId);
         tripDelete.executeUpdate();
     }
 
     public int countAllTrips() {
-        TypedQuery<Long> query = em.createQuery("select count(*) from Trip", Long.class);
+        TypedQuery<Long> query = em.createQuery("SELECT count(*) FROM Trip", Long.class);
         return query.getSingleResult().intValue();
     }
 
     @Override
     public List<Trip> findByCategory(String category) {
-        final TypedQuery<Trip> query = em.createQuery("select t From Trip as t, Activity as a" +
-                " where a.trip.id = t.id and a.category like :category", Trip.class);
+        final TypedQuery<Trip> query = em.createQuery("SELECT t FROM Trip AS t, Activity AS a" +
+                " WHERE a.trip.id = t.id AND a.category LIKE :category", Trip.class);
         query.setParameter("category", category);
         query.setMaxResults(MAX_ROWS);
         return query.getResultList();
@@ -183,8 +191,8 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> findByPlace(String placeName) {
-        final TypedQuery<Trip> query = em.createQuery("select t From Trip as t, Place as p" +
-                " where t.startPlace.id = p.id and lower(p.address) like lower(:placeName)", Trip.class);
+        final TypedQuery<Trip> query = em.createQuery("SELECT t FROM Trip AS t, Place AS p" +
+                " WHERE t.startPlace.id = p.id and lower(p.address) like lower(:placeName)", Trip.class);
         query.setParameter("placeName", "%" + placeName + "%");
         query.setMaxResults(MAX_ROWS);
         return query.getResultList();
@@ -193,22 +201,20 @@ public class TripHibernateDao implements TripDao {
     @Override
     public List<Trip> findWithFilters(Map<String, Object> filterMap) {
         final TypedQuery<Trip> query = em.createQuery("select distinct t From Trip as t, Place as p " +
-                        filtersQuery(filterMap), Trip.class);
+                filtersQuery(filterMap), Trip.class);
         setQueryParameters(query, filterMap);
         query.setMaxResults(MAX_ROWS);
         return query.getResultList();
     }
 
     private void setQueryParameters(TypedQuery<Trip> query, Map<String, Object> filterMap) {
-        for(String filter : filterMap.keySet()) {
-            if(filter.equals("placeName")) {
-                query.setParameter(filter, "%" +  filterMap.get(filter) + "%");
-            }
-            else if (filter.equals("category")){
+        for (String filter : filterMap.keySet()) {
+            if (filter.equals("placeName")) {
+                query.setParameter(filter, "%" + filterMap.get(filter) + "%");
+            } else if (filter.equals("category")) {
                 query.setParameter(filter, filterMap.get(filter));
-            }
-            else {
-                query.setParameter(filter, filterMap.get(filter)) ;
+            } else {
+                query.setParameter(filter, filterMap.get(filter));
             }
         }
     }
@@ -217,16 +223,15 @@ public class TripHibernateDao implements TripDao {
     private String filtersQuery(Map<String, Object> filterMap) {
         int count = 0;
         StringBuilder buffer = new StringBuilder();
-        if(filterMap.containsKey("category") || filterMap.containsKey("placeName")) {
+        if (filterMap.containsKey("category") || filterMap.containsKey("placeName")) {
             buffer.append(", Activity as a ");
         }
-        for(String filter : filterMap.keySet()) {
-            switch(filter) {
+        for (String filter : filterMap.keySet()) {
+            switch (filter) {
                 case "placeName":
-                    if(count == 0) {
+                    if (count == 0) {
                         buffer.append(" where ");
-                    }
-                    else {
+                    } else {
                         buffer.append(" and  ");
                     }
                     buffer.append("((t.startPlaceId = p.id and (lower(p.address) like lower(:placeName) or lower(p.name) like lower(:placeName)) )");
@@ -235,30 +240,27 @@ public class TripHibernateDao implements TripDao {
                     break;
 
                 case "startDate":
-                    if(count == 0) {
+                    if (count == 0) {
                         buffer.append(" where ");
-                    }
-                    else {
+                    } else {
                         buffer.append(" and ");
                     }
                     buffer.append("(t.startDate = :startDate)");
                     count++;
                     break;
                 case "category":
-                    if(count == 0) {
+                    if (count == 0) {
                         buffer.append(" where ");
-                    }
-                    else {
+                    } else {
                         buffer.append(" and ");
                     }
                     buffer.append("(a.trip.id = t.id and a.category like :category)");
                     count++;
                     break;
                 case "endDate":
-                    if(count == 0) {
+                    if (count == 0) {
                         buffer.append(" where ");
-                    }
-                    else {
+                    } else {
                         buffer.append(" and ");
                     }
                     buffer.append("(t.endDate = :endDate)");
@@ -271,7 +273,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<TripComment> getTripComments(long tripId) {
-        final TypedQuery<TripComment> query = em.createQuery("From TripComment as tc where tc.member.trip.id = :tripId", TripComment.class);
+        final TypedQuery<TripComment> query = em.createQuery("FROM TripComment as tc where tc.member.trip.id = :tripId", TripComment.class);
         query.setParameter("tripId", tripId);
         return query.getResultList();
     }

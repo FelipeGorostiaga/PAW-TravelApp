@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces;
 
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripInvitation;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserRate;
 
@@ -30,4 +31,8 @@ public interface UserDao {
     List<UserRate> getUserRates(long userId);
 
     UserRate createRate(Trip trip, User ratedBy, User ratedUser, int rate, String comment);
+
+    List<TripInvitation> getTripInvitations(long userId);
+
+    List<UserRate> getUserPendingRates(long userId);
 }

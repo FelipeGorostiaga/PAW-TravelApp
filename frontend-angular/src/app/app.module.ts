@@ -39,9 +39,12 @@ import {UserListItemComponent} from './trip/information/user-list-item/user-list
 import {AlertModule} from "ngx-bootstrap/alert";
 import {ModalModule} from "ngx-bootstrap/modal";
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
-import { UserRatesComponent } from './user-rates/user-rates.component';
-import { UserNotificationsComponent } from './user-notifications/user-notifications.component';
+import {AdvancedSearchComponent} from './advanced-search/advanced-search.component';
+import {UserRatesComponent} from './user-rates/user-rates.component';
+import {UserNotificationsComponent} from './user-notifications/user-notifications.component';
+import {CompleteRatesComponent} from './complete-rates/complete-rates.component';
+import {RatingModule} from 'ngx-bootstrap/rating';
+import { RateFormComponent } from './complete-rates/rate-form/rate-form.component';
 
 
 @NgModule({
@@ -73,6 +76,8 @@ import { UserNotificationsComponent } from './user-notifications/user-notificati
         AdvancedSearchComponent,
         UserRatesComponent,
         UserNotificationsComponent,
+        CompleteRatesComponent,
+        RateFormComponent,
 
     ],
     imports: [
@@ -93,7 +98,8 @@ import { UserNotificationsComponent } from './user-notifications/user-notificati
         BrowserAnimationsModule,
         AlertModule.forRoot(),
         ModalModule.forRoot(),
-        TooltipModule.forRoot()
+        TooltipModule.forRoot(),
+        RatingModule.forRoot()
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [AuthService, AuthGuard, {

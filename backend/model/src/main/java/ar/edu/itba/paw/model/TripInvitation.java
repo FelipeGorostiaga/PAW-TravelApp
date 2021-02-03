@@ -28,11 +28,15 @@ public class TripInvitation {
     @Column(nullable = false)
     private String token;
 
-    public TripInvitation(Trip trip, User invitee, User inviter,  String token) {
+    @Column(nullable = false)
+    private boolean responded;
+
+    public TripInvitation(Trip trip, User invitee, User inviter, String token) {
         this.trip = trip;
         this.invitee = invitee;
         this.inviter = inviter;
         this.token = token;
+        this.responded = false;
     }
 
     public long getId() {
@@ -41,6 +45,14 @@ public class TripInvitation {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public boolean isResponded() {
+        return responded;
+    }
+
+    public void setResponded(boolean responded) {
+        this.responded = responded;
     }
 
     public Trip getTrip() {

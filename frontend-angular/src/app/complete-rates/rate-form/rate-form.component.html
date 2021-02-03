@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card m-5">
+            <h5 class="card-header">User X --> Trip Y</h5>
+            <div class="card-body">
+                <rating [max]="10" [(ngModel)]="rating" [customTemplate]="tt"></rating>
+                <!--                        <div class="card">
+                                            <pre class="card-block card-header" style="margin:15px 0;"> <b>(<i>Rate:</i> {{rating}})</b> </pre>
+                                        </div>-->
+                <ng-template #tt let-i="index" let-v="value">
+                    <button class="btn btn-{{i < v ? 'warning' : 'default'}}">
+                        {{i < v ? '&#9733;' : '&#9734;'}}
+                    </button>
+                </ng-template>
+                <textarea
+                        class="form-control"
+                        type="text"
+                        id="commentTextArea"
+                        rows="3"
+                        [(ngModel)]="comment"
+                        placeholder="Write a comment..."
+                        style="margin-top: 20px;resize:none;"
+                        maxlength="300">
+                    </textarea>
+            </div>
+            <div class="card-footer text-center">
+                <button class="btn btn-primary" (click)="submitRate()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>

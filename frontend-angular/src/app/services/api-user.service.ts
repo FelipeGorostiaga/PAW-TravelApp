@@ -56,8 +56,16 @@ export class ApiUserService {
         return this.http.get<UserProfile>(url);
     }
 
+
+    // rates the user received
     getUserRates(userId: number): Observable<any>  {
         const url = this.usersBaseURL + userId + '/rates';
+        return this.http.get(url);
+    }
+
+    // rates the user need to write
+    getUserPendingRates(userId: number): Observable<any> {
+        const url = this.usersBaseURL + userId + '/pending/rates';
         return this.http.get(url);
     }
 }

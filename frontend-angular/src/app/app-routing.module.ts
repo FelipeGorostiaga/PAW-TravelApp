@@ -17,6 +17,7 @@ import {RespondJoinReqComponent} from "./trip/respond-join-req/respond-join-req.
 import {RespondInviteComponent} from "./trip/respond-invite/respond-invite.component";
 import {UserRatesComponent} from "./user-rates/user-rates.component";
 import {UserNotificationsComponent} from "./user-notifications/user-notifications.component";
+import {CompleteRatesComponent} from "./complete-rates/complete-rates.component";
 
 const routes: Routes = [
     {
@@ -83,6 +84,11 @@ const routes: Routes = [
     {
         path: 'user/:id/notifications',
         component: UserNotificationsComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'user/:id/pending/rates',
+        component: CompleteRatesComponent,
         canActivate: [AuthGuard]
     },
     {

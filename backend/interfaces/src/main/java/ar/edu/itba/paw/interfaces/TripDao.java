@@ -57,4 +57,6 @@ public interface TripDao {
     TripMember createTripMember(Trip trip, User user, TripMemberRole role);
 
     void updateRoleToAdmin(long tripId, long invitedUserId);
+
+    void markTripAsCompleted(long tripId);
 }

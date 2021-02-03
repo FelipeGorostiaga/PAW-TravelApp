@@ -18,6 +18,7 @@ public class UserRate {
         this.ratedUser = ratedUser;
         this.comment = comment;
         this.createdOn = createdOn;
+        this.pending = true;
     }
 
     @Id
@@ -37,7 +38,19 @@ public class UserRate {
     @Column(length = 500, nullable = false)
     private String comment;
 
+    @Column(nullable = false)
+    private boolean pending;
+
+    @Column
     private LocalDateTime createdOn;
+
+    public boolean isPending() {
+        return pending;
+    }
+
+    public void setPending(boolean pending) {
+        this.pending = pending;
+    }
 
     public long getId() {
         return id;

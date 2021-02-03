@@ -76,4 +76,6 @@ public interface TripService {
     boolean isMember(Trip trip, User user);
 
     List<Trip> getUserTrips(User user);
+
+    void markTripAsCompleted(long tripId);
 }

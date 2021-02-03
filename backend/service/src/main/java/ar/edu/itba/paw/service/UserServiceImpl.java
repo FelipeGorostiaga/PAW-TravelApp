@@ -81,8 +81,21 @@ public class UserServiceImpl implements UserService {
         ud.editBiography(user, biography);
     }
 
+
+    // rates that the user received
     @Override
     public List<UserRate> getUserRates(long userId) {
         return ud.getUserRates(userId);
+    }
+
+    @Override
+    public List<TripInvitation> getTripInvitations(long userId) {
+        return ud.getTripInvitations(userId);
+    }
+
+    // rates that the user need to complete to other users
+    @Override
+    public List<UserRate> getUserPendingRates(long userId) {
+        return ud.getUserPendingRates(userId);
     }
 }

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripInvitation;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserRate;
 import org.springframework.stereotype.Repository;
@@ -35,14 +36,14 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public void verify(User u) {
-        Query query = em.createQuery("UPDATE User set verified = true where id = :userId");
+        Query query = em.createQuery("UPDATE User SET verified = true WHERE id = :userId");
         query.setParameter("userId", u.getId());
         query.executeUpdate();
     }
 
     @Override
     public List<User> findByName(String name) {
-        final TypedQuery<User> query = em.createQuery("FROM User as u where u.firstname like :name or u.lastname like :name", User.class);
+        final TypedQuery<User> query = em.createQuery("FROM User AS u WHERE u.firstname LIKE :name OR u.lastname LIKE :name", User.class);
         query.setParameter("name", name);
         return query.getResultList();
     }
@@ -50,7 +51,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public boolean editBiography(User user, String biography) {
-        Query query = em.createQuery("UPDATE User set biography = :biography where id = :id");
+        Query query = em.createQuery("UPDATE User SET biography = :biography WHERE id = :id");
         query.setParameter("biography", biography);
         query.setParameter("id", user.getId());
         return query.executeUpdate() != 0;
@@ -58,7 +59,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public List<UserRate> getUserRates(long userId) {
-        final TypedQuery<UserRate> query = em.createQuery("FROM UserRate as ur where ur.ratedUser.id = :userId", UserRate.class);
+        final TypedQuery<UserRate> query = em.createQuery("FROM UserRate AS ur WHERE ur.ratedUser.id = :userId", UserRate.class);
         query.setParameter("userId", userId);
         return query.getResultList();
     }
@@ -68,6 +69,20 @@ public class UserHibernateDao implements UserDao {
         final UserRate user = new UserRate(rate,ratedUser, ratedBy, comment, LocalDateTime.now());
         em.persist(user);
         return user;
+    }
+
+    @Override
+    public List<TripInvitation> getTripInvitations(long userId) {
+        final TypedQuery<TripInvitation> query = em.createQuery("FROM TripInvitation AS ti WHERE ti.invitee.id = :userId", TripInvitation.class);
+        query.setParameter("userId", userId);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<UserRate> getUserPendingRates(long userId) {
+        final TypedQuery<UserRate> query = em.createQuery("FROM UserRate AS ur WHERE ur.ratedByUser.id = :userId AND ur.pending = true", UserRate.class);
+        query.setParameter("userId", userId);
+        return query.getResultList();
     }
 
     @Override

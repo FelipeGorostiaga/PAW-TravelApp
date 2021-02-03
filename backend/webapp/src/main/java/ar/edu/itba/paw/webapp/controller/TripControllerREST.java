@@ -467,4 +467,18 @@ public class TripControllerREST {
         return Response.ok().build();
     }
 
+
+    @POST
+    @Path("/{id}/mark-complete")
+    public Response markTripAsCompleted(@PathParam("id") final long tripId) {
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        User loggedUser = securityUserService.getLoggedUser();
+        if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        if (tripService.isCreator(tripOptional.get(), loggedUser)) {
+            tripService.markTripAsCompleted(tripId);
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.FORBIDDEN).build();
+    }
+
 }

@@ -75,6 +75,11 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public void markTripAsCompleted(long tripId) {
+        td.markTripAsCompleted(tripId);
+    }
+
+    @Override
     public List<Place> findTripPlaces(Trip trip) {
         List<Activity> activities = trip.getActivities();
         List<Place> places = new LinkedList<>();
