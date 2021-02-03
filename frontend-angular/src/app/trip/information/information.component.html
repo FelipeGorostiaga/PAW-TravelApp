@@ -1,4 +1,3 @@
-
 <div>
     <img *ngIf="hasImage" [src]="tripImage" alt="Trip image">
     <img *ngIf="!hasImage" src="./assets/images/trip-default-info.jpg" alt="Trip image">
@@ -17,7 +16,7 @@
 </div>
 <h3 class="margin-class">Starting place</h3>
 <p>{{trip?.startPlace?.name}}</p>
-<agm-map [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude" [zoom]="14"
+<agm-map [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude" [zoom]="14" [zoomControl]="true"
          style="height: 400px;width: 700px;">
     <agm-marker [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude"></agm-marker>
 </agm-map>

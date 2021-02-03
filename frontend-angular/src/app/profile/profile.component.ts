@@ -59,28 +59,15 @@ export class ProfileComponent implements OnInit {
         this.loggedUser = this.authService.getLoggedUser();
         const profileId = Number(this.route.snapshot.paramMap.get("id"));
         this.isProfileOwner = this.loggedUser.id === profileId;
-
         this.editProfileForm = this.formBuilder.group({
             imageUpload: ['', Validators.required],
             biography: ['', Validators.maxLength(500)],
         }, {
             validators: [validImgExtension('imageUpload', this.validExtensions)]
         });
-
-      /*  this.userService.getUserById(profileId).subscribe(
-            data => {
-                this.user = data;
-                this.editProfileForm.get('biography').setValue(this.user.biography);
-            },
-            error => {
-                console.log(error);
-                this.router.navigate(['/404']);
-            });
-*/
         this.userService.getUserProfileData(profileId).subscribe(
             data => {
                 this.userProfile = data;
-                console.log(data);
                 this.user = data.user;
                 this.editProfileForm.get('biography').setValue(this.userProfile.user.biography);
                 this.calculateUserRate();
@@ -88,10 +75,10 @@ export class ProfileComponent implements OnInit {
             },
             error => {
                 console.log(error);
+                this.spinner.hide();
                 this.router.navigate(['/404']);
             }
         )
-
 
         this.userService.getUserPicture(profileId).subscribe(
             data => {

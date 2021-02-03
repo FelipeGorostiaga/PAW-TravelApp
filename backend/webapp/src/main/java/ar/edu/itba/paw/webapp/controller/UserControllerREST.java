@@ -241,7 +241,6 @@ public class UserControllerREST {
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
         List<RateDTO> rateDTOs = userService.getUserRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
-        if (rateDTOs.isEmpty()) return Response.status(Response.Status.NOT_FOUND).build();
         return Response.ok(new GenericEntity<List<RateDTO>>(rateDTOs) {
         }).build();
     }
@@ -280,7 +279,6 @@ public class UserControllerREST {
     @GET
     @Path("/{userId}/trips/due")
     public Response getDueTrips(@PathParam("userId") final long userId) {
-        //get active trips (status == 0) IN PROGRESS
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
         List<Trip> userTrips = tripService.getUserTrips(userOptional.get());
@@ -326,14 +324,29 @@ public class UserControllerREST {
             dueTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.DUE).map(TripDTO::new).collect(Collectors.toList());
             activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.IN_PROGRESS).map(TripDTO::new).collect(Collectors.toList());
             completedTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED).map(TripDTO::new).collect(Collectors.toList());
-        }
-        else {
+        } else {
             dueTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.DUE && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
             activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.IN_PROGRESS && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
             completedTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
         }
         return Response.ok(new ProfileDataDTO(userOptional.get(), rates, dueTrips, activeTrips, completedTrips)).build();
     }
+
+    @GET
+    @Path("/{userId}/pending/invitations")
+    public Response getUserPendingInvitations(@PathParam("userId") final long userId) {
+        return Response.ok().build();
+    }
+
+
+    @GET
+    @Path("/{userId}/pending/trip-rates")
+    public Response getUserPendingTripRates(@PathParam("userId") final long userId) {
+        return Response.ok().build();
+    }
+
+
+
 }
 
-
+ 

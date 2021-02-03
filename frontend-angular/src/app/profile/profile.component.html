@@ -20,13 +20,18 @@
                     </div>
                 </div>
             </div>
+
+            <!--  <i class="fa fa-suitcase mr-1"> -->
             <div class="bg-light p-4 d-flex justify-content-end text-center">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item" style="margin-left: 10px">
-                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.activeTrips?.length}}</h5><small class="text-muted"><i class="fa fa-suitcase mr-1"></i>Active</small>
+                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.dueTrips?.length}}</h5><small class="text-muted"><i class="fa fa-calendar mr-1"></i><a>Due</a></small>
                     </li>
                     <li class="list-inline-item" style="margin-left: 10px">
-                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.completedTrips?.length}}</h5><small class="text-muted"><i class="fa fa-check mr-1"></i>Completed</small>
+                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.activeTrips?.length}}</h5><small class="text-muted"><i class="fa fa-suitcase mr-1"></i><a>Active</a></small>
+                    </li>
+                    <li class="list-inline-item" style="margin-left: 10px">
+                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.completedTrips?.length}}</h5><small class="text-muted"><i class="fa fa-check mr-1"></i><a routerLink="/home">Completed</a></small>
                     </li>
                     <li class="list-inline-item" style="margin-left: 10px">
                     <li class="list-inline-item" >
@@ -44,7 +49,8 @@
             <div class="py-4 px-4">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <!-- TODO, user rates view component-->
-                    <h5 class="mb-0">Recent reviews</h5><a class="btn btn-link text-muted" routerLink="/home">Show all</a>
+
+                    <h5 class="mb-0">Recent reviews</h5><a class="btn btn-link text-muted" routerLink="/profile/{{user?.id}}/rates">Show all</a>
                 </div>
                 <div class="row list-group">
                     <div *ngFor="let rate of userProfile?.rates" class="list-group-item">

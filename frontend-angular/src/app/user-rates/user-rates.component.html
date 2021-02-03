@@ -1,0 +1,11 @@
+<app-navigation></app-navigation>
+<div class="list-group">
+    <div class="alert alert-primary" role="alert" *ngIf="!!rates">This user has no available rates</div>
+    <div *ngFor="let rate of rates" class="list-group-item">
+        <p>{{rate?.ratedBy.firstname}} {{rate?.ratedBy.lastname}}:</p>
+        <p>{{rate?.comment}}</p>
+        <p>{{rate?.rate}}</p>
+        <p>{{rate?.createdOn}}</p>
+    </div>
+    <p></p>
+</div>

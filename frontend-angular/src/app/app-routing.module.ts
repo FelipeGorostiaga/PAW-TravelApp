@@ -15,6 +15,8 @@ import {VerificationComponent} from "./register/verification/verification.compon
 import {VerificationResultComponent} from "./register/verification-result/verification-result.component";
 import {RespondJoinReqComponent} from "./trip/respond-join-req/respond-join-req.component";
 import {RespondInviteComponent} from "./trip/respond-invite/respond-invite.component";
+import {UserRatesComponent} from "./user-rates/user-rates.component";
+import {UserNotificationsComponent} from "./user-notifications/user-notifications.component";
 
 const routes: Routes = [
     {
@@ -71,6 +73,16 @@ const routes: Routes = [
     {
         path: 'create-trip',
         component: CreateTripComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'profile/:id/rates',
+        component: UserRatesComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'user/:id/notifications',
+        component: UserNotificationsComponent,
         canActivate: [AuthGuard]
     },
     {

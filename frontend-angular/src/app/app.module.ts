@@ -40,6 +40,8 @@ import {AlertModule} from "ngx-bootstrap/alert";
 import {ModalModule} from "ngx-bootstrap/modal";
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
+import { UserRatesComponent } from './user-rates/user-rates.component';
+import { UserNotificationsComponent } from './user-notifications/user-notifications.component';
 
 
 @NgModule({
@@ -69,6 +71,8 @@ import { AdvancedSearchComponent } from './advanced-search/advanced-search.compo
         RespondInviteComponent,
         UserListItemComponent,
         AdvancedSearchComponent,
+        UserRatesComponent,
+        UserNotificationsComponent,
 
     ],
     imports: [

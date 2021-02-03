@@ -82,7 +82,6 @@ public class TripControllerREST {
     public Response getTrip(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        System.out.println(tripOptional.get());
         return Response.ok(new FullTripDTO(tripOptional.get(), tripService.getTripComments(tripOptional.get().getId()))).build();
     }
 
@@ -167,7 +166,7 @@ public class TripControllerREST {
         if (trip != null) {
             return Response.ok(new TripDTO(trip)).build();
         }
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        return Response.serverError().build();
     }
 
     @GET

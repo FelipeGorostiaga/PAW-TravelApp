@@ -55,4 +55,9 @@ export class ApiUserService {
         const url = this.usersBaseURL + userId + '/profile';
         return this.http.get<UserProfile>(url);
     }
+
+    getUserRates(userId: number): Observable<any>  {
+        const url = this.usersBaseURL + userId + '/rates';
+        return this.http.get(url);
+    }
 }
