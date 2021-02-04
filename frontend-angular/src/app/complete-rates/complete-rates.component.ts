@@ -3,7 +3,6 @@ import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ApiUserService} from "../services/api-user.service";
 import {Rate} from "../model/rate";
-import {FormBuilder} from "@angular/forms";
 
 
 @Component({
@@ -13,16 +12,12 @@ import {FormBuilder} from "@angular/forms";
 })
 export class CompleteRatesComponent implements OnInit {
 
-
     pendingRates: Rate[];
-    rating = 0;
-    comment: string = "";
 
     constructor(private spinner: NgxSpinnerService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private userService: ApiUserService,
-                private formBuilder: FormBuilder) {
+                private userService: ApiUserService) {
     }
 
     ngOnInit() {
@@ -34,12 +29,16 @@ export class CompleteRatesComponent implements OnInit {
                 this.spinner.hide();
             },
             error => {
+                this.spinner.hide();
                 console.log(error);
             }
         );
     }
 
-    submitRate() {
-        console.log("submitting rate");
+    submitRate($event: FormData) {
+        // todo\
+        console.log($event.get('id'));
+        console.log($event.get('comment'));
+        console.log($event.get('rating'));
     }
 }

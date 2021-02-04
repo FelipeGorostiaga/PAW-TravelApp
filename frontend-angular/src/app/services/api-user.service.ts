@@ -68,4 +68,9 @@ export class ApiUserService {
         const url = this.usersBaseURL + userId + '/pending/rates';
         return this.http.get(url);
     }
+
+    getUserRating(userId: number): Observable<number> {
+        const url = this.usersBaseURL + userId + '/rating'
+        return this.http.get<number>(url);
+    }
 }

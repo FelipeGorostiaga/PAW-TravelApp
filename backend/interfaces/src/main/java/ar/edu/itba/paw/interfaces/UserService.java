@@ -39,4 +39,6 @@ public interface UserService {
     List<TripInvitation> getTripInvitations(long userId);
 
     List<UserRate> getUserPendingRates(long userId);
+
+    double calculateRate(long userId);
 }

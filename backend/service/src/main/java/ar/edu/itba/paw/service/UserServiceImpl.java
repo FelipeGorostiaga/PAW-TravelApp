@@ -98,4 +98,12 @@ public class UserServiceImpl implements UserService {
     public List<UserRate> getUserPendingRates(long userId) {
         return ud.getUserPendingRates(userId);
     }
+
+    @Override
+    public double calculateRate(long userId) {
+        List<UserRate> rates = getUserRates(userId);
+        if (rates.isEmpty()) return 0;
+        int totalRating = rates.stream().map(UserRate::getRate).reduce(0, Integer::sum);
+        return totalRating / (double) rates.size();
+    }
 }

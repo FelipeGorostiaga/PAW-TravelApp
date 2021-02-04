@@ -355,6 +355,16 @@ public class UserControllerREST {
         List<RateDTO> rates = userService.getUserPendingRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<RateDTO>>(rates) {}).build();
     }
+
+    @GET
+    @Path("/{userId}/rating")
+    @Produces(value = {MediaType.TEXT_PLAIN})
+    public Response getUserRating(@PathParam("userId") final long userId) {
+        Optional<User> userOptional = userService.findById(userId);
+        if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        double rate = userService.calculateRate(userId);
+        return Response.ok(rate).build();
+    }
 }
 
  
