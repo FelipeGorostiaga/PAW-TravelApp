@@ -13,6 +13,8 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 import {validImgExtension} from "../../profile/profile.component";
 import {TripRole} from "../../model/TripMember";
+import {DateUtilService} from "../../services/date-util.service";
+import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
 
 @Component({
     selector: 'app-information',
@@ -36,6 +38,12 @@ export class InformationComponent implements OnInit {
     userSearchList: Observable<User>;
     latestSearch = new Subject<string>();
 
+    date: Date = new Date();
+    startDate: Date;
+    endDate: Date;
+
+    bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, { containerClass: 'theme-dark-blue'});
+
     loading: boolean;
 
     showSuccessAlert;
@@ -56,7 +64,8 @@ export class InformationComponent implements OnInit {
                 private modalService: BsModalService,
                 private sanitizer: DomSanitizer,
                 private spinner: NgxSpinnerService,
-                private formBuilder: FormBuilder) {
+                private formBuilder: FormBuilder,
+                private dateUtils: DateUtilService) {
 
         this.userSearchList = this.latestSearch.pipe(
             debounceTime(300),
@@ -66,8 +75,11 @@ export class InformationComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.startDate = this.dateUtils.stringToDate(this.trip.startDate);
+        this.endDate = this.dateUtils.stringToDate(this.trip.endDate);
         this.getTripStatus();
         this.loadingImage = true;
+        
         // TODO: remove required image upload !!!!!!!!!!!!!!!
         this.editTripForm = this.formBuilder.group({
             imageUpload: ['', Validators.required],

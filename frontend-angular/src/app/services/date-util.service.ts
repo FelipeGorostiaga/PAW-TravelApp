@@ -30,4 +30,11 @@ export class DateUtilService {
     return dateString;
   }
 
+  stringToDate(dateString: string): Date {
+    let day = Number(dateString.slice(0,2));
+    let month = Number(dateString.slice(3,5)) - 1;
+    let year = Number(dateString.slice(6,10));
+    return  new Date(Number(year),Number(month), Number(day));
+  }
+
 }

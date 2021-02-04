@@ -1,47 +1,63 @@
-<div>
-    <img *ngIf="hasImage" [src]="tripImage" alt="Trip image">
-    <img *ngIf="!hasImage" src="./assets/images/trip-default-info.jpg" alt="Trip image">
-    <div class="d-flex justify-content-between">
-        <div *ngIf="isAdmin" class="p-2">
-            <button class="btn btn-outline-dark" (click)="openEditTripModal(editTripTemplate)"
-                    style="margin-top: 10px;">Edit
-            </button>
+<div class="row">
+    <div class="col-6">
+        <img *ngIf="hasImage" [src]="tripImage" alt="Trip image">
+        <img *ngIf="!hasImage" src="./assets/images/trip-default-info.jpg" alt="Trip image">
+    </div>
+    <div class="col-6">
+        <h3><small>Status:</small>   {{trip.status}}</h3>
+        <div class="display-3 ">{{trip?.name}}</div>
+        <p class="text-justify" style="font-size: 150%;margin-top: 10px;">{{trip?.description}}</p>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 40px;">
+    <div class="col-6 form-group">
+        <div class="form-control" placeholder="Datepicker" bsDatepicker #dp="bsDatepicker"
+             [isDisabled]="true" [(bsValue)]="startDate" [bsConfig]="bsConfig">Start date: {{startDate | date}}
         </div>
     </div>
-    <h3>STATUS: {{status}}</h3>
-    <div class="display-4 ">{{trip?.name}}</div>
-    <p class="text-justify" style="font-size: 150%;">{{trip?.description}}</p>
-    <div id="rate-bar" class="card-text" style="font-size: 150%; margin-bottom: 15px;"></div>
-    <p class="card-text"><i class="far fa-calendar-alt"></i>{{trip?.startDate}}  - {{trip?.endDate}}</p>
-</div>
-<h3 class="margin-class">Starting place</h3>
-<p>{{trip?.startPlace?.name}}</p>
-<agm-map [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude" [zoom]="14" [zoomControl]="true"
-         style="height: 400px;width: 700px;">
-    <agm-marker [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude"></agm-marker>
-</agm-map>
-
-<div class="list-group" style="margin-top: 40px">
-    <div *ngFor="let member of trip?.members" class="list-group-item">
-        <div class="d-flex w-100 justify-content-between">
-            <a routerLink="/profile/{{member.user.id}}"><h5 class="mb-1"><i class="fa fa-user" style="margin-right: 15px;"></i>{{member.user.firstname}} {{member.user.lastname}}</h5></a>
-            <small *ngIf="member.role === 'CREATOR'" style="color: darkorange">{{member.role}}</small>
-            <small *ngIf="member.role === 'ADMIN'" style="color: darkgreen">{{member.role}}</small>
-            <button *ngIf="isAdmin && member.role === 'MEMBER'" (click)="grantAdminRole($event, member.user)" tooltip="Make trip administrator"><i class="fa fa-user-plus"></i></button>
+    <div class="col-6 form-group">
+        <div class="form-control" placeholder="Datepicker" bsDatepicker #dp="bsDatepicker" [isDisabled]="true"
+             [(bsValue)]="endDate" [bsConfig]="bsConfig">End date: {{endDate | date}}
         </div>
     </div>
 </div>
 
+<div class="row" style="margin-top: 50px;">
+    <div class="col-8">
+        <agm-map [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude" [zoom]="14"
+                 [zoomControl]="true"
+                 style="height: 400px;width: 700px;">
+            <agm-marker [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude"></agm-marker>
+        </agm-map>
+    </div>
+    <div class="col-4">
+        <div class="list-group">
+            <div *ngFor="let member of trip?.members" class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <a routerLink="/profile/{{member.user.id}}"><h5 class="mb-1"><i class="fa fa-user"
+                                                                                    style="margin-right: 15px;"></i>{{member.user.firstname}} {{member.user.lastname}}
+                    </h5></a>
+                    <small *ngIf="member.role === 'CREATOR'" style="color: darkorange">{{member.role}}</small>
+                    <small *ngIf="member.role === 'ADMIN'" style="color: darkgreen">{{member.role}}</small>
+                    <button *ngIf="isAdmin && member.role === 'MEMBER'" (click)="grantAdminRole($event, member.user)"
+                            tooltip="Make trip administrator"><i class="fa fa-user-plus"></i></button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="isAdmin" style="margin-top: 20px;">
+            <button class="btn btn-primary" (click)="openModal(template)">Invite User</button>
+        </div>
+    </div>
+</div>
 
-<div style="margin-top: 20px;">
+<div class="row" style="margin-top: 20px;">
+    <button *ngIf="isAdmin" style="margin-right: 15px; margin-left: 10px;" class="btn btn-outline-dark" (click)="openEditTripModal(editTripTemplate)">Edit Trip</button>
     <button *ngIf="isAdmin || isMember" class="btn btn-danger" (click)="exitTrip()">Exit</button>
-    <button *ngIf="!loading && !isMember && !waitingConfirmation" class="btn-primary btn" (click)="requestJoinTrip()">Request to join</button>
-</div>
-<div *ngIf="isAdmin">
-    <button class="btn btn-primary" (click)="openModal(template)">Invite User</button>
+    <button *ngIf="!loading && !isMember && !waitingConfirmation" class=" btn btn-primary" (click)="requestJoinTrip()">Request to join</button>
 </div>
 
-<!-- INVITE USER TO TRIP -->
+<!-- invite user modal -->
 <ng-template #template>
     <div class="modal-header">
         <h4 class="modal-title pull-left">Invite user</h4>
@@ -51,7 +67,8 @@
     </div>
     <div class="modal-body">
         <div *ngIf="showSuccessAlert">
-            <alert [type]="'success'" [dismissible]="true" (onClosed)="closeSuccessAlert()">User invite sent.</alert>
+            <alert [type]="'success'" [dismissible]="true" (onClosed)="closeSuccessAlert()">User invite sent.
+            </alert>
         </div>
         <div *ngIf="showErrorAlert">
             <alert [type]="'warning'" [dismissible]="true" (onClosed)="closeErrorAlert()">Error, user was already
@@ -75,7 +92,7 @@
     </div>
 </ng-template>
 
-<!-- EDIT TRIP-->
+<!-- edit trip modal -->
 <ng-template #editTripTemplate>
     <div class="modal-header">
         <h4 class="modal-title pull-left">Edit Trip</h4>
@@ -90,13 +107,11 @@
                 <input formControlName="imageUpload" type="file" class="form-control-file" id="imageUpload"
                        (change)="onFileSelected($event)">
             </div>
-
             <!-- Edit Trip Name -->
             <div class="form-group">
                 <label for="tripName">Name</label>
                 <input formControlName="tripName" type="text" class="form-control" id="tripName">
             </div>
-
             <!-- Edit description -->
             <div class="form-group">
                 <label for="description">Description</label>
