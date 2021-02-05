@@ -79,7 +79,7 @@ export class InformationComponent implements OnInit {
         this.endDate = this.dateUtils.stringToDate(this.trip.endDate);
         this.getTripStatus();
         this.loadingImage = true;
-        
+
         // TODO: remove required image upload !!!!!!!!!!!!!!!
         this.editTripForm = this.formBuilder.group({
             imageUpload: ['', Validators.required],

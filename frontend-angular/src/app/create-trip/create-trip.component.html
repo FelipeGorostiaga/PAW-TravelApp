@@ -6,6 +6,11 @@
             <div class="col-12">
                 <h1 style="margin-top: 30px;margin-bottom: 20px;">Create trip</h1>
                 <form [formGroup]="tripForm" (ngSubmit)="onSubmit()">
+                    <alert *ngIf="!!mapsErrorMessage" [type]="'danger'" [dismissible]="true"
+                           (onClosed)="closeMapsAlert()">
+                        {{mapsErrorMessage}}
+                    </alert>
+
                     <div class="form-group">
                         <label>Name</label>
                         <input formControlName="name"
@@ -15,9 +20,9 @@
                                style="margin-bottom: 10px;"
                                [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
                         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-                            <div *ngIf="f.name.errors.required">Field is required</div>
-                            <div *ngIf="f.name.errors.minLength">Name must be at least 5</div>
-                            <div *ngIf="f.name.errors.maxLength">Maximum length is 30</div>
+                            <p *ngIf="f.name.errors.required">Field is required</p>
+                            <p *ngIf="f.name.errors.minlength">Name must be at least 5</p>
+                            <p *ngIf="f.name.errors.maxlength">Maximum length is 30</p>
                         </div>
                     </div>
                     <div class="form-group">
@@ -33,11 +38,16 @@
                                   [ngClass]="{ 'is-invalid': submitted && f.description.errors }">
                         </textarea>
                         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-                            <div *ngIf="f.description.errors.required">Field is required</div>
-                            <div *ngIf="f.description.errors.minLength">Description must be at least 25 characters long</div>
-                            <div *ngIf="f.description.errors.maxLength">Maximum length is 100</div>
+                            <p *ngIf="f.description.errors.required">Field is required</p>
+                            <p *ngIf="f.description.errors.minlength">Description must be at least 25 characters
+                                long</p>
+                            <p *ngIf="f.description.errors.maxlength">Maximum length is 100</p>
                         </div>
                     </div>
+                    <alert *ngIf="!!datesErrorMessage" [type]="'danger'" [dismissible]="true"
+                           (onClosed)="closeDateAlert()">
+                        {{datesErrorMessage}}
+                    </alert>
                     <div class="form-row">
                         <div class="form-group col-4">
                             <label for="startDate">Start</label>
@@ -52,7 +62,8 @@
                                    [bsConfig]="bsConfig">
                             <div *ngIf="submitted && f.startDate.errors" class="invalid-feedback">
                                 <p *ngIf="f.startDate.errors.required">Field is required</p>
-                                <p *ngIf="f.startDate.errors.invalidDate">Activity must start the same date or before end date</p>
+                                <p *ngIf="f.startDate.errors.invalidDate">Activity must start the same date or before
+                                    end date</p>
                             </div>
                         </div>
                         <div class="form-group col-4">
@@ -70,7 +81,7 @@
                                 <p *ngIf="f.endDate.errors.required">Field is required</p>
                             </div>
                         </div>
-                        <div class="col-4" style="padding-top: 15px; padding-left: 40px;" >
+                        <div class="col-4" style="padding-top: 15px; padding-left: 40px;">
                             <div class="row" style="margin-top: 15px;">
                                 <div class="col-sm-2" style="margin-right: 30px">
                                     <h4>{{tripStatus}}</h4>
@@ -88,6 +99,7 @@
                             </div>
                         </div>
                     </div>
+
                     <input
                         #search
                         formControlName="placeInput"
@@ -98,15 +110,18 @@
                         autocomplete="off"
                         autocapitalize="off"
                         [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }"/>
-                    <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
-                        <div *ngIf="f.placeInput.errors.required">Field is required</div>
-                    </div>
-                    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 500px;width: 100%;">
+                    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom"
+                             style="height: 500px;width: 100%;">
                         <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
                     </agm-map>
+                    <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
+                        <p *ngIf="f.placeInput.errors.required">Field is required</p>
+                    </div>
                     <div class="text-center flex-fill" style="margin-bottom: 20px; margin-top: 10px;">
                         <button type="submit" class="btn-primary btn">Create</button>
-                        <button class="btn btn-secondary" type="reset" (click)="onReset()" style="margin-left: 10px;">Cancel</button>
+                        <button class="btn btn-secondary" type="reset" (click)="onReset()" style="margin-left: 10px;">
+                            Cancel
+                        </button>
                     </div>
                 </form>
             </div>

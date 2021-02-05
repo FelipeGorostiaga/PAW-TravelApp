@@ -41,7 +41,8 @@ public class ImageUtils {
         if (!extensionOptional.isPresent()) {
             return false;
         }
-        if (!extensionOptional.get().equals("jpeg") && !extensionOptional.get().equals("png") && !extensionOptional.get().equals("jpg")) {
+        String extension = extensionOptional.get().toLowerCase();
+        if (!extension.equals("jpeg") && !extension.equals("png") && !extension.equals("jpg")) {
             return false;
         }
         return size <= MAX_UPLOAD_SIZE;

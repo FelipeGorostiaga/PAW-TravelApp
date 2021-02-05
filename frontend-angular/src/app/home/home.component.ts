@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit {
   trips: any[][];
   currentPage: number;
   numberOfPages: number;
-  tripsPerPage = 6;
+  tripsPerPage = 4;
 
   constructor(private ts: ApiTripService,
               private spinner: NgxSpinnerService) { }

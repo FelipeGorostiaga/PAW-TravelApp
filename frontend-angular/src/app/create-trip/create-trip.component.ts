@@ -1,142 +1,164 @@
 import {Component, ElementRef, NgZone, OnInit, ViewChild} from '@angular/core';
 import {MapsAPILoader} from "@agm/core";
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 // @ts-ignore
 import {} from 'googlemaps';
-import {NavigationExtras, Router} from "@angular/router";
-import {ApiUserService} from "../services/api-user.service";
+import {Router} from "@angular/router";
 import {TripForm} from "../model/forms/trip-form";
 import {ApiTripService} from "../services/api-trip.service";
 import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
 import {DateUtilService} from "../services/date-util.service";
 
+
 @Component({
-  selector: 'app-create-trip',
-  templateUrl: './create-trip.component.html',
-  styleUrls: ['./create-trip.component.scss']
+    selector: 'app-create-trip',
+    templateUrl: './create-trip.component.html',
+    styleUrls: ['./create-trip.component.scss']
 })
 export class CreateTripComponent implements OnInit {
 
-  @ViewChild('search')
-  public searchElement: ElementRef;
-  searchControl: FormControl;
+    @ViewChild('search')
+    public searchElement: ElementRef;
+    searchControl: FormControl;
 
-  zoom: number;
-  latitude: number;
-  longitude: number;
-  latlongs: any = [];
-  submittedPlace: boolean;
-  tripStatus: string;
+    zoom: number;
+    latitude: number;
+    longitude: number;
+    latlongs: any = [];
+    submittedPlace: boolean;
+    tripStatus: string;
 
-  tripForm: FormGroup;
-  submitted = false;
+    tripForm: FormGroup;
+    submitted = false;
 
-  bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY' });
+    mapsErrorMessage: string;
+    datesErrorMessage: string;
 
-  // TODO: add errors from backend
-  constraintViolations: any;
-  receivedErrors: boolean;
+    bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, {containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY'});
 
-  constructor(private mapsAPILoader: MapsAPILoader, private  ngZone: NgZone, private router: Router,
-              private ts: ApiTripService, private formBuilder: FormBuilder, private dateUtilService: DateUtilService) { }
+    constructor(private mapsAPILoader: MapsAPILoader, private  ngZone: NgZone, private router: Router,
+                private ts: ApiTripService, private formBuilder: FormBuilder, private dateUtilService: DateUtilService) {
+    }
 
-  ngOnInit() {
+    ngOnInit() {
 
-    this.tripForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50) ]],
-      description: ['', [ Validators.required, Validators.minLength(25), Validators.maxLength(100) ]],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
-      placeInput: ['', Validators.required],
-      isPrivate: ['']
-    });
-
-    this.tripStatus = "Public";
-    this.submittedPlace = false;
-    this.zoom = 14;
-    this.searchControl = new FormControl();
-    this.setCurrentPosition();
-
-    this.mapsAPILoader.load().then(
-        () => {
-          const autocomplete = new google.maps.places.Autocomplete(this.searchElement.nativeElement,
-              {
-                types: [],
-              });
-
-          autocomplete.addListener('place_changed', () => {
-            this.ngZone.run(() => {
-              const place: google.maps.places.PlaceResult = autocomplete.getPlace();
-              if (place.geometry === undefined || place.geometry == null) {
-                return;
-              }
-              const latlong = {
-                latitude: place.geometry.location.lat(),
-                longitude: place.geometry.location.lng()
-              };
-              this.submittedPlace = true;
-              this.latitude = place.geometry.location.lat();
-              this.longitude = place.geometry.location.lng();
-              this.zoom = 16;
-              this.latlongs.push(latlong);
-              this.tripForm.get('placeInput').setValue(place.formatted_address);
-            });
-          });
+        this.tripForm = this.formBuilder.group({
+            name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(15)]],
+            description: ['', [Validators.required, Validators.minLength(25), Validators.maxLength(100)]],
+            startDate: ['', Validators.required],
+            endDate: ['', Validators.required],
+            placeInput: ['', Validators.required],
+            isPrivate: ['']
         });
-  }
 
-  setCurrentPosition() {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.latitude = position.coords.latitude;
-        this.longitude = position.coords.longitude;
-      });
-    } else {
-      this.latitude = -34.603722;
-      this.longitude = -58.381592;
-    }
-  }
+        this.tripStatus = "Public";
+        this.submittedPlace = false;
+        this.zoom = 14;
+        this.searchControl = new FormControl();
+        this.setCurrentPosition();
+        this.mapsAPILoader.load().then(
+            () => {
+                const autocomplete = new google.maps.places.Autocomplete(this.searchElement.nativeElement,
+                    {
+                        types: [],
+                    });
 
-  changeTripStatus() {
-    if (this.tripStatus === "Private") {
-      this.tripStatus = "Public";
-    } else {
-      this.tripStatus = "Private";
+                autocomplete.addListener('place_changed', () => {
+                    this.ngZone.run(() => {
+                        const place: google.maps.places.PlaceResult = autocomplete.getPlace();
+                        if (place.geometry === undefined || place.geometry == null) {
+                            return;
+                        }
+                        const latlong = {
+                            latitude: place.geometry.location.lat(),
+                            longitude: place.geometry.location.lng()
+                        };
+                        this.submittedPlace = true;
+                        this.latitude = place.geometry.location.lat();
+                        this.longitude = place.geometry.location.lng();
+                        this.zoom = 16;
+                        this.latlongs.push(latlong);
+                        this.tripForm.get('placeInput').setValue(place.formatted_address);
+                    });
+                });
+            });
     }
-  }
 
-  onSubmit() {
-    const values = this.tripForm.value;
-    this.submitted = true;
-    if (this.tripForm.invalid) {
-      return;
-    }
-    const formData = new TripForm(values.name, values.description, this.dateUtilService.convertToDateString(values.startDate),
-        this.dateUtilService.convertToDateString(values.endDate), values.placeInput, !!values.isPrivate, this.latitude, this.longitude);
-    console.log(JSON.stringify(formData));
-    this.ts.createTrip(formData).subscribe(
-        res => {
-          console.log("Trip created successfully");
-          const tripId = res.id;
-          const tripUrl = "/trip/" + tripId;
-          this.router.navigate([tripUrl]);
-        },
-        err => {
-          this.constraintViolations = err;
-          this.receivedErrors = true;
-          console.log("Error creating trip");
+    setCurrentPosition() {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                this.latitude = position.coords.latitude;
+                this.longitude = position.coords.longitude;
+            });
+        } else {
+            this.latitude = -34.603722;
+            this.longitude = -58.381592;
         }
-    );
-  }
+    }
 
-  onReset() {
-    this.tripStatus = "Public";
-    this.submitted = false;
-    this.tripForm.reset();
-  }
+    changeTripStatus() {
+        if (this.tripStatus === "Private") {
+            this.tripStatus = "Public";
+        } else {
+            this.tripStatus = "Private";
+        }
+    }
 
-  // convenience getter for easy access to form fields
-  get f() { return this.tripForm.controls; }
+    onSubmit() {
+        const values = this.tripForm.value;
+        this.submitted = true;
+        if (this.tripForm.invalid) {
+            return;
+        }
+        if (!!this.longitude || !!this.latitude) {
+            this.mapsErrorMessage = "Invalid google maps location";
+            return;
+        }
+        const formData = new TripForm(values.name, values.description, this.dateUtilService.convertToDateString(values.startDate),
+            this.dateUtilService.convertToDateString(values.endDate), values.placeInput, !!values.isPrivate, this.latitude, this.longitude);
+        console.log(JSON.stringify(formData));
+        this.ts.createTrip(formData).subscribe(
+            res => {
+                console.log("Trip created successfully");
+                const tripId = res.id;
+                const tripUrl = "/trip/" + tripId;
+                this.router.navigate([tripUrl]);
+            },
+            err => {
+                if (err.status === 400) {
+                    err.error.forEach(e => {
+                        if (e.invalidField === 'dates') {
+                            this.datesErrorMessage = e.message;
+                        }
+                        if (e.invalidField === 'googleMaps') {
+                            this.mapsErrorMessage = e.message;
+                        }
+                    })
+                }
+            }
+        );
+    }
+
+    onReset() {
+        this.tripStatus = "Public";
+        this.submitted = false;
+        this.tripForm.reset();
+        this.latitude = null;
+        this.longitude = null;
+    }
+
+    // convenience getter for easy access to form fields
+    get f() {
+        return this.tripForm.controls;
+    }
+
+    closeMapsAlert() {
+        this.mapsErrorMessage = null;
+    }
+
+    closeDateAlert() {
+        this.datesErrorMessage = null;
+    }
 }
 
 

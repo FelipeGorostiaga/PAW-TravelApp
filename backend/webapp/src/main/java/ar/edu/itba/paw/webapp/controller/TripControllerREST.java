@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -150,17 +151,21 @@ public class TripControllerREST {
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
         User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
+        List<ErrorDTO> errorDTOS = new ArrayList<>();
         if (!violations.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCreateForm>>>(violations) {}).build();
+            errorDTOS.addAll(violations.stream().map(violation -> new ErrorDTO(violation.getMessage(), violation.getInvalidValue().toString())).collect(Collectors.toList()));
         }
-        System.out.println(tripCreateForm);
+        if (!tripCreateForm.validateDates()) {
+            errorDTOS.add(new ErrorDTO("Invalid dates, start date must be before end date", "dates"));
+        }
+        if (!errorDTOS.isEmpty()) return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<List<ErrorDTO>>(errorDTOS){}).build();
         Trip trip;
         try {
             trip = tripService.create(loggedUser.getId(), tripCreateForm.getLatitude(), tripCreateForm.getLongitude(), tripCreateForm.getName(),
                     tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
                     DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());
         } catch (GooglePlacesException exception) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.status(Response.Status.CONFLICT)
                     .entity(new ErrorDTO("There was an error connecting to the GoogleMaps API", "googleMaps")).build();
         }
         if (trip != null) {
