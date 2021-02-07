@@ -1,15 +1,15 @@
 .container{
   height: 100%;
   align-content: center;
-  font-family: 'Numans', sans-serif;
+/*  font-family: 'Numans', sans-serif;*/
 }
 
 .card{
-  height: 370px;
+  height: 430px;
   margin-top: auto;
   margin-bottom: auto;
   width: 400px;
-  background-color: rgba(0,0,0,0.5) !important;
+  background-color: rgb(231, 231, 233) !important;
 }
 
 .social_icon span{
@@ -23,13 +23,8 @@
   cursor: pointer;
 }
 
-.card-header h3{
-  color: white;
-}
-
 .social_icon{
   position: absolute;
-  /*    right: 20px;*/
   top: -45px;
 }
 
@@ -48,32 +43,15 @@ input:focus{
 
 }
 
-.remember{
-  color: white;
-}
-
-.remember input
-{
-  width: 20px;
-  height: 20px;
-  margin-left: 15px;
-  margin-right: 5px;
-}
-
 .login_btn{
   color: white;
   background-color:   forestgreen;
-  /* background-color: #FFC312;*/
   width: 100px;
-}
-
-.links{
-  color: white;
 }
 
 .links a{
   margin-left: 4px;
-  color: seashell;
+  color: #2056d6;
 }
 
 a:hover {
