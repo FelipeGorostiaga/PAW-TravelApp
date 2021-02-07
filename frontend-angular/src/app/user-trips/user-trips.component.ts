@@ -4,6 +4,7 @@ import {Trip} from "../model/trip";
 import {ApiUserService} from "../services/api-user.service";
 import {AuthService} from "../services/auth/auth.service";
 import {User} from "../model/user";
+import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 
 @Component({
   selector: 'app-user-trips',
@@ -19,17 +20,22 @@ export class UserTripsComponent implements OnInit {
   loggedUser: User;
   loading = true;
 
-  constructor(private userService: ApiUserService, private authService: AuthService, private router: Router) { }
+  constructor(private userService: ApiUserService, private authService: AuthService, private router: Router,
+              private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
+    this.spinner.show();
     this.loggedUser = this.authService.getLoggedUser();
     this.userService.getUserTrips(this.loggedUser.id).subscribe(
         res => {
+          let totalTrips = res.length;
           this.trips = this.chopList(res);
-          this.numberOfPages = Math.ceil(this.trips.length / this.tripsPerPage);
+          this.numberOfPages = Math.ceil(totalTrips / this.tripsPerPage);
           this.loading = false;
+          this.spinner.hide();
         },
         error => {
+          this.spinner.hide();
           this.loading = false;
         }
     );

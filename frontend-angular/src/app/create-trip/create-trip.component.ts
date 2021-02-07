@@ -147,7 +147,6 @@ export class CreateTripComponent implements OnInit {
         this.longitude = null;
     }
 
-    // convenience getter for easy access to form fields
     get f() {
         return this.tripForm.controls;
     }

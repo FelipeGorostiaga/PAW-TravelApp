@@ -6,7 +6,6 @@ import ar.edu.itba.paw.model.Trip;
 public class TripDTO {
 
     private long id;
-    //private long adminId;
     private PlaceDTO startPlace;
     private boolean isPrivate;
     private int membersAmount;
@@ -26,7 +25,6 @@ public class TripDTO {
         this.description = trip.getDescription();
         this.startDate = DateManipulation.changeDateFormat(trip.getStartDate());
         this.endDate = DateManipulation.changeDateFormat(trip.getEndDate());
-        //this.adminId = trip.getAdminId();
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
         this.membersAmount = trip.getMembers().size();
@@ -73,14 +71,6 @@ public class TripDTO {
     public void setId(long id) {
         this.id = id;
     }
-
-/*    public long getAdminId() {
-        return adminId;
-    }
-
-    public void setAdminId(long adminId) {
-        this.adminId = adminId;
-    }*/
 
     public String getName() {
         return name;

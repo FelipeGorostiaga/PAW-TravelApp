@@ -23,9 +23,9 @@ export class HomeComponent implements OnInit {
       this.ts.getAllTrips().subscribe(
         res => {
             this.trips = this.chopList(res);
-            this.numberOfPages = Math.ceil(this.trips.length / this.tripsPerPage);
+            let totalTrips = res.length;
+            this.numberOfPages = Math.ceil(totalTrips / this.tripsPerPage );
             this.spinner.hide();
-            console.log(this.trips);
         },
         err => {
             this.spinner.hide();
