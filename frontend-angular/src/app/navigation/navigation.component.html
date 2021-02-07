@@ -31,14 +31,6 @@
             </button>
         </form>
         <a
-                *ngIf="!isLoggedIn"
-                id="signinButton"
-                class="btn btn-primary my-2 my-sm-0"
-                routerLink="/login"
-                style="margin-left: 95%;"
-
-        >Sign in</a>
-        <a
                 *ngIf="isLoggedIn"
                 [routerLink] = "['/profile/' + loggedUser.id]">
             <img alt="Profile icon" style="margin-left: 10px" src="../../assets/icons/man.png"/>

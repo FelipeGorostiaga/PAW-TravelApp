@@ -4,6 +4,28 @@
   background-repeat: no-repeat;
 }
 
+#image-background {
+  background-image: url("../../assets/images/trekkingcouple.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 1191px;
+  width: 100%;
+}
+
+#custom-text {
+  padding-top: 200px;
+  padding-left: 1100px;
+}
+
+#inner-text {
+  width: 70%;
+}
+
+#custom-buttons {
+  padding-top: 50px;
+  padding-left: 1300px;
+}
+
 #main-container {
   min-height: 100vh;
 }
