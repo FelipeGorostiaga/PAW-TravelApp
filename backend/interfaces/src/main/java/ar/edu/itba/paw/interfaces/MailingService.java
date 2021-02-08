@@ -7,11 +7,11 @@ public interface MailingService {
 
     void sendRegisterMail(User user, String contextURL);
 
-    void sendJoinTripMail(String emailA, String adminName, String tripName, String firstname, String lastname);
+    void sendJoinTripMail(User tripMember, Trip trip);
 
-    void sendExitTripMail(String emailA, String adminName, String tripName, String firstname, String lastname);
+    void sendExitTripMail(User tripMember, Trip trip);
 
-    void sendDeleteTripMail(String email, String firstname, String lastname, String tripName);
+    void sendDeleteTripMail(Trip trip);
 
     void sendJoinRequestMail(Trip t, User user, String token);
 

@@ -39,6 +39,7 @@ public class MailingServiceImpl implements MailingService {
     private static final String EMAIL_NAME = "meet.travel.paw@gmail.com";
     private static final String EMAIL_PASS = "power123321";
     private static final Locale locale = getLocale();
+    // TODO: CHANGE THIS IN PRODUCTION
     private static final String frontEndURL = "http://localhost:4200";
 
     @Autowired
@@ -74,47 +75,47 @@ public class MailingServiceImpl implements MailingService {
 
     @Async
     @Override
-    public void sendJoinTripMail(String emailA, String adminName, String tripName, String firstname, String lastname) {
-        List<Recipient> recipients = new ArrayList<>();
-        recipients.add(new Recipient(adminName, emailA, null));
+    public void sendJoinTripMail(User tripMember, Trip trip) {
+        List<Recipient> recipients = trip.getMembers().stream()
+                .map(TripMember::getUser)
+                .map(user -> new Recipient(user.getFirstname(), user.getEmail(), null)).collect(Collectors.toList());
         String subject = applicationContext.getMessage("mailJoinSubject", null, locale);
         Context ctx = new Context(locale);
-        ctx.setVariable("email", emailA);
-        ctx.setVariable("adminname", adminName);
-        ctx.setVariable("firstname", firstname);
-        ctx.setVariable("lastname", lastname);
-        ctx.setVariable("tripname", tripName);
+        String tripURL = frontEndURL + "/trip/" + trip.getId();
+        ctx.setVariable("firstname", tripMember.getFirstname());
+        ctx.setVariable("lastname", tripMember.getLastname());
+        ctx.setVariable("tripname", trip.getName());
+        ctx.setVariable("tripURL", tripURL);
         String html = htmlTemplateEngine.process(JOIN_TRIP_TEMPLATE, ctx);
         sendMail(recipients, html, subject);
     }
 
     @Async
     @Override
-    public void sendExitTripMail(String emailA, String adminName, String tripName, String firstname, String lastname) {
-        List<Recipient> recipients = new ArrayList<>();
-        recipients.add(new Recipient(adminName, emailA, null));
+    public void sendExitTripMail(User tripMember, Trip trip) {
+        List<Recipient> recipients = trip.getMembers().stream()
+                .map(TripMember::getUser)
+                .map(user -> new Recipient(user.getFirstname(), user.getEmail(), null)).collect(Collectors.toList());
         String subject = applicationContext.getMessage("mailExitSubject", null, locale);
         Context ctx = new Context(locale);
-        ctx.setVariable("email", emailA);
-        ctx.setVariable("adminname", adminName);
-        ctx.setVariable("firstname", firstname);
-        ctx.setVariable("lastname", lastname);
-        ctx.setVariable("tripname", tripName);
+        String tripURL = frontEndURL + "/trip/" + trip.getId();
+        ctx.setVariable("firstname", tripMember.getFirstname());
+        ctx.setVariable("lastname", tripMember.getLastname());
+        ctx.setVariable("tripname", trip.getName());
+        ctx.setVariable("tripURL", tripURL);
         String html = htmlTemplateEngine.process(EXIT_TRIP_TEMPLATE, ctx);
         sendMail(recipients, html, subject);
     }
 
     @Async
     @Override
-    public void sendDeleteTripMail(String email, String firstname, String lastname, String tripName) {
-        List<Recipient> recipients = new ArrayList<>();
-        recipients.add(new Recipient(firstname + " " + lastname, email, null));
+    public void sendDeleteTripMail(Trip trip) {
+        List<Recipient> recipients = trip.getMembers().stream()
+                .map(TripMember::getUser)
+                .map(user -> new Recipient(user.getFirstname(), user.getEmail(), null)).collect(Collectors.toList());
         String subject = applicationContext.getMessage("mailDeleteSubject", null, locale);
         Context ctx = new Context(locale);
-        ctx.setVariable("email", email);
-        ctx.setVariable("firstname", firstname);
-        ctx.setVariable("lastname", lastname);
-        ctx.setVariable("tripname", tripName);
+        ctx.setVariable("tripname", trip.getName());
         String html = htmlTemplateEngine.process(DELETE_TRIP_TEMPLATE, ctx);
         sendMail(recipients, html, subject);
     }
@@ -147,9 +148,11 @@ public class MailingServiceImpl implements MailingService {
         List<Recipient> recipients = new ArrayList<>();
         recipients.add(new Recipient(requesterName, requester.getEmail(), null));
         Context ctx = new Context(locale);
+        String tripURL = frontEndURL + "/trip/" + trip.getId();
         ctx.setVariable("requester", requesterName);
         ctx.setVariable("admin", loggedUser.getFirstname() + " " + loggedUser.getLastname());
         ctx.setVariable("tripname", trip.getName());
+        ctx.setVariable("tripURL", tripURL);
         String subject;
         String html;
         if (accepted) {

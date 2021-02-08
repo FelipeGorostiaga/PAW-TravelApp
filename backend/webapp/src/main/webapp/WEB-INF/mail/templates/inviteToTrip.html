@@ -3,11 +3,58 @@
 <head>
     <title th:remove="all" th:text="#{mailJoinTitle}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        .container {
+            text-align: center;
+            margin-bottom: 20px;
+            color: black;
+        }
+        .button-primary {
+            margin-top: 20px;
+            background-color: lightblue;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+        .button-secondary {
+            margin-top: 20px;
+            background-color: darkgrey;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+        .button-aux {
+            margin-top: 20px;
+            background-color: lightskyblue;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+        a {
+            color: white;
+            text-decoration-color: white;
+            text-decoration: none!important;
+        }
+    </style>
 </head>
 <body>
-<p  th:text="#{mailInviteToTripBody(${invitedUserName}, ${admin}, ${tripName})}" ></p>
-<button><a th:href="${acceptInviteURL}">Accept Invitation</a></button>
-<button><a th:href="${denyInviteURL}">Reject</a></button>
-<button><a th:href="${tripURL}">View Trip</a></button>
+<div class="container">
+    <h3  th:text="#{mailInviteToTripBody(${invitedUserName}, ${admin}, ${tripName})}" ></h3>
+    <a class="button-primary" th:href="${acceptInviteURL}">Accept Invitation</a></button>
+    <a class="button-secondary" th:href="${denyInviteURL}">Reject</a></button>
+    <a class="button-aux" th:href="${tripURL}">View Trip</a></button>
+</div>
 </body>
 </html>
