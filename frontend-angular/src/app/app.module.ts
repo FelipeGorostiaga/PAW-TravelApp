@@ -45,6 +45,7 @@ import {UserNotificationsComponent} from './user-notifications/user-notification
 import {CompleteRatesComponent} from './complete-rates/complete-rates.component';
 import {RatingModule} from 'ngx-bootstrap/rating';
 import { RateFormComponent } from './complete-rates/rate-form/rate-form.component';
+import { ForbiddenComponent } from './errors/forbidden/forbidden.component';
 
 
 @NgModule({
@@ -78,6 +79,7 @@ import { RateFormComponent } from './complete-rates/rate-form/rate-form.componen
         UserNotificationsComponent,
         CompleteRatesComponent,
         RateFormComponent,
+        ForbiddenComponent,
 
     ],
     imports: [

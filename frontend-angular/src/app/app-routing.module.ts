@@ -18,6 +18,7 @@ import {RespondInviteComponent} from "./trip/respond-invite/respond-invite.compo
 import {UserRatesComponent} from "./user-rates/user-rates.component";
 import {UserNotificationsComponent} from "./user-notifications/user-notifications.component";
 import {CompleteRatesComponent} from "./complete-rates/complete-rates.component";
+import {ForbiddenComponent} from "./errors/forbidden/forbidden.component";
 
 const routes: Routes = [
     {
@@ -94,6 +95,10 @@ const routes: Routes = [
     {
         path: '',
         component: IndexComponent
+    },
+    {
+        path: 'forbidden',
+        component: ForbiddenComponent
     },
     {
         path: '404',
