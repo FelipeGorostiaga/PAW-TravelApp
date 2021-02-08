@@ -8,6 +8,7 @@ import {TripForm} from "../model/forms/trip-form";
 import {ApiTripService} from "../services/api-trip.service";
 import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
 import {DateUtilService} from "../services/date-util.service";
+import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 
 
 @Component({
@@ -36,12 +37,17 @@ export class CreateTripComponent implements OnInit {
 
     bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, {containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY'});
 
-    constructor(private mapsAPILoader: MapsAPILoader, private  ngZone: NgZone, private router: Router,
-                private ts: ApiTripService, private formBuilder: FormBuilder, private dateUtilService: DateUtilService) {
+    constructor(private mapsAPILoader: MapsAPILoader,
+                private  ngZone: NgZone,
+                private router: Router,
+                private ts: ApiTripService,
+                private formBuilder: FormBuilder,
+                private dateUtilService: DateUtilService,
+                private spinner: NgxSpinnerService) {
     }
 
     ngOnInit() {
-
+        this.spinner.show();
         this.tripForm = this.formBuilder.group({
             name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(15)]],
             description: ['', [Validators.required, Validators.minLength(25), Validators.maxLength(100)]],
@@ -81,6 +87,7 @@ export class CreateTripComponent implements OnInit {
                         this.tripForm.get('placeInput').setValue(place.formatted_address);
                     });
                 });
+                this.spinner.hide();
             });
     }
 
@@ -133,7 +140,7 @@ export class CreateTripComponent implements OnInit {
                         if (e.invalidField === 'googleMaps') {
                             this.mapsErrorMessage = e.message;
                         }
-                    })
+                    });
                 }
             }
         );
