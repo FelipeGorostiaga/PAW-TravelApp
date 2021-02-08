@@ -1,15 +1,14 @@
 .container{
   height: 100%;
   align-content: center;
-/*  font-family: 'Numans', sans-serif;*/
 }
 
 .card{
-  height: 430px;
+  height: 350px;
   margin-top: auto;
   margin-bottom: auto;
   width: 400px;
-  background-color: rgb(231, 231, 233) !important;
+  background-color: rgb(248, 248, 253) !important;
 }
 
 .social_icon span{
@@ -31,14 +30,13 @@
 .input-group-prepend span{
   width: 50px;
   background-color: white;
-  /*background-color: #FFC312;*/
   color: black;
   border:0 !important;
 }
 
 
 input:focus{
-  outline: 0 0 0 0  !important;
+/*  outline: 0 0 0 0  !important;*/
   box-shadow: 0 0 0 0 !important;
 
 }
@@ -70,3 +68,5 @@ label {
 label:hover {
   cursor:pointer;
 }
+
+
