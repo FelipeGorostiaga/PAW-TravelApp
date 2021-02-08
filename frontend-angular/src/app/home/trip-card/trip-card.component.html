@@ -2,15 +2,13 @@
     <div class="col-auto mb-3">
         <div class="card trip-card" style="width: 30rem;">
             <img *ngIf="!loadingImage && hasImage" class="card-img-top" [src]="tripImage">
-            <!-- TODO: resize image and remove height attribute-->
-            <img *ngIf="!loadingImage && !hasImage" class="card-img-top" src="./assets/images/trip-default-card.jpg"
-                 height="280">
+            <img *ngIf="!loadingImage && !hasImage" class="card-img-top" src="./assets/images/trip-default-card.jpg">
             <div class="card-body">
                 <h5 class="card-title" style="font-size: 35px;">{{trip?.name}}</h5>
                 <p class="card-text">{{trip?.description}}</p>
                 <p class="card-text"><i class="fas fa-map-marker-alt"></i></p>
                 <p class="card-text">
-                    <i class="far fa-calendar-alt"></i>{{trip?.startDate}} - {{trip?.endDate}}
+                    <i class="far fa-calendar-alt"></i>{{startDate | date}} - {{endDate | date}}
                 </p>
             </div>
             <div class="card-footer">
