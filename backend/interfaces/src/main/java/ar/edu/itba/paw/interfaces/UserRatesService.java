@@ -6,5 +6,7 @@ import ar.edu.itba.paw.model.UserRate;
 
 public interface UserRatesService {
 
-    UserRate createRate(Trip trip, User ratedBy, User ratedUser, int rate, String comment);
+    UserRate createRate(Trip trip, User ratedBy, User ratedUser);
+
+    UserRate rateUser(Trip trip, User ratedUser, User ratedBy, int rate, String comment);
 }

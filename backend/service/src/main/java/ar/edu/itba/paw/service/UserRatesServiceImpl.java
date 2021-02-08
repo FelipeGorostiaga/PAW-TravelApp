@@ -8,6 +8,8 @@ import ar.edu.itba.paw.model.UserRate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserRatesServiceImpl implements UserRatesService {
 
@@ -15,7 +17,16 @@ public class UserRatesServiceImpl implements UserRatesService {
     UserDao userDao;
 
     @Override
-    public UserRate createRate(Trip trip, User ratedBy, User ratedUser, int rate, String comment) {
-        return userDao.createRate(trip, ratedBy, ratedUser, rate, comment);
+    public UserRate createRate(Trip trip, User ratedBy, User ratedUser) {
+        return userDao.createRate(trip, ratedUser, ratedBy);
+    }
+
+    @Override
+    public UserRate rateUser(Trip trip, User ratedUser, User ratedBy, int rate, String comment) {
+        if (userDao.rateUser(trip, ratedUser, ratedBy, rate, comment)) {
+            Optional<UserRate> rateOptional = userDao.findUserRate(trip, ratedUser, ratedBy);
+            return rateOptional.orElse(null);
+        }
+        return null;
     }
 }

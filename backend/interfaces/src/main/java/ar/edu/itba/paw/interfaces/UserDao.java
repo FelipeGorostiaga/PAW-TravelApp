@@ -11,6 +11,8 @@ import java.util.Optional;
 
 public interface UserDao {
 
+    Optional<UserRate> findUserRate(Trip trip, User ratedUser, User ratedBy);
+
     Optional<User> findById(final long id);
 
     Optional<User> findByUsername(final String email);
@@ -30,9 +32,11 @@ public interface UserDao {
 
     List<UserRate> getUserRates(long userId);
 
-    UserRate createRate(Trip trip, User ratedBy, User ratedUser, int rate, String comment);
+    UserRate createRate(Trip trip, User ratedUser, User ratedBy);
 
     List<TripInvitation> getTripInvitations(long userId);
 
     List<UserRate> getUserPendingRates(long userId);
+
+    boolean rateUser(Trip trip, User ratedUser, User ratedBy, int rate, String comment);
 }

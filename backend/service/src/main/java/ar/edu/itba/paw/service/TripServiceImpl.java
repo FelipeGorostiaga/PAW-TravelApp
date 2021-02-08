@@ -40,6 +40,9 @@ public class TripServiceImpl implements TripService {
     @Autowired
     private TripPicturesService tripPicturesService;
 
+    @Autowired
+    private UserRatesService userRatesService;
+
     @Override
     public Trip create(long userId, double latitude, double longitude, String name, String description,
                        LocalDate startDate, LocalDate endDate, boolean isPrivate) throws GooglePlacesException {
@@ -76,7 +79,21 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void markTripAsCompleted(long tripId) {
+        Optional<Trip> tripOptional = findById(tripId);
+        if (!tripOptional.isPresent()) {
+            return;
+        }
+        Trip trip = tripOptional.get();
         td.markTripAsCompleted(tripId);
+        Set<TripMember> tripMembers = trip.getMembers();
+        // create bidirectional rates for trip members
+        for (TripMember member: tripMembers) {
+            for (TripMember member2: tripMembers) {
+                if (!member.equals(member2)) {
+                    userRatesService.createRate(trip, member.getUser(), member2.getUser());
+                }
+            }
+        }
     }
 
     @Override
@@ -251,6 +268,7 @@ public class TripServiceImpl implements TripService {
         return isMember(trip, ratedUser) && isMember(trip, ratedBy);
     }
 
+    @Override
     public boolean isCreator(Trip trip, User user) {
         return trip.getMembers().stream().anyMatch(member -> member.getUser().equals(user) && member.getRole().equals(TripMemberRole.CREATOR));
     }

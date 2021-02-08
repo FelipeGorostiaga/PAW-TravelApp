@@ -4,7 +4,10 @@
         <img *ngIf="!hasImage" src="./assets/images/trip-default-info.jpg" alt="Trip image">
     </div>
     <div class="col-6">
-        <h3><small>Status:</small>   {{trip.status}}</h3>
+        <!--TODO: change trip status to locale correct status-->
+        <h3 *ngIf="trip?.status === 'DUE'" style="color: white"><span class="badge bg-primary">{{trip.status}}</span></h3>
+        <h3 *ngIf="trip?.status === 'COMPLETED'" style="color: white"><span class="badge bg-danger">{{trip.status}}</span></h3>
+        <h3 *ngIf="trip?.status === 'IN_PROGRESS'" style="color: white" ><span class="badge bg-success">IN PROGRESS</span></h3>
         <div class="display-3 ">{{trip?.name}}</div>
         <p class="text-justify" style="font-size: 150%;margin-top: 10px;">{{trip?.description}}</p>
     </div>

@@ -272,8 +272,8 @@ public class UserControllerREST {
         if (!tripService.traveledTogether(trip, ratedUser, ratedBy)) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        UserRate userRate = userRatesService.createRate(trip, ratedBy, ratedUser, form.getRate(), form.getComment());
-        return Response.ok(new RateDTO(userRate)).build();
+        UserRate rate = userRatesService.rateUser(trip, ratedUser, ratedBy, form.getRate(), form.getComment());
+        return Response.ok(new RateDTO(rate)).build();
     }
 
     @GET

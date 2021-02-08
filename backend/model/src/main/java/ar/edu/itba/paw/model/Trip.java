@@ -2,9 +2,7 @@ package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "trips")
@@ -39,10 +37,13 @@ public class Trip implements Comparable<Trip> {
     private Place startPlace;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
-    private List<TripMember> members = new LinkedList<>();
+    private Set<TripMember> members = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
     private List<Activity> activities = new LinkedList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip")
+    private List<UserRate> rates = new LinkedList<>();
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip")
     private TripPicture profilePicture;
@@ -65,6 +66,14 @@ public class Trip implements Comparable<Trip> {
         this.endDate = endDate;
         this.isPrivate = isPrivate;
         this.status = TripStatus.DUE;
+    }
+
+    public List<UserRate> getRates() {
+        return rates;
+    }
+
+    public void setRates(List<UserRate> rates) {
+        this.rates = rates;
     }
 
     public List<TripInvitation> getPendingConfirmations() {
@@ -177,11 +186,11 @@ public class Trip implements Comparable<Trip> {
         return Objects.hash(id);
     }
 
-    public List<TripMember> getMembers() {
+    public Set<TripMember> getMembers() {
         return members;
     }
 
-    public void setMembers(List<TripMember> members) {
+    public void setMembers(Set<TripMember> members) {
         this.members = members;
     }
 }

@@ -77,9 +77,7 @@ export class InformationComponent implements OnInit {
     ngOnInit() {
         this.startDate = this.dateUtils.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtils.stringToDate(this.trip.endDate);
-        this.getTripStatus();
         this.loadingImage = true;
-
         // TODO: remove required image upload !!!!!!!!!!!!!!!
         this.editTripForm = this.formBuilder.group({
             imageUpload: ['', Validators.required],
@@ -249,20 +247,6 @@ export class InformationComponent implements OnInit {
                     console.log(error);
                 }
             )
-        }
-    }
-
-    private getTripStatus() {
-        switch (this.trip.status) {
-            case (0):
-                this.status = "DUE";
-                break;
-            case (1):
-                this.status = "IN PROGRESS";
-                break;
-            case (2):
-                this.status = "COMPLETED";
-                break;
         }
     }
 }

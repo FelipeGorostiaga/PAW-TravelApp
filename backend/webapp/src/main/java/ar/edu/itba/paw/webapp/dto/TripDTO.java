@@ -2,6 +2,9 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripStatus;
+
+import java.time.LocalDate;
 
 public class TripDTO {
 
@@ -28,8 +31,15 @@ public class TripDTO {
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
         this.membersAmount = trip.getMembers().size();
+        TripStatus status = trip.getStatus();
+        if (!status.equals(TripStatus.COMPLETED)) {
+            LocalDate now = LocalDate.now();
+            if (now.isAfter(trip.getStartDate()) || now.isEqual(trip.getStartDate())) {
+                this.status = TripStatus.IN_PROGRESS.name();
+                return;
+            }
+        }
         this.status = trip.getStatus().name();
-
     }
 
     public String getStatus() {

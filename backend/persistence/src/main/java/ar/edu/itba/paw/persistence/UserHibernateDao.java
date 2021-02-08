@@ -65,10 +65,10 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public UserRate createRate(Trip trip, User ratedBy, User ratedUser, int rate, String comment) {
-        final UserRate user = new UserRate(rate,ratedUser, ratedBy, comment, LocalDateTime.now());
-        em.persist(user);
-        return user;
+    public UserRate createRate(Trip trip, User ratedUser, User ratedBy) {
+        final UserRate rate = new UserRate(trip, ratedUser, ratedBy);
+        em.persist(rate);
+        return rate;
     }
 
     @Override
@@ -83,6 +83,25 @@ public class UserHibernateDao implements UserDao {
         final TypedQuery<UserRate> query = em.createQuery("FROM UserRate AS ur WHERE ur.ratedByUser.id = :userId AND ur.pending = true", UserRate.class);
         query.setParameter("userId", userId);
         return query.getResultList();
+    }
+
+    @Override
+    public boolean rateUser(Trip trip, User ratedUser, User ratedBy, int rate, String comment) {
+        Query query = em.createQuery("UPDATE UserRate SET rate = :rate, comment = :comment, createdOn = :createdOn WHERE trip.id = :tripId AND ratedUser.id = :ratedId AND ratedByUser.id = :ratedById");
+        query.setParameter("tripId", trip.getId());
+        query.setParameter("ratedId", ratedUser.getId());
+        query.setParameter("ratedById", ratedBy.getId());
+        query.setParameter("createdOn", LocalDateTime.now());
+        return query.executeUpdate() != 0;
+    }
+
+    @Override
+    public Optional<UserRate> findUserRate(Trip trip, User ratedUser, User ratedBy) {
+        final TypedQuery<UserRate> query = em.createQuery("FROM UserRate AS ur WHERE ur.trip.id = :tripID AND ur.ratedUser.id = :ratedId AND ur.ratedByUser.id = :ratedById ", UserRate.class);
+        query.setParameter("tripId", trip.getId());
+        query.setParameter("ratedId", ratedUser.getId());
+        query.setParameter("ratedById", ratedBy.getId());
+        return query.getResultList().stream().findAny();
     }
 
     @Override

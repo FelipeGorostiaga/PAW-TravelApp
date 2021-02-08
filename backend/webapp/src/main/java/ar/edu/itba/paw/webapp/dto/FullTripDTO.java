@@ -3,7 +3,10 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
+import ar.edu.itba.paw.model.TripStatus;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +41,14 @@ public class FullTripDTO {
         this.comments = comments.stream().map(TripCommentDTO::new).collect(Collectors.toList());
         this.activities = trip.getActivities().stream().map(ActivityDTO::new).collect(Collectors.toList());
         this.members = trip.getMembers().stream().map(TripMemberDTO::new).collect(Collectors.toSet());
+        TripStatus status = trip.getStatus();
+        if (!status.equals(TripStatus.COMPLETED)) {
+            LocalDate now = LocalDate.now();
+            if (now.isAfter(trip.getStartDate()) || now.isEqual(trip.getStartDate())) {
+                this.status = TripStatus.IN_PROGRESS.name();
+                return;
+            }
+        }
         this.status = trip.getStatus().name();
     }
 

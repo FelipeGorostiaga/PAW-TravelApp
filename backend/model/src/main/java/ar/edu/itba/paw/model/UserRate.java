@@ -12,22 +12,10 @@ public class UserRate {
         // Just for Hibernate
     }
 
-    public UserRate(int rate, User ratedUser, User ratedByUser, String comment, LocalDateTime createdOn) {
-        this.rate = rate;
-        this.ratedByUser = ratedByUser;
-        this.ratedUser = ratedUser;
-        this.comment = comment;
-        this.createdOn = createdOn;
-        this.pending = true;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userRate_id_seq")
     @SequenceGenerator(sequenceName = "userRate_id_seq", name = "userRate_id_seq", allocationSize = 1)
     private long id;
-
-    @Column(nullable = false)
-    private int rate;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private User ratedByUser;
@@ -35,7 +23,13 @@ public class UserRate {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private User ratedUser;
 
-    @Column(length = 500, nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    private Trip trip;
+
+    @Column(nullable = false)
+    private int rate;
+
+    @Column(length = 500)
     private String comment;
 
     @Column(nullable = false)
@@ -43,6 +37,21 @@ public class UserRate {
 
     @Column
     private LocalDateTime createdOn;
+
+    public UserRate(Trip trip, User ratedUser, User ratedByUser) {
+        this.trip = trip;
+        this.ratedByUser = ratedByUser;
+        this.ratedUser = ratedUser;
+        this.pending = true;
+    }
+
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trip trip) {
+        this.trip = trip;
+    }
 
     public boolean isPending() {
         return pending;
