@@ -36,6 +36,7 @@
     <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
     <google-places-api-java-version>2.1.7</google-places-api-java-version>
     <simple-java-mail-version>5.1.6</simple-java-mail-version>
+    <bootstrap-version> 4.6.0</bootstrap-version>
   </properties>
 
   <build>
@@ -73,6 +74,11 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>bootstrap</artifactId>
+        <version>${bootstrap-version}</version>
+      </dependency>
       <dependency>
         <groupId>org.simplejavamail</groupId>
         <artifactId>simple-java-mail</artifactId>
