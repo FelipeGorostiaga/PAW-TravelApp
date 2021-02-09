@@ -10,7 +10,6 @@ import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
 import {DateUtilService} from "../services/date-util.service";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 
-
 @Component({
     selector: 'app-create-trip',
     templateUrl: './create-trip.component.html',
@@ -55,6 +54,8 @@ export class CreateTripComponent implements OnInit {
             endDate: ['', Validators.required],
             placeInput: ['', Validators.required],
             isPrivate: ['']
+        }, {
+            validators: validInterval('startDate', 'endDate')
         });
 
         this.tripStatus = "Public";
@@ -123,10 +124,8 @@ export class CreateTripComponent implements OnInit {
         }
         const formData = new TripForm(values.name, values.description, this.dateUtilService.convertToDateString(values.startDate),
             this.dateUtilService.convertToDateString(values.endDate), values.placeInput, !!values.isPrivate, this.latitude, this.longitude);
-        console.log(JSON.stringify(formData));
         this.ts.createTrip(formData).subscribe(
             res => {
-                console.log("Trip created successfully");
                 const tripId = res.id;
                 const tripUrl = "/trip/" + tripId;
                 this.router.navigate([tripUrl]);
@@ -165,6 +164,25 @@ export class CreateTripComponent implements OnInit {
     closeDateAlert() {
         this.datesErrorMessage = null;
     }
+}
+
+export function validInterval(startControlName: string, endControlName: string) {
+    return (formGroup: FormGroup) => {
+        const startControl = formGroup.controls[startControlName];
+        const endControl = formGroup.controls[endControlName];
+        if (startControl.errors || endControl.errors) {
+            return;
+        }
+        let now = new Date();
+        let startDate = startControl.value;
+        let endDate = endControl.value;
+        if (startDate < now || startDate > endDate) {
+            startControl.setErrors({invalidInterval: true});
+            endControl.setErrors({invalidInterval: true});
+        } else {
+            startControl.setErrors(null);
+        }
+    };
 }
 
 

@@ -318,6 +318,7 @@
                                        placeholder="Enter a valid birthday">
                                 <div *ngIf="submitted && f.birthDate?.errors" class="invalid-feedback">
                                     <div *ngIf="f.birthDate?.errors.required">Date of birth is required</div>
+                                    <div *ngIf="f.birthDate?.errors.validBirthday">Invalid date</div>
                                     <div *ngIf="f.birthDate?.errors.invalidDate">Must be a valid date format 'dd/mm/yyy'</div>
                                 </div>
                             </div>

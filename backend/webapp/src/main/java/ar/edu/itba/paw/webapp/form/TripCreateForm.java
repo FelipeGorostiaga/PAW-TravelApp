@@ -110,7 +110,7 @@ public class TripCreateForm {
         LocalDate sDate = DateManipulation.stringToLocalDate(startDate);
         LocalDate eDate = DateManipulation.stringToLocalDate(endDate);
         LocalDate now = LocalDate.now();
-        return  now.isBefore(sDate) && sDate.isBefore(eDate);
+        return  (now.isBefore(sDate) || now.isEqual(sDate)) && sDate.isBefore(eDate);
     }
 
     @Override

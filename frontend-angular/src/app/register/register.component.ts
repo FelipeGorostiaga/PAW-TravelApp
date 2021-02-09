@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
             nationality: ['', Validators.required],
             customRadioInline1: ['', Validators.required]
         }, {
-            validators: [MustMatch('password', 'confirmPassword'), ValidDate('birthDate')]
+            validators: [MustMatch('password', 'confirmPassword'), validBirthday('birthDate')]
         });
     }
 
@@ -99,8 +99,25 @@ export function MustMatch(controlName: string, matchingControlName: string) {
     };
 }
 
+export function validBirthday(controlName: string) {
+    return (formGroup: FormGroup) => {
+        const control = formGroup.controls[controlName];
+        if (control.errors) {
+            return;
+        }
+        let birthDate: Date = control.value;
+        let now: Date = new Date();
+        // set error on matchingControl if validation fails
+        if (birthDate >= now) {
+            control.setErrors({validBirthday: true});
+        } else {
+            control.setErrors(null);
+        }
+    };
+}
 
-export function ValidDate(controlName: string) {
+
+/*export function ValidDate(controlName: string) {
     return (formGroup: FormGroup) => {
         const control = formGroup.controls[controlName];
         if (control.errors) {
@@ -136,5 +153,5 @@ export function validDate(date: string): boolean {
     }
     // Check the range of the day
     return day > 0 && day <= monthLength[month - 1];
-}
+}*/
 
