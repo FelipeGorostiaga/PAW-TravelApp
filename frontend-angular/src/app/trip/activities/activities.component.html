@@ -4,7 +4,7 @@
 <div *ngIf="trip?.activities?.length !== 0">
     <div class="list-group" style="margin-bottom: 20px">
         <app-map-activity *ngFor="let activity of trip?.activities"
-                          [activity]="activity" (deleteActivityEvent)="deleteActivity($event)">
+                          [activity]="activity" (deleteActivityEvent)="deleteActivity(activity)">
         </app-map-activity>
     </div>
 </div>
@@ -58,8 +58,7 @@
                        [bsConfig]="bsConfig">
                 <div *ngIf="submitted && f.startDate.errors" class="invalid-feedback">
                     <p *ngIf="f.startDate.errors.required">Field is required</p>
-                    <p *ngIf="f.startDate.errors.invalidDate">Activity must start the same date or before end
-                        date</p>
+                    <p *ngIf="f.startDate.errors.invalidInterval">Invalid dates</p>
                 </div>
             </div>
             <div class="form-group col-6">
@@ -74,6 +73,7 @@
                        [bsConfig]="bsConfig">
                 <div *ngIf="submitted && f.endDate.errors" class="invalid-feedback">
                     <p *ngIf="f.endDate.errors.required">Field is required</p>
+                    <p *ngIf="f.startDate.errors.invalidInterval">Invalid dates</p>
                 </div>
             </div>
         </div>
@@ -94,7 +94,6 @@
                 </agm-map>
                 <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
                     <p *ngIf="f.placeInput.errors.required">Field is required</p>
-                    <p *ngIf="f.placeInput.errors.required">Invalid google maps input</p>
                 </div>
             </div>
         </div>

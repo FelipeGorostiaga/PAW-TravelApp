@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, NgZone, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, NgZone, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MapsAPILoader} from "@agm/core";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -42,7 +42,8 @@ export class ActivitiesComponent implements OnInit {
                 private route: ActivatedRoute,
                 private dateUtilService: DateUtilService,
                 private modalService: ModalService,
-                private mapsAPILoader: MapsAPILoader) {
+                private mapsAPILoader: MapsAPILoader,
+                private dateUtil: DateUtilService) {
     }
 
     ngOnInit() {
@@ -53,7 +54,8 @@ export class ActivitiesComponent implements OnInit {
             endDate: ['', Validators.required],
             placeInput: ['', Validators.required]
         }, {
-            validators: InvalidDate('startDate', 'endDate')
+            validators: InvalidInterval('startDate', 'endDate', this.trip.activities, this.dateUtil.stringToDate(this.trip.startDate),
+                this.dateUtil.stringToDate(this.trip.endDate))
         });
         this.submittedPlace = false;
         this.zoom = 14;
@@ -91,9 +93,6 @@ export class ActivitiesComponent implements OnInit {
         const values = this.activityForm.value;
         this.submitted = true;
         if (this.activityForm.invalid) {
-            console.log("form is invalid");
-            console.log(JSON.stringify(values));
-            console.log(this.activityForm.errors);
             return;
         }
         let form = new ActivityForm(values.name, values.category, values.placeInput, this.latitude, this.longitude, this.dateUtilService.convertToDateString(values.startDate),
@@ -153,28 +152,53 @@ export class ActivitiesComponent implements OnInit {
             error => {
                 console.log(error);
             }
-        )
+        );
     }
 }
 
 // custom validator to check that two fields match
-export function InvalidDate(startDateControlName: string, endDateControlName: string) {
+export function InvalidInterval(sControl: string, eControl: string, activities: Activity[], tripSDate: Date, tripEDate: Date) {
     return (formGroup: FormGroup) => {
-        const startControl = formGroup.controls[startDateControlName];
-        const endControl = formGroup.controls[endDateControlName];
+        const startControl = formGroup.controls[sControl];
+        const endControl = formGroup.controls[eControl];
         if (startControl.errors || endControl.errors) {
-            // return if another validator has already found an error
             return;
         }
-        // set error on matchingControl if validation fails
-        if (!isBeforeOrEqual(startControl.value, endControl.value)) {
-            startControl.setErrors({invalidDate: true});
+        let now: Date = new Date();
+        now.setHours(0,0,0,0)
+        let actSDate: Date = startControl.value;
+        actSDate.setHours(0,0,0,0)
+        let actEDate: Date = endControl.value;
+        actEDate.setHours(0,0,0,0)
+        if ((actSDate < now) || (actSDate > actEDate) || (actSDate < tripSDate) || (actEDate > tripEDate) || hasActivityConflict(activities, actSDate, actEDate)) {
+            startControl.setErrors({invalidInterval: true});
+            endControl.setErrors({invalidInterval: true});
         } else {
             startControl.setErrors(null);
         }
     };
 }
 
-export function isBeforeOrEqual(startDate: string, endDate: string): boolean {
-    return new Date(endDate) >= new Date(startDate);
+export function hasActivityConflict(activities: Activity[], startDate: Date, endDate: Date): boolean {
+    activities.forEach(
+        activity => {
+            let asdate = activity.startDate;
+            let sday = Number(asdate.slice(0, 2));
+            let smonth = Number(asdate.slice(3, 5)) - 1;
+            let syear = Number(asdate.slice(6, 10));
+            let aSDate = new Date(Number(syear), Number(smonth), Number(sday));
+            aSDate.setHours(0,0,0,0);
+            let aedate = activity.endDate;
+            let eday = Number(aedate.slice(0, 2));
+            let emonth = Number(aedate.slice(3, 5)) - 1;
+            let eyear = Number(aedate.slice(6, 10));
+            let eSDate = new Date(Number(eyear), Number(emonth), Number(eday));
+            eSDate.setHours(0,0,0,0);
+            if ((startDate <= aSDate && endDate >= eSDate) || (startDate >= aSDate && endDate <= eSDate) || (startDate >= aSDate && endDate > eSDate)
+                || (startDate <= aSDate && endDate > aSDate)) {
+                return true;
+            }
+        }
+    );
+    return false;
 }
