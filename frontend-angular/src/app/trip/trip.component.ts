@@ -18,10 +18,13 @@ export class TripComponent implements OnInit {
     trip: FullTrip;
 
     tripId: number;
-    isAdmin: boolean;
+
     selectedIndex: number;
     loading = true;
-    isMember = false;
+
+    isMember: boolean;
+    isAdmin: boolean;
+    isCreator: boolean;
 
     constructor(private router: Router,
                 private ts: ApiTripService,
@@ -43,10 +46,9 @@ export class TripComponent implements OnInit {
                 this.isAdmin = !!members.find(member => (member.role === TripRole.CREATOR || member.role === TripRole.ADMIN) &&
                     member.user.id === this.loggedUser.id);
                 this.isMember = !!(this.isAdmin || members.find(member => member.user.id === this.loggedUser.id));
+                this.isCreator = !!members.find(member => (member.role === TripRole.CREATOR && member.user.id === this.loggedUser.id));
                 this.spinner.hide();
                 this.loading = false;
-                console.log("Is admin: " + this.isAdmin);
-                console.log("Is member: " + this.isMember);
             },
             err => {
                 this.loading = false;

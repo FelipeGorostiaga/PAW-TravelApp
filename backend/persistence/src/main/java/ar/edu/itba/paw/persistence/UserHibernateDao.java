@@ -24,9 +24,9 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex, String verificationCode) {
-       final User user = new User(firstname, lastname, email, password, birthday, nationality, sex, verificationCode);
-       em.persist(user);
-       return user;
+        final User user = new User(firstname, lastname, email, password, birthday, nationality, sex, verificationCode);
+        em.persist(user);
+        return user;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class UserHibernateDao implements UserDao {
     @Override
     public List<User> findByName(String name) {
         final TypedQuery<User> query = em.createQuery("FROM User AS u WHERE u.firstname LIKE :name OR u.lastname LIKE :name", User.class);
-        query.setParameter("name", name);
+        query.setParameter("name", "%" + name + "%");
         return query.getResultList();
     }
 
@@ -96,6 +96,14 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
+    public boolean hasTripInvitation(Trip trip, User u) {
+        final TypedQuery<TripInvitation> query = em.createQuery("FROM TripInvitation AS ti WHERE ti.trip.id = :tripId AND ti.invitee.id = :userId AND responded = false", TripInvitation.class);
+        query.setParameter("tripId", trip.getId());
+        query.setParameter("userId", u.getId());
+        return !query.getResultList().isEmpty();
+    }
+
+    @Override
     public Optional<UserRate> findUserRate(Trip trip, User ratedUser, User ratedBy) {
         final TypedQuery<UserRate> query = em.createQuery("FROM UserRate AS ur WHERE ur.trip.id = :tripID AND ur.ratedUser.id = :ratedId AND ur.ratedByUser.id = :ratedById ", UserRate.class);
         query.setParameter("tripId", trip.getId());
@@ -105,7 +113,7 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public Optional<User> findById(long id)  {
+    public Optional<User> findById(long id) {
         return Optional.ofNullable(em.find(User.class, id));
     }
 

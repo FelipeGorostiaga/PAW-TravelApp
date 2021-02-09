@@ -39,4 +39,6 @@ public interface UserDao {
     List<UserRate> getUserPendingRates(long userId);
 
     boolean rateUser(Trip trip, User ratedUser, User ratedBy, int rate, String comment);
+
+    boolean hasTripInvitation(Trip trip, User u);
 }

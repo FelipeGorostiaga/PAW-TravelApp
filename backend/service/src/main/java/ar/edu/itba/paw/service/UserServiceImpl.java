@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     public List<User> findInvitableUsersByName(String name, Trip trip) {
         List<User> users = findByName(name);
         List<User> tripUsers = trip.getMembers().stream().map(TripMember::getUser).collect(Collectors.toList());
-        return users.stream().filter(u -> !tripUsers.contains(u)).collect(Collectors.toList());
+        return users.stream().filter(u -> !tripUsers.contains(u) && !ud.hasTripInvitation(trip, u)).collect(Collectors.toList());
     }
 
     @Override

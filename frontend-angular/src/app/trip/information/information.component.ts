@@ -25,6 +25,7 @@ export class InformationComponent implements OnInit {
     @Input() trip: FullTrip;
     @Input() isAdmin: boolean;
     @Input() isMember: boolean;
+    @Input() isCreator: boolean;
 
     waitingConfirmation = true;
 
@@ -266,6 +267,12 @@ export class InformationComponent implements OnInit {
 
     validImgSize() {
         return this.selectedFile.size <= this.maxImageSize;
+    }
+
+    deleteTrip() {
+        if (confirm("Are you sure you want to delete this trip?")) {
+            console.log("delete trip api call");
+        }
     }
 }
 

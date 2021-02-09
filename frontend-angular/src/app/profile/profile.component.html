@@ -12,8 +12,9 @@
                             <img *ngIf="!hasImage" class="rounded mb-2 img-thumbnail" id="defaultImage"
                                  src="/assets/images/profile-default.jpg"/>
                         </div>
-                        <a *ngIf="user?.id == loggedUser?.id" (click)="openModal(modalTemplate)"
-                           class="btn btn-outline-dark btn-sm btn-block">Edit profile</a></div>
+                        <button *ngIf="user?.id == loggedUser?.id" (click)="openModal(modalTemplate)"
+                           class="btn btn-outline-dark btn-sm btn-block">Edit profile</button>
+                    </div>
                     <div class="media-body mb-5">
                         <h4 class="mt-0 mb-0 text-white">{{user?.firstname}} {{user?.lastname}}</h4>
                         <p class="mb-4 text-white"><i class="fa fa-map-marker" aria-hidden="true"
@@ -85,7 +86,8 @@
                 <label for="imageUpload">File input</label>
                 <input type="file" class="form-control-file" id="imageUpload" (change)="onFileSelected($event)">
             </div>
-            <p *ngIf="submitted && invalidFileExtension" class="invalid-feedback">Invalid file extension, only jpg and png allowed.</p>
+            <p *ngIf="submitted && invalidFileExtension" class="invalid-feedback">Invalid file extension, only jpg and
+                png allowed.</p>
             <p *ngIf="submitted && invalidFileSize" class="invalid-feedback">Image size too big (max </p>
             <div class="form-group">
                 <label for="biography">About Me</label>
