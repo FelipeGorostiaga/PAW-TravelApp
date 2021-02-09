@@ -39,8 +39,7 @@
                         </textarea>
                         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
                             <p *ngIf="f.description.errors.required">Field is required</p>
-                            <p *ngIf="f.description.errors.minlength">Description must be at least 25 characters
-                                long</p>
+                            <p *ngIf="f.description.errors.minlength">Description must be at least 25 characters long</p>
                             <p *ngIf="f.description.errors.maxlength">Maximum length is 100</p>
                         </div>
                     </div>

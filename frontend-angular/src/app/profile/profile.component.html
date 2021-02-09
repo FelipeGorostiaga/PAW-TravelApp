@@ -8,11 +8,12 @@
                     <div class="profile mr-3">
                         <div *ngIf="!loadingImage">
                             <img *ngIf="hasImage" class="rounded mb-2 img-thumbnail" id="profilePicture"
-                                 [src]='profilePicture' />
+                                 [src]='profilePicture'/>
                             <img *ngIf="!hasImage" class="rounded mb-2 img-thumbnail" id="defaultImage"
                                  src="/assets/images/profile-default.jpg"/>
                         </div>
-                        <a *ngIf="user?.id == loggedUser?.id" (click)="openModal(modalTemplate)" class="btn btn-outline-dark btn-sm btn-block">Edit profile</a></div>
+                        <a *ngIf="user?.id == loggedUser?.id" (click)="openModal(modalTemplate)"
+                           class="btn btn-outline-dark btn-sm btn-block">Edit profile</a></div>
                     <div class="media-body mb-5">
                         <h4 class="mt-0 mb-0 text-white">{{user?.firstname}} {{user?.lastname}}</h4>
                         <p class="mb-4 text-white"><i class="fa fa-map-marker" aria-hidden="true"
@@ -25,18 +26,23 @@
             <div class="bg-light p-4 d-flex justify-content-end text-center">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item" style="margin-left: 10px">
-                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.dueTrips?.length}}</h5><small class="text-muted"><i class="fa fa-calendar mr-1"></i><a>Due</a></small>
+                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.dueTrips?.length}}</h5><small
+                            class="text-muted"><i class="fa fa-calendar mr-1"></i><a>Due</a></small>
                     </li>
                     <li class="list-inline-item" style="margin-left: 10px">
-                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.activeTrips?.length}}</h5><small class="text-muted"><i class="fa fa-suitcase mr-1"></i><a>Active</a></small>
+                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.activeTrips?.length}}</h5><small
+                            class="text-muted"><i class="fa fa-suitcase mr-1"></i><a>Active</a></small>
                     </li>
                     <li class="list-inline-item" style="margin-left: 10px">
-                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.completedTrips?.length}}</h5><small class="text-muted"><i class="fa fa-check mr-1"></i><a routerLink="/home">Completed</a></small>
+                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.completedTrips?.length}}</h5><small
+                            class="text-muted"><i class="fa fa-check mr-1"></i><a
+                            routerLink="/home">Completed</a></small>
                     </li>
                     <li class="list-inline-item" style="margin-left: 10px">
-                    <li class="list-inline-item" >
+                    <li class="list-inline-item">
                         <h5 *ngIf="hasRates" class="font-weight-bold mb-0 d-block">{{userRate}}</h5>
-                        <h5 *ngIf="!hasRates"class="font-weight-bold mb-0 d-block">-</h5><small class="text-muted"><i class="fa fa-heart mr-1"></i>Rate</small>
+                        <h5 *ngIf="!hasRates" class="font-weight-bold mb-0 d-block">-</h5><small class="text-muted"><i
+                            class="fa fa-heart mr-1"></i>Rate</small>
                     </li>
                 </ul>
             </div>
@@ -50,7 +56,8 @@
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <!-- TODO, user rates view component-->
 
-                    <h5 class="mb-0">Recent reviews</h5><a class="btn btn-link text-muted" routerLink="/profile/{{user?.id}}/rates">Show all</a>
+                    <h5 class="mb-0">Recent reviews</h5><a class="btn btn-link text-muted"
+                                                           routerLink="/profile/{{user?.id}}/rates">Show all</a>
                 </div>
                 <div class="row list-group">
                     <div *ngFor="let rate of userProfile?.rates" class="list-group-item">
@@ -66,7 +73,6 @@
 </div>
 
 
-
 <ng-template #modalTemplate>
     <div class="modal-header">
         <h4 class="modal-title pull-left">Edit Trip</h4>
@@ -75,17 +81,16 @@
     </div>
     <div class="modal-body">
         <form [formGroup]="editProfileForm" (ngSubmit)="submitEditProfile()">
-            <!-- Image Upload -->
             <div class="form-group">
                 <label for="imageUpload">File input</label>
-                <input formControlName="imageUpload" type="file" class="form-control-file" id="imageUpload" (change)="onFileSelected($event)">
+                <input type="file" class="form-control-file" id="imageUpload" (change)="onFileSelected($event)">
             </div>
-
-            <!-- Edit Biography -->
+            <p *ngIf="submitted && invalidFileExtension" class="invalid-feedback">Invalid file extension, only jpg and png allowed.</p>
+            <p *ngIf="submitted && invalidFileSize" class="invalid-feedback">Image size too big (max </p>
             <div class="form-group">
                 <label for="biography">About Me</label>
                 <textarea formControlName="biography" style="resize: none" class="form-control" id="biography"
-                          rows="4" ></textarea>
+                          rows="4"></textarea>
             </div>
         </form>
     </div>
@@ -95,10 +100,7 @@
     </div>
 
     <!-- TODO -->
-    <div *ngIf="submitted && f.imageUpload?.errors" class="invalid-feedback">
-        <p *ngIf="f.imageUpload.errors.validImgExtension">Invalid file extension, only jpg and png allowed.</p>
-        <p *ngIf="f.imageUpload.errors.required">File is required</p>
-    </div>
+
 
     <div *ngIf="submitted && f.biography?.errors" class="invalid-feedback">
         <p *ngIf="f.biography.errors.maxLength">Max length is 150 characters</p>

@@ -23,7 +23,7 @@ public class Trip implements Comparable<Trip> {
     @Column(length = 100, nullable = false)
     private String name;
 
-    @Column(length = 500, nullable = false)
+    @Column(length = 400, nullable = false)
     private String description;
 
     @Column(name = "start_date", nullable = false)

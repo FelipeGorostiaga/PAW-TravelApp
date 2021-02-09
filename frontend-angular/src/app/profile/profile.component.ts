@@ -39,7 +39,10 @@ export class ProfileComponent implements OnInit {
 
     imageError: string;
     selectedFile: File;
+    invalidFileExtension: boolean;
+    invalidFileSize: boolean;
     validExtensions: string[] = ['jpeg', 'png', 'jpg'];
+    maxImageSize: number = 5242880;
 
     constructor(private userService: ApiUserService,
                 private authService: AuthService,
@@ -58,13 +61,14 @@ export class ProfileComponent implements OnInit {
         this.loading = true;
         this.loggedUser = this.authService.getLoggedUser();
         const profileId = Number(this.route.snapshot.paramMap.get("id"));
+        if (!profileId) {
+            this.router.navigate(['/404']);
+        }
         this.isProfileOwner = this.loggedUser.id === profileId;
         this.editProfileForm = this.formBuilder.group({
-            imageUpload: ['', Validators.required],
             biography: ['', Validators.maxLength(500)],
-        }, {
-            validators: [validImgExtension('imageUpload', this.validExtensions)]
         });
+
         this.userService.getUserProfileData(profileId).subscribe(
             data => {
                 this.userProfile = data;
@@ -76,7 +80,6 @@ export class ProfileComponent implements OnInit {
             error => {
                 console.log(error);
                 this.spinner.hide();
-                this.router.navigate(['/404']);
             }
         )
 
@@ -106,6 +109,8 @@ export class ProfileComponent implements OnInit {
     }
 
     resetForm() {
+        this.invalidFileSize = false;
+        this.invalidFileExtension = false;
         this.submitted = false;
         this.editProfileForm.reset();
     }
@@ -118,19 +123,39 @@ export class ProfileComponent implements OnInit {
     submitEditProfile() {
         this.submitted = true;
         if (this.editProfileForm.invalid) {
+            console.log("Form in invalid");
             return;
         }
         const formData = new FormData();
-        formData.append('biography', this.editProfileForm.get('biography').value);
-        if (this.selectedFile) {
+        let error = false;
+        if (!!this.selectedFile) {
+            console.log("There is a selected file");
+            console.log(this.selectedFile);
+            if (!this.validImgExtension()) {
+                console.log("Invalid image extension");
+                error = true;
+                this.invalidFileExtension = true;
+            }
+            if (!this.validImgSize()) {
+                console.log("Invalid image size");
+                error = true;
+                this.invalidFileSize = true;
+            }
+            if (error) {
+                console.log("There is an error");
+                return;
+            }
             formData.append('image', this.selectedFile, this.selectedFile.name);
         }
+        formData.append('biography', this.editProfileForm.get('biography').value);
+        console.log(formData.get('biography'));
+        console.log(formData.get('image'));
         this.userService.editProfile(formData, this.user.id).subscribe(
             data => {
                 window.location.reload();
             },
             error => {
-                // todo
+                console.log(error);
                 this.imageError = error.message;
             }
         );
@@ -156,20 +181,15 @@ export class ProfileComponent implements OnInit {
         this.userProfile.rates.forEach(rate => totalRate += rate.rate);
         this.userRate = Math.round(totalRate / len);
     }
-}
 
-export function validImgExtension(controlName: string, validExtensions: string[]) {
-    return (formGroup: FormGroup) => {
-        const control = formGroup.controls[controlName];
-        if (control.errors || !!control.value) {
-            return;
-        }
-        const extension = control.value.split('.')[1].toLowerCase();
+    validImgExtension() {
+        const extension = this.selectedFile.name.split('.')[1].toLowerCase();
         console.log(extension);
-        if (!validExtensions.includes(extension)) {
-            control.setErrors({invalidExtension: true});
-        } else {
-            control.setErrors(null);
-        }
-    };
+        return this.validExtensions.includes(extension);
+    }
+
+    validImgSize() {
+        console.log(this.selectedFile.size);
+        return this.selectedFile.size <= this.maxImageSize;
+    }
 }

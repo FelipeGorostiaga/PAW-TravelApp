@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, TemplateRef} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {FullTrip} from "../../model/trip";
 import {ApiTripService} from "../../services/api-trip.service";
 import {AuthService} from "../../services/auth/auth.service";
@@ -11,7 +11,6 @@ import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DomSanitizer} from "@angular/platform-browser";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
-import {validImgExtension} from "../../profile/profile.component";
 import {TripRole} from "../../model/TripMember";
 import {DateUtilService} from "../../services/date-util.service";
 import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
@@ -42,7 +41,7 @@ export class InformationComponent implements OnInit {
     startDate: Date;
     endDate: Date;
 
-    bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, { containerClass: 'theme-dark-blue'});
+    bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, {containerClass: 'theme-dark-blue'});
 
     loading: boolean;
 
@@ -50,12 +49,17 @@ export class InformationComponent implements OnInit {
     showErrorAlert;
 
     submitted: boolean;
-    selectedFile: File;
+
     tripImage;
     loadingImage: boolean;
     hasImage: boolean;
+
+
+    selectedFile: File;
+    invalidFileExtension: boolean;
+    invalidFileSize: boolean;
     validExtensions: string[] = ['jpeg', 'png', 'jpg'];
-    status;
+    maxImageSize: number = 5242880;
 
     constructor(private tripService: ApiTripService,
                 private authService: AuthService,
@@ -78,20 +82,15 @@ export class InformationComponent implements OnInit {
         this.startDate = this.dateUtils.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtils.stringToDate(this.trip.endDate);
         this.loadingImage = true;
-        // TODO: remove required image upload !!!!!!!!!!!!!!!
         this.editTripForm = this.formBuilder.group({
-            imageUpload: ['', Validators.required],
-            description: ['', [Validators.required, Validators.minLength(25), Validators.maxLength(500)]],
+            description: ['', [Validators.required, Validators.minLength(25), Validators.maxLength(400)]],
             tripName: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(25)]],
-        }, {
-            validators: [validImgExtension('imageUpload', this.validExtensions)]
         });
         this.populateForm();
         if (this.trip != null) {
             if (!this.isAdmin && !this.isMember) {
                 this.tripService.isWaitingTripConfirmation(this.trip.id, this.authService.getLoggedUser().id).subscribe(
                     data => {
-                        console.log("is waiting confirmation!");
                         this.waitingConfirmation = true;
                     },
                     error => {
@@ -107,7 +106,7 @@ export class InformationComponent implements OnInit {
                         this.tripImage = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
                         this.loadingImage = false;
                         this.hasImage = true;
-                    }
+                    };
                     reader.readAsDataURL(new Blob([data]));
                 },
                 error => {
@@ -128,9 +127,6 @@ export class InformationComponent implements OnInit {
             this.tripService.sendJoinRequest(this.trip.id, this.authService.getLoggedUser().id).subscribe(
                 data => {
                     this.waitingConfirmation = true;
-                },
-                error => {
-                    console.log("Error sending request...");
                 }
             );
         }
@@ -148,8 +144,11 @@ export class InformationComponent implements OnInit {
         }
     }
 
+    get f() {
+        return this.editTripForm.controls;
+    }
+
     openModal(template: TemplateRef<any>) {
-        this.populateForm();
         this.modalRef = this.modalService.show(template);
     }
 
@@ -177,7 +176,7 @@ export class InformationComponent implements OnInit {
 
     }
 
-    resetSearch()  {
+    resetSearch() {
         this.searchTerm = "";
         this.latestSearch.next(" ");
     }
@@ -190,8 +189,8 @@ export class InformationComponent implements OnInit {
         this.showErrorAlert = false;
     }
 
-
     openEditTripModal(template: TemplateRef<any>) {
+        this.populateForm();
         this.editTripModalRef = this.modalService.show(template);
     }
 
@@ -204,22 +203,32 @@ export class InformationComponent implements OnInit {
     submitEditTripForm() {
         this.submitted = true;
         if (this.editTripForm.invalid) {
-            console.log("form is invalid");
             return;
         }
+        let error = false;
         const formData = new FormData();
-        formData.append('tripName', this.editTripForm.get('tripName').value);
-        formData.append('description', this.editTripForm.get('description').value);
-        if (this.selectedFile) {
+        if (!!this.selectedFile) {
+            if (!this.validImgExtension()) {
+                error = true;
+                this.invalidFileExtension = true;
+            }
+            if (!this.validImgSize()) {
+                error = true;
+                this.invalidFileSize = true;
+            }
+            if (error) {
+                return;
+            }
             formData.append('image', this.selectedFile, this.selectedFile.name);
         }
+        formData.append('tripName', this.editTripForm.get('tripName').value);
+        formData.append('description', this.editTripForm.get('description').value);
         this.tripService.editTrip(formData, this.trip.id).subscribe(
             data => {
                 window.location.reload();
             },
             error => {
                 console.log(error);
-                // todo: check for error dtos
             }
         );
 
@@ -227,11 +236,11 @@ export class InformationComponent implements OnInit {
 
     resetEditTripForm() {
         this.submitted = false;
+        this.selectedFile = null;
         this.editTripForm.reset();
     }
 
     onFileSelected(event) {
-        console.log(event.target.files[0]);
         this.selectedFile = event.target.files[0];
     }
 
@@ -246,8 +255,17 @@ export class InformationComponent implements OnInit {
                 error => {
                     console.log(error);
                 }
-            )
+            );
         }
+    }
+
+    validImgExtension() {
+        const extension = this.selectedFile.name.split('.')[1].toLowerCase();
+        return this.validExtensions.includes(extension);
+    }
+
+    validImgSize() {
+        return this.selectedFile.size <= this.maxImageSize;
     }
 }
 
