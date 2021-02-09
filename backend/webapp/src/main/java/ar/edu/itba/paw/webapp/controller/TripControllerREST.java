@@ -201,7 +201,6 @@ public class TripControllerREST {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-
     // TODO: front-end
     @POST
     @Path("/{id}/exit")
@@ -376,16 +375,18 @@ public class TripControllerREST {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         Optional<TripPendingConfirmation> pendingConfirmationOptional = tripService.findJoinRequestByToken(token);
-        if (!pendingConfirmationOptional.isPresent() || !tripOptional.isPresent())
+        if (!pendingConfirmationOptional.isPresent() || !tripOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
-        if (tripService.isAdmin(tripOptional.get(), loggedUser))
+        }
+        if (!tripService.isAdmin(tripOptional.get(), loggedUser)) {
             return Response.status(Response.Status.FORBIDDEN).build();
+        }
         if (pendingConfirmationOptional.get().isEdited())
             return Response.status(Response.Status.CONFLICT).entity(new ErrorDTO("Request already responded by another trip admin", "edited")).build();
         if (tripService.updateJoinRequest(tripOptional.get(), loggedUser, token, accepted, pendingConfirmationOptional.get().getRequestingUser())) {
             return Response.ok().build();
         }
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO("Internal Server Error", "error")).build();
+        return Response.serverError().build();
     }
 
     @GET

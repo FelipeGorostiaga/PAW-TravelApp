@@ -1,16 +1,18 @@
 <app-navigation></app-navigation>
 <ngx-bootstrap-spinner></ngx-bootstrap-spinner>
-<div *ngIf="!loading" class="container" style="align-content: center; margin: 40px;">
-    <div *ngIf="error">
-        <h3 class="alert-warning text-center">Request was already responded by another admin</h3>
-    </div>
-    <div *ngIf="!error">
-        <div *ngIf="accepted">
-            <h3 class="alert-success">User was successfully added to trip.</h3>
+<div *ngIf="!loading" class="container" style="margin-top: 80px;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error-template">
+                <alert *ngIf="error" [type]="'warning'">Request was already responded by another admin</alert>
+                <div *ngIf="!error">
+                    <alert *ngIf="accepted" [type]="'warning'">User was successfully added to trip</alert>
+                    <alert *ngIf="!accepted" [type]="'info'">User was successfully added to trip</alert>
+                </div>
+                <div class="error-actions">
+                    <a [routerLink] = "['/trip/' + tripId]" class="btn btn-primary btn-lg">Go to Trip</a>
+                </div>
+            </div>
         </div>
-        <div *ngIf="!accepted">
-            <h3 class="alert-info">Request to join was successfully denied.</h3>
-        </div>
     </div>
-    <button class="btn btn-primary"><a [routerLink] = "['/trip/' + tripId]">Go to Trip</a></button>
 </div>

@@ -140,7 +140,7 @@ public class TripHibernateDao implements TripDao {
     @Override
     public void updateRoleToAdmin(long tripId, long userId) {
         Query query = em.createQuery("UPDATE TripMember SET role = :adminRole WHERE trip.id = :tripId AND user.id = :userId");
-        query.setParameter("adminRole", TripMemberRole.MEMBER.name());
+        query.setParameter("adminRole", TripMemberRole.ADMIN);
         query.setParameter("tripId", tripId);
         query.setParameter("userId", userId);
         query.executeUpdate();

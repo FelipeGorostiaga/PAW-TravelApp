@@ -123,7 +123,6 @@ export class ProfileComponent implements OnInit {
     submitEditProfile() {
         this.submitted = true;
         if (this.editProfileForm.invalid) {
-            console.log("Form in invalid");
             return;
         }
         const formData = new FormData();

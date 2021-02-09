@@ -44,10 +44,10 @@
                     <a routerLink="/profile/{{member.user.id}}"><h5 class="mb-1"><i class="fa fa-user"
                                                                                     style="margin-right: 15px;"></i>{{member.user.firstname}} {{member.user.lastname}}
                     </h5></a>
-                    <small *ngIf="member.role === 'CREATOR'" style="color: darkorange">{{member.role}}</small>
-                    <small *ngIf="member.role === 'ADMIN'" style="color: darkgreen">{{member.role}}</small>
+                    <small *ngIf="member.role === 'CREATOR'" style="color: darkslategrey">{{member.role}}</small>
+                    <small *ngIf="member.role === 'ADMIN'" style="color: forestgreen">{{member.role}}</small>
                     <button *ngIf="isAdmin && member.role === 'MEMBER'" (click)="grantAdminRole($event, member.user)"
-                            tooltip="Make trip administrator"><i class="fa fa-user-plus"></i></button>
+                            tooltip="Make trip administrator"><img src="assets/icons/plus.png" alt="plus icon"></button>
                 </div>
             </div>
         </div>

@@ -51,7 +51,6 @@ public class UserControllerREST {
     private static final int PROFILE_WIDTH = 220;
     private static final int PROFILE_HEIGHT = 200;
 
-
     @Autowired
     Validator validator;
 
@@ -81,7 +80,6 @@ public class UserControllerREST {
 
     @Autowired
     SecurityUserService securityUserService;
-
 
     @POST
     @Path("/authenticate")
