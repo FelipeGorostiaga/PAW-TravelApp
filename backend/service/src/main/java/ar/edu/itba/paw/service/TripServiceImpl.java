@@ -134,12 +134,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void removeUserFromTrip(long userId, long tripId) {
-        Optional<User> userOptional = ud.findById(userId);
-        Optional<Trip> tripOptional = td.findById(tripId);
-        if (userOptional.isPresent() && tripOptional.isPresent()) {
-            tripOptional.get().getMembers().removeIf(member -> member.getUser().equals(userOptional.get()));
-            userOptional.get().getTrips().removeIf(member -> member.getTrip().equals(tripOptional.get()));
-        }
+        td.deleteTripMember(userId, tripId);
     }
 
     @Override

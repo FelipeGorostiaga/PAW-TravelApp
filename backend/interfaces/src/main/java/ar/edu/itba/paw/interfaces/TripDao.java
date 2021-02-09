@@ -59,4 +59,6 @@ public interface TripDao {
     void updateRoleToAdmin(long tripId, long invitedUserId);
 
     void markTripAsCompleted(long tripId);
+
+    void deleteTripMember(long userId, long tripId);
 }

@@ -135,11 +135,12 @@ export class InformationComponent implements OnInit {
 
     exitTrip() {
         if (confirm("Are you sure you want to leave this trip?")) {
-            this.tripService.exitTrip(this.trip.id, this.authService.getLoggedUser().id).subscribe(
-                () => {
-                    this.isMember = false;
-                    this.isAdmin = false;
+            this.tripService.exitTrip(this.trip.id).subscribe(
+                ok => {
                     this.router.navigate(["/user-trips"]);
+                }
+                , error => {
+                  console.log(error);
                 }
             );
         }

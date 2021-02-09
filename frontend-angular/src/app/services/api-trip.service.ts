@@ -98,8 +98,8 @@ export class ApiTripService {
         return this.http.post(url, {},{params: params});
     }
 
-    exitTrip(id: number, userId: number): Observable<any> {
-        const url = this.tripsBaseURL + id + "/remove/" + userId;
+    exitTrip(tripId: number): Observable<any> {
+        const url = this.tripsBaseURL + tripId + '/exit';
         return this.http.post(url, {});
     }
 

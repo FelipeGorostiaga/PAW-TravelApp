@@ -201,7 +201,7 @@ public class TripControllerREST {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    // TODO: front-end
+
     @POST
     @Path("/{id}/exit")
     public Response exitTrip(@PathParam("id") final long tripId) {
