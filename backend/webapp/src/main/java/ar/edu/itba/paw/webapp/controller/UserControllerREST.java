@@ -97,7 +97,7 @@ public class UserControllerREST {
         UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         Optional<User> userOptional = userService.findByUsername(userDetails.getUsername());
         if (!userOptional.isPresent() || !userOptional.get().isVerified()) {
-            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Please verify your email before login in", "verification")).build();
+            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Please verify your email", "verification")).build();
         }
         final UserDTO user = new UserDTO(userOptional.get());
         final String accessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);

@@ -129,27 +129,22 @@ export class ProfileComponent implements OnInit {
         const formData = new FormData();
         let error = false;
         if (!!this.selectedFile) {
-            console.log("There is a selected file");
-            console.log(this.selectedFile);
             if (!this.validImgExtension()) {
-                console.log("Invalid image extension");
                 error = true;
                 this.invalidFileExtension = true;
             }
             if (!this.validImgSize()) {
-                console.log("Invalid image size");
                 error = true;
                 this.invalidFileSize = true;
             }
             if (error) {
-                console.log("There is an error");
                 return;
             }
             formData.append('image', this.selectedFile, this.selectedFile.name);
         }
-        formData.append('biography', this.editProfileForm.get('biography').value);
-        console.log(formData.get('biography'));
-        console.log(formData.get('image'));
+        if (!!this.editProfileForm.get('biography').value) {
+            formData.append('biography', this.editProfileForm.get('biography').value);
+        }
         this.userService.editProfile(formData, this.user.id).subscribe(
             data => {
                 window.location.reload();
@@ -184,12 +179,10 @@ export class ProfileComponent implements OnInit {
 
     validImgExtension() {
         const extension = this.selectedFile.name.split('.')[1].toLowerCase();
-        console.log(extension);
         return this.validExtensions.includes(extension);
     }
 
     validImgSize() {
-        console.log(this.selectedFile.size);
         return this.selectedFile.size <= this.maxImageSize;
     }
 }
