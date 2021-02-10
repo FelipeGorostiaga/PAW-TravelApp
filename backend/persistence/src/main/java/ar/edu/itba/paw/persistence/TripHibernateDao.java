@@ -169,6 +169,13 @@ public class TripHibernateDao implements TripDao {
         query.executeUpdate();
     }
 
+    @Override
+    public void deleteTripInvitations(long tripId) {
+        Query query = em.createQuery("DELETE TripInvitation WHERE trip.id = :tripId");
+        query.setParameter("tripId", tripId);
+        query.executeUpdate();
+    }
+
 
     @Override
     public List<Trip> getAllTrips() {

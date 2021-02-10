@@ -139,6 +139,8 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void deleteTrip(long tripId) {
+        tpd.deleteByTripId(tripId);
+        td.deleteTripInvitations(tripId);
         ad.deleteActivities(tripId);
         tcd.deleteComments(tripId);
         td.deleteAllTripMembers(tripId);

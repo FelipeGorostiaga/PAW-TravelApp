@@ -63,4 +63,6 @@ public interface TripDao {
     void deleteTripMember(long userId, long tripId);
 
     void deleteAllTripMembers(long tripId);
+
+    void deleteTripInvitations(long tripId);
 }

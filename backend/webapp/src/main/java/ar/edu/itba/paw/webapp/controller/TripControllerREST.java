@@ -287,7 +287,7 @@ public class TripControllerREST {
             return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<Set<ConstraintViolation<TripCommentForm>>>(violations) {
             }).build();
         }
-        if (tripService.isAdmin(trip, loggedUser)) {
+        if (tripService.isMember(trip, loggedUser)) {
             TripComment tripComment = tripCommentsService.create(loggedUser, trip, tripCommentForm.getComment());
             return Response.ok(new TripCommentDTO(tripComment)).build();
         }
