@@ -57,19 +57,23 @@
     </div>
 </div>
 
-<div class="row" style="margin-top: 20px;">
-    <button *ngIf="isAdmin" style="margin-right: 15px; margin-left: 10px;" class="btn btn-outline-dark"
-            (click)="openEditTripModal(editTripTemplate)"><img src="assets/icons/editar.png" alt="remove icon"
-                                                               style="margin-right: 5px;">Edit Trip
-    </button>
-    <button *ngIf="(isAdmin || isMember) && !isCreator" class="btn btn-danger" (click)="exitTrip()">Exit</button>
-    <button *ngIf="!loading && !isMember && !waitingConfirmation" class=" btn btn-primary" (click)="requestJoinTrip()">
-        Request to join
-    </button>
-    <button *ngIf="isCreator" class="btn btn-outline-dark" (click)="deleteTrip()">
-        <img src="assets/icons/eliminar-small.png" alt="remove icon" style="margin-right: 5px;">Delete Trip
-    </button>
+<div class="row justify-content-around" style="margin-top: 40px;">
+    <div class="col-12">
+        <button *ngIf="isAdmin" type="button" class="btn btn-outline-dark button-list" (click)="openEditTripModal(editTripTemplate)"><img
+                src="assets/icons/editar.png" alt="remove icon">Edit Trip
+        </button>
+        <button *ngIf="(isAdmin || isMember) && !isCreator" type="button" class="btn btn-danger button-list" (click)="exitTrip()">Exit</button>
+        <button *ngIf="!loading && !isMember && !waitingConfirmation" type="button" class=" btn btn-primary button-list" (click)="requestJoinTrip()">
+            Request to join
+        </button>
+        <button *ngIf="isCreator" class="btn btn-outline-dark button-list" type="button" (click)="deleteTrip()">
+            <img src="assets/icons/eliminar-small.png" alt="remove icon" style="margin-right: 5px;">Delete Trip
+        </button>
+        <!--*ngIf="canFinish"-->
+        <button class="btn btn-outline-primary button-list" type="button" (click)="finishTrip()">Finish Trip</button>
+    </div>
 </div>
+
 
 <!-- invite user modal -->
 <ng-template #template>

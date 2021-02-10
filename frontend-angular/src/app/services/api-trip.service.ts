@@ -19,16 +19,11 @@ export class ApiTripService {
 
     private tripsBaseURL = `${environment.apiURL}/trips/`;
 
-    getTripUsersAmount(id: number): Observable<any> {
-        const url = this.tripsBaseURL + id + '/users/amount';
-        return this.http.get(url);
-    }
-
-    getAllTripsPerPage(pageNum: number): Observable<any> {
+/*    getAllTripsPerPage(pageNum: number): Observable<any> {
         const url = this.tripsBaseURL + 'all' + pageNum;
         // let params = new HttpParams().set('page', String(pageNum));
         return this.http.get(this.tripsBaseURL);
-    }
+    }*/
 
     getAllTrips(): Observable<any> {
         const url = this.tripsBaseURL + 'all';
@@ -127,6 +122,11 @@ export class ApiTripService {
 
     grantAdminRole(trip: FullTrip, user: User) {
         const url = this.tripsBaseURL + trip.id + '/make-admin/' + user.id;
+        return this.http.post(url, {});
+    }
+
+    finishTrip(tripId: number) {
+        const url = this.tripsBaseURL + tripId + '/finish';
         return this.http.post(url, {});
     }
 }

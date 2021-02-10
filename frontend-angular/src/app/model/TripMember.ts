@@ -1,12 +1,10 @@
 import {User} from "./user";
-import {Trip} from "./trip";
 
 export class TripMember {
 
     user: User;
     tripId: number;
     role: TripRole;
-
 
     constructor(user: User, tripId: number, role: TripRole) {
         this.user = user;

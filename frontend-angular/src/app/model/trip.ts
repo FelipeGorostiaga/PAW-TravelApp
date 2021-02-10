@@ -14,7 +14,7 @@ export class Trip {
     private: boolean;
     startPlace: Place;
     membersAmount: number;
-    status: number;
+    status: TripStatus;
 }
 
 export class FullTrip extends Trip {
@@ -23,3 +23,10 @@ export class FullTrip extends Trip {
     members: TripMember[];
     admins: User[];
 }
+
+export enum TripStatus {
+    DUE = "DUE",
+    IN_PROGRESS = "IN PROGRESS",
+    COMPLETED = "COMPLETED"
+}
+

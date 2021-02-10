@@ -1,5 +1,5 @@
-import {Component, ElementRef, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {FullTrip} from "../../model/trip";
+import {Component, Input, OnInit, TemplateRef} from '@angular/core';
+import {FullTrip, TripStatus} from "../../model/trip";
 import {ApiTripService} from "../../services/api-trip.service";
 import {AuthService} from "../../services/auth/auth.service";
 import {Router} from "@angular/router";
@@ -28,6 +28,8 @@ export class InformationComponent implements OnInit {
     @Input() isCreator: boolean;
 
     waitingConfirmation = true;
+
+    canFinish: boolean;
 
     modalRef: BsModalRef;
 
@@ -82,12 +84,16 @@ export class InformationComponent implements OnInit {
     ngOnInit() {
         this.startDate = this.dateUtils.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtils.stringToDate(this.trip.endDate);
-        this.loadingImage = true;
+
+        this.canFinish = this.canMarkAsCompleted();
+        console.log(this.canFinish);
+
         this.editTripForm = this.formBuilder.group({
             description: ['', [Validators.required, Validators.minLength(25), Validators.maxLength(400)]],
             tripName: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(25)]],
         });
         this.populateForm();
+
         if (this.trip != null) {
             if (!this.isAdmin && !this.isMember) {
                 this.tripService.isWaitingTripConfirmation(this.trip.id, this.authService.getLoggedUser().id).subscribe(
@@ -99,6 +105,7 @@ export class InformationComponent implements OnInit {
                     }
                 );
             }
+            this.loadingImage = true;
             this.tripService.getTripImage(this.trip.id).subscribe(
                 data => {
                     const reader = new FileReader();
@@ -116,6 +123,12 @@ export class InformationComponent implements OnInit {
                 }
             );
         }
+    }
+
+    canMarkAsCompleted(): boolean {
+        let now: Date = new Date();
+        now.setHours(0, 0, 0, 0);
+        return this.isCreator && now >= this.endDate;
     }
 
     populateForm() {
@@ -274,11 +287,20 @@ export class InformationComponent implements OnInit {
         if (confirm("Are you sure you want to delete this trip?")) {
             this.tripService.deleteTrip(this.trip.id).subscribe(
                 ok => {
-                    console.log("Trip deleted successfully");
                     this.router.navigate(["/home"]);
                 },
                 error => console.log(error)
+            );
+        }
+    }
 
+    finishTrip() {
+        if (confirm("Are you sure you want to finish this trip?")) {
+            this.tripService.finishTrip(this.trip.id).subscribe(
+                res => {
+                    this.trip.status = TripStatus.COMPLETED;
+                    console.log("trip status is now COMPLETED -> user pending rates generated!");
+                }
             );
         }
     }

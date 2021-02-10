@@ -149,7 +149,7 @@ public class TripHibernateDao implements TripDao {
     @Override
     public void markTripAsCompleted(long tripId) {
         Query query = em.createQuery("UPDATE Trip SET status = :completed WHERE id = :tripId");
-        query.setParameter("completed", "COMPLETED");
+        query.setParameter("completed", TripStatus.COMPLETED);
         query.setParameter("tripId", tripId);
         query.executeUpdate();
     }

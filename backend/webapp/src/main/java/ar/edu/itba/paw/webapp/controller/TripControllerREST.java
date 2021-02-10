@@ -475,7 +475,7 @@ public class TripControllerREST {
 
 
     @POST
-    @Path("/{id}/mark-complete")
+    @Path("/{id}/finish")
     public Response markTripAsCompleted(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         User loggedUser = securityUserService.getLoggedUser();

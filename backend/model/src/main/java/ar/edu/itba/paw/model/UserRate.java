@@ -26,7 +26,7 @@ public class UserRate {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Trip trip;
 
-    @Column(nullable = false)
+    @Column
     private int rate;
 
     @Column(length = 500)
@@ -103,5 +103,18 @@ public class UserRate {
 
     public void setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
+    }
+
+    @Override
+    public String toString() {
+        return "UserRate{" +
+                "ratedByUser=" + ratedByUser +
+                ", ratedUser=" + ratedUser +
+                ", trip=" + trip +
+                ", rate=" + rate +
+                ", comment='" + comment + '\'' +
+                ", pending=" + pending +
+                ", createdOn=" + createdOn +
+                '}';
     }
 }
