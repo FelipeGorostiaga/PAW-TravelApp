@@ -162,6 +162,13 @@ public class TripHibernateDao implements TripDao {
         query.executeUpdate();
     }
 
+    @Override
+    public void deleteAllTripMembers(long tripId) {
+        Query query = em.createQuery("DELETE TripMember WHERE trip.id = :tripId");
+        query.setParameter("tripId", tripId);
+        query.executeUpdate();
+    }
+
 
     @Override
     public List<Trip> getAllTrips() {
@@ -178,8 +185,8 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public void deleteTrip(long tripId) {
-        Query tripDelete = em.createQuery("DELETE Trip AS t WHERE t.id = :id");
-        tripDelete.setParameter("id", tripId);
+        Query tripDelete = em.createQuery("DELETE Trip WHERE id = :tripId");
+        tripDelete.setParameter("tripId", tripId);
         tripDelete.executeUpdate();
     }
 
@@ -281,7 +288,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<TripComment> getTripComments(long tripId) {
-        final TypedQuery<TripComment> query = em.createQuery("FROM TripComment as tc where tc.member.trip.id = :tripId", TripComment.class);
+        final TypedQuery<TripComment> query = em.createQuery("FROM TripComment as tc where tc.trip.id = :tripId", TripComment.class);
         query.setParameter("tripId", tripId);
         return query.getResultList();
     }

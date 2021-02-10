@@ -140,7 +140,7 @@ export class InformationComponent implements OnInit {
                     this.router.navigate(["/user-trips"]);
                 }
                 , error => {
-                  console.log(error);
+                    console.log(error);
                 }
             );
         }
@@ -272,7 +272,14 @@ export class InformationComponent implements OnInit {
 
     deleteTrip() {
         if (confirm("Are you sure you want to delete this trip?")) {
-            console.log("delete trip api call");
+            this.tripService.deleteTrip(this.trip.id).subscribe(
+                ok => {
+                    console.log("Trip deleted successfully");
+                    this.router.navigate(["/home"]);
+                },
+                error => console.log(error)
+
+            );
         }
     }
 }

@@ -61,4 +61,6 @@ public interface TripDao {
     void markTripAsCompleted(long tripId);
 
     void deleteTripMember(long userId, long tripId);
+
+    void deleteAllTripMembers(long tripId);
 }

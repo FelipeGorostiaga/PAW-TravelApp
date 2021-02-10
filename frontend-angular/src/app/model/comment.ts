@@ -2,7 +2,8 @@ import {User} from "./user";
 import {TripMember} from "./TripMember";
 
 export class Comment {
-    member: TripMember;
+    tripId: number;
+    user: User;
     comment: string;
     createdOn: string;
 }

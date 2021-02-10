@@ -50,14 +50,8 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<TripMember> trips = new LinkedList<>();
 
-    /*@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TripComment> comments;*/
-
-    /*@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Trip> trips = new HashSet<>();
-
-    @ManyToMany(mappedBy = "admins", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Trip> adminTrips = new HashSet<>();*/
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripComment> comments;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     private UserPicture profilePicture;
@@ -96,6 +90,14 @@ public class User {
         this.sex = sex;
         this.verified = false;
         this.verificationCode = verificationCode;
+    }
+
+    public List<TripComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<TripComment> comments) {
+        this.comments = comments;
     }
 
     public String getVerificationCode() {

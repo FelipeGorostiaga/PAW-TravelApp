@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
@@ -32,25 +35,33 @@ public class Trip implements Comparable<Trip> {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripComment> comments;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "place_id")
     private Place startPlace;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TripMember> members = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Activity> activities = new LinkedList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip")
     private List<UserRate> rates = new LinkedList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private TripPicture profilePicture;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripInvitation> pendingConfirmations;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripInvitation> invitations;
 
@@ -66,6 +77,14 @@ public class Trip implements Comparable<Trip> {
         this.endDate = endDate;
         this.isPrivate = isPrivate;
         this.status = TripStatus.DUE;
+    }
+
+    public List<TripComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<TripComment> comments) {
+        this.comments = comments;
     }
 
     public List<UserRate> getRates() {

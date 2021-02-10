@@ -28,7 +28,7 @@ public class FullTripDTO {
         // Empty constructor needed by JAX-RS
     }
 
-    public FullTripDTO(Trip trip, List<TripComment> comments) {
+    public FullTripDTO(Trip trip) {
         this.id = trip.getId();
         this.name = trip.getName();
         this.description = trip.getDescription();
@@ -36,7 +36,7 @@ public class FullTripDTO {
         this.endDate = DateManipulation.changeDateFormat(trip.getEndDate());
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
-        this.comments = comments.stream().map(TripCommentDTO::new).collect(Collectors.toList());
+        this.comments = trip.getComments().stream().sorted().map(TripCommentDTO::new).collect(Collectors.toList());
         this.activities = trip.getActivities().stream().map(ActivityDTO::new).collect(Collectors.toList());
         this.members = trip.getMembers().stream().map(TripMemberDTO::new).collect(Collectors.toSet());
         TripStatus status = trip.getStatus();

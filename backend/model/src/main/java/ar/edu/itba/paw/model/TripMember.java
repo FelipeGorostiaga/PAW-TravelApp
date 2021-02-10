@@ -2,8 +2,6 @@ package ar.edu.itba.paw.model;
 
 
 import javax.persistence.*;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -15,18 +13,18 @@ public class TripMember {
     @SequenceGenerator(sequenceName = "trip_members_id_seq", name = "trip_members_id_seq", allocationSize = 1)
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     private Trip trip;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     private User user;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private TripMemberRole role;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member")
-    private List<TripComment> comments = new LinkedList<>();
+/*    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", orphanRemoval = true)
+    private List<TripComment> comments = new LinkedList<>();*/
 
     TripMember() {
         //Hibernate
@@ -66,14 +64,6 @@ public class TripMember {
         this.role = role;
     }
 
-    public List<TripComment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<TripComment> comments) {
-        this.comments = comments;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,9 +85,7 @@ public class TripMember {
                 "id=" + id +
                 ", trip=" + trip.getId() +
                 ", user=" + user.getId() +
-                ", role=" + role +
-                ", comments=" + comments +
-                '}';
+                ", role=" + role;
     }
 }
 

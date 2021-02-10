@@ -49,7 +49,7 @@ export class CreateTripComponent implements OnInit {
         this.spinner.show();
         this.tripForm = this.formBuilder.group({
             name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(15)]],
-            description: ['', [Validators.required, Validators.minLength(25), Validators.maxLength(100)]],
+            description: ['', [Validators.required, Validators.minLength(25), Validators.maxLength(400)]],
             startDate: ['', Validators.required],
             endDate: ['', Validators.required],
             placeInput: ['', Validators.required],
@@ -118,7 +118,7 @@ export class CreateTripComponent implements OnInit {
         if (this.tripForm.invalid) {
             return;
         }
-        if (!!this.longitude || !!this.latitude) {
+        if (!this.longitude || !this.latitude) {
             this.mapsErrorMessage = "Invalid google maps location";
             return;
         }
@@ -174,6 +174,7 @@ export function validInterval(startControlName: string, endControlName: string) 
             return;
         }
         let now = new Date();
+        now.setHours(0,0,0,0);
         let startDate = startControl.value;
         let endDate = endControl.value;
         if (startDate < now || startDate > endDate) {
@@ -181,6 +182,7 @@ export function validInterval(startControlName: string, endControlName: string) 
             endControl.setErrors({invalidInterval: true});
         } else {
             startControl.setErrors(null);
+            endControl.setErrors(null);
         }
     };
 }

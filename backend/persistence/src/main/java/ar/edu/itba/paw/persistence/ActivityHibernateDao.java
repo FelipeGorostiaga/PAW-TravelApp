@@ -29,7 +29,7 @@ public class ActivityHibernateDao implements ActivityDao {
 
     @Override
     public Optional<Activity> findByName(String name) {
-        final TypedQuery<Activity> query = em.createQuery("From Activity as a where a.name like :name", Activity.class);
+        final TypedQuery<Activity> query = em.createQuery("FROM Activity AS a WHERE a.name LIKE :name", Activity.class);
         query.setParameter("name", name);
         query.setMaxResults(MAX_ROWS);
         return query.getResultList().stream().findFirst();
@@ -44,27 +44,27 @@ public class ActivityHibernateDao implements ActivityDao {
 
     @Override
     public Optional<Activity> findByCategory(String category) {
-        final TypedQuery<Activity> query = em.createQuery("From Activity as a where a.category like :category", Activity.class);
+        final TypedQuery<Activity> query = em.createQuery("FROM Activity AS a WHERE a.category LIKE :category", Activity.class);
         query.setParameter("category", category);
         return query.getResultList().stream().findFirst();
     }
 
     @Override
     public void deleteActivities(long tripId) {
-        Query activityDelete = em.createQuery("delete Activity as a where a.trip.id = :tripId");
+        Query activityDelete = em.createQuery("DELETE Activity AS a WHERE a.trip.id = :tripId");
         activityDelete.setParameter("tripId", tripId);
         activityDelete.executeUpdate();
     }
 
     @Override
     public void deleteActivity(long activityId) {
-        Query activityDelete = em.createQuery("delete Activity as a where a.id = :activityId");
+        Query activityDelete = em.createQuery("DELETE Activity AS a WHERE a.id = :activityId");
         activityDelete.setParameter("activityId", activityId);
         activityDelete.executeUpdate();
     }
     @Override
     public List<Activity> getTripActivities(long tripId) {
-        final TypedQuery<Activity> query = em.createQuery("From Activity as a where a.trip.id = :tripId", Activity.class);
+        final TypedQuery<Activity> query = em.createQuery("FROM Activity AS a WHERE a.trip.id = :tripId", Activity.class);
         query.setParameter("tripId", tripId);
         return query.getResultList();
     }

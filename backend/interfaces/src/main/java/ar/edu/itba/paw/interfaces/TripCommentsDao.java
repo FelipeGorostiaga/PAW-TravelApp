@@ -7,7 +7,7 @@ import ar.edu.itba.paw.model.User;
 import java.util.Optional;
 
 public interface TripCommentsDao {
-    TripComment create(TripMember member, Trip trip, String comment);
+    TripComment create(Trip trip, User user, String comment);
     Optional<TripComment> findById(long id);
     void deleteComments(long tripId);
 }

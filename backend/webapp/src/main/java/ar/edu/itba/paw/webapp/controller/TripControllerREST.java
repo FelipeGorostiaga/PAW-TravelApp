@@ -83,7 +83,7 @@ public class TripControllerREST {
     public Response getTrip(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        return Response.ok(new FullTripDTO(tripOptional.get(), tripService.getTripComments(tripOptional.get().getId()))).build();
+        return Response.ok(new FullTripDTO(tripOptional.get())).build();
     }
 
 

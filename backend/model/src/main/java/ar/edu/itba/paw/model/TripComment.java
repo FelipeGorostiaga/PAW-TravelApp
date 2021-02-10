@@ -22,15 +22,19 @@ public class TripComment implements Comparable<TripComment>{
     @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.MERGE)
-    private TripMember member;
+/*    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.MERGE)
+    private TripMember member;*/
 
-/*    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Trip trip;*/
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    private Trip trip;
 
-    public TripComment(String comment, TripMember member, LocalDateTime createdOn) {
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    private User user;
+
+    public TripComment(String comment, Trip trip, User user, LocalDateTime createdOn) {
         this.comment = comment;
-        this.member = member;
+        this.trip = trip;
+        this.user = user;
         this.createdOn = createdOn;
     }
 
@@ -42,20 +46,20 @@ public class TripComment implements Comparable<TripComment>{
         this.comment = comment;
     }
 
-/*    public User getUser() {
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trip trip) {
+        this.trip = trip;
+    }
+
+    public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
-    }*/
-
-    public TripMember getMember() {
-        return member;
-    }
-
-    public void setMember(TripMember member) {
-        this.member = member;
     }
 
     public long getId() {

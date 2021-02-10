@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.TripCommentsDao;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.TripMember;
+import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -19,8 +20,8 @@ public class TripCommentHibernateDao implements TripCommentsDao {
     EntityManager em;
 
     @Override
-    public TripComment create(TripMember member, Trip trip, String comment) {
-        TripComment tc = new TripComment(comment, member, LocalDateTime.now());
+    public TripComment create(Trip trip, User user, String comment) {
+        TripComment tc = new TripComment(comment, trip, user, LocalDateTime.now());
         em.persist(tc);
         return tc;
     }
@@ -32,7 +33,7 @@ public class TripCommentHibernateDao implements TripCommentsDao {
 
     @Override
     public void deleteComments(long tripId) {
-        Query commentDelete = em.createQuery("delete TripComment as tp where tp.trip.id = :tripId");
+        Query commentDelete = em.createQuery("DELETE TripComment as tc WHERE tc.trip.id = :tripId");
         commentDelete.setParameter("tripId", tripId);
         commentDelete.executeUpdate();
     }
