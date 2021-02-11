@@ -19,6 +19,7 @@ import {UserRatesComponent} from "./user-rates/user-rates.component";
 import {UserNotificationsComponent} from "./user-notifications/user-notifications.component";
 import {CompleteRatesComponent} from "./complete-rates/complete-rates.component";
 import {ForbiddenComponent} from "./errors/forbidden/forbidden.component";
+import {SearchResultComponent} from "./search-result/search-result.component";
 
 const routes: Routes = [
     {
@@ -70,6 +71,11 @@ const routes: Routes = [
     {
         path: 'about',
         component: AboutComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'search-result',
+        component: SearchResultComponent,
         canActivate: [AuthGuard]
     },
     {

@@ -14,8 +14,8 @@ export class ApiSearchService {
 
   private searchBaseURL = `${environment.apiURL}/search/`;
 
-  searchByName(name: string): Observable<Trip[]> {
-    const url = this.searchBaseURL + '/name';
+  searchTripsByName(name: string): Observable<Trip[]> {
+    const url = this.searchBaseURL + 'trips/name';
     const params = new HttpParams().set('nameInput', name);
     return this.http.get<Trip[]>(url, {params});
   }

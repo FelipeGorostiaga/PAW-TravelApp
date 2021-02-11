@@ -51,7 +51,8 @@ public class SearchControllerREST {
 
     @GET
     @Path("/trips/name")
-    public Response searchByName(@QueryParam("nameInput") String name) {
+    public Response searchTripByName(@QueryParam("nameInput") String name) {
+        System.out.println(name);
         List<TripDTO> resultTrips = tripService.findByName(name).stream().map(TripDTO::new).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<TripDTO>>(resultTrips) {
         }).build();

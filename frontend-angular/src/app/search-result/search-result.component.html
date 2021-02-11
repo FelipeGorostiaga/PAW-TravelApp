@@ -1,0 +1,18 @@
+<app-navigation></app-navigation>
+<ngx-bootstrap-spinner></ngx-bootstrap-spinner>
+<div class="container-fluid">
+    <div class="container-fluid mt-4" id="main-comp">
+        <div class="card-deck" *ngIf="trips?.length > 0">
+            <div class="row justify-content-center">
+                <app-trip-card
+                        *ngFor="let trip of trips[currentPage]"
+                        [trip]="trip">
+                </app-trip-card>
+            </div>
+        </div>
+    </div>
+</div>
+<app-paginator  *ngIf="numberOfPages > 1"
+                [numberOfPages]="numberOfPages"
+                (pageNumberClick)="updatePage($event)">>
+</app-paginator>

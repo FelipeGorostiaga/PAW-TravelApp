@@ -24,7 +24,6 @@ import {CreateTripComponent} from './create-trip/create-trip.component';
 import {AgmCoreModule} from "@agm/core";
 import {MapActivityComponent} from './trip/activities/map-activity/map-activity.component';
 import {IndexComponent} from './index/index.component';
-import {LoggedGuard} from "./services/auth/logged.guard";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {PageNotFoundComponent} from './errors/page-not-found/page-not-found.component';
 import {ModalModuleCustom} from "./modal";
@@ -47,6 +46,7 @@ import {RatingModule} from 'ngx-bootstrap/rating';
 import { RateFormComponent } from './complete-rates/rate-form/rate-form.component';
 import { ForbiddenComponent } from './errors/forbidden/forbidden.component';
 import { RateTileComponent } from './profile/rate-tile/rate-tile.component';
+import { SearchResultComponent } from './search-result/search-result.component';
 
 
 @NgModule({
@@ -82,6 +82,7 @@ import { RateTileComponent } from './profile/rate-tile/rate-tile.component';
         RateFormComponent,
         ForbiddenComponent,
         RateTileComponent,
+        SearchResultComponent,
 
     ],
     imports: [
@@ -110,7 +111,7 @@ import { RateTileComponent } from './profile/rate-tile/rate-tile.component';
         provide: HTTP_INTERCEPTORS,
         useClass: TokenInterceptor,
         multi: true
-    }, LoggedGuard],
+    }],
     bootstrap: [AppComponent]
 })
 export class AppModule {
