@@ -1,7 +1,8 @@
 <div class="row">
     <div class="col-12">
         <div class="card m-5">
-            <h5 class="card-header">{{rate.ratedUser.firstname}} {{rate.ratedUser.lastname}}    {{userRating}}</h5>
+            <h5 class="card-header"><a routerLink="/profile/{{rate?.ratedUser?.id}}">{{rate?.ratedUser?.firstname}} {{rate?.ratedUser?.lastname}}</a>
+                - <a routerLink="/trip/{{rate?.trip?.id}}">{{rate?.trip.name}}</a></h5>
             <div class="card-body">
                 <rating [max]="5" [(ngModel)]="rating" [customTemplate]="tt"></rating>
                 <ng-template #tt let-i="index" let-v="value">
@@ -9,9 +10,7 @@
                         {{i < v ? '&#9733;' : '&#9734;'}}
                     </button>
                 </ng-template>
-                <div *ngIf="showAlert">
-                    <alert [type]="'warning'" [dismissible]="true" (onClosed)="closeAlert()">{{errorMessage}}</alert>
-                </div>
+
                 <textarea
                         class="form-control"
                         type="text"
@@ -22,7 +21,11 @@
                         style="margin-top: 20px;resize:none;"
                         maxlength="300">
                 </textarea>
+                <div style="margin-top: 10px;" *ngIf="showAlert">
+                    <alert  [type]="'warning'" [dismissible]="true" (onClosed)="closeAlert()">{{errorMessage}}</alert>
+                </div>
             </div>
+
             <div class="card-footer text-center">
                 <button class="btn btn-primary" (click)="submitRate()">Submit</button>
             </div>

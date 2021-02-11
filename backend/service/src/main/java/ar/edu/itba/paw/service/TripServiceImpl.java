@@ -247,7 +247,7 @@ public class TripServiceImpl implements TripService {
         if (tripPicturesService.findByTripId(trip.getId()).isPresent()) {
             tripPicturesService.deleteByTripId(trip.getId());
         }
-        TripPicture picture = tripPicturesService.create(trip, imageBytes);
+        tripPicturesService.create(trip, imageBytes);
     }
 
     @Override

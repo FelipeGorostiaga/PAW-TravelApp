@@ -17,6 +17,8 @@ public class RateDTO {
 
     private String createdOn;
 
+    private TripDTO trip;
+
     public RateDTO() {
         // Empty constructor needed by JAX-RS
     }
@@ -26,8 +28,19 @@ public class RateDTO {
         this.rate = rate.getRate();
         this.ratedBy = new UserDTO(rate.getRatedByUser());
         this.ratedUser = new UserDTO(rate.getRatedUser());
-        this.createdOn = DateManipulation.changeDateTimeFormat(rate.getCreatedOn());
+        if (rate.getCreatedOn() != null) {
+            this.createdOn = DateManipulation.changeDateTimeFormat(rate.getCreatedOn());
+        }
+        this.trip = new TripDTO(rate.getTrip());
         this.comment = rate.getComment();
+    }
+
+    public TripDTO getTrip() {
+        return trip;
+    }
+
+    public void setTrip(TripDTO trip) {
+        this.trip = trip;
     }
 
     public long getId() {

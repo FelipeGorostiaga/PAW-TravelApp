@@ -36,26 +36,10 @@ export class ApiUserService {
         return this.http.post(url, formData);
     }
 
-    getUserActiveTrips(userId: number): Observable<any> {
-        const url = this.usersBaseURL + userId + "/trips/active";
-        return this.http.get(url);
-    }
-
-    getUserCompletedTrips(userId: number) {
-        const url = this.usersBaseURL + userId + "/trips/completed";
-        return this.http.get(url);
-    }
-
-    getUserDueTrips(userId: number) {
-        const url = this.usersBaseURL + userId + "/trips/due";
-        return this.http.get(url);
-    }
-
     getUserProfileData(userId: number): Observable<UserProfile> {
         const url = this.usersBaseURL + userId + '/profile';
         return this.http.get<UserProfile>(url);
     }
-
 
     // rates the user received
     getUserRates(userId: number): Observable<any>  {
@@ -72,5 +56,10 @@ export class ApiUserService {
     getUserRating(userId: number): Observable<number> {
         const url = this.usersBaseURL + userId + '/rating'
         return this.http.get<number>(url);
+    }
+
+    submitRate(data: any) {
+        const url = this.usersBaseURL + 'rateUser';
+        return this.http.post(url, data);
     }
 }

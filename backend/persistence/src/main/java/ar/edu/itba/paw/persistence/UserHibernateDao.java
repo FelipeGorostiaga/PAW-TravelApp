@@ -65,13 +65,6 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public UserRate createRate(Trip trip, User ratedUser, User ratedBy) {
-        final UserRate rate = new UserRate(trip, ratedUser, ratedBy);
-        em.persist(rate);
-        return rate;
-    }
-
-    @Override
     public List<TripInvitation> getTripInvitations(long userId) {
         final TypedQuery<TripInvitation> query = em.createQuery("FROM TripInvitation AS ti WHERE ti.invitee.id = :userId", TripInvitation.class);
         query.setParameter("userId", userId);
@@ -86,30 +79,11 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public boolean rateUser(Trip trip, User ratedUser, User ratedBy, int rate, String comment) {
-        Query query = em.createQuery("UPDATE UserRate SET rate = :rate, comment = :comment, createdOn = :createdOn WHERE trip.id = :tripId AND ratedUser.id = :ratedId AND ratedByUser.id = :ratedById");
-        query.setParameter("tripId", trip.getId());
-        query.setParameter("ratedId", ratedUser.getId());
-        query.setParameter("ratedById", ratedBy.getId());
-        query.setParameter("createdOn", LocalDateTime.now());
-        return query.executeUpdate() != 0;
-    }
-
-    @Override
     public boolean hasTripInvitation(Trip trip, User u) {
         final TypedQuery<TripInvitation> query = em.createQuery("FROM TripInvitation AS ti WHERE ti.trip.id = :tripId AND ti.invitee.id = :userId AND responded = false", TripInvitation.class);
         query.setParameter("tripId", trip.getId());
         query.setParameter("userId", u.getId());
         return !query.getResultList().isEmpty();
-    }
-
-    @Override
-    public Optional<UserRate> findUserRate(Trip trip, User ratedUser, User ratedBy) {
-        final TypedQuery<UserRate> query = em.createQuery("FROM UserRate AS ur WHERE ur.trip.id = :tripID AND ur.ratedUser.id = :ratedId AND ur.ratedByUser.id = :ratedById ", UserRate.class);
-        query.setParameter("tripId", trip.getId());
-        query.setParameter("ratedId", ratedUser.getId());
-        query.setParameter("ratedById", ratedBy.getId());
-        return query.getResultList().stream().findAny();
     }
 
     @Override

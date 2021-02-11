@@ -5,13 +5,7 @@ import javax.validation.constraints.NotNull;
 public class UserRateForm {
 
     @NotNull
-    private long tripId;
-
-    @NotNull
-    private long ratedUserId;
-
-    @NotNull
-    private long ratedById;
+    private long rateId;
 
     @NotNull
     private String comment;
@@ -23,28 +17,12 @@ public class UserRateForm {
 
     }
 
-    public long getTripId() {
-        return tripId;
+    public long getRateId() {
+        return rateId;
     }
 
-    public void setTripId(long tripId) {
-        this.tripId = tripId;
-    }
-
-    public long getRatedUserId() {
-        return ratedUserId;
-    }
-
-    public void setRatedUserId(long ratedUserId) {
-        this.ratedUserId = ratedUserId;
-    }
-
-    public long getRatedById() {
-        return ratedById;
-    }
-
-    public void setRatedById(long ratedById) {
-        this.ratedById = ratedById;
+    public void setRateId(long rateId) {
+        this.rateId = rateId;
     }
 
     public String getComment() {
@@ -61,5 +39,14 @@ public class UserRateForm {
 
     public void setRate(int rate) {
         this.rate = rate;
+    }
+
+    @Override
+    public String toString() {
+        return "UserRateForm{" +
+                "rateId=" + rateId +
+                ", comment='" + comment + '\'' +
+                ", rate=" + rate +
+                '}';
     }
 }

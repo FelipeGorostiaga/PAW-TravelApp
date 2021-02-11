@@ -246,32 +246,31 @@ public class UserControllerREST {
     @POST
     @Path("/rateUser")
     public Response rateUser(@Valid UserRateForm form) {
+        System.out.println(form);
+        User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<UserRateForm>> violations = validator.validate(form);
         if (!violations.isEmpty()) {
+            System.out.println("Form has violations");
             List<ErrorDTO> errors = violations.stream().map(violation -> new ErrorDTO(violation.getMessage(),
                     violation.getPropertyPath().toString())).collect(Collectors.toList());
             return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<List<ErrorDTO>>(errors) {
             }).build();
         }
-        Optional<Trip> tripOptional = tripService.findById(form.getTripId());
-        Optional<User> ratedByUserOp = userService.findById(form.getRatedById());
-        Optional<User> ratedUserOptional = userService.findById(form.getRatedUserId());
-        if (!tripOptional.isPresent() || !ratedByUserOp.isPresent() || !ratedUserOptional.isPresent()) {
+        Optional<UserRate> rateOptional = userRatesService.findById(form.getRateId());
+        if (!rateOptional.isPresent()) {
+            System.out.println("Rate not found");
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        Trip trip = tripOptional.get();
-        User ratedUser = ratedUserOptional.get();
-        User ratedBy = ratedByUserOp.get();
-
-        if (trip.getStatus() != TripStatus.COMPLETED) {
+        UserRate rate = rateOptional.get();
+        if (!rate.getRatedByUser().equals(loggedUser)) return Response.status(Response.Status.FORBIDDEN).build();
+        if (rate.getTrip().getStatus() != TripStatus.COMPLETED)
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        if (userRatesService.rateUser(rate.getId(), form.getRate(), form.getComment())) {
+            System.out.println("Rating user");
+            return Response.ok().build();
         }
+        return Response.serverError().build();
 
-        if (!tripService.traveledTogether(trip, ratedUser, ratedBy)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        UserRate rate = userRatesService.rateUser(trip, ratedUser, ratedBy, form.getRate(), form.getComment());
-        return Response.ok(new RateDTO(rate)).build();
     }
 
     @GET
@@ -341,7 +340,8 @@ public class UserControllerREST {
                 .filter(tripInvitation -> !tripInvitation.isResponded())
                 .map(TripInvitationDTO::new)
                 .collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripInvitationDTO>>(tripInvitations) {}).build();
+        return Response.ok(new GenericEntity<List<TripInvitationDTO>>(tripInvitations) {
+        }).build();
     }
 
     @GET
@@ -349,9 +349,11 @@ public class UserControllerREST {
     public Response getUserPendingRates(@PathParam("userId") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        if (!userOptional.get().equals(securityUserService.getLoggedUser())) return Response.status(Response.Status.FORBIDDEN).build();
+        if (!userOptional.get().equals(securityUserService.getLoggedUser()))
+            return Response.status(Response.Status.FORBIDDEN).build();
         List<RateDTO> rates = userService.getUserPendingRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<RateDTO>>(rates) {}).build();
+        return Response.ok(new GenericEntity<List<RateDTO>>(rates) {
+        }).build();
     }
 
     @GET

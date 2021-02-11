@@ -1,4 +1,14 @@
 <app-navigation></app-navigation>
 <ngx-bootstrap-spinner></ngx-bootstrap-spinner>
-<app-rate-form *ngFor="let rate of pendingRates" (rateSubmitEvent)="submitRate($event)"></app-rate-form>
-<div *ngIf="pendingRates?.length === 0" class="alert alert-primary" role="alertdialog">There are no pending rates</div>
+<div class="container-fluid">
+    <div class="container">
+        <div *ngIf="pendingRates?.length === 0" class="alert alert-primary" role="alertdialog" style="margin-top: 40px">There are no pending rates</div>
+        <div *ngIf="pendingRates?.length > 0">
+            <h1 style="margin-left: 50px; margin-top: 40px;">Pending rates</h1>
+            <app-rate-form *ngFor="let rate of pendingRates" (rateSubmitEvent)="submitRate($event)" [rate]="rate"></app-rate-form>
+        </div>
+
+    </div>
+</div>
+
+

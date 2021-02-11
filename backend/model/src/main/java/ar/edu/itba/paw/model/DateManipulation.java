@@ -12,15 +12,12 @@ public class DateManipulation {
     }
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm");
+    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     public static LocalDate stringToLocalDate(String dateString) {
         try {
-            LocalDate date = LocalDate.parse(dateString, formatter);
-            System.out.println("String converted to date correctly");
-            return date;
+            return LocalDate.parse(dateString, formatter);
         } catch (DateTimeParseException e) {
-            System.out.println("Date manipulation exception");
             return null;
         }
     }
