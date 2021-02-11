@@ -44,10 +44,11 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Activity create(String name, String category, double latitude, double longitude, Trip trip, LocalDate startDate, LocalDate endDate) throws GooglePlacesException {
+    public Activity create(String name, String category, double latitude, double longitude, Trip trip, LocalDate startDate, LocalDate endDate,
+                           String description) throws GooglePlacesException {
         List<se.walkercrou.places.Place> googleMapsPlaces = googleMapsService.queryGoogleMapsPlaces(latitude, longitude);
         Place place = googleMapsService.createGooglePlaceReference(googleMapsPlaces);
-        Activity activity =  ad.create(name, category, place, trip, startDate, endDate);
+        Activity activity = ad.create(name, category, place, trip, startDate, endDate, description);
         tripService.addActivityToTrip(activity.getId(), trip.getId());
         return activity;
     }
@@ -62,7 +63,7 @@ public class ActivityServiceImpl implements ActivityService {
         List<Activity> activities = ad.getTripActivities(trip.getId());
         Collections.sort(activities);
         List<DataPair<Activity, Place>> dataPairList = new ArrayList<>();
-        for(Activity activity : activities) {
+        for (Activity activity : activities) {
             Place place = activity.getPlace();
             dataPairList.add(new DataPair<>(activity, place));
 

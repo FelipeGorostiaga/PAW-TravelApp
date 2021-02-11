@@ -52,6 +52,7 @@
                        type="text"
                        class="form-control"
                        id="startDate"
+                       placeholder="dd/mm/yyyy"
                        autocomplete="off"
                        [ngClass]="{ 'is-invalid': submitted && f.startDate.errors }"
                        bsDatepicker
@@ -67,19 +68,20 @@
                        type="text"
                        class="form-control"
                        autocomplete="off"
+                       placeholder="dd/mm/yyyy"
                        [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }"
                        bsDatepicker
                        id="endDate"
                        [bsConfig]="bsConfig">
                 <div *ngIf="submitted && f.endDate.errors" class="invalid-feedback">
                     <p *ngIf="f.endDate.errors.required">Field is required</p>
-                    <p *ngIf="f.startDate.errors.invalidInterval">Invalid dates</p>
+                    <p *ngIf="f.endDate.errors.invalidInterval">Invalid dates</p>
                 </div>
             </div>
         </div>
 
         <div class="form-row">
-            <div class="form-group">
+            <div class="form-group col-6">
                 <label>Location</label>
                 <input #search
                        formControlName="placeInput"
@@ -89,15 +91,32 @@
                        autocomplete="off"
                        [ngClass]="{ 'is-invalid': submitted && f.placeInput.errors }"/>
                 <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom"
-                         style="height: 400px;width: 768px;">
+                         style="height: 400px;width: 100%;">
                     <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
                 </agm-map>
                 <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
                     <p *ngIf="f.placeInput.errors.required">Field is required</p>
                 </div>
             </div>
+            <div class="form-group col-6">
+                <label for="description">Description</label>
+                <textarea formControlName="description"
+                          class="form-control"
+                          type="text"
+                          id="description"
+                          rows="8"
+                          placeholder="Write a description for this activity..."
+                          style="margin-bottom: 10px;resize:none;"
+                          maxlength="300"
+                          [ngClass]="{ 'is-invalid': submitted && f.description.errors }">
+                        </textarea>
+                <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+                    <p *ngIf="f.description.errors.required">Field is required</p>
+                    <p *ngIf="f.description.errors.maxlength">Max length is 300 characters</p>
+                    <p *ngIf="f.description.errors.minlength">Min length is 10 characters</p>
+                </div>
+            </div>
         </div>
-
         <div class="container text-center flex-fill">
             <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Create</button>
             <button type="button" class="btn btn-outline-secondary" (click)="closeModal('custom-modal-1')">Close

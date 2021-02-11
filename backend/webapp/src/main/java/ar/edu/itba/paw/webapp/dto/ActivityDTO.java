@@ -8,8 +8,9 @@ public class ActivityDTO {
 
     private long id;
     private String name;
-    private PlaceDTO place;
+    private String description;
     private String category;
+    private PlaceDTO place;
     private LocalDate startDate;
     private LocalDate endDate;
 
@@ -24,6 +25,15 @@ public class ActivityDTO {
         this.category = activity.getCategory();
         this.startDate = activity.getStartDate();
         this.endDate = activity.getEndDate();
+        this.description = activity.getDescription();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public long getId() {

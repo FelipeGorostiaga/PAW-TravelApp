@@ -20,6 +20,9 @@ public class Activity implements Comparable<Activity> {
     @Column(length = 40, nullable = false)
     private String category;
 
+    @Column(length = 300, nullable = false)
+    private String description;
+
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
@@ -32,24 +35,33 @@ public class Activity implements Comparable<Activity> {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Trip trip;
 
-    public Activity(long id, String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
-        this(name, category, place, trip, startDate, endDate);
+    public Activity(long id, String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate, String description) {
+        this(name, category, place, trip, startDate, endDate, description);
         this.id = id;
     }
 
-    public Activity(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
+    public Activity(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate, String description) {
         this.name = name;
         this.category = category;
         this.place = place;
         this.trip = trip;
         this.endDate = endDate;
         this.startDate = startDate;
+        this.description = description;
     }
 
     /* package */ Activity() {
         // Just for Hibernate
     }
 
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Trip getTrip() {
         return trip;

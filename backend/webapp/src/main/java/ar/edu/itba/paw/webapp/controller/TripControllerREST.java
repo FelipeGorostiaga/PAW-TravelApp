@@ -325,7 +325,7 @@ public class TripControllerREST {
         }
         Activity activity = activityService.create(activityCreateForm.getName(), activityCreateForm.getCategory(), activityCreateForm.getLatitude(),
                 activityCreateForm.getLongitude(), trip, DateManipulation.stringToLocalDate(activityCreateForm.getStartDate()),
-                DateManipulation.stringToLocalDate(activityCreateForm.getEndDate()));
+                DateManipulation.stringToLocalDate(activityCreateForm.getEndDate()), activityCreateForm.getDescription());
         return Response.ok(new ActivityDTO(activity)).build();
     }
 

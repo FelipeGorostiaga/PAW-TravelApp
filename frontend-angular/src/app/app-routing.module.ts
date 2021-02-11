@@ -20,6 +20,7 @@ import {UserNotificationsComponent} from "./user-notifications/user-notification
 import {CompleteRatesComponent} from "./complete-rates/complete-rates.component";
 import {ForbiddenComponent} from "./errors/forbidden/forbidden.component";
 import {SearchResultComponent} from "./search-result/search-result.component";
+import {AdvancedSearchComponent} from "./advanced-search/advanced-search.component";
 
 const routes: Routes = [
     {
@@ -96,6 +97,11 @@ const routes: Routes = [
     {
         path: 'user/:id/pending/rates',
         component: CompleteRatesComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'advanced-search',
+        component: AdvancedSearchComponent,
         canActivate: [AuthGuard]
     },
     {

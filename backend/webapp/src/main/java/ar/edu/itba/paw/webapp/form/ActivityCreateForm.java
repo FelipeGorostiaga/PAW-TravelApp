@@ -11,10 +11,6 @@ import javax.validation.constraints.Size;
 @ValidDates
 public class ActivityCreateForm {
 
-    public ActivityCreateForm() {
-        // Empty constructor needed by JAX-RS
-    }
-
     @Size(min = 3, max = 40)
     private String name;
 
@@ -24,6 +20,10 @@ public class ActivityCreateForm {
 
     @Size(min = 3, max = 100)
     private String placeInput;
+
+    @Size(min = 10, max = 300)
+    @NotNull
+    private String description;
 
     @NotNull
     private double latitude;
@@ -39,7 +39,19 @@ public class ActivityCreateForm {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String endDate;
 
+    public ActivityCreateForm() {
+        // Empty constructor needed by JAX-RS
+    }
+
     private Trip trip;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public double getLatitude() {
         return latitude;

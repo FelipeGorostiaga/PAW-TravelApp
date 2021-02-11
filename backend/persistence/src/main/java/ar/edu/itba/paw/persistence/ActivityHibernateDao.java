@@ -36,8 +36,8 @@ public class ActivityHibernateDao implements ActivityDao {
     }
 
     @Override
-    public Activity create(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate) {
-        Activity activity = new Activity(name, category, place, trip, startDate, endDate);
+    public Activity create(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate, String description) {
+        Activity activity = new Activity(name, category, place, trip, startDate, endDate, description);
         em.persist(activity);
         return activity;
     }
@@ -62,6 +62,7 @@ public class ActivityHibernateDao implements ActivityDao {
         activityDelete.setParameter("activityId", activityId);
         activityDelete.executeUpdate();
     }
+
     @Override
     public List<Activity> getTripActivities(long tripId) {
         final TypedQuery<Activity> query = em.createQuery("FROM Activity AS a WHERE a.trip.id = :tripId", Activity.class);

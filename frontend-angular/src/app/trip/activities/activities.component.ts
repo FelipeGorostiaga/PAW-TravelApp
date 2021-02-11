@@ -52,6 +52,7 @@ export class ActivitiesComponent implements OnInit {
             category: ['', Validators.required],
             startDate: ['', Validators.required],
             endDate: ['', Validators.required],
+            description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(300)]],
             placeInput: ['', Validators.required]
         }, {
             validators: InvalidInterval('startDate', 'endDate', this.trip.activities, this.dateUtil.stringToDate(this.trip.startDate),
@@ -93,12 +94,24 @@ export class ActivitiesComponent implements OnInit {
         const values = this.activityForm.value;
         this.submitted = true;
         if (this.activityForm.invalid) {
+            console.log("form is invalid");
             return;
         }
-        let form = new ActivityForm(values.name, values.category, values.placeInput, this.latitude, this.longitude, this.dateUtilService.convertToDateString(values.startDate),
-            this.dateUtilService.convertToDateString(values.endDate));
-        console.log(JSON.stringify(form));
-        this.ts.createTripActivity(this.trip.id, form).subscribe(
+
+        let postData = {
+            name: values.name,
+            category: values.category,
+            placeInput: values.placeInput,
+            startDate: this.dateUtilService.convertToDateString(values.startDate),
+            endDate: this.dateUtilService.convertToDateString(values.endDate),
+            latitude: this.latitude,
+            longitude: this.longitude,
+            description: values.description
+        };
+    /*    let form = new ActivityForm(values.name, values.category, values.placeInput, this.latitude, this.longitude, this.dateUtilService.convertToDateString(values.startDate),
+            this.dateUtilService.convertToDateString(values.endDate), values.description);*/
+        console.log(JSON.stringify(postData));
+        this.ts.createTripActivity(this.trip.id, postData).subscribe(
             data => {
                 this.trip.activities.push(data);
                 this.closeModal('custom-modal-1');
@@ -165,16 +178,17 @@ export function InvalidInterval(sControl: string, eControl: string, activities: 
             return;
         }
         let now: Date = new Date();
-        now.setHours(0,0,0,0)
+        now.setHours(0, 0, 0, 0);
         let actSDate: Date = startControl.value;
-        actSDate.setHours(0,0,0,0)
+        actSDate.setHours(0, 0, 0, 0);
         let actEDate: Date = endControl.value;
-        actEDate.setHours(0,0,0,0)
+        actEDate.setHours(0, 0, 0, 0);
         if ((actSDate < now) || (actSDate > actEDate) || (actSDate < tripSDate) || (actEDate > tripEDate) || hasActivityConflict(activities, actSDate, actEDate)) {
             startControl.setErrors({invalidInterval: true});
             endControl.setErrors({invalidInterval: true});
         } else {
             startControl.setErrors(null);
+            endControl.setErrors(null);
         }
     };
 }
@@ -187,13 +201,13 @@ export function hasActivityConflict(activities: Activity[], startDate: Date, end
             let smonth = Number(asdate.slice(3, 5)) - 1;
             let syear = Number(asdate.slice(6, 10));
             let aSDate = new Date(Number(syear), Number(smonth), Number(sday));
-            aSDate.setHours(0,0,0,0);
+            aSDate.setHours(0, 0, 0, 0);
             let aedate = activity.endDate;
             let eday = Number(aedate.slice(0, 2));
             let emonth = Number(aedate.slice(3, 5)) - 1;
             let eyear = Number(aedate.slice(6, 10));
             let eSDate = new Date(Number(eyear), Number(emonth), Number(eday));
-            eSDate.setHours(0,0,0,0);
+            eSDate.setHours(0, 0, 0, 0);
             if ((startDate <= aSDate && endDate >= eSDate) || (startDate >= aSDate && endDate <= eSDate) || (startDate >= aSDate && endDate > eSDate)
                 || (startDate <= aSDate && endDate > aSDate)) {
                 return true;

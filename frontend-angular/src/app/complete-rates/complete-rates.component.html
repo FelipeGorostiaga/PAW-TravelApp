@@ -2,7 +2,7 @@
 <ngx-bootstrap-spinner></ngx-bootstrap-spinner>
 <div class="container-fluid">
     <div class="container">
-        <div *ngIf="pendingRates?.length === 0" class="alert alert-primary" role="alertdialog" style="margin-top: 40px">There are no pending rates</div>
+        <div *ngIf="pendingRates?.length === 0" class="alert alert-success" role="alertdialog" style="margin-top: 40px">You have no pending rates</div>
         <div *ngIf="pendingRates?.length > 0">
             <h1 style="margin-left: 50px; margin-top: 40px;">Pending rates</h1>
             <app-rate-form *ngFor="let rate of pendingRates" (rateSubmitEvent)="submitRate($event)" [rate]="rate"></app-rate-form>
