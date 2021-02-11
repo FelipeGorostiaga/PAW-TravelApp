@@ -17,7 +17,7 @@
             <li class="nav-item" id="create-trip-item"><a class="nav-link" routerLink="/create-trip">Create trip </a></li>
             <li class="nav-item" id="about-item"><a class="nav-link" routerLink="/about">About</a></li>
         </ul>
-        <form *ngIf="isLoggedIn" class="form-inline my-2 my-lg-0">
+        <div *ngIf="isLoggedIn" class="form-inline my-2 my-lg-0">
             <input
                     id="nameInput"
                     name="nameInput"
@@ -30,7 +30,7 @@
                     type="submit"
                     (click)="search()">Search
             </button>
-        </form>
+        </div>
         <a
                 *ngIf="isLoggedIn"
                 [routerLink] = "['/profile/' + loggedUser.id]">

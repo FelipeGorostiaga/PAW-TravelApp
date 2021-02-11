@@ -29,15 +29,25 @@ export class NavigationComponent implements OnInit {
     }
 
     search() {
-        if (!this.searchInput) {
+        if (!this.searchInput || this.containsSpecialCharacters(this.searchInput)) {
+            this.searchInput = "";
             return;
         }
-        this.router.navigate(['search-result'], {
-            queryParams: {name: this.searchInput}});
+        this.redirectTo('search-result');
     }
 
     logout() {
         this.authService.logout();
+    }
+
+    redirectTo(uri:string){
+        this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+            this.router.navigate([uri], {
+                queryParams: {name: this.searchInput}}));
+    }
+
+    containsSpecialCharacters(input: string): boolean {
+        return input.includes('%') || input.includes('_');
     }
 
 }

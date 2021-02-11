@@ -43,9 +43,8 @@ export class SearchResultComponent implements OnInit {
                 this.spinner.hide();
             }
         );
-        console.log(this.trips);
-        console.log(this.nameInput);
     }
+
 
     chopList(arr: any) {
         const newarr = new Array();
