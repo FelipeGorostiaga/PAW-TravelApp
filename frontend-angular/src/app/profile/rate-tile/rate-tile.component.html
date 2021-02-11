@@ -1,0 +1,19 @@
+<div class="card">
+    <div class="card-header">
+        {{rate?.ratedBy.firstname}} {{rate?.ratedBy.lastname}}  -  {{rate?.trip?.name}}
+    </div>
+    <div class="card-body" style="margin-top: 10px; margin-bottom: 5px;">
+        <p class="card-text">{{rate?.comment}}</p>
+        <rating [max]="5" [(ngModel)]="rate.rate" [customTemplate]="tt" [readonly]="true"></rating>
+        <ng-template #tt let-i="index" let-v="value">
+            <button class="btn btn-{{i < v ? 'primary' : 'default'}}">
+                {{i < v ? '&#9733;' : '&#9734;'}}
+            </button>
+        </ng-template>
+
+    </div>
+    <div class="card-footer">
+        <p style="font-size: 85%">{{rate?.createdOn | date }}</p>
+    </div>
+</div>
+

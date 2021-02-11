@@ -28,16 +28,15 @@
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item" style="margin-left: 10px">
                         <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.dueTrips?.length}}</h5><small
-                            class="text-muted"><i class="fa fa-calendar mr-1"></i><a>Due</a></small>
+                            class="text-muted"><i class="fa fa-calendar mr-1"></i>Due</small>
                     </li>
                     <li class="list-inline-item" style="margin-left: 10px">
                         <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.activeTrips?.length}}</h5><small
-                            class="text-muted"><i class="fa fa-suitcase mr-1"></i><a>Active</a></small>
+                            class="text-muted"><i class="fa fa-suitcase mr-1"></i>Active</small>
                     </li>
                     <li class="list-inline-item" style="margin-left: 10px">
                         <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.completedTrips?.length}}</h5><small
-                            class="text-muted"><i class="fa fa-check mr-1"></i><a
-                            routerLink="/home">Completed</a></small>
+                            class="text-muted"><i class="fa fa-check mr-1"></i>Completed</small>
                     </li>
                     <li class="list-inline-item" style="margin-left: 10px">
                     <li class="list-inline-item">
@@ -55,24 +54,16 @@
             </div>
             <div class="py-4 px-4">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <!-- TODO, user rates view component-->
-
                     <h5 class="mb-0">Recent reviews</h5><a class="btn btn-link text-muted"
                                                            routerLink="/profile/{{user?.id}}/rates">Show all</a>
                 </div>
-                <div class="row list-group">
-                    <div *ngFor="let rate of userProfile?.rates" class="list-group-item">
-                        <p>rate?.comment</p>
-                        <p>rate?.createdOn</p>
-                        <p>rate?.ratedBy?.firstname</p>
-                        <p>rate?.ratedUser?.firstname</p>
-                    </div>
-                </div>
+                <ul class="list-group list-group-flush">
+                    <app-rate-tile *ngFor="let rate of userProfile?.rates" [rate]="rate"></app-rate-tile>
+                </ul>
             </div>
         </div>
     </div>
 </div>
-
 
 <ng-template #modalTemplate>
     <div class="modal-header">
@@ -102,8 +93,6 @@
     </div>
 
     <!-- TODO -->
-
-
     <div *ngIf="submitted && f.biography?.errors" class="invalid-feedback">
         <p *ngIf="f.biography.errors.maxLength">Max length is 150 characters</p>
         <p *ngIf="f.biography.errors.required">Biography</p>

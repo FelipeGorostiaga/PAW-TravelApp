@@ -46,6 +46,7 @@ import {CompleteRatesComponent} from './complete-rates/complete-rates.component'
 import {RatingModule} from 'ngx-bootstrap/rating';
 import { RateFormComponent } from './complete-rates/rate-form/rate-form.component';
 import { ForbiddenComponent } from './errors/forbidden/forbidden.component';
+import { RateTileComponent } from './profile/rate-tile/rate-tile.component';
 
 
 @NgModule({
@@ -80,6 +81,7 @@ import { ForbiddenComponent } from './errors/forbidden/forbidden.component';
         CompleteRatesComponent,
         RateFormComponent,
         ForbiddenComponent,
+        RateTileComponent,
 
     ],
     imports: [

@@ -59,7 +59,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public List<UserRate> getUserRates(long userId) {
-        final TypedQuery<UserRate> query = em.createQuery("FROM UserRate AS ur WHERE ur.ratedUser.id = :userId", UserRate.class);
+        final TypedQuery<UserRate> query = em.createQuery("FROM UserRate AS ur WHERE ur.ratedUser.id = :userId and pending = false", UserRate.class);
         query.setParameter("userId", userId);
         return query.getResultList();
     }
