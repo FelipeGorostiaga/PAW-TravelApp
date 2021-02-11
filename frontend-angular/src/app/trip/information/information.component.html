@@ -4,6 +4,7 @@
         <img *ngIf="!hasImage" src="./assets/images/trip-default-info.jpg" alt="Trip image">
     </div>
     <div class="col-6">
+
         <!--TODO: change trip status to locale correct status-->
         <h3 *ngIf="trip?.status === 'DUE'" style="color: white"><span class="badge bg-primary">{{trip.status}}</span>
         </h3>

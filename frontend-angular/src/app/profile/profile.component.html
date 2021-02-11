@@ -54,11 +54,11 @@
             </div>
             <div class="py-4 px-4">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h5 class="mb-0">Recent reviews</h5><a class="btn btn-link text-muted"
+                    <h5 class="mb-0">Recent reviews</h5><a *ngIf="userProfile?.rates?.length > 3" class="btn btn-link text-muted"
                                                            routerLink="/profile/{{user?.id}}/rates">Show all</a>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <app-rate-tile *ngFor="let rate of userProfile?.rates" [rate]="rate"></app-rate-tile>
+                    <app-rate-tile *ngFor="let rate of userProfile?.rates | slice:0:3; let i=index" [rate]="rate"></app-rate-tile>
                 </ul>
             </div>
         </div>

@@ -1,13 +1,20 @@
 <app-navigation></app-navigation>
-<div class="list-group">
-
-    <div class="alert alert-primary" role="alert" *ngIf="!!rates">This user has no available rates</div>
-    <div class="aler alert-danger" role="alert" *ngIf="!!errorMessage">{{errorMessage}}</div>
-    <div *ngFor="let rate of rates" class="list-group-item">
-        <p>{{rate?.ratedBy.firstname}} {{rate?.ratedBy.lastname}}:</p>
-        <p>{{rate?.comment}}</p>
-        <p>{{rate?.rate}}</p>
-        <p>{{rate?.createdOn}}</p>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 style="margin-top: 35px;margin-bottom: 25px;">{{user?.firstname}} {{user?.lastname}}</h1>
+            <alert *ngIf="rates?.length === 0" [type]="'primary'">This user has no available rates</alert>
+            <alert *ngIf="error" [type]="'danger'">Error fetching data from server, please try again later</alert>
+            <div *ngIf="rates?.length > 0"class="list-group list-group-flush">
+                <app-rate-tile *ngFor="let rate of rates[currentPage]" [rate]="rate"></app-rate-tile>
+            </div>
+        </div>
     </div>
-    <p></p>
+    <app-paginator
+            *ngIf="numberOfPages > 1"
+            [numberOfPages]="numberOfPages"
+            (pageNumberClick)="updatePage($event)">
+    </app-paginator>
 </div>
+
+
