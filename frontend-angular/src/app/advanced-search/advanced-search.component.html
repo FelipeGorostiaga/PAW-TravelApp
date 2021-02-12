@@ -1,16 +1,47 @@
 <app-navigation></app-navigation>
 <ngx-bootstrap-spinner></ngx-bootstrap-spinner>
 <div class="container-fluid">
-    <div class="row">
-        <h4>Advanced Search</h4>
-        <div class="form-group">
 
-            <input class="form-control">
 
-            <button class="btn btn-outline-primary">Search</button>
+    <h4 style="margin-top: 20px;">Advanced Search</h4>
+
+    <form>
+
+        <div class="form-row">
+            <div class="form-group col-3">
+                <label for="name-input">Name</label>
+                <input class="form-control" type="text" name="nameInput" placeholder="Search by name..." id="name-input" [(ngModel)]="nameInput">
+            </div>
+        </div>
+
+
+        <div class="form-row">
+
+            <div class="form-group">
+                <label>Start date</label>
+                <input class="form-control" type="text" autocomplete="off"
+                       placeholder="dd/mm/yyyy" name="startDate" bsDatepicker [bsConfig]="bsConfig" [(ngModel)]="startDate">
+            </div>
+
+            <div class="form-group">
+                <label>Start date</label>
+                <input class="form-control" type="text" autocomplete="off"
+                       placeholder="dd/mm/yyyy" bsDatepicker name="endDate" [bsConfig]="bsConfig" [(ngModel)]="endDate">
+            </div>
 
         </div>
 
-    </div>
+        <div class="form-row">
+            <div class="form-group col-3">
+                <label for="place-input">Place</label>
+                <input class="form-control" type="text" id="place-input" placeholder="Search by place..." name="placeInput" [(ngModel)]="placeInput">
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-outline-primary" (click)="searchTrips()">Search</button>
+        </div>
+
+    </form>
+
 
 </div>
