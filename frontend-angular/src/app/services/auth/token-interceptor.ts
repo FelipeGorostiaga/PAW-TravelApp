@@ -30,8 +30,6 @@ export class TokenInterceptor implements HttpInterceptor {
                                 return next.handle(request);
                             }),
                             catchError((err: any) => {
-                                console.log(err);
-                                console.log("login out");
                                 this.authService.logout();
                                 return empty();
                             })

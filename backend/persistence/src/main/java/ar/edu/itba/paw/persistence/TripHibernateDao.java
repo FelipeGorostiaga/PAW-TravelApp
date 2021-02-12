@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -222,21 +223,31 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> findWithFilters(Map<String, Object> filterMap) {
+
+        System.out.println("select distinct t From Trip as t, Place as p " +
+                filtersQuery(filterMap));
+
         final TypedQuery<Trip> query = em.createQuery("select distinct t From Trip as t, Place as p " +
                 filtersQuery(filterMap), Trip.class);
         setQueryParameters(query, filterMap);
-        query.setMaxResults(MAX_ROWS);
         return query.getResultList();
     }
 
     private void setQueryParameters(TypedQuery<Trip> query, Map<String, Object> filterMap) {
+
+
         for (String filter : filterMap.keySet()) {
-            if (filter.equals("placeName")) {
-                query.setParameter(filter, "%" + filterMap.get(filter) + "%");
-            } else if (filter.equals("category")) {
-                query.setParameter(filter, filterMap.get(filter));
-            } else {
-                query.setParameter(filter, filterMap.get(filter));
+            if (filter.equals("place")) {
+                query.setParameter("placeName", "%" + filterMap.get(filter) + "%");
+            }
+            if (filter.equals("name")) {
+                query.setParameter("name", "%" + filterMap.get(filter) + "%");
+            }
+            if (filter.equals("startDate")) {
+                query.setParameter("startDate", filterMap.get(filter));
+            }
+            if (filter.equals("endDate")) {
+                query.setParameter("endDate", filterMap.get(filter));
             }
         }
     }
@@ -245,22 +256,33 @@ public class TripHibernateDao implements TripDao {
     private String filtersQuery(Map<String, Object> filterMap) {
         int count = 0;
         StringBuilder buffer = new StringBuilder();
-        if (filterMap.containsKey("category") || filterMap.containsKey("placeName")) {
+
+        if (filterMap.containsKey("place")) {
             buffer.append(", Activity as a ");
         }
+
         for (String filter : filterMap.keySet()) {
             switch (filter) {
-                case "placeName":
+                case "place":
                     if (count == 0) {
                         buffer.append(" where ");
                     } else {
-                        buffer.append(" and  ");
+                        buffer.append(" and ");
                     }
-                    buffer.append("((t.startPlaceId = p.id and (lower(p.address) like lower(:placeName) or lower(p.name) like lower(:placeName)) )");
+                    buffer.append("((t.startPlace.id = p.id and (lower(p.address) like lower(:placeName) or lower(p.name) like lower(:placeName)) )");
                     buffer.append("or (a.trip.id = t.id and ( lower(a.place.name) like lower(:placeName) or lower(a.place.address) like lower(:placeName))))");
                     count++;
                     break;
 
+                case "name":
+                    if (count == 0) {
+                        buffer.append(" where ");
+                    } else {
+                        buffer.append(" and ");
+                    }
+                    buffer.append("lower(t.name) LIKE lower(:name)");
+                    count++;
+                    break;
                 case "startDate":
                     if (count == 0) {
                         buffer.append(" where ");
@@ -270,15 +292,7 @@ public class TripHibernateDao implements TripDao {
                     buffer.append("(t.startDate = :startDate)");
                     count++;
                     break;
-                case "category":
-                    if (count == 0) {
-                        buffer.append(" where ");
-                    } else {
-                        buffer.append(" and ");
-                    }
-                    buffer.append("(a.trip.id = t.id and a.category like :category)");
-                    count++;
-                    break;
+
                 case "endDate":
                     if (count == 0) {
                         buffer.append(" where ");

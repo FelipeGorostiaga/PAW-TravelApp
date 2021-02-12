@@ -48,7 +48,6 @@ export class AuthService {
             }
         }).pipe(
             tap((data: RefreshTokenResponse) => {
-                console.log("JWT token refreshed");
                 this.setAccessToken(data.accessToken);
             })
         );

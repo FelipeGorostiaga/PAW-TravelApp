@@ -26,27 +26,17 @@ export class ApiSearchService {
     return this.http.get<User>(url, {params: params});
   }
 
-  searchUserByName(name: string): Observable<User> {
-    const url = this.searchBaseURL + "users";
-    let params = new HttpParams().set("name", name);
-    return this.http.get<User>(url, {params: params});
-  }
-
-  advancedSearch(name?: string, sdate?: string, edate?: string, category?: string): Observable<Trip[]> {
-    const url = this.searchBaseURL + '/advanced';
+  advancedSearch(formData: FormData): Observable<Trip[]> {
+    const url = this.searchBaseURL + 'advanced';
     let params = new HttpParams();
-    if (name) {
-      params = params.set('name', name);
-    }
-    if (sdate) {
-      params = params.set('startDate', sdate);
-    }
-    if (edate) {
-      params = params.set('endDate', edate);
-    }
-    if (category) {
-      params = params.set('category', category);
-    }
+    if (formData.get('name'))
+      params = params.set('name', formData.get('name').toString());
+    if (formData.get('place'))
+      params = params.set('place', formData.get('place').toString());
+    if (formData.get('startDate'))
+      params = params.set('startDate', formData.get('startDate').toString());
+    if (formData.get('endDate'))
+      params = params.set('endDate', formData.get('endDate').toString());
     return this.http.get<Trip[]>(url, {params});
   }
 

@@ -60,16 +60,24 @@ public class SearchControllerREST {
 
     @GET
     @Path("/advanced")
-    public Response searchByMultipleParams(@QueryParam("placeName") String placeName,
+    public Response searchByMultipleParams(@QueryParam("place") String place,
                                            @QueryParam("startDate") String startDate,
                                            @QueryParam("endDate") String endDate,
-                                           @QueryParam("category") String category) {
+                                           @QueryParam("name") String name) {
+
         Map<String, Object> filterMap = new HashMap<>();
-        // TODO - validate inputs
-        filterMap.put("category", category);
-        filterMap.put("placeName", placeName);
-        filterMap.put("startDate", DateManipulation.stringToLocalDate(startDate));
-        filterMap.put("endDate", DateManipulation.stringToLocalDate(endDate));
+        if (place != null && place.length() > 0)
+            filterMap.put("place", place);
+        if (startDate != null && DateManipulation.stringToLocalDate(startDate) != null)
+            filterMap.put("startDate", DateManipulation.stringToLocalDate(startDate));
+        if (endDate != null && DateManipulation.stringToLocalDate(endDate) != null)
+            filterMap.put("endDate", DateManipulation.stringToLocalDate(endDate));
+        if (name != null && name.length() > 0)
+            filterMap.put("name", name);
+
+        if (filterMap.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         List<TripDTO> resultTrips = tripService.findWithFilters(filterMap).stream().map(TripDTO::new).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<TripDTO>>(resultTrips) {
         }).build();
