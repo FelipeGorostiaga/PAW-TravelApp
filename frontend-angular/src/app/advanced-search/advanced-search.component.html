@@ -54,6 +54,11 @@
                     </app-trip-card>
                 </div>
             </div>
+            <app-paginator
+                    *ngIf="numberOfPages > 1"
+                    [numberOfPages]="numberOfPages"
+                    (pageNumberClick)="updatePage($event)">
+            </app-paginator>
         </div>
     </div>
 </div>
