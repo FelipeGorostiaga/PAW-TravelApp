@@ -26,6 +26,8 @@ export class InformationComponent implements OnInit {
     @Input() isAdmin: boolean;
     @Input() isMember: boolean;
     @Input() isCreator: boolean;
+    @Input() completed: boolean;
+
 
     waitingConfirmation = true;
 
@@ -84,10 +86,7 @@ export class InformationComponent implements OnInit {
     ngOnInit() {
         this.startDate = this.dateUtils.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtils.stringToDate(this.trip.endDate);
-
         this.canFinish = this.canMarkAsCompleted();
-        console.log(this.canFinish);
-
         this.editTripForm = this.formBuilder.group({
             description: ['', [Validators.required, Validators.minLength(25), Validators.maxLength(400)]],
             tripName: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(25)]],

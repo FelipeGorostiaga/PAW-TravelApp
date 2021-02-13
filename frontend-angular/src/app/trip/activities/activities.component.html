@@ -4,11 +4,11 @@
 <div *ngIf="trip?.activities?.length !== 0">
     <div class="list-group" style="margin-bottom: 20px">
         <app-map-activity *ngFor="let activity of trip?.activities"
-                          [activity]="activity" (deleteActivityEvent)="deleteActivity(activity)">
+                          [activity]="activity" [completed]="completed" (deleteActivityEvent)="deleteActivity(activity)">
         </app-map-activity>
     </div>
 </div>
-<button *ngIf="isAdmin" class="btn btn-primary" (click)="openModal('custom-modal-1')">Add activity</button>
+<button *ngIf="isAdmin && !completed" class="btn btn-primary" (click)="openModal('custom-modal-1')">Add activity</button>
 
 <jw-modal id="custom-modal-1">
     <form [formGroup]="activityForm" (ngSubmit)="createActivity()">

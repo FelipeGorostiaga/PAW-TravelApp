@@ -16,6 +16,6 @@
         </div>
     </div>
 </div>
-<button class="btn btn-danger" (click)="deleteActivity()">Delete</button>
+<button *ngIf="!completed" class="btn btn-danger" (click)="deleteActivity()">Delete</button>
 
 

@@ -4,7 +4,6 @@
         <img *ngIf="!hasImage" src="./assets/images/trip-default-info.jpg" alt="Trip image">
     </div>
     <div class="col-6">
-
         <!--TODO: change trip status to locale correct status-->
         <h3 *ngIf="trip?.status === 'DUE'" style="color: white"><span class="badge bg-primary">{{trip.status}}</span>
         </h3>
@@ -47,12 +46,12 @@
                     </h5></a>
                     <small *ngIf="member.role === 'CREATOR'" style="color: darkslategrey">{{member.role}}</small>
                     <small *ngIf="member.role === 'ADMIN'" style="color: forestgreen">{{member.role}}</small>
-                    <button *ngIf="isAdmin && member.role === 'MEMBER'" (click)="grantAdminRole($event, member.user)"
+                    <button *ngIf="isAdmin && !completed && member.role === 'MEMBER' " (click)="grantAdminRole($event, member.user)"
                             tooltip="Make trip administrator"><img src="assets/icons/plus.png" alt="plus icon"></button>
                 </div>
             </div>
         </div>
-        <div *ngIf="isAdmin" style="margin-top: 20px;">
+        <div *ngIf="isAdmin && !completed" style="margin-top: 20px;">
             <button class="btn btn-primary" (click)="openModal(template)">Invite User</button>
         </div>
     </div>
@@ -60,18 +59,18 @@
 
 <div class="row justify-content-around" style="margin-top: 40px;">
     <div class="col-12">
-        <button *ngIf="isAdmin" type="button" class="btn btn-outline-dark button-list" (click)="openEditTripModal(editTripTemplate)"><img
+        <button *ngIf="isAdmin && !completed" type="button" class="btn btn-outline-dark button-list" (click)="openEditTripModal(editTripTemplate)"><img
                 src="assets/icons/editar.png" alt="remove icon">Edit Trip
         </button>
-        <button *ngIf="(isAdmin || isMember) && !isCreator" type="button" class="btn btn-danger button-list" (click)="exitTrip()">Exit</button>
-        <button *ngIf="!loading && !isMember && !waitingConfirmation" type="button" class=" btn btn-primary button-list" (click)="requestJoinTrip()">
+        <button *ngIf="(isAdmin || isMember) && !isCreator && !completed" type="button" class="btn btn-danger button-list" (click)="exitTrip()">Exit</button>
+        <button *ngIf="!loading && !completed && !isMember && !waitingConfirmation" type="button" class=" btn btn-primary button-list" (click)="requestJoinTrip()">
             Request to join
         </button>
-        <button *ngIf="isCreator" class="btn btn-outline-dark button-list" type="button" (click)="deleteTrip()">
+        <button *ngIf="isCreator && !completed" class="btn btn-outline-dark button-list" type="button" (click)="deleteTrip()">
             <img src="assets/icons/eliminar-small.png" alt="remove icon" style="margin-right: 5px;">Delete Trip
         </button>
         <!--*ngIf="canFinish"-->
-        <button class="btn btn-outline-primary button-list" type="button" (click)="finishTrip()">Finish Trip</button>
+        <button *ngIf="canFinish && !completed" class="btn btn-outline-primary button-list" type="button" (click)="finishTrip()">Finish Trip</button>
     </div>
 </div>
 

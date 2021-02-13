@@ -10,6 +10,7 @@ import {ApiTripService} from "../../../services/api-trip.service";
 export class MapActivityComponent implements OnInit {
 
   @Input() activity: Activity;
+  @Input() completed: boolean;
   @Output()
   deleteActivityEvent: EventEmitter<number> = new EventEmitter<number>();
   zoom: number;

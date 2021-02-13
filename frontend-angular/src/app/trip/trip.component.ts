@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FullTrip} from "../model/trip";
+import {FullTrip, TripStatus} from "../model/trip";
 import {ActivatedRoute, Router} from "@angular/router";
 import {User} from "../model/user";
 import {AuthService} from "../services/auth/auth.service";
@@ -25,6 +25,7 @@ export class TripComponent implements OnInit {
     isMember: boolean;
     isAdmin: boolean;
     isCreator: boolean;
+    completed: boolean;
 
     constructor(private router: Router,
                 private ts: ApiTripService,
@@ -47,8 +48,10 @@ export class TripComponent implements OnInit {
                     member.user.id === this.loggedUser.id);
                 this.isMember = !!(this.isAdmin || members.find(member => member.user.id === this.loggedUser.id));
                 this.isCreator = !!members.find(member => (member.role === TripRole.CREATOR && member.user.id === this.loggedUser.id));
+                this.completed = this.trip.status === TripStatus.COMPLETED;
                 this.spinner.hide();
                 this.loading = false;
+                console.log(this.completed);
             },
             err => {
                 this.loading = false;

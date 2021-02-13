@@ -14,6 +14,7 @@ export class ChatComponent implements OnInit {
 
     @Input() trip: FullTrip;
     @Input() isAdmin: boolean;
+    @Input() completed: boolean;
 
 
     constructor(private tripService: ApiTripService, private authService: AuthService) {
