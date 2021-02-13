@@ -51,7 +51,6 @@ export class TripComponent implements OnInit {
                 this.completed = this.trip.status === TripStatus.COMPLETED;
                 this.spinner.hide();
                 this.loading = false;
-                console.log(this.completed);
             },
             err => {
                 this.loading = false;

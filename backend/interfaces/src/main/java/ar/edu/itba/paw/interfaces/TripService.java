@@ -29,7 +29,7 @@ public interface TripService {
 
     void removeUserFromTrip(long userId, long tripId);
 
-    void deleteTrip(long tripId);
+    void deleteTrip(Trip trip);
 
     void deleteTripActivity(long activityId, long tripId);
 

@@ -123,6 +123,8 @@ public class TripServiceImpl implements TripService {
             Trip trip = tripOptional.get();
             User user = userOptional.get();
             TripMember tripMember = createTripMember(trip, user, TripMemberRole.MEMBER);
+            mailService.sendJoinTripMail(user, trip);
+            // TODO: check this
             trip.getMembers().add(tripMember);
             user.getTrips().add(tripMember);
         }
@@ -138,13 +140,14 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public void deleteTrip(long tripId) {
-        tpd.deleteByTripId(tripId);
-        td.deleteTripInvitations(tripId);
-        ad.deleteActivities(tripId);
-        tcd.deleteComments(tripId);
-        td.deleteAllTripMembers(tripId);
-        td.deleteTrip(tripId);
+    public void deleteTrip(Trip trip) {
+        mailService.sendDeleteTripMail(trip);
+        tpd.deleteByTripId(trip.getId());
+        td.deleteTripInvitations(trip.getId());
+        ad.deleteActivities(trip.getId());
+        tcd.deleteComments(trip.getId());
+        td.deleteAllTripMembers(trip.getId());
+        td.deleteTrip(trip.getId());
     }
 
     @Override
