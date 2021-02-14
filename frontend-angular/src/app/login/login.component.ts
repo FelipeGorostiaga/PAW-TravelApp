@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {UserAuth} from '../model/user-auth';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthService} from '../services/auth/auth.service';
+import {catchError} from "rxjs/operators";
+import {throwError} from "rxjs";
 
 @Component({
     selector: 'app-login',
@@ -15,7 +17,10 @@ export class LoginComponent implements OnInit {
         password: ""
     };
 
-    errMessage: string;
+    credentialsError: boolean;
+    verificationError: boolean;
+    serverError: boolean;
+
     returnUrl: string;
 
     constructor(private authService: AuthService,
@@ -38,12 +43,30 @@ export class LoginComponent implements OnInit {
                 this.router.navigateByUrl(this.returnUrl);
             },
             error => {
-                this.errMessage = error;
+                let status = error.status;
+                if (status === 403) {
+                    let field = error.error.field;
+                    if (field === 'verification') {
+                        this.verificationError = true;
+                    } else if (field === 'credentials') {
+                        this.credentialsError = true;
+                    }
+                } else {
+                    this.serverError = true;
+                }
             }
         );
     }
 
-    closeAlert() {
-        this.errMessage = null;
+    closeCredentialsAlert() {
+        this.credentialsError = false;
+    }
+
+    closeVerificationAlert() {
+        this.verificationError = false;
+    }
+
+    closeServerErrAlert() {
+        this.serverError = false;
     }
 }

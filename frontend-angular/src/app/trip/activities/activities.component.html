@@ -1,5 +1,5 @@
 <div *ngIf="trip?.activities?.length == 0">
-    <div class="alert alert-primary" role="alert" style="margin-top: 40px">This trip has no activities</div>
+    <div class="alert alert-primary" role="alert" style="margin-top: 40px" i18n=@@activities.emptyAlert>This trip has no activities</div>
 </div>
 <div *ngIf="trip?.activities?.length !== 0">
     <div class="list-group" style="margin-bottom: 20px">
@@ -8,46 +8,46 @@
         </app-map-activity>
     </div>
 </div>
-<button *ngIf="isAdmin && !completed" class="btn btn-primary" (click)="openModal('custom-modal-1')">Add activity</button>
+<button *ngIf="isAdmin && !completed" class="btn btn-primary" (click)="openModal('custom-modal-1')" i18n=@@activities.addButton>Add activity</button>
 
 <jw-modal id="custom-modal-1">
     <form [formGroup]="activityForm" (ngSubmit)="createActivity()">
         <div class="form-row">
             <div class="form-group col-6">
-                <label>Name</label>
-                <input formControlName="name" type="text" placeholder="Give your activity a name"
+                <label i18n=@@activities.create.name>Name</label>
+                <input formControlName="name" type="text" placeholder="Give your activity a name" i18n-placeholder=@@activities.create.namePlaceholder
                        class="form-control"
                        [ngClass]="{ 'is-invalid': submitted && f.name.errors }"/>
                 <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-                    <div *ngIf="f.name.errors.required">Field is required</div>
-                    <div *ngIf="f.name.errors.minlength">Min 6 characters</div>
-                    <div *ngIf="f.name.errors.maxlength">Max 25 characters</div>
+                    <div *ngIf="f.name.errors.required" i18n=@@activities.create.name.required>Name is required</div>
+                    <div *ngIf="f.name.errors.minlength" i18n=@@activities.create.name.minlength>Min 6 characters</div>
+                    <div *ngIf="f.name.errors.maxlength" i18n=@@activities.create.name.maxlength>Max 25 characters</div>
                 </div>
             </div>
             <div class="form-group col-6">
-                <label>Category</label>
+                <label i18n=@@activities.create.category>Category</label>
                 <select formControlName="category" name="category" class="form-control" style="margin-bottom: 10px;"
                         [ngClass]="{ 'is-invalid': (submitted && f.category.errors) }">
                     <option disabled selected>Select category</option>
-                    <option value="Cultural">Cultural</option>
-                    <option value="Sports">Sports</option>
-                    <option value="Social">Social</option>
-                    <option value="Romantic">Romantic</option>
-                    <option value="Adventure">Adventure</option>
-                    <option value="Family">Family</option>
-                    <option value="Friends">Friends</option>
-                    <option value="Business">Business</option>
-                    <option value="Relaxation">Relax</option>
-                    <option value="Nightlife">Nightlife</option>
+                    <option value="Cultural" i18n=@@activities.create.category.cultural>Cultural</option>
+                    <option value="Sports" i18n=@@activities.create.category.sports>Sports</option>
+                    <option value="Social" i18n=@@activities.create.category.social>Social</option>
+                    <option value="Romantic" i18n=@@activities.create.category.romantic>Romantic</option>
+                    <option value="Adventure" i18n=@@activities.create.category.adventure>Adventure</option>
+                    <option value="Family" i18n=@@activities.create.category.family>Family</option>
+                    <option value="Friends" i18n=@@activities.create.category.friends>Friends</option>
+                    <option value="Business" i18n=@@activities.create.category.business>Business</option>
+                    <option value="Relaxation" i18n=@@activities.create.category.relax>Relax</option>
+                    <option value="Nightlife" i18n=@@activities.create.category.nightlife>Nightlife</option>
                 </select>
                 <div *ngIf="submitted && f.category.errors" class="invalid-feedback">
-                    <p *ngIf="f.category.errors.required">Field is required</p>
+                    <p *ngIf="f.category.errors.required" i18n=@@activities.create.category.required>Category is required</p>
                 </div>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-6">
-                <label for="startDate">Start date</label>
+                <label for="startDate" i18n=@@activities.create.startDate>Start date</label>
                 <input formControlName="startDate"
                        type="text"
                        class="form-control"
@@ -58,12 +58,12 @@
                        bsDatepicker
                        [bsConfig]="bsConfig">
                 <div *ngIf="submitted && f.startDate.errors" class="invalid-feedback">
-                    <p *ngIf="f.startDate.errors.required">Field is required</p>
-                    <p *ngIf="f.startDate.errors.invalidInterval">Invalid dates</p>
+                    <p *ngIf="f.startDate.errors.required" i18n=@@activities.create.startDate.required>Start date is required</p>
+                    <p *ngIf="f.startDate.errors.invalidInterval" i18n=@@activities.create.startDate.invalidDate>Invalid dates</p>
                 </div>
             </div>
             <div class="form-group col-6">
-                <label for="endDate">End date</label>
+                <label for="endDate" i18n=@@activities.create.endDate>End date</label>
                 <input formControlName="endDate"
                        type="text"
                        class="form-control"
@@ -74,19 +74,20 @@
                        id="endDate"
                        [bsConfig]="bsConfig">
                 <div *ngIf="submitted && f.endDate.errors" class="invalid-feedback">
-                    <p *ngIf="f.endDate.errors.required">Field is required</p>
-                    <p *ngIf="f.endDate.errors.invalidInterval">Invalid dates</p>
+                    <p *ngIf="f.endDate.errors.required" i18n=@@activities.create.endDate.required>End date is required</p>
+                    <p *ngIf="f.endDate.errors.invalidInterval" i18n=@@activities.create.endDate.invalidDate>Invalid dates</p>
                 </div>
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group col-6">
-                <label>Location</label>
+                <label i18n=@@activities.create.location>Location</label>
                 <input #search
                        formControlName="placeInput"
                        type="text"
                        placeholder="Enter location"
+                       i18n-placeholder=@@activities.create.locationPlaceholder
                        class="form-control"
                        autocomplete="off"
                        [ngClass]="{ 'is-invalid': submitted && f.placeInput.errors }"/>
@@ -95,31 +96,32 @@
                     <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
                 </agm-map>
                 <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
-                    <p *ngIf="f.placeInput.errors.required">Field is required</p>
+                    <p *ngIf="f.placeInput.errors.required" i18n=@@activities.create.location.required>Location is required</p>
                 </div>
             </div>
             <div class="form-group col-6">
-                <label for="description">Description</label>
+                <label for="description" i18n=@@activities.create.description>Description</label>
                 <textarea formControlName="description"
                           class="form-control"
                           type="text"
                           id="description"
                           rows="8"
                           placeholder="Write a description for this activity..."
+                          i18n-placeholder=@@activities.create.descriptionPlaceholder
                           style="margin-bottom: 10px;resize:none;"
                           maxlength="300"
                           [ngClass]="{ 'is-invalid': submitted && f.description.errors }">
                         </textarea>
                 <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-                    <p *ngIf="f.description.errors.required">Field is required</p>
-                    <p *ngIf="f.description.errors.maxlength">Max length is 300 characters</p>
-                    <p *ngIf="f.description.errors.minlength">Min length is 10 characters</p>
+                    <p *ngIf="f.description.errors.required" i18n=@@activities.create.description.required>Description is required</p>
+                    <p *ngIf="f.description.errors.minlength" i18n=@@activities.create.description.minlength>Min length is 10 characters</p>
+                    <p *ngIf="f.description.errors.maxlength" i18n=@@activities.create.description.maxlength>Max length is 300 characters</p>
                 </div>
             </div>
         </div>
         <div class="container text-center flex-fill">
-            <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Create</button>
-            <button type="button" class="btn btn-outline-secondary" (click)="closeModal('custom-modal-1')">Close
+            <button type="submit" class="btn btn-primary" style="margin-right: 10px;"  i18n=@@activities.create.createButton>Create</button>
+            <button type="button" class="btn btn-outline-secondary" (click)="closeModal('custom-modal-1')"  i18n=@@activities.create.closeButton>Close
             </button>
         </div>
     </form>

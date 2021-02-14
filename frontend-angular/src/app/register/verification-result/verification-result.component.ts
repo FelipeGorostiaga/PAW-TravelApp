@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {AuthService} from "../../services/auth/auth.service";
+import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 
 @Component({
     selector: 'app-verification-result',
@@ -9,21 +10,26 @@ import {AuthService} from "../../services/auth/auth.service";
 })
 export class VerificationResultComponent implements OnInit {
 
-    constructor(private route: ActivatedRoute, private authService: AuthService) {
+    constructor(private route: ActivatedRoute,
+                private authService: AuthService,
+                private spinner: NgxSpinnerService) {
     }
 
-    successfullyVerified: boolean = false;
-    errorMessage: string;
+    verified: boolean = false;
+    error: boolean;
 
     ngOnInit(): void {
+        this.spinner.show();
+        this.error = false;
         let verificationCode = this.route.snapshot.paramMap.get('code');
         this.authService.verifyAccount(verificationCode).subscribe(
             data => {
-                this.successfullyVerified = true;
+                this.verified = true;
+                this.spinner.hide();
             },
             error => {
-                console.log(error);
-                this.errorMessage = error.error.message;
+                this.spinner.hide();
+                this.error = true;
             }
         );
     }

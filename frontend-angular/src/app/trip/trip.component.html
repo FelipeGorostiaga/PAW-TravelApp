@@ -13,14 +13,14 @@
                            role="tab"
                            [ngClass]="{'active':selectedIndex == 0}"
                            aria-controls="nav-home"
-                           aria-selected="true">Information</a>
+                           aria-selected="true" i18n=@@trip.informationTab>Information</a>
                         <a class="nav-item nav-link"
                            id="nav-act-tab"
                            data-toggle="tab"
                            (click)="switchTab(1)"
                            role="tab" aria-controls="nav-profile"
                            [ngClass]="{'active':selectedIndex == 1}"
-                           aria-selected="false">Activities</a>
+                           aria-selected="false" i18n=@@trip.activitiesTab>Activities</a>
                         <a *ngIf="isAdmin || isMember" class="nav-item nav-link"
                            id="nav-chat-tab"
                            data-toggle="tab"
@@ -28,7 +28,8 @@
                            role="tab"
                            [ngClass]="{'active':selectedIndex == 2}"
                            aria-controls="nav-contact"
-                           aria-selected="false">Chat</a>
+                           aria-selected="false"
+                           i18n=@@trip.chatTab>Chat</a>
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent" style="margin-top: 40px;">

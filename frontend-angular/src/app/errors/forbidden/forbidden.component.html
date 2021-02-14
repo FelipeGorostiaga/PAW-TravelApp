@@ -5,14 +5,13 @@
             <div class="error-template">
                 <h1>
                     Oops!</h1>
-                <h2>
+                <h2 i18n=@@forbidden.title>
                     Error 403 - Forbidden</h2>
-                <div class="error-details">
+                <div class="error-details" i18n=@@forbidden.errorDetails>
                     You don't have the required permissions to access this page!
                 </div>
                 <div class="error-actions">
-                    <a routerLink="/home" class="btn btn-primary btn-lg"><span
-                            class="glyphicon glyphicon-home"></span>Home </a>
+                    <a routerLink="/home" class="btn btn-primary btn-lg" i18n=@@forbidden.homeButton>Home</a>
                 </div>
             </div>
         </div>

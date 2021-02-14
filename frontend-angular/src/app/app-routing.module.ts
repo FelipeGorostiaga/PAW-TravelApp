@@ -16,7 +16,6 @@ import {VerificationResultComponent} from "./register/verification-result/verifi
 import {RespondJoinReqComponent} from "./trip/respond-join-req/respond-join-req.component";
 import {RespondInviteComponent} from "./trip/respond-invite/respond-invite.component";
 import {UserRatesComponent} from "./user-rates/user-rates.component";
-import {UserNotificationsComponent} from "./user-notifications/user-notifications.component";
 import {CompleteRatesComponent} from "./complete-rates/complete-rates.component";
 import {ForbiddenComponent} from "./errors/forbidden/forbidden.component";
 import {SearchResultComponent} from "./search-result/search-result.component";
@@ -87,11 +86,6 @@ const routes: Routes = [
     {
         path: 'profile/:id/rates',
         component: UserRatesComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'user/:id/notifications',
-        component: UserNotificationsComponent,
         canActivate: [AuthGuard]
     },
     {

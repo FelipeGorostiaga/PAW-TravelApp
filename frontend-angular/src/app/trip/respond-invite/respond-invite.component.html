@@ -2,16 +2,16 @@
 <ngx-bootstrap-spinner></ngx-bootstrap-spinner>
 <div *ngIf="!loading" class="container" style="align-content: center; margin: 40px;">
     <div *ngIf="error">
-        <alert [type]="'warning'" [dismissible]="false">Invalid token or invitation does not exist</alert>
+        <alert [type]="'warning'" [dismissible]="false" i18n=@@respond-invite.error>Invalid token or invitation does not exist</alert>
     </div>
     <div *ngIf="!error">
         <div *ngIf="accepted">
-            <alert [type]="'success'" [dismissible]="false">You have joined {{tripName}}</alert>
-            <button class="btn btn-primary"><a [routerLink] = "['/trip/' + tripId]">Go to Trip</a></button>
+            <alert [type]="'success'" [dismissible]="false" i18n=@@respond-invite.success>You have joined {{tripName}}</alert>
+            <button class="btn btn-primary"><a [routerLink] = "['/trip/' + tripId]" i18n=@@respond-invite.tripButton>Go to Trip</a></button>
         </div>
         <div *ngIf="!accepted">
-            <alert [type]="'info'" [dismissible]="false">You have declined the invitation to join {{tripName}}</alert>
-            <button class="btn btn-primary"><a routerLink = "/home">Home</a></button>
+            <alert [type]="'info'" [dismissible]="false" i18n=@@respond-invite.declined>You have declined the invitation to join {{tripName}}</alert>
+            <button class="btn btn-primary"><a routerLink = "/home" i18n=@@respond-invite.homeButton>Home</a></button>
         </div>
     </div>
 </div>

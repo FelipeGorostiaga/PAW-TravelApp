@@ -22,6 +22,8 @@ export class TripCardComponent implements OnInit {
     startDate: Date;
     endDate: Date;
 
+    userLang: string;
+
     constructor(private tripService: ApiTripService,
                 private sanitizer: DomSanitizer,
                 private router: Router,
@@ -29,6 +31,8 @@ export class TripCardComponent implements OnInit {
     }
 
     ngOnInit() {
+        // @ts-ignore
+        this.userLang = (navigator.language || navigator.userLanguage).substr(0,2);
         this.startDate = this.dateUtil.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtil.stringToDate(this.trip.endDate);
         this.loadingImage = true;

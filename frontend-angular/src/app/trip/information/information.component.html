@@ -4,14 +4,13 @@
         <img *ngIf="!hasImage" src="./assets/images/trip-default-info.jpg" alt="Trip image">
     </div>
     <div class="col-6">
-        <!--TODO: change trip status to locale correct status-->
-        <h3 *ngIf="trip?.status === 'DUE'" style="color: white"><span class="badge bg-primary">{{trip.status}}</span>
-        </h3>
-        <h3 *ngIf="trip?.status === 'COMPLETED'" style="color: white"><span
-                class="badge bg-danger">{{trip.status}}</span></h3>
-        <h3 *ngIf="trip?.status === 'IN_PROGRESS'" style="color: white"><span
-                class="badge bg-success">IN PROGRESS</span></h3>
-        <div class="display-3 ">{{trip?.name}}</div>
+        <h3 *ngIf="trip?.status === 'DUE' && userLang === 'es'" style="color: white"><span class="badge bg-primary">PENDIENTE</span></h3>
+        <h3 *ngIf="trip?.status === 'COMPLETED' && userLang === 'es'" style="color: white"><span class="badge bg-danger">COMPLETADO</span></h3>
+        <h3 *ngIf="trip?.status === 'IN_PROGRESS' && userLang === 'es'" style="color: white"><span class="badge bg-success">EN PROGRESO</span></h3>
+        <h3 *ngIf="trip?.status === 'DUE' && userLang !== 'es'" style="color: white"><span class="badge bg-primary">DUE</span></h3>
+        <h3 *ngIf="trip?.status === 'COMPLETED' && userLang !== 'es'" style="color: white"><span class="badge bg-danger">COMPLETED</span></h3>
+        <h3 *ngIf="trip?.status === 'IN_PROGRESS' && userLang !== 'es'" style="color: white"><span class="badge bg-success">IN PROGRESS</span></h3>
+        <div class="display-3">{{trip?.name}}</div>
         <p class="text-justify" style="font-size: 150%;margin-top: 10px;">{{trip?.description}}</p>
     </div>
 </div>
@@ -19,12 +18,12 @@
 <div class="row" style="margin-top: 40px;">
     <div class="col-6 form-group">
         <div class="form-control" placeholder="Datepicker" bsDatepicker #dp="bsDatepicker"
-             [isDisabled]="true" [(bsValue)]="startDate" [bsConfig]="bsConfig">Start date: {{startDate | date}}
+             [isDisabled]="true" [(bsValue)]="startDate" [bsConfig]="bsConfig" i18n=@@trip.information.startDate>Start date: {{startDate | date}}
         </div>
     </div>
     <div class="col-6 form-group">
         <div class="form-control" placeholder="Datepicker" bsDatepicker #dp="bsDatepicker" [isDisabled]="true"
-             [(bsValue)]="endDate" [bsConfig]="bsConfig">End date: {{endDate | date}}
+             [(bsValue)]="endDate" [bsConfig]="bsConfig" i18n=@@trip.information.endDate>End date: {{endDate | date}}
         </div>
     </div>
 </div>
@@ -44,53 +43,60 @@
                     <a routerLink="/profile/{{member.user.id}}"><h5 class="mb-1"><i class="fa fa-user"
                                                                                     style="margin-right: 15px;"></i>{{member.user.firstname}} {{member.user.lastname}}
                     </h5></a>
-                    <small *ngIf="member.role === 'CREATOR'" style="color: darkslategrey">{{member.role}}</small>
-                    <small *ngIf="member.role === 'ADMIN'" style="color: forestgreen">{{member.role}}</small>
-                    <button *ngIf="isAdmin && !completed && member.role === 'MEMBER' " (click)="grantAdminRole($event, member.user)"
+                    <small *ngIf="member.role === 'CREATOR' && userLang === 'en'" style="color: darkslategrey">CREATOR</small>
+                    <small *ngIf="member.role === 'ADMIN' && userLang === 'en'" style="color: forestgreen">ADMIN</small>
+                    <small *ngIf="member.role === 'CREATOR' && userLang !== 'es'" style="color: darkslategrey">CREADOR</small>
+                    <small *ngIf="member.role === 'ADMIN' && userLang !== 'es'" style="color: forestgreen">ADMIN</small>
+                    <button *ngIf="isAdmin && !completed && member.role === 'MEMBER' "
+                            (click)="grantAdminRole($event, member.user)"
                             tooltip="Make trip administrator"><img src="assets/icons/plus.png" alt="plus icon"></button>
                 </div>
             </div>
         </div>
         <div *ngIf="isAdmin && !completed" style="margin-top: 20px;">
-            <button class="btn btn-primary" (click)="openModal(template)">Invite User</button>
+            <button class="btn btn-primary" (click)="openModal(template)" i18n=@@trip.information.inviteUserButton>Invite User</button>
         </div>
     </div>
 </div>
 
 <div class="row justify-content-around" style="margin-top: 40px;">
     <div class="col-12">
-        <button *ngIf="isAdmin && !completed" type="button" class="btn btn-outline-dark button-list" (click)="openEditTripModal(editTripTemplate)"><img
-                src="assets/icons/editar.png" alt="remove icon">Edit Trip
+        <button *ngIf="isAdmin && !completed" type="button" class="btn btn-outline-dark button-list"
+                (click)="openEditTripModal(editTripTemplate)"><img
+                src="assets/icons/editar.png" alt="remove icon" i18n=@@trip.information.editTripButton>Edit Trip
         </button>
-        <button *ngIf="(isAdmin || isMember) && !isCreator && !completed" type="button" class="btn btn-danger button-list" (click)="exitTrip()">Exit</button>
-        <button *ngIf="!loading && !completed && !isMember && !waitingConfirmation" type="button" class=" btn btn-primary button-list" (click)="requestJoinTrip()">
+        <button *ngIf="(isAdmin || isMember) && !isCreator && !completed" type="button"
+                class="btn btn-danger button-list" (click)="exitTrip()" i18n=@@trip.information.exitTripButton>Exit
+        </button>
+        <button *ngIf="!loading && !completed && !isMember && !waitingConfirmation" type="button"
+                class=" btn btn-primary button-list" (click)="requestJoinTrip()" i18n=@@trip.information.requestJoinButton>
             Request to join
         </button>
-        <button *ngIf="isCreator && !completed" class="btn btn-outline-dark button-list" type="button" (click)="deleteTrip()">
-            <img src="assets/icons/eliminar-small.png" alt="remove icon" style="margin-right: 5px;">Delete Trip
+        <button *ngIf="isCreator && !completed" class="btn btn-outline-dark button-list" type="button"
+                (click)="deleteTrip()">
+            <img src="assets/icons/eliminar-small.png" alt="remove icon" style="margin-right: 5px;" i18n=@@trip.information.deleteTripButton>Delete Trip
         </button>
-        <!--*ngIf="canFinish"-->
-        <button *ngIf="canFinish && !completed" class="btn btn-outline-primary button-list" type="button" (click)="finishTrip()">Finish Trip</button>
+        <button *ngIf="canFinish && !completed" class="btn btn-outline-primary button-list" type="button"
+                (click)="finishTrip()" i18n=@@trip.information.finishTripButton>Finish Trip
+        </button>
     </div>
 </div>
-
 
 <!-- invite user modal -->
 <ng-template #template>
     <div class="modal-header">
-        <h4 class="modal-title pull-left">Invite user</h4>
+        <h4 class="modal-title pull-left" i18n=@@trip.information.inviteUser.title>Invite user</h4>
         <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
         <div *ngIf="showSuccessAlert">
-            <alert [type]="'success'" [dismissible]="true" (onClosed)="closeSuccessAlert()">User invite sent.
+            <alert [type]="'success'" [dismissible]="true" (onClosed)="closeSuccessAlert()" i18n=@@trip.information.inviteUser.success>User invite sent.
             </alert>
         </div>
         <div *ngIf="showErrorAlert">
-            <alert [type]="'warning'" [dismissible]="true" (onClosed)="closeErrorAlert()">Error, user was already
-                invited.
+            <alert [type]="'warning'" [dismissible]="true" (onClosed)="closeErrorAlert()" i18n=@@trip.information.inviteUser.error>User was already invited.
             </alert>
         </div>
         <section>
@@ -105,7 +111,7 @@
         </section>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-primary" (click)="closeModal()" style="margin-top: 20px;">Close
+        <button type="button" class="btn btn-outline-primary" (click)="closeModal()" style="margin-top: 20px;" i18n=@@trip.information.inviteUser.closeButton>Close
         </button>
     </div>
 </ng-template>
@@ -113,7 +119,7 @@
 <!-- edit trip modal -->
 <ng-template #editTripTemplate>
     <div class="modal-header">
-        <h4 class="modal-title pull-left">Edit Trip</h4>
+        <h4 class="modal-title pull-left" i18n=@@trip.information.editTrip.title>Edit Trip</h4>
         <button type="button" class="close pull-right" aria-label="Close" (click)="editTripModalRef.hide()"><span
                 aria-hidden="true">&times;</span></button>
     </div>
@@ -122,35 +128,37 @@
 
             <!-- Image Upload -->
             <div class="form-group">
-                <label for="imageUpload">File input</label>
+                <label for="imageUpload" i18n=@@trip.information.editTrip.file>File input</label>
                 <input type="file" class="form-control-file" id="imageUpload" (change)="onFileSelected($event)">
             </div>
 
             <!-- Edit Trip Name -->
             <div class="form-group">
-                <label for="tripName">Name</label>
+                <label for="tripName" i18n=@@trip.information.editTrip.name>Name</label>
                 <input formControlName="tripName" type="text" class="form-control" id="tripName">
             </div>
             <div *ngIf="submitted && f.tripName.errors" class="invalid-feedback">
-                <p *ngIf="f.tripName.errors.minlength">Min length is 5 characters</p>
-                <p *ngIf="f.tripName.errors.maxlength">Max length is 15 characters</p>
+                <p *ngIf="f.tripName.errors.required" i18n=@@trip.information.editTrip.name.required>Name is required</p>
+                <p *ngIf="f.tripName.errors.minlength" i18n=@@trip.information.editTrip.name.minlength>Min length is 5 characters</p>
+                <p *ngIf="f.tripName.errors.maxlength" i18n=@@trip.information.editTrip.name.maxlength>Max length is 15 characters</p>
             </div>
 
             <!-- Edit description -->
             <div class="form-group">
-                <label for="description">Description</label>
+                <label for="description" i18n=@@trip.information.editTrip.description>Description</label>
                 <textarea formControlName="description" style="resize: none" class="form-control" id="description"
                           rows="4"></textarea>
             </div>
             <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-                <p *ngIf="f.description.errors.minlength">Min length is 25 characters</p>
-                <p *ngIf="f.description.errors.maxlength">Max length is 400 characters</p>
+                <p *ngIf="f.description.errors.required" i18n=@@trip.information.editTrip.description.required>Description is required</p>
+                <p *ngIf="f.description.errors.minlength" i18n=@@trip.information.editTrip.description.minlength>Min length is 25 characters</p>
+                <p *ngIf="f.description.errors.maxlength" i18n=@@trip.information.editTrip.description.maxlength>Max length is 400 characters</p>
             </div>
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="submitEditTripForm()">Submit</button>
-        <button type="button" class="btn btn-outline-primary" (click)="closeEditTripModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="submitEditTripForm()" i18n=@@trip.information.editTrip.submitButton>Submit</button>
+        <button type="button" class="btn btn-outline-primary" (click)="closeEditTripModal()" i18n=@@trip.information.editTrip.closeButton>Close</button>
     </div>
 </ng-template>
 

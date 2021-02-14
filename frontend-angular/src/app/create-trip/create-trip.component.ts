@@ -31,8 +31,10 @@ export class CreateTripComponent implements OnInit {
     tripForm: FormGroup;
     submitted = false;
 
-    mapsErrorMessage: string;
-    datesErrorMessage: string;
+    userLang: string;
+
+    mapsError: boolean;
+    datesError: boolean;
 
     bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, {containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY'});
 
@@ -46,6 +48,8 @@ export class CreateTripComponent implements OnInit {
     }
 
     ngOnInit() {
+        // @ts-ignore
+        this.userLang = (navigator.language || navigator.userLanguage).substr(0,2);
         this.spinner.show();
         this.tripForm = this.formBuilder.group({
             name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(15)]],
@@ -57,8 +61,7 @@ export class CreateTripComponent implements OnInit {
         }, {
             validators: validInterval('startDate', 'endDate')
         });
-
-        this.tripStatus = "Public";
+        this.tripStatus = this.userLang === 'en' ? "Public" : "Publico";
         this.submittedPlace = false;
         this.zoom = 14;
         this.searchControl = new FormControl();
@@ -105,10 +108,20 @@ export class CreateTripComponent implements OnInit {
     }
 
     changeTripStatus() {
-        if (this.tripStatus === "Private") {
-            this.tripStatus = "Public";
-        } else {
-            this.tripStatus = "Private";
+        if (this.userLang === 'es') {
+            if (this.tripStatus === "Privado") {
+                this.tripStatus = "Publico";
+            }
+            else {
+                this.tripStatus = "Privado";
+            }
+        }
+        else {
+            if (this.tripStatus === "Private") {
+                this.tripStatus = "Public";
+            } else {
+                this.tripStatus = "Private";
+            }
         }
     }
 
@@ -119,7 +132,7 @@ export class CreateTripComponent implements OnInit {
             return;
         }
         if (!this.longitude || !this.latitude) {
-            this.mapsErrorMessage = "Invalid google maps location";
+            this.mapsError = true;
             return;
         }
         const formData = new TripForm(values.name, values.description, this.dateUtilService.convertToDateString(values.startDate),
@@ -134,10 +147,10 @@ export class CreateTripComponent implements OnInit {
                 if (err.status === 400) {
                     err.error.forEach(e => {
                         if (e.invalidField === 'dates') {
-                            this.datesErrorMessage = e.message;
+                            this.datesError = true;
                         }
                         if (e.invalidField === 'googleMaps') {
-                            this.mapsErrorMessage = e.message;
+                            this.mapsError = true;
                         }
                     });
                 }
@@ -158,11 +171,11 @@ export class CreateTripComponent implements OnInit {
     }
 
     closeMapsAlert() {
-        this.mapsErrorMessage = null;
+        this.mapsError = false;
     }
 
     closeDateAlert() {
-        this.datesErrorMessage = null;
+        this.datesError = false;
     }
 }
 

@@ -59,6 +59,7 @@ export class InformationComponent implements OnInit {
     loadingImage: boolean;
     hasImage: boolean;
 
+    userLang: string;
 
     selectedFile: File;
     invalidFileExtension: boolean;
@@ -84,6 +85,8 @@ export class InformationComponent implements OnInit {
     }
 
     ngOnInit() {
+        // @ts-ignore
+        this.userLang = (navigator.language || navigator.userLanguage).substr(0,2);
         this.startDate = this.dateUtils.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtils.stringToDate(this.trip.endDate);
         this.canFinish = this.canMarkAsCompleted();

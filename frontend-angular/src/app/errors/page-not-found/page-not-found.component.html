@@ -3,16 +3,13 @@
     <div class="row">
         <div class="col-md-12">
             <div class="error-template">
-                <h1>
-                    Oops!</h1>
-                <h2>
-                    Error 404 - Page Not Found</h2>
-                <div class="error-details">
-                    Sorry, an error has occurred, requested page was not found!
+                <h1>Oops!</h1>
+                <h2 i18n=@@page-not-found.title>Error 404 - Page Not Found</h2>
+                <div class="error-details" i18n=@@page-not-found.errorDetails>Sorry, an error has occurred, requested
+                    page was not found!
                 </div>
                 <div class="error-actions">
-                    <a routerLink="/home" class="btn btn-primary btn-lg"><span
-                            class="glyphicon glyphicon-home"></span>Home </a>
+                    <a routerLink="/home" class="btn btn-primary btn-lg" i18n=@@page-not-found.homeButton>Home</a>
                 </div>
             </div>
         </div>

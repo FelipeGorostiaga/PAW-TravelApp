@@ -16,7 +16,7 @@ export class RateFormComponent implements OnInit {
     comment: string = "";
     userRating: number;
 
-    errorMessage = "Please write a review, at least 20 characters long";
+    errorMessage = "";
     showAlert = false;
 
     constructor(private userService: ApiUserService) {

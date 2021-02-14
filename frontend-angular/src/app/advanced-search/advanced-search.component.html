@@ -3,19 +3,19 @@
 <div class="container-fluid">
     <div class="row" style="margin-top: 100px; margin-left: 20px">
         <div class="col-2" id="custom-container">
-            <h4 style="margin-bottom: 20px;">Advanced Search</h4>
+            <h4 style="margin-bottom: 20px;" i18n=@@advanced-search.title>Advanced Search</h4>
             <form>
                 <div class="form-row">
                     <div class="form-group col-12">
-                        <label for="name-input">Name</label>
-                        <input class="form-control" type="text" name="nameInput" placeholder="Enter a trip name..."
+                        <label for="name-input" i18n=@@advanced-search.name>Name</label>
+                        <input class="form-control" type="text" name="nameInput" i18n-placeholder=@@advanced-search.placeholder placeholder="Enter a trip name..."
                                id="name-input"
                                autocomplete="off" [(ngModel)]="nameInput">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-12">
-                        <label>Start date</label>
+                        <label i18n=@@advanced-search.startDate>Start date</label>
                         <input class="form-control" type="text" autocomplete="off"
                                placeholder="dd/mm/yyyy" name="startDate" bsDatepicker [bsConfig]="bsConfig"
                                [(ngModel)]="startDate">
@@ -23,7 +23,7 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-12">
-                        <label>End date</label>
+                        <label i18n=@@advanced-search.endDate>End date</label>
                         <input class="form-control" type="text" autocomplete="off"
                                placeholder="dd/mm/yyyy" bsDatepicker name="endDate" [bsConfig]="bsConfig"
                                [(ngModel)]="endDate">
@@ -31,20 +31,20 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-12">
-                        <label for="place-input">Place</label>
+                        <label for="place-input" i18n=@@advanced-search.place>Place</label>
                         <input class="form-control" type="text" id="place-input" placeholder="Enter a place..."
                                name="placeInput" [(ngModel)]="placeInput" autocomplete="off">
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary" (click)="searchTrips()">Search</button>
+                    <button class="btn btn-primary" (click)="searchTrips()" i18n=@@advanced-search.searchButton>Search</button>
                 </div>
             </form>
         </div>
         <div class="col-10">
             <div style="width: 1000px; margin-left: 20%; margin-right: 20%">
-                <alert *ngIf="searched && trips?.length === 0" [type]="'warning'" class="text-center">No trips where found with selected specifications</alert>
-                <alert *ngIf="searched && error" [type]="'danger'" class="text-center">Error getting trips, please try again later</alert>
+                <alert *ngIf="searched && trips?.length === 0" [type]="'warning'" class="text-center" i18n=@@advanced-search.noTripsMessage>No trips where found with selected specifications</alert>
+                <alert *ngIf="searched && error" [type]="'danger'" class="text-center" i18n=@@advanced-search.errorMessage>Error getting trips, please try again later</alert>
             </div>
             <div class="card-deck" *ngIf="trips?.length > 0" style="margin-left: 50px;">
                 <div class="row justify-content-center">

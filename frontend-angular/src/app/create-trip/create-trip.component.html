@@ -4,52 +4,52 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1 style="margin-top: 30px;margin-bottom: 20px;">Create trip</h1>
+                <h1 style="margin-top: 30px;margin-bottom: 20px;" i18n=@@create-trip.title>Create trip</h1>
                 <form [formGroup]="tripForm" (ngSubmit)="onSubmit()">
-                    <alert *ngIf="!!mapsErrorMessage" [type]="'danger'" [dismissible]="true"
-                           (onClosed)="closeMapsAlert()">
-                        {{mapsErrorMessage}}
+                    <alert *ngIf="mapsError" [type]="'danger'" [dismissible]="true"
+                           (onClosed)="closeMapsAlert()" i18n=@@create-trip.mapsError>Invalid google maps location
                     </alert>
-
                     <div class="form-group">
-                        <label>Name</label>
+                        <label i18n=@@create-trip.name>Name</label>
                         <input formControlName="name"
                                class="form-control"
                                type="text"
+                               i18n-placeholder=@@create-trip.namePlaceholder
                                placeholder="Enter a name for your trip"
                                style="margin-bottom: 10px;"
                                [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
                         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-                            <p *ngIf="f.name.errors.required">Field is required</p>
-                            <p *ngIf="f.name.errors.minlength">Name must be at least 5 characters long</p>
-                            <p *ngIf="f.name.errors.maxlength">Maximum length is 30 characters</p>
+                            <p *ngIf="f.name.errors.required"  i18n=@@create-trip.name.required>Name is required</p>
+                            <p *ngIf="f.name.errors.minlength" i18n=@@create-trip.name.minlength>Name must be at least 5 characters long</p>
+                            <p *ngIf="f.name.errors.maxlength" i18n=@@create-trip.name.maxlength>Maximum length is 30 characters</p>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="descriptionBox">Description</label>
+                        <label for="descriptionBox" i18n=@@create-trip.description>Description</label>
                         <textarea formControlName="description"
                                   class="form-control"
                                   type="text"
                                   id="descriptionBox"
                                   rows="3"
+                                  i18n-placeholder=@@create-trip.descriptionPlaceholder
                                   placeholder="Write a description for your new adventure!"
                                   style="margin-bottom: 10px;resize:none;"
                                   maxlength="300"
                                   [ngClass]="{ 'is-invalid': submitted && f.description.errors }">
                         </textarea>
                         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-                            <p *ngIf="f.description.errors.required">Field is required</p>
-                            <p *ngIf="f.description.errors.minlength">Description must be at least 25 characters long</p>
-                            <p *ngIf="f.description.errors.maxlength">Maximum length is 400 characters</p>
+                            <p *ngIf="f.description.errors.required" i18n=@@create-trip.description.required>Description is required</p>
+                            <p *ngIf="f.description.errors.minlength" i18n=@@create-trip.description.minlength>Description must be at least 25 characters
+                                long</p>
+                            <p *ngIf="f.description.errors.maxlength" i18n=@@create-trip.description.maxlength>Maximum length is 400 characters</p>
                         </div>
                     </div>
-                    <alert *ngIf="!!datesErrorMessage" [type]="'danger'" [dismissible]="true"
-                           (onClosed)="closeDateAlert()">
-                        {{datesErrorMessage}}
+                    <alert *ngIf="datesError" [type]="'danger'" [dismissible]="true"
+                           (onClosed)="closeDateAlert()" i18n=@@create-trip.datesError>Invalid dates
                     </alert>
                     <div class="form-row">
                         <div class="form-group col-4">
-                            <label for="startDate">Start</label>
+                            <label for="startDate" i18n=@@create-trip.startDate>Start</label>
                             <input formControlName="startDate"
                                    type="text"
                                    class="form-control"
@@ -60,12 +60,12 @@
                                    bsDatepicker
                                    [bsConfig]="bsConfig">
                             <div *ngIf="submitted && f.startDate.errors" class="invalid-feedback">
-                                <p *ngIf="f.startDate.errors.required">Field is required</p>
-                                <p *ngIf="f.startDate.errors.invalidInterval">Invalid dates</p>
+                                <p *ngIf="f.startDate.errors.required" i18n=@@create-trip.startDate.required>Start date is required</p>
+                                <p *ngIf="f.startDate.errors.invalidInterval" i18n=@@create-trip.startDate.invalidInterval>Invalid dates</p>
                             </div>
                         </div>
                         <div class="form-group col-4">
-                            <label for="endDate">End</label>
+                            <label for="endDate" i18n=@@create-trip.endDate>End</label>
                             <input formControlName="endDate"
                                    type="text"
                                    class="form-control"
@@ -76,8 +76,8 @@
                                    id="endDate"
                                    [bsConfig]="bsConfig">
                             <div *ngIf="submitted && f.endDate.errors" class="invalid-feedback">
-                                <p *ngIf="f.endDate.errors.required">Field is required</p>
-                                <p *ngIf="f.endDate.errors.invalidInterval">Invalid dates</p>
+                                <p *ngIf="f.endDate.errors.required"  i18n=@@create-trip.endDate.required>End date is required</p>
+                                <p *ngIf="f.endDate.errors.invalidInterval"  i18n=@@create-trip.endDate.invalidInterval>Invalid dates</p>
                             </div>
                         </div>
                         <div class="col-4" style="padding-top: 15px; padding-left: 40px;">
@@ -104,6 +104,7 @@
                         formControlName="placeInput"
                         class="form-control"
                         id="place"
+                        i18n-placeholder=@@create-trip.googlePlacePlaceholder
                         placeholder="Enter location"
                         type="text"
                         autocomplete="off"
@@ -114,11 +115,11 @@
                         <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
                     </agm-map>
                     <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
-                        <p *ngIf="f.placeInput.errors.required">Field is required</p>
+                        <p *ngIf="f.placeInput.errors.required" i18n=@@create-trip.placeInput.required>Location is required</p>
                     </div>
                     <div class="text-center flex-fill" style="margin-bottom: 20px; margin-top: 10px;">
-                        <button type="submit" class="btn-primary btn">Create</button>
-                        <button class="btn btn-secondary" type="reset" (click)="onReset()" style="margin-left: 10px;">
+                        <button type="submit" class="btn-primary btn" i18=@@create-trip.createButton>Create</button>
+                        <button class="btn btn-secondary" type="reset" (click)="onReset()" style="margin-left: 10px;" i18=@@create-trip.cancelButton>
                             Cancel
                         </button>
                     </div>

@@ -1,12 +1,12 @@
 <div class="container">
     <div *ngIf="trip?.comments?.length == 0">
-        <div class="alert alert-primary" role="alert" style="margin-top: 40px">Be the first to write a comment...</div>
+        <div class="alert alert-primary" role="alert" style="margin-top: 40px" i18n=@@chat.noComments>Be the first to write a comment...</div>
     </div>
     <app-comment *ngFor="let comment of trip?.comments" [comment]="comment"></app-comment>
     <div *ngIf="!completed" class="input-group">
         <input type="text" #comment class="form-control" placeholder="Write a comment...">
         <span class="input-group-btn"><button class="btn btn-primary" type="button"
-                                              (click)="sendMessage(comment)">Send</button></span>
+                                              (click)="sendMessage(comment)" i18n=@@chat.sendComment>Send</button></span>
     </div>
 </div>
 

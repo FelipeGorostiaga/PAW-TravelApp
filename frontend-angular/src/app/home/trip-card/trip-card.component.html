@@ -4,14 +4,16 @@
             <img *ngIf="!loadingImage && hasImage" class="card-img-top" [src]="tripImage">
             <img *ngIf="!loadingImage && !hasImage" class="card-img-top" src="./assets/images/trip-default-card.jpg">
             <div class="card-body">
-
                 <h5 class="card-title" style="font-size: 35px;">{{trip?.name}}</h5>
                 <p class="card-text">{{trip?.description}}</p>
                 <p class="card-text"><i class="fas fa-map-marker-alt"></i></p>
                 <p class="card-text">
-                    <span *ngIf="trip?.status === 'DUE'" class="badge bg-primary card-badge">DUE</span>
-                    <span *ngIf="trip?.status === 'IN_PROGRESS'" class="badge bg-success card-badge">IN PROGRESS</span>
-                    <span *ngIf="trip?.status === 'COMPLETED'"class="badge bg-danger card-badge">COMPLETED</span>
+                    <span *ngIf="trip?.status === 'DUE' && userLang === 'es'" class="badge bg-primary card-badge">PENDIENTE</span>
+                    <span *ngIf="trip?.status === 'IN_PROGRESS' && userLang === 'es'" class="badge bg-success card-badge">EN PROGRESO</span>
+                    <span *ngIf="trip?.status === 'COMPLETED' && userLang === 'es'"class="badge bg-danger card-badge">COMPLETADO</span>
+                    <span *ngIf="trip?.status === 'DUE' && userLang !== 'es'" class="badge bg-primary card-badge">DUE</span>
+                    <span *ngIf="trip?.status === 'IN_PROGRESS' && userLang !== 'es'" class="badge bg-success card-badge">IN PROGRESS</span>
+                    <span *ngIf="trip?.status === 'COMPLETED' && userLang !== 'es'"class="badge bg-danger card-badge">COMPLETED</span>
                     {{startDate | date}} - {{endDate | date}}
                 </p>
             </div>

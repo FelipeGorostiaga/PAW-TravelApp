@@ -3,11 +3,15 @@
     <div class="d-flex justify-content-center h-75 my-auto">
         <div class="card">
             <div class="card-header card-img">
-                <h3 class="card-title">Sign in</h3>
+                <h3 class="card-title" i18n=@@login.title>Sign in</h3>
             </div>
             <div class="card-body" id="card-id">
-                <alert *ngIf="!!errMessage" [dismissible]="true" [type]="'danger'"
-                       (onClosed)="closeAlert()">{{errMessage}}</alert>
+                <alert *ngIf="credentialsError" [dismissible]="true" [type]="'danger'"
+                       (onClosed)="closeCredentialsAlert()" i18n=@@login.credentialsError>Invalid username or password</alert>
+                <alert *ngIf="verificationError" [dismissible]="true" [type]="'warning'"
+                       (onClosed)="closeVerificationAlert()" i18n=@@login.verificationError>Please verify your email</alert>
+                <alert *ngIf="serverError" [dismissible]="true" [type]="'danger'"
+                       (onClosed)="closeVerificationAlert()" i18n=@@login.serverError>Unexpected error, try again later</alert>
                 <form>
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
@@ -21,19 +25,19 @@
                             <span class="input-group-text"><i class="fa fa-lock" style="margin-left: 5px;"></i></span>
                         </div>
                         <input type="password" class="form-control" [(ngModel)]="user.password" placeholder="password"
-                               name="password">
+                               name="password" i18n-placeholder=@@login.passwordPlaceholder>
                     </div>
                 </form>
             </div>
             <div class="card-footer">
                 <div class="form-group">
                     <input type="submit" value="Sign in" (click)="login()"
-                           class="btn btn-primary">
+                           class="btn btn-primary" i18n-value=@@login.submitButton>
                 </div>
             </div>
         </div>
     </div>
-    <div class="links justify-content-center d-flex" style="margin-top: 10px">
+    <div class="links justify-content-center d-flex" style="margin-top: 10px" i18n=@@login.noAccount>
         Dont have an account?
         <a routerLink="/register">
             <u>Register</u>

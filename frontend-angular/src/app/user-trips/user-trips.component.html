@@ -1,6 +1,6 @@
 <app-navigation></app-navigation>
 <ngx-bootstrap-spinner></ngx-bootstrap-spinner>
-<alert *ngIf="!loading && !trips" [type]="'primary'" [dismissible]="false">You are not participating in any active trips</alert>
+<alert *ngIf="!loading && !trips" [type]="'primary'" [dismissible]="false" i18n=@@user-trips.noTrips>You are not a member of any trip</alert>
 <div class="container-fluid mt-4" id="main-container">
     <div class="card-deck" *ngIf="trips?.length > 0">
         <div class="row">

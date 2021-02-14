@@ -40,7 +40,6 @@ import {ModalModule} from "ngx-bootstrap/modal";
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {AdvancedSearchComponent} from './advanced-search/advanced-search.component';
 import {UserRatesComponent} from './user-rates/user-rates.component';
-import {UserNotificationsComponent} from './user-notifications/user-notifications.component';
 import {CompleteRatesComponent} from './complete-rates/complete-rates.component';
 import {RatingModule} from 'ngx-bootstrap/rating';
 import { RateFormComponent } from './complete-rates/rate-form/rate-form.component';
@@ -77,7 +76,6 @@ import { SearchResultComponent } from './search-result/search-result.component';
         UserListItemComponent,
         AdvancedSearchComponent,
         UserRatesComponent,
-        UserNotificationsComponent,
         CompleteRatesComponent,
         RateFormComponent,
         ForbiddenComponent,

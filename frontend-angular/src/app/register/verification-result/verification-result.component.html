@@ -1,12 +1,13 @@
 <app-navigation></app-navigation>
+<ngx-bootstrap-spinner></ngx-bootstrap-spinner>
 <div class="container align-content-center text-center">
-    <div *ngIf="successfullyVerified"  style="margin-top: 120px;">
-        <h1>Congratulations!</h1>
-        <h4>Your account has been successfully verified</h4>
-        <button class=" btn-lg btn-primary" style="margin-top: 20px;"><a routerLink="/login">Sign in</a></button>
+    <div *ngIf="verified"  style="margin-top: 120px;">
+        <h1 i18n=@@verification-result.congrats>Congratulations!</h1>
+        <h4 i18n=@@verification-result.success>Your account has been successfully verified</h4>
+        <button class=" btn-lg btn-primary" style="margin-top: 20px;"><a routerLink="/login" i18n=@@verification-result.signinButton>Sign in</a></button>
     </div>
-    <div *ngIf="errorMessage" style="margin-top: 120px;">
+    <div *ngIf="error" style="margin-top: 120px;">
         <img src="assets/images/red_cross.png" alt="error verification">
-        <h4 class="text-danger" style="margin-top: 15px;">{{errorMessage}}</h4>
+        <h4 class="text-danger" style="margin-top: 15px;" i18n=@@verification-result.error>Unexpected error, please try again later</h4>
     </div>
 </div>

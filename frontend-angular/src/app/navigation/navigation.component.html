@@ -11,13 +11,12 @@
             *ngIf="isLoggedIn"
             class="navbar-nav mr-auto">
 
-            <li class="nav-item" id="home-item"><a class="nav-link" routerLink="/home">Home<span class="sr-only">(current)</span></a></li>
-            <li class="nav-item"></li>
-            <li class="nav-item" id="my-trips-item"><a class="nav-link" routerLink="/user-trips">My trips</a></li>
-            <li class="nav-item" id="create-trip-item"><a class="nav-link" routerLink="/create-trip">Create trip </a></li>
-            <li class="nav-item" id="adv-search-item"><a class="nav-link" routerLink="/advanced-search">Advanced Search</a></li>
-            <li class="nav-item" id="pending-rates"><a class="nav-link" routerLink="/user/{{loggedUser.id}}/pending/rates">Pending Rates</a></li>
-            <li class="nav-item" id="about-item"><a class="nav-link" routerLink="/about">About</a></li>
+            <li class="nav-item" id="home-item"><a class="nav-link" routerLink="/home" i18n=@@navbar.home>Home<span class="sr-only">(current)</span></a></li>
+            <li class="nav-item" id="my-trips-item"><a class="nav-link" routerLink="/user-trips" i18n=@@navbar.myTrips>My trips</a></li>
+            <li class="nav-item" id="create-trip-item"><a class="nav-link" routerLink="/create-trip" i18n=@@navbar.createTrip>Create trip </a></li>
+            <li class="nav-item" id="adv-search-item"><a class="nav-link" routerLink="/advanced-search" i18n=@@navbar.advancedSearch>Advanced Search</a></li>
+            <li class="nav-item" id="pending-rates"><a class="nav-link" routerLink="/user/{{loggedUser.id}}/pending/rates" i18n=@@navbar.pendingRates>Pending Rates</a></li>
+            <li class="nav-item" id="about-item"><a class="nav-link" routerLink="/about" i18n=@@navbar.about>About</a></li>
         </ul>
         <div *ngIf="isLoggedIn" class="form-inline my-2 my-lg-0">
             <input
@@ -26,11 +25,14 @@
                     class="form-control mr-sm-2"
                     type="search"
                     [(ngModel)] = "searchInput"
-                    placeholder="Search trips by name..."/>
+                    placeholder="Search trips by name..."
+                    i18n-placeholder=@@navbar.searchPlaceholder/>
+
             <button
                     class="btn btn-success my-2 my-sm-0"
                     type="submit"
-                    (click)="search()">Search
+                    (click)="search()"
+                    i18n=@@navbar.searchButton>Search
             </button>
         </div>
         <a

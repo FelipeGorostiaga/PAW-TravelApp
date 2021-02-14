@@ -34,11 +34,7 @@ export class AuthService {
 
     login(userAuth: UserAuth): Observable<any> {
         const url = this.usersBaseURL + '/authenticate';
-        return this.http.post<string>(url, userAuth).pipe(
-            catchError(err => {
-                return throwError(err.error.message);
-            })
-        );
+        return this.http.post<string>(url, userAuth);
     }
 
     refreshToken() {
