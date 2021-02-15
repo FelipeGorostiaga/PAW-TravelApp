@@ -46,6 +46,7 @@ import { RateFormComponent } from './complete-rates/rate-form/rate-form.componen
 import { ForbiddenComponent } from './errors/forbidden/forbidden.component';
 import { RateTileComponent } from './profile/rate-tile/rate-tile.component';
 import { SearchResultComponent } from './search-result/search-result.component';
+import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 
 @NgModule({
@@ -102,7 +103,10 @@ import { SearchResultComponent } from './search-result/search-result.component';
         AlertModule.forRoot(),
         ModalModule.forRoot(),
         TooltipModule.forRoot(),
-        RatingModule.forRoot()
+        RatingModule.forRoot(),
+        ConfirmationPopoverModule.forRoot({
+            confirmButtonType: 'primary',
+        })
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [AuthService, AuthGuard, {

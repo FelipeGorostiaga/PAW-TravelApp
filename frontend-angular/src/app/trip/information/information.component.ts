@@ -67,6 +67,21 @@ export class InformationComponent implements OnInit {
     validExtensions: string[] = ['jpeg', 'png', 'jpg'];
     maxImageSize: number = 5242880;
 
+    exitTripTitle: string;
+    exitTripMessage: string;
+
+    deleteTripTitle: string;
+    deleteTripMessage: string;
+
+    finishTripTitle: string;
+    finishTripMessage: string;
+
+    requestJoinTitle: string;
+    requestJoinMessage: string;
+
+    makeAdminTitle: string;
+    makeAdminMessage: string;
+
     constructor(private tripService: ApiTripService,
                 private authService: AuthService,
                 private router: Router,
@@ -86,7 +101,38 @@ export class InformationComponent implements OnInit {
 
     ngOnInit() {
         // @ts-ignore
-        this.userLang = (navigator.language || navigator.userLanguage).substr(0,2);
+        this.userLang = (navigator.language || navigator.userLanguage).substr(0, 2);
+        if (this.userLang === 'es') {
+            this.exitTripTitle = "Salir del viaje";
+            this.exitTripMessage = "Estas seguro que deseas salir de este viaje?";
+
+            this.deleteTripTitle = "Borrar viaje";
+            this.deleteTripMessage = "Estas seguro que quieres borrar este viaje?";
+
+            this.makeAdminTitle = "Rol de administrador";
+            this.makeAdminMessage = "Estas seguro que quieres otorgar permisos de administrador a este usuario?";
+
+            this.finishTripTitle = "Terminar viaje";
+            this.finishTripMessage = "Estas seguro que quieres terminar este viaje?";
+
+            this.requestJoinTitle = "Pedir unirse";
+            this.requestJoinMessage = "Estas seguro que quieres pedir unirte a este viaje?";
+        } else {
+            this.exitTripTitle = "Exit trip";
+            this.exitTripMessage = "Are you sure you want to exit this trip?";
+
+            this.deleteTripTitle = "Delete trip";
+            this.deleteTripMessage = "Are you sure you want to delete this trip?";
+
+            this.makeAdminTitle = "Administrator role";
+            this.makeAdminMessage = "Are you sure you want to grant administrator role?";
+
+            this.finishTripTitle = "End trip";
+            this.finishTripMessage = "Are you sure you want to end this trip?";
+
+            this.requestJoinTitle = "Ask to join";
+            this.requestJoinMessage = "Are you sure you want to ask to join this trip?";
+        }
         this.startDate = this.dateUtils.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtils.stringToDate(this.trip.endDate);
         this.canFinish = this.canMarkAsCompleted();
@@ -139,26 +185,22 @@ export class InformationComponent implements OnInit {
     }
 
     requestJoinTrip() {
-        if (confirm("are you sure you want to request to join this trip?")) {
-            this.tripService.sendJoinRequest(this.trip.id, this.authService.getLoggedUser().id).subscribe(
-                data => {
-                    this.waitingConfirmation = true;
-                }
-            );
-        }
+        this.tripService.sendJoinRequest(this.trip.id, this.authService.getLoggedUser().id).subscribe(
+            data => {
+                this.waitingConfirmation = true;
+            }
+        );
     }
 
     exitTrip() {
-        if (confirm("Are you sure you want to leave this trip?")) {
-            this.tripService.exitTrip(this.trip.id).subscribe(
-                ok => {
-                    this.router.navigate(["/user-trips"]);
-                }
-                , error => {
-                    console.log(error);
-                }
-            );
-        }
+        this.tripService.exitTrip(this.trip.id).subscribe(
+            ok => {
+                this.router.navigate(["/user-trips"]);
+            }
+            , error => {
+                console.log(error);
+            }
+        );
     }
 
     get f() {
@@ -243,9 +285,6 @@ export class InformationComponent implements OnInit {
         this.tripService.editTrip(formData, this.trip.id).subscribe(
             data => {
                 window.location.reload();
-            },
-            error => {
-                console.log(error);
             }
         );
 
@@ -261,19 +300,13 @@ export class InformationComponent implements OnInit {
         this.selectedFile = event.target.files[0];
     }
 
-    grantAdminRole(event: Event, user: User) {
-        event.preventDefault();
-        if (confirm("Are you sure you want to grant administrator role to " + user.firstname + " " + user.lastname + "?")) {
-            this.tripService.grantAdminRole(this.trip, user).subscribe(
-                ok => {
-                    const index = this.trip.members.findIndex(member => member.user.id === user.id);
-                    this.trip.members[index].role = TripRole.ADMIN;
-                },
-                error => {
-                    console.log(error);
-                }
-            );
-        }
+    grantAdminRole(user: User) {
+        this.tripService.grantAdminRole(this.trip, user).subscribe(
+            ok => {
+                const index = this.trip.members.findIndex(member => member.user.id === user.id);
+                this.trip.members[index].role = TripRole.ADMIN;
+            }
+        );
     }
 
     validImgExtension() {
@@ -286,25 +319,20 @@ export class InformationComponent implements OnInit {
     }
 
     deleteTrip() {
-        if (confirm("Are you sure you want to delete this trip?")) {
-            this.tripService.deleteTrip(this.trip.id).subscribe(
-                ok => {
-                    this.router.navigate(["/home"]);
-                },
-                error => console.log(error)
-            );
-        }
+        this.tripService.deleteTrip(this.trip.id).subscribe(
+            ok => {
+                this.router.navigate(["/home"]);
+            },
+            error => console.log(error)
+        );
     }
 
     finishTrip() {
-        if (confirm("Are you sure you want to finish this trip?")) {
-            this.tripService.finishTrip(this.trip.id).subscribe(
-                res => {
-                    this.trip.status = TripStatus.COMPLETED;
-                    console.log("trip status is now COMPLETED -> user pending rates generated!");
-                }
-            );
-        }
+        this.tripService.finishTrip(this.trip.id).subscribe(
+            res => {
+                this.trip.status = TripStatus.COMPLETED;
+            }
+        );
     }
 }
 

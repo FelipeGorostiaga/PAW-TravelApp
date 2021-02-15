@@ -22,13 +22,19 @@
                 </agm-map>
             </div>
         </div>
+        <!-- *ngIf="!completed"-->
         <div class="card-footer " style="margin-top: 10px;">
             <div class="row">
                 <div class="col-11">
                     <p class="card-text">{{activity?.startDate | date}} - {{activity.endDate | date}}</p>
                 </div>
-                <div class="col-1" style="padding: 0" *ngIf="!completed">
-                    <button class="btn btn-danger" (click)="deleteActivity()" i18n=@@map-activity.deleteButton>Delete
+                <div class="col-1" style="padding: 0" >
+                    <button class="btn btn-danger" i18n=@@map-activity.deleteButton
+                            mwlConfirmationPopover
+                            [popoverTitle]="popoverTitle"
+                            [popoverMessage]="popoverMessage"
+                            placement="right"
+                            (confirm)="deleteActivity()">Delete
                     </button>
                 </div>
             </div>

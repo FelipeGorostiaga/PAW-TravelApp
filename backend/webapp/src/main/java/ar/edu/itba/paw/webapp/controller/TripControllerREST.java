@@ -225,11 +225,6 @@ public class TripControllerREST {
         return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("User is not part of this trip", "invalid-user")).build();
     }
 
-    /*  public Response kickUserFromTrip() {
-        // TODO
-      }
-  */
-
     @GET
     @Path("/{id}/image")
     @Produces(value = {"image/png", "image/jpeg"})

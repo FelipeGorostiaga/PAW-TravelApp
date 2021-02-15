@@ -55,8 +55,13 @@
                     <p *ngIf="member.role === 'CREATOR' && userLang !== 'es'" style="color: darkblue">Creator</p>
                     <p *ngIf="member.role === 'ADMIN' && userLang !== 'es'" style="color: forestgreen">Administrator</p>
                     <button *ngIf="isAdmin && !completed && member.role === 'MEMBER' "
-                            (click)="grantAdminRole($event, member.user)"
-                            tooltip="Make trip administrator"><img src="assets/icons/plus.png" alt="plus icon"></button>
+                            tooltip="Make trip administrator"
+                            mwlConfirmationPopover
+                            [popoverTitle]="makeAdminTitle"
+                            [popoverMessage]="makeAdminMessage"
+                            placement="right"
+                            (confirm)="grantAdminRole(member.user)"
+                    ><img src="assets/icons/plus.png" alt="plus icon"></button>
                 </div>
             </div>
         </div>
@@ -75,20 +80,39 @@
                 src="assets/icons/editar.png" alt="remove icon" i18n=@@trip.information.editTripButton>Edit Trip
         </button>
         <button *ngIf="(isAdmin || isMember) && !isCreator && !completed" type="button"
-                class="btn btn-danger button-list" (click)="exitTrip()" i18n=@@trip.information.exitTripButton>Exit
+                class="btn btn-danger button-list" (click)="exitTrip()" i18n=@@trip.information.exitTripButton
+                mwlConfirmationPopover
+                [popoverTitle]="exitTripTitle"
+                [popoverMessage]="exitTripMessage"
+                placement="right"
+                (confirm)="exitTrip()">Exit
         </button>
         <button *ngIf="!loading && !completed && !isMember && !waitingConfirmation" type="button"
-                class=" btn btn-primary button-list" (click)="requestJoinTrip()"
+                class=" btn btn-primary button-list"
+                mwlConfirmationPopover
+                [popoverTitle]="requestJoinTitle"
+                [popoverMessage]="requestJoinMessage"
+                placement="right"
+                (confirm)="requestJoinTrip()"
                 i18n=@@trip.information.requestJoinButton>
             Request to join
         </button>
         <button *ngIf="isCreator && !completed" class="btn btn-outline-dark button-list" type="button"
-                (click)="deleteTrip()">
+                mwlConfirmationPopover
+                [popoverTitle]="deleteTripTitle"
+                [popoverMessage]="deleteTripMessage"
+                placement="right"
+                (confirm)="deleteTrip()">
             <img src="assets/icons/eliminar-small.png" alt="remove icon" style="margin-right: 5px;"
                  i18n=@@trip.information.deleteTripButton>Delete Trip
         </button>
         <button *ngIf="canFinish && !completed" class="btn btn-outline-primary button-list" type="button"
-                (click)="finishTrip()" i18n=@@trip.information.finishTripButton>Finish Trip
+                i18n=@@trip.information.finishTripButton
+                mwlConfirmationPopover
+                [popoverTitle]="finishTripTitle"
+                [popoverMessage]="finishTripMessage"
+                placement="right"
+                (confirm)="finishTrip()">Finish Trip
         </button>
     </div>
 </div>
@@ -119,7 +143,7 @@
                        (ngModelChange)="newSearch(searchTerm)">
             </div>
             <div *ngFor="let u of userSearchList | async" class="list-group">
-                <user-list-item [user]="u" (userClickedEvent)="sendInvite($event)"></user-list-item>
+                <user-list-item [user]="u" (userClickedEvent)="sendInvite($event)" [userLang]="userLang"></user-list-item>
             </div>
         </section>
     </div>

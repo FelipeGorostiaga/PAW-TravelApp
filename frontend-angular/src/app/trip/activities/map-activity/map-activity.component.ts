@@ -17,6 +17,11 @@ export class MapActivityComponent implements OnInit {
     zoom: number;
     showMap: boolean;
 
+    userLang: string;
+
+    popoverTitle: string;
+    popoverMessage: string;
+
     startDate: Date;
     endDate: Date;
 
@@ -25,6 +30,16 @@ export class MapActivityComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        // @ts-ignore
+        this.userLang = (navigator.language || navigator.userLanguage).substr(0,2);
+        if (this.userLang === 'es') {
+            this.popoverTitle = "Eliminar actividad";
+            this.popoverMessage = "Estas seguro que deseas eliminar esta actividad?";
+        }
+        else {
+            this.popoverTitle = "Delete activity";
+            this.popoverMessage = "Are you sure you want to delete this activity?";
+        }
         this.startDate = this.dateUtils.stringToDate(this.activity.startDate);
         this.endDate = this.dateUtils.stringToDate(this.activity.endDate);
         this.zoom = 14;
@@ -35,9 +50,7 @@ export class MapActivityComponent implements OnInit {
     }
 
     deleteActivity() {
-        if (confirm("Are you sure you want to delete activity " + this.activity.name + " ?")) {
-            // @ts-ignore
-            this.deleteActivityEvent.emit(this.activity);
-        }
+        // @ts-ignore
+        this.deleteActivityEvent.emit(this.activity);
     }
 }
