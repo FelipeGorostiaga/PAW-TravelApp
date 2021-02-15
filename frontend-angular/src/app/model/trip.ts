@@ -10,11 +10,11 @@ export class Trip {
     description: string;
     startDate: string;
     endDate: string;
-    adminId: number;
     private: boolean;
     startPlace: Place;
     membersAmount: number;
     status: TripStatus;
+    hasImage: boolean;
 }
 
 export class FullTrip extends Trip {

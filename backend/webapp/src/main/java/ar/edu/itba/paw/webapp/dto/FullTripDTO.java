@@ -14,6 +14,7 @@ public class FullTripDTO {
 
     private Long id;
     private Boolean isPrivate;
+    private boolean hasImage;
     private String name;
     private String description;
     private String startDate;
@@ -47,6 +48,7 @@ public class FullTripDTO {
                 return;
             }
         }
+        this.hasImage = trip.getProfilePicture() != null;
         this.status = trip.getStatus().name();
     }
 
@@ -56,6 +58,14 @@ public class FullTripDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isHasImage() {
+        return hasImage;
+    }
+
+    public void setHasImage(boolean hasImage) {
+        this.hasImage = hasImage;
     }
 
     public String getStatus() {

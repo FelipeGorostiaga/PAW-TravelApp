@@ -36,22 +36,28 @@ export class TripCardComponent implements OnInit {
         this.startDate = this.dateUtil.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtil.stringToDate(this.trip.endDate);
         this.loadingImage = true;
-        this.tripService.getTripCardImage(this.trip.id).subscribe(
-            data => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    // @ts-ignore
-                    this.tripImage = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
+        if (this.trip.hasImage) {
+            this.tripService.getTripCardImage(this.trip.id).subscribe(
+                data => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        // @ts-ignore
+                        this.tripImage = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
+                        this.loadingImage = false;
+                        this.hasImage = true;
+                    };
+                    reader.readAsDataURL(new Blob([data]));
+                },
+                error => {
                     this.loadingImage = false;
-                    this.hasImage = true;
-                };
-                reader.readAsDataURL(new Blob([data]));
-            },
-            error => {
-                this.loadingImage = false;
-                this.hasImage = false;
-            }
-        );
+                    this.hasImage = false;
+                }
+            );
+        }
+        else {
+            this.hasImage = false;
+            this.loadingImage = false;
+        }
     }
 
     navigateToTrip() {

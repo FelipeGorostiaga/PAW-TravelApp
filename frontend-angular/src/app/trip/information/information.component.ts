@@ -154,22 +154,29 @@ export class InformationComponent implements OnInit {
                 );
             }
             this.loadingImage = true;
-            this.tripService.getTripImage(this.trip.id).subscribe(
-                data => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        // @ts-ignore
-                        this.tripImage = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
+            if (this.trip.hasImage) {
+                this.tripService.getTripImage(this.trip.id).subscribe(
+                    data => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            // @ts-ignore
+                            this.tripImage = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
+                            this.loadingImage = false;
+                            this.hasImage = true;
+                        };
+                        reader.readAsDataURL(new Blob([data]));
+                    },
+                    error => {
                         this.loadingImage = false;
-                        this.hasImage = true;
-                    };
-                    reader.readAsDataURL(new Blob([data]));
-                },
-                error => {
-                    this.loadingImage = false;
-                    this.hasImage = false;
-                }
-            );
+                        this.hasImage = false;
+                    }
+                );
+            }
+            else {
+                this.loadingImage = false;
+                this.hasImage = false;
+            }
+
         }
     }
 

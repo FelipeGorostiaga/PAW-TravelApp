@@ -17,6 +17,7 @@ public class TripDTO {
     private String startDate;
     private String endDate;
     private String status;
+    private boolean hasImage;
 
     public TripDTO() {
         // Empty constructor needed by JAX-RS
@@ -39,7 +40,16 @@ public class TripDTO {
                 return;
             }
         }
+        this.hasImage = trip.getProfilePicture() != null;
         this.status = trip.getStatus().name();
+    }
+
+    public boolean isHasImage() {
+        return hasImage;
+    }
+
+    public void setHasImage(boolean hasImage) {
+        this.hasImage = hasImage;
     }
 
     public String getStatus() {
