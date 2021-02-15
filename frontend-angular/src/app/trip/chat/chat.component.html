@@ -2,11 +2,23 @@
     <div *ngIf="trip?.comments?.length == 0">
         <div class="alert alert-primary" role="alert" style="margin-top: 40px" i18n=@@chat.noComments>Be the first to write a comment...</div>
     </div>
-    <app-comment *ngFor="let comment of trip?.comments" [comment]="comment"></app-comment>
-    <div *ngIf="!completed" class="input-group">
-        <input type="text" #comment class="form-control" placeholder="Write a comment...">
-        <span class="input-group-btn"><button class="btn btn-primary" type="button"
-                                              (click)="sendMessage(comment)" i18n=@@chat.sendComment>Send</button></span>
+    <div class="row" style="border: 1px solid; border-color: lightblue; padding-top: 25px; padding-bottom: 25px;">
+        <div class="col-12">
+            <div class="list-group list-group-flush">
+                <app-comment *ngFor="let comment of trip?.comments" [comment]="comment"></app-comment>
+            </div>
+        </div>
+
+    </div>
+    <div class="row" *ngIf="!completed">
+        <div class="col-12">
+            <div  class="input-group" style="margin-top: 15px; padding: 0">
+                <input type="text" #comment class="form-control" placeholder="Write a comment..." >
+                <span class="input-group-btn"><button class="btn btn-primary" type="button" style="margin-left: 5px; width: 100%"
+                                                      (click)="sendMessage(comment)" i18n=@@chat.sendComment>Send</button></span>
+            </div>
+        </div>
+
     </div>
 </div>
 

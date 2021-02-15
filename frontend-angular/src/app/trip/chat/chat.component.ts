@@ -16,25 +16,30 @@ export class ChatComponent implements OnInit {
     @Input() isAdmin: boolean;
     @Input() completed: boolean;
 
+    sendingMessage: boolean;
 
     constructor(private tripService: ApiTripService, private authService: AuthService) {
     }
 
     ngOnInit() {
+        this.sendingMessage = false;
     }
 
     sendMessage(input) {
         let inputValue = input.value;
-        if (inputValue.length === 0) {
+        if (inputValue.length === 0 || this.sendingMessage) {
             return;
         }
+        this.sendingMessage = true;
         input.value = "";
         this.tripService.postComment(this.trip.id, new CommentForm(String(inputValue))).subscribe(
             data => {
                 this.trip.comments.push(data);
+                this.sendingMessage = false;
             },
             error => {
                 console.log(error);
+                this.sendingMessage = false;
             }
         );
     }

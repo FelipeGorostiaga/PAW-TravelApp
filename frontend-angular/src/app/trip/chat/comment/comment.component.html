@@ -1,4 +1,4 @@
-<div class="form-group" style="margin-top: 25px;">
+<div class="list-group-item" style="border: none">
     <strong>{{comment?.user?.firstname}} {{comment?.user?.lastname}}</strong>
-    {{comment?.createdOn}}<br>{{comment?.comment}}
+    {{comment?.createdOn | date :'short'}}<br>{{comment?.comment}}
 </div>

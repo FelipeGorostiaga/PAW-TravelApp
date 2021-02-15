@@ -43,9 +43,8 @@ export class LoginComponent implements OnInit {
                 this.router.navigateByUrl(this.returnUrl);
             },
             error => {
-                let status = error.status;
-                if (status === 403) {
-                    let field = error.error.field;
+                if (error.status === 403) {
+                    let field = error.error.invalidField;
                     if (field === 'verification') {
                         this.verificationError = true;
                     } else if (field === 'credentials') {

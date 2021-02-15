@@ -11,13 +11,15 @@
         </div>
         <div class="card-body" style="padding-top: 1px; padding-bottom: 0;">
             <p class="card-text">{{activity?.description}}</p>
-            <button class="btn btn-outline-primary" (click)="toggle()" style="margin-bottom: 10px;">Location</button>
+            <button class="btn btn-outline-primary" (click)="toggle()" style="margin-bottom: 10px;"
+                    i18n=@@map-activity.locationButton>Location
+            </button>
             <div *ngIf="showMap">
-                        <agm-map [latitude]="activity?.place.latitude" [longitude]="activity?.place.longitude"
-                                 [zoom]="14" style="height: 400px;width: 600px;">
-                            <agm-marker [latitude]="activity?.place.latitude"
-                                        [longitude]="activity?.place.longitude"></agm-marker>
-                        </agm-map>
+                <agm-map [latitude]="activity?.place.latitude" [longitude]="activity?.place.longitude"
+                         [zoom]="14" style="height: 400px;width: 600px;">
+                    <agm-marker [latitude]="activity?.place.latitude"
+                                [longitude]="activity?.place.longitude"></agm-marker>
+                </agm-map>
             </div>
         </div>
         <div class="card-footer " style="margin-top: 10px;">
@@ -25,8 +27,8 @@
                 <div class="col-11">
                     <p class="card-text">{{activity?.startDate | date}} - {{activity.endDate | date}}</p>
                 </div>
-                <div class="col-1" style="padding: 0">
-                    <button class="btn btn-danger" (click)="deleteActivity()"  i18n=@@map-activity.deleteButton>Delete
+                <div class="col-1" style="padding: 0" *ngIf="!completed">
+                    <button class="btn btn-danger" (click)="deleteActivity()" i18n=@@map-activity.deleteButton>Delete
                     </button>
                 </div>
             </div>

@@ -810,7 +810,7 @@
       </trans-unit>
       <trans-unit id="register.birthdayPlaceholder" datatype="html">
         <source>Enter a valid birthday</source>
-        <target>Ingrese una fecha de nacimiento válida</target>
+        <target>dd/mm/yyyy</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/register/register.component.html</context>
           <context context-type="linenumber">340</context>
@@ -1230,6 +1230,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
           <context context-type="linenumber">124,125</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="map-activity.locationButton" datatype="html">
+        <source>Location</source>
+        <target>Lugar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/trip/activities/map-activity/map-activity.component.html</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="map-activity.deleteButton" datatype="html">
