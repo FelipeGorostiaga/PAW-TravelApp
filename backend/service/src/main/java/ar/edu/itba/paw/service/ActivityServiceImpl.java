@@ -45,9 +45,9 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public Activity create(String name, String category, double latitude, double longitude, Trip trip, LocalDate startDate, LocalDate endDate,
-                           String description) throws GooglePlacesException {
+                           String description, String placeInput) throws GooglePlacesException {
         List<se.walkercrou.places.Place> googleMapsPlaces = googleMapsService.queryGoogleMapsPlaces(latitude, longitude);
-        Place place = googleMapsService.createGooglePlaceReference(googleMapsPlaces);
+        Place place = googleMapsService.createGooglePlaceReference(googleMapsPlaces, placeInput, latitude, longitude);
         Activity activity = ad.create(name, category, place, trip, startDate, endDate, description);
         tripService.addActivityToTrip(activity.getId(), trip.getId());
         return activity;

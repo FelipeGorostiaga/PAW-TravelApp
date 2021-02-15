@@ -16,7 +16,7 @@ public interface ActivityService {
     public Optional<Activity> findByName(String name);
 
     public Activity create(String name, String category, double latitude, double longitude, Trip trip, LocalDate startDate, LocalDate endDate,
-                           String description);
+                           String description, String placeInput);
 
     public Optional<Activity> findByCategory(String category);
 

@@ -6,7 +6,7 @@
             <div class="card-body">
                 <h5 class="card-title" style="font-size: 35px;">{{trip?.name}}</h5>
                 <p class="card-text">{{trip?.description}}</p>
-                <p class="card-text"><i class="fas fa-map-marker-alt"></i></p>
+                <p class="card-text"><img src="assets/icons/mapa.png" alt="map-icon" style="margin-right: 5px;">{{trip?.startPlace?.name}}</p>
                 <p class="card-text">
                     <span *ngIf="trip?.status === 'DUE' && userLang === 'es'" class="badge bg-primary card-badge">Pendiente</span>
                     <span *ngIf="trip?.status === 'IN_PROGRESS' && userLang === 'es'" class="badge bg-success card-badge">En progreso</span>

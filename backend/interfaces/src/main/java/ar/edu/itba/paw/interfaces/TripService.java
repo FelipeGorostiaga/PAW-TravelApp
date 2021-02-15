@@ -9,7 +9,8 @@ import java.util.*;
 
 public interface TripService {
 
-    Trip create(long createdBy, double latitude, double longitude, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) throws GooglePlacesException;
+    Trip create(long createdBy, double latitude, double longitude, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate,
+                String googlePlaceId, String placeInput) throws GooglePlacesException;
 
     Optional<Trip> findById(long id);
 
@@ -18,8 +19,6 @@ public interface TripService {
     List<Trip> getAllTrips();
 
     List<Trip> findByName(String name);
-
-    // Set<Trip> getAllUserTrips(User user);
 
     List<Place> findTripPlaces(Trip trip);
 

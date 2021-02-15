@@ -15,7 +15,7 @@ export class UserTripsComponent implements OnInit {
 
   trips: Trip[][];
   currentPage = 0;
-  tripsPerPage = 6;
+  tripsPerPage = 8;
   numberOfPages: number;
   loggedUser: User;
   loading = true;

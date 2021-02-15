@@ -221,17 +221,15 @@ export class InformationComponent implements OnInit {
     }
 
     sendInvite(user: User) {
-        if (confirm("Invite user to trip?")) {
-            this.tripService.inviteUserToTrip(this.trip.id, user.id).subscribe(
-                next => {
-                    this.showSuccessAlert = true;
-                },
-                error => {
-                    this.showErrorAlert = true;
-                }
-            );
-            this.resetSearch();
-        }
+        this.tripService.inviteUserToTrip(this.trip.id, user.id).subscribe(
+            next => {
+                this.showSuccessAlert = true;
+            },
+            error => {
+                this.showErrorAlert = true;
+            }
+        );
+        this.resetSearch();
 
     }
 

@@ -28,13 +28,18 @@ public class GoogleMapsServiceImpl implements GoogleMapsService {
     }
 
     @Override
-    public ar.edu.itba.paw.model.Place createGooglePlaceReference(List<Place> googlePlaces) throws GooglePlacesException {
-        if(googlePlaces != null && !googlePlaces.isEmpty()) {
+    public Place findGooglePlaceById(String googlePlaceId) {
+        return this.googleClient.getPlaceById(googlePlaceId);
+    }
+
+    @Override
+    public ar.edu.itba.paw.model.Place createGooglePlaceReference(List<Place> googlePlaces, String address, double latitude, double longitude) throws GooglePlacesException {
+        if (googlePlaces != null && !googlePlaces.isEmpty()) {
             se.walkercrou.places.Place googlePlace = googlePlaces.get(0);
             Optional<ar.edu.itba.paw.model.Place> maybePlace = placeService.findByGoogleId(googlePlace.getPlaceId());
             return maybePlace.orElseGet(() -> placeService
-                    .create(googlePlace.getPlaceId(), googlePlace.getName(), googlePlace.getLatitude(),
-                            googlePlace.getLongitude(), googlePlace.getAddress()));
+                    .create(googlePlace.getPlaceId(), googlePlace.getName(), latitude,
+                            longitude, address));
         }
         throw new GooglePlacesException("500", "Error creating place reference");
     }

@@ -21,6 +21,7 @@ export class CreateTripComponent implements OnInit {
     public searchElement: ElementRef;
     searchControl: FormControl;
 
+    placeId: string;
     zoom: number;
     latitude: number;
     longitude: number;
@@ -86,6 +87,7 @@ export class CreateTripComponent implements OnInit {
                         this.submittedPlace = true;
                         this.latitude = place.geometry.location.lat();
                         this.longitude = place.geometry.location.lng();
+                        this.placeId = place.place_id;
                         this.zoom = 16;
                         this.latlongs.push(latlong);
                         this.tripForm.get('placeInput').setValue(place.formatted_address);
@@ -131,12 +133,12 @@ export class CreateTripComponent implements OnInit {
         if (this.tripForm.invalid) {
             return;
         }
-        if (!this.longitude || !this.latitude) {
+        if (!this.longitude || !this.latitude || !this.placeId) {
             this.mapsError = true;
             return;
         }
         const formData = new TripForm(values.name, values.description, this.dateUtilService.convertToDateString(values.startDate),
-            this.dateUtilService.convertToDateString(values.endDate), values.placeInput, !!values.isPrivate, this.latitude, this.longitude);
+            this.dateUtilService.convertToDateString(values.endDate), values.placeInput, !!values.isPrivate, this.latitude, this.longitude, this.placeId);
         this.ts.createTrip(formData).subscribe(
             res => {
                 const tripId = res.id;
@@ -164,6 +166,7 @@ export class CreateTripComponent implements OnInit {
         this.tripForm.reset();
         this.latitude = null;
         this.longitude = null;
+        this.placeId = null;
     }
 
     get f() {

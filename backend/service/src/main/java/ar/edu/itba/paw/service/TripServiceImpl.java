@@ -45,11 +45,14 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public Trip create(long userId, double latitude, double longitude, String name, String description,
-                       LocalDate startDate, LocalDate endDate, boolean isPrivate) throws GooglePlacesException {
+                       LocalDate startDate, LocalDate endDate, boolean isPrivate, String googlePlaceId, String placeInput) throws GooglePlacesException {
+
+        Place startPlace;
         List<se.walkercrou.places.Place> googleMapsPlaces = googleMapsService.queryGoogleMapsPlaces(latitude, longitude);
-        Place startPlace = googleMapsService.createGooglePlaceReference(googleMapsPlaces);
+        startPlace = googleMapsService.createGooglePlaceReference(googleMapsPlaces, placeInput, latitude, longitude);
         Optional<User> u = ud.findById(userId);
-        return u.map(user -> td.create(user, startPlace, name, description, startDate, endDate, isPrivate)).orElse(null);
+        Place finalStartPlace = startPlace;
+        return u.map(user -> td.create(user, finalStartPlace, name, description, startDate, endDate, isPrivate)).orElse(null);
     }
 
     @Override
@@ -87,8 +90,8 @@ public class TripServiceImpl implements TripService {
         td.markTripAsCompleted(tripId);
         Set<TripMember> tripMembers = trip.getMembers();
         // create bidirectional rates for trip members
-        for (TripMember member: tripMembers) {
-            for (TripMember member2: tripMembers) {
+        for (TripMember member : tripMembers) {
+            for (TripMember member2 : tripMembers) {
                 if (!member.equals(member2)) {
                     userRatesService.createRate(trip, member.getUser(), member2.getUser());
                 }

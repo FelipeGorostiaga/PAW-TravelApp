@@ -153,6 +153,7 @@ public class TripControllerREST {
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
+        System.out.println(tripCreateForm);
         User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
         List<ErrorDTO> errorDTOS = new ArrayList<>();
@@ -169,7 +170,7 @@ public class TripControllerREST {
         try {
             trip = tripService.create(loggedUser.getId(), tripCreateForm.getLatitude(), tripCreateForm.getLongitude(), tripCreateForm.getName(),
                     tripCreateForm.getDescription(), DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
-                    DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate());
+                    DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate(), tripCreateForm.getGooglePlaceId(), tripCreateForm.getPlaceInput());
         } catch (GooglePlacesException exception) {
             return Response.status(Response.Status.CONFLICT)
                     .entity(new ErrorDTO("There was an error connecting to the GoogleMaps API", "googleMaps")).build();
@@ -332,7 +333,7 @@ public class TripControllerREST {
         }
         Activity activity = activityService.create(activityCreateForm.getName(), activityCreateForm.getCategory(), activityCreateForm.getLatitude(),
                 activityCreateForm.getLongitude(), trip, DateManipulation.stringToLocalDate(activityCreateForm.getStartDate()),
-                DateManipulation.stringToLocalDate(activityCreateForm.getEndDate()), activityCreateForm.getDescription());
+                DateManipulation.stringToLocalDate(activityCreateForm.getEndDate()), activityCreateForm.getDescription(), activityCreateForm.getPlaceInput());
         return Response.ok(new ActivityDTO(activity)).build();
     }
 

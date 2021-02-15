@@ -1256,6 +1256,14 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="chat.commentPlaceholder" datatype="html">
+        <source>Write a comment...</source>
+        <target>Escriba un mensaje...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/trip/chat/chat.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="chat.sendComment" datatype="html">
         <source>Send</source>
         <target>Enviar</target>

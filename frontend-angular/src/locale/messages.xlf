@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
       <trans-unit id="about.title" datatype="html">
         <source>Software Engineering Student @ Instituto Tecnologico de Buenos Aires</source>
@@ -1077,17 +1077,17 @@
         </context-group>
       </trans-unit>
       <trans-unit id="map-activity.locationButton" datatype="html">
-        <source>Location</source>
+        <source>Location </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/map-activity/map-activity.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">15,16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="map-activity.deleteButton" datatype="html">
-        <source>Delete</source>
+        <source>Delete </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/map-activity/map-activity.component.html</context>
-          <context context-type="linenumber">29,30</context>
+          <context context-type="linenumber">37,38</context>
         </context-group>
       </trans-unit>
       <trans-unit id="chat.noComments" datatype="html">
@@ -1097,165 +1097,172 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="chat.commentPlaceholder" datatype="html">
+        <source>Write a comment...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/trip/chat/chat.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="chat.sendComment" datatype="html">
         <source>Send</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/chat/chat.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.startDate" datatype="html">
-        <source>Start date: <x id="INTERPOLATION" equiv-text="{{startDate | date}}"/> </source>
+        <source>Start date: <x id="INTERPOLATION" equiv-text=" {{startDate | date}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">21,22</context>
+          <context context-type="linenumber">27,29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.endDate" datatype="html">
         <source>End date: <x id="INTERPOLATION" equiv-text="{{endDate | date}}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">26,27</context>
+          <context context-type="linenumber">33,34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.inviteUserButton" datatype="html">
-        <source>Invite User</source>
+        <source> Invite User </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">70,71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.exitTripButton" datatype="html">
         <source>Exit </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">69,70</context>
+          <context context-type="linenumber">88,89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.requestJoinButton" datatype="html">
         <source> Request to join </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">73,74</context>
+          <context context-type="linenumber">98,99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.finishTripButton" datatype="html">
         <source>Finish Trip </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">80,81</context>
+          <context context-type="linenumber">115,116</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.inviteUser.title" datatype="html">
         <source>Invite user</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.inviteUser.success" datatype="html">
         <source>User invite sent. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">95,96</context>
+          <context context-type="linenumber">131,132</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.inviteUser.error" datatype="html">
         <source>User was already invited. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">99,100</context>
+          <context context-type="linenumber">136,137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.inviteUser.closeButton" datatype="html">
         <source>Close </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">114,115</context>
+          <context context-type="linenumber">152,153</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.title" datatype="html">
         <source>Edit Trip</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.file" datatype="html">
         <source>File input</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">169</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.name" datatype="html">
         <source>Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.name.required" datatype="html">
         <source>Name is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">179,180</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.name.minlength" datatype="html">
         <source>Min length is 5 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">181,182</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.name.maxlength" datatype="html">
         <source>Max length is 15 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">183,184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.description" datatype="html">
         <source>Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">189</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.description.required" datatype="html">
-        <source>Description is required</source>
+        <source> Description is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">195</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.description.minlength" datatype="html">
         <source>Min length is 25 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">154</context>
+          <context context-type="linenumber">196,197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.description.maxlength" datatype="html">
         <source>Max length is 400 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">198,199</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.submitButton" datatype="html">
-        <source>Submit</source>
+        <source>Submit </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">160</context>
+          <context context-type="linenumber">205,206</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.closeButton" datatype="html">
-        <source>Close</source>
+        <source>Close </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">208,209</context>
         </context-group>
       </trans-unit>
       <trans-unit id="respond-invite.error" datatype="html">

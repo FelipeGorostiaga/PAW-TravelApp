@@ -8,6 +8,10 @@ import java.util.List;
 public interface GoogleMapsService {
 
     List<Place> queryGoogleMapsPlaces(double latitude, double longitude) throws GooglePlacesException;
-    ar.edu.itba.paw.model.Place createGooglePlaceReference(List<se.walkercrou.places.Place> googlePlaces) throws GooglePlacesException;
+
+    ar.edu.itba.paw.model.Place createGooglePlaceReference(List<se.walkercrou.places.Place> googlePlaces, String placeInput,
+                                                           double latitude, double longitude) throws GooglePlacesException;
+
+    Place findGooglePlaceById(String googlePlaceId);
 
 }

@@ -30,7 +30,7 @@ public class TripCreateForm {
     @NotNull
     private boolean isPrivate;
 
-    @Size(min = 5, max = 100)
+    @Size(max = 100)
     private String placeInput;
 
     @NotNull
@@ -38,6 +38,17 @@ public class TripCreateForm {
 
     @NotNull
     private double longitude;
+
+    @NotNull
+    private String googlePlaceId;
+
+    public String getGooglePlaceId() {
+        return googlePlaceId;
+    }
+
+    public void setGooglePlaceId(String googlePlaceId) {
+        this.googlePlaceId = googlePlaceId;
+    }
 
     public double getLatitude() {
         return latitude;
@@ -124,6 +135,7 @@ public class TripCreateForm {
                 ", placeInput='" + placeInput + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
+                ", googlePlaceId='" + googlePlaceId + '\'' +
                 '}';
     }
 }
