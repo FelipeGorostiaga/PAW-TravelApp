@@ -2,6 +2,7 @@ package ar.edu.itba.paw.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "trip_comments")
@@ -21,9 +22,6 @@ public class TripComment implements Comparable<TripComment>{
 
     @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
-
-/*    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.MERGE)
-    private TripMember member;*/
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Trip trip;
@@ -77,5 +75,18 @@ public class TripComment implements Comparable<TripComment>{
     @Override
     public int compareTo(TripComment o) {
         return this.createdOn.isBefore(o.createdOn) ? -1 : 1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TripComment)) return false;
+        TripComment that = (TripComment) o;
+        return getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

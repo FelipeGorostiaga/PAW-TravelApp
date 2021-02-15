@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.TripComment;
 import ar.edu.itba.paw.model.TripStatus;
 
 import java.time.LocalDate;
@@ -21,7 +20,7 @@ public class FullTripDTO {
     private String endDate;
     private String status;
     private PlaceDTO startPlace;
-    private List<TripCommentDTO> comments;
+    private Set<TripCommentDTO> comments;
     private Set<TripMemberDTO> members;
     private List<ActivityDTO> activities;
 
@@ -37,7 +36,7 @@ public class FullTripDTO {
         this.endDate = DateManipulation.changeDateFormat(trip.getEndDate());
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
-        this.comments = trip.getComments().stream().sorted().map(TripCommentDTO::new).collect(Collectors.toList());
+        this.comments = trip.getComments().stream().distinct().sorted().map(TripCommentDTO::new).collect(Collectors.toSet());
         this.activities = trip.getActivities().stream().sorted().map(ActivityDTO::new).collect(Collectors.toList());
         this.members = trip.getMembers().stream().map(TripMemberDTO::new).collect(Collectors.toSet());
         TripStatus status = trip.getStatus();
@@ -116,11 +115,11 @@ public class FullTripDTO {
         this.startPlace = startPlace;
     }
 
-    public List<TripCommentDTO> getComments() {
+    public Set<TripCommentDTO> getComments() {
         return comments;
     }
 
-    public void setComments(List<TripCommentDTO> comments) {
+    public void setComments(Set<TripCommentDTO> comments) {
         this.comments = comments;
     }
 
