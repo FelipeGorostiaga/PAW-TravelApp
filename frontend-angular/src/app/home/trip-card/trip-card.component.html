@@ -8,12 +8,12 @@
                 <p class="card-text">{{trip?.description}}</p>
                 <p class="card-text"><i class="fas fa-map-marker-alt"></i></p>
                 <p class="card-text">
-                    <span *ngIf="trip?.status === 'DUE' && userLang === 'es'" class="badge bg-primary card-badge">PENDIENTE</span>
-                    <span *ngIf="trip?.status === 'IN_PROGRESS' && userLang === 'es'" class="badge bg-success card-badge">EN PROGRESO</span>
-                    <span *ngIf="trip?.status === 'COMPLETED' && userLang === 'es'"class="badge bg-danger card-badge">COMPLETADO</span>
-                    <span *ngIf="trip?.status === 'DUE' && userLang !== 'es'" class="badge bg-primary card-badge">DUE</span>
-                    <span *ngIf="trip?.status === 'IN_PROGRESS' && userLang !== 'es'" class="badge bg-success card-badge">IN PROGRESS</span>
-                    <span *ngIf="trip?.status === 'COMPLETED' && userLang !== 'es'"class="badge bg-danger card-badge">COMPLETED</span>
+                    <span *ngIf="trip?.status === 'DUE' && userLang === 'es'" class="badge bg-primary card-badge">Pendiente</span>
+                    <span *ngIf="trip?.status === 'IN_PROGRESS' && userLang === 'es'" class="badge bg-success card-badge">En progreso</span>
+                    <span *ngIf="trip?.status === 'COMPLETED' && userLang === 'es'"class="badge bg-danger card-badge">Completado</span>
+                    <span *ngIf="trip?.status === 'DUE' && userLang !== 'es'" class="badge bg-primary card-badge">Due</span>
+                    <span *ngIf="trip?.status === 'IN_PROGRESS' && userLang !== 'es'" class="badge bg-success card-badge">In progress</span>
+                    <span *ngIf="trip?.status === 'COMPLETED' && userLang !== 'es'"class="badge bg-danger card-badge">Completed</span>
                     {{startDate | date}} - {{endDate | date}}
                 </p>
             </div>

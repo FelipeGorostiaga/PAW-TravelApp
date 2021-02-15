@@ -502,7 +502,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="profile.editTrip.invalidFileSize" datatype="html">
-        <source> Image size too big (max </source>
+        <source> Image size too big (max 5MB)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
           <context context-type="linenumber">90</context>
