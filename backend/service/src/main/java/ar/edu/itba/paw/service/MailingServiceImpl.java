@@ -40,8 +40,7 @@ public class MailingServiceImpl implements MailingService {
     private static final String EMAIL_PASS = "power123321";
     private static final Locale locale = getLocale();
 
-    // TODO: CHANGE THIS IN PRODUCTION
-    private static final String frontEndURL = "http://localhost:4200";
+    private static final String frontEndURL = "http://localhost:8080";
 
     @Autowired
     private ApplicationContext applicationContext;

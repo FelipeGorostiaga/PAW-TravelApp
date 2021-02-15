@@ -73,15 +73,6 @@ CREATE TABLE IF NOT EXISTS trip_pictures (
 
 );
 
-/*
-user id = 1
-trip_id = 2
-place_id = 3
-activity_id = 4
-trip_place_id = 1
-trip_users_id = 1
-*/
-
 INSERT INTO places(id, google_id, name, latitude, longitude, address)
 values(3, 'google id', 'Bahamas', 100, 100, 'Bahamas address');
 
