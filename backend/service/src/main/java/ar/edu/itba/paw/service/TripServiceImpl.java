@@ -134,8 +134,9 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public void removeUserFromTrip(long userId, long tripId) {
-        td.deleteTripMember(userId, tripId);
+    public void removeUserFromTrip(User loggedUser, Trip trip) {
+        td.deleteTripMember(loggedUser.getId(), trip.getId());
+        mailService.sendExitTripMail(loggedUser, trip);
     }
 
     @Override
@@ -190,6 +191,8 @@ public class TripServiceImpl implements TripService {
     @Override
     public boolean createJoinRequest(Trip trip, User user, String token) {
         TripPendingConfirmation pendingConfirmation = td.createPendingConfirmation(trip, user, token);
+        if (pendingConfirmation != null)
+            mailService.sendJoinRequestMail(trip, user, token);
         return pendingConfirmation != null;
     }
 

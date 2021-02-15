@@ -27,7 +27,7 @@ public interface TripService {
 
     void addUserToTrip(long userId, long tripId);
 
-    void removeUserFromTrip(long userId, long tripId);
+    void removeUserFromTrip(User user, Trip trip);
 
     void deleteTrip(Trip trip);
 

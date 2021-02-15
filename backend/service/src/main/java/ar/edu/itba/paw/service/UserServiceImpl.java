@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.service;
 
+import ar.edu.itba.paw.interfaces.MailingService;
 import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.interfaces.UserService;
@@ -26,6 +27,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private MailingService mailService;
+
     @Override
     public Optional<User> findById(long id) {
         return ud.findById(id);
@@ -43,7 +47,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex, String verificationCode) {
-        return ud.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality, sex, verificationCode);
+        User user = ud.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality, sex, verificationCode);
+        if (user != null) {
+            mailService.sendRegisterMail(user);
+        }
+        return user;
     }
 
     @Override

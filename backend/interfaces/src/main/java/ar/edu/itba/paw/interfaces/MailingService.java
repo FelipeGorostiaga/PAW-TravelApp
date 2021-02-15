@@ -5,7 +5,7 @@ import ar.edu.itba.paw.model.User;
 
 public interface MailingService {
 
-    void sendRegisterMail(User user, String contextURL);
+    void sendRegisterMail(User user);
 
     void sendJoinTripMail(User tripMember, Trip trip);
 

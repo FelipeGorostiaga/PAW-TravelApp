@@ -60,11 +60,11 @@ public class MailingServiceImpl implements MailingService {
 
     @Async
     @Override
-    public void sendRegisterMail(User user, String contextURL) {
+    public void sendRegisterMail(User user) {
         List<Recipient> recipients = new ArrayList<>();
         recipients.add(new Recipient(user.getFirstname() + " " + user.getLastname(), user.getEmail(), null));
         String subject = applicationContext.getMessage("mailRegisterSubject", null, locale);
-        String verifyURL = contextURL + "/" + user.getVerificationCode();
+        String verifyURL = frontEndURL + "/verify/" + user.getVerificationCode();
         Context ctx = new Context(locale);
         ctx.setVariable("email", user.getEmail());
         ctx.setVariable("name", user.getFirstname());

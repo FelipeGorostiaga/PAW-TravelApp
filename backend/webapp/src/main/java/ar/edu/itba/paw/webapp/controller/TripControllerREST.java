@@ -218,8 +218,7 @@ public class TripControllerREST {
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         Trip trip = tripOptional.get();
         if (tripService.isMember(trip, loggedUser)) {
-            mailService.sendExitTripMail(loggedUser, trip);
-            tripService.removeUserFromTrip(loggedUser.getId(), tripId);
+            tripService.removeUserFromTrip(loggedUser, trip);
             return Response.ok().build();
         }
         return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("User is not part of this trip", "invalid-user")).build();
@@ -374,7 +373,6 @@ public class TripControllerREST {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Cannot send multiple join requests", "repeated")).build();
         String token = RandomStringUtils.random(64, true, true);
         if (tripService.createJoinRequest(t, user, token)) {
-            mailService.sendJoinRequestMail(t, user, token);
             return Response.ok().build();
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO("Error creating request, please try again...", "error")).build();

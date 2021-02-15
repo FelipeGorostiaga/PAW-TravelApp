@@ -21,7 +21,7 @@ export class UserListItemComponent implements OnInit {
     ngOnInit(): void {
         if (this.userLang == 'es') {
             this.sendInviteTitle = "Enviar invitacion";
-            this.sendInviteMessage = "Estas seguro que deseas enviar una invitacion";
+            this.sendInviteMessage = "Estas seguro que deseas enviar una invitacion?";
         } else {
             this.sendInviteTitle = "Send trip invite";
             this.sendInviteMessage = "Are you sure you want to send a trip invitation?";

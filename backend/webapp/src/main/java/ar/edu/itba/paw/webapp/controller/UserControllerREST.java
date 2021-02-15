@@ -67,9 +67,6 @@ public class UserControllerREST {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private MailingService mailService;
-
-    @Autowired
     private TravelUserDetailsService userDetailsService;
 
     @Autowired
@@ -162,7 +159,6 @@ public class UserControllerREST {
             user = userService.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
                     userForm.getPassword(), DateManipulation.stringToLocalDate(userForm.getBirthday()),
                     userForm.getNationality(), userForm.getSex(), verificationToken);
-            mailService.sendRegisterMail(user, userForm.getVerificationURL());
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Email already in use", "email")).build();
         }
@@ -246,11 +242,9 @@ public class UserControllerREST {
     @POST
     @Path("/rateUser")
     public Response rateUser(@Valid UserRateForm form) {
-        System.out.println(form);
         User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<UserRateForm>> violations = validator.validate(form);
         if (!violations.isEmpty()) {
-            System.out.println("Form has violations");
             List<ErrorDTO> errors = violations.stream().map(violation -> new ErrorDTO(violation.getMessage(),
                     violation.getPropertyPath().toString())).collect(Collectors.toList());
             return Response.status(Response.Status.BAD_REQUEST).entity(new GenericEntity<List<ErrorDTO>>(errors) {
@@ -258,7 +252,6 @@ public class UserControllerREST {
         }
         Optional<UserRate> rateOptional = userRatesService.findById(form.getRateId());
         if (!rateOptional.isPresent()) {
-            System.out.println("Rate not found");
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         UserRate rate = rateOptional.get();
@@ -266,7 +259,6 @@ public class UserControllerREST {
         if (rate.getTrip().getStatus() != TripStatus.COMPLETED)
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         if (userRatesService.rateUser(rate.getId(), form.getRate(), form.getComment())) {
-            System.out.println("Rating user");
             return Response.ok().build();
         }
         return Response.serverError().build();
