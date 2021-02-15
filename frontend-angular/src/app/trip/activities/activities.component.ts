@@ -3,7 +3,6 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MapsAPILoader} from "@agm/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ApiTripService} from "../../services/api-trip.service";
-import {ActivityForm} from "../../model/forms/activity-form";
 import {FullTrip} from "../../model/trip";
 import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
 import {DateUtilService} from "../../services/date-util.service";

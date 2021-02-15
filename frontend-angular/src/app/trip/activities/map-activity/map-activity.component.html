@@ -1,20 +1,38 @@
-<div (click)="toggle()" class="container list-group-item list-group-item-action flex-column align-items-start">
-    <div class="row ">
-        <div class="col-12">
-            <div class="col-6">
-                <h5 class="mb-1">{{activity?.name}}</h5>
-                <p>{{activity?.category}}</p>
-                <p>{{activity?.startDate}} - {{activity.endDate}}</p>
-                <p class="mb-1"><i class="fa fa-map-marker-alt"></i>{{activity?.place?.address}}</p>
+<div class="container">
+    <div class="card">
+        <div class="card-title">
+            <div class="row">
+                <div class="col" style="margin-left: 20px; margin-top: 10px;">
+                    <span class="badge bg-primary card-badge card-text text-white"
+                    >{{activity?.category}}</span>
+                    <h5 class="mb-1" style="margin-top: 10px;">{{activity?.name}}</h5>
+                </div>
             </div>
-            <div class="col-6" *ngIf="showMap">
-                <agm-map [latitude]="activity?.place.latitude" [longitude]="activity?.place.longitude" [zoom]="14" style="height: 400px;width: 600px;">
-                    <agm-marker [latitude]="activity?.place.latitude" [longitude]="activity?.place.longitude"></agm-marker>
-                </agm-map>
+        </div>
+        <div class="card-body" style="padding-top: 1px; padding-bottom: 0;">
+            <p class="card-text">{{activity?.description}}</p>
+            <button class="btn btn-outline-primary" (click)="toggle()" style="margin-bottom: 10px;">Location</button>
+            <div *ngIf="showMap">
+                        <agm-map [latitude]="activity?.place.latitude" [longitude]="activity?.place.longitude"
+                                 [zoom]="14" style="height: 400px;width: 600px;">
+                            <agm-marker [latitude]="activity?.place.latitude"
+                                        [longitude]="activity?.place.longitude"></agm-marker>
+                        </agm-map>
+            </div>
+        </div>
+        <div class="card-footer " style="margin-top: 10px;">
+            <div class="row">
+                <div class="col-11">
+                    <p class="card-text">{{activity?.startDate | date}} - {{activity.endDate | date}}</p>
+                </div>
+                <div class="col-1" style="padding: 0">
+                    <button class="btn btn-danger" (click)="deleteActivity()"  i18n=@@map-activity.deleteButton>Delete
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<button *ngIf="!completed" class="btn btn-danger" (click)="deleteActivity()" i18n=@@map-activity.deleteButton>Delete</button>
+
 
 

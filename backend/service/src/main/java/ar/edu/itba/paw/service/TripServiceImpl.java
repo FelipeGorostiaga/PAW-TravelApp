@@ -124,7 +124,6 @@ public class TripServiceImpl implements TripService {
             User user = userOptional.get();
             TripMember tripMember = createTripMember(trip, user, TripMemberRole.MEMBER);
             mailService.sendJoinTripMail(user, trip);
-            // TODO: check this
             trip.getMembers().add(tripMember);
             user.getTrips().add(tripMember);
         }

@@ -431,7 +431,6 @@ public class TripControllerREST {
                     .build();
         List<TripPendingConfirmationDTO> pendingConfirmations = tripService.getTripJoinRequests(tripId).stream().map(TripPendingConfirmationDTO::new).collect(Collectors.toList());
         if (pendingConfirmations.isEmpty()) return Response.status(Response.Status.NOT_FOUND).build();
-        // TODO --> check if I need to filter {edited = false} or {accepted = false}
         return Response.ok(new GenericEntity<List<TripPendingConfirmationDTO>>(pendingConfirmations) {
         }).build();
     }

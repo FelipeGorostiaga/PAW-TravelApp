@@ -502,7 +502,7 @@
       </trans-unit>
       <trans-unit id="profile.due" datatype="html">
         <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;fa fa-calendar mr-1&quot;&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/>Due</source>
-        <target><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;fa fa-calendar mr-1&quot;&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/>Pendiente</target>
+        <target><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;fa fa-calendar mr-1&quot;&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/>Pendientes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
           <context context-type="linenumber">33</context>
@@ -520,7 +520,7 @@
         <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i
                             class=&quot;fa fa-check mr-1&quot;&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/>Completed</source>
         <target><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i
-                            class=&quot;fa fa-check mr-1&quot;&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/>Completado</target>
+                            class=&quot;fa fa-check mr-1&quot;&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/>Completados</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
           <context context-type="linenumber">42,43</context>
@@ -570,7 +570,7 @@
       </trans-unit>
       <trans-unit id="profile.fileInput" datatype="html">
         <source>File input</source>
-        <target>Archivo</target>
+        <target>Imágen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
           <context context-type="linenumber">83</context>

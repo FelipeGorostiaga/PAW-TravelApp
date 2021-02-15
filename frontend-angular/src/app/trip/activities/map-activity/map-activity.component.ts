@@ -1,35 +1,43 @@
 import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {Activity} from "../../../model/activity";
 import {ApiTripService} from "../../../services/api-trip.service";
+import {DateUtilService} from "../../../services/date-util.service";
 
 @Component({
-  selector: 'app-map-activity',
-  templateUrl: './map-activity.component.html',
-  styleUrls: ['./map-activity.component.scss']
+    selector: 'app-map-activity',
+    templateUrl: './map-activity.component.html',
+    styleUrls: ['./map-activity.component.scss']
 })
 export class MapActivityComponent implements OnInit {
 
-  @Input() activity: Activity;
-  @Input() completed: boolean;
-  @Output()
-  deleteActivityEvent: EventEmitter<number> = new EventEmitter<number>();
-  zoom: number;
-  showMap: boolean;
+    @Input() activity: Activity;
+    @Input() completed: boolean;
+    @Output()
+    deleteActivityEvent: EventEmitter<number> = new EventEmitter<number>();
+    zoom: number;
+    showMap: boolean;
 
-  constructor(tripService: ApiTripService) { }
+    startDate: Date;
+    endDate: Date;
 
-  ngOnInit(): void {
-    this.zoom = 14;
-  }
+    constructor(private tripService: ApiTripService,
+                private dateUtils: DateUtilService) {
+    }
 
-  toggle() {
-    this.showMap = !this.showMap;
-  }
+    ngOnInit(): void {
+        this.startDate = this.dateUtils.stringToDate(this.activity.startDate);
+        this.endDate = this.dateUtils.stringToDate(this.activity.endDate);
+        this.zoom = 14;
+    }
+
+    toggle() {
+        this.showMap = !this.showMap;
+    }
 
     deleteActivity() {
-      if (confirm("Are you sure you want to delete activity " + this.activity.name + " ?")) {
-        // @ts-ignore
-        this.deleteActivityEvent.emit(this.activity);
-      }
+        if (confirm("Are you sure you want to delete activity " + this.activity.name + " ?")) {
+            // @ts-ignore
+            this.deleteActivityEvent.emit(this.activity);
+        }
     }
 }

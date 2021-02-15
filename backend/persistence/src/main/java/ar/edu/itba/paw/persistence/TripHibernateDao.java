@@ -62,7 +62,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<TripPendingConfirmation> getTripJoinRequests(long tripId) {
-        final TypedQuery<TripPendingConfirmation> query = em.createQuery("FROM TripPendingConfirmation as tp WHERE tp.trip.id = :tripId", TripPendingConfirmation.class);
+        final TypedQuery<TripPendingConfirmation> query = em.createQuery("FROM TripPendingConfirmation as tp WHERE tp.trip.id = :tripId AND tp.edited = false", TripPendingConfirmation.class);
         query.setParameter("tripId", tripId);
         return query.getResultList();
     }
