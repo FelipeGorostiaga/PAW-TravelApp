@@ -6,7 +6,7 @@
         <h4 i18n=@@verification-result.success>Your account has been successfully verified</h4>
         <button class=" btn-lg btn-primary" style="margin-top: 20px;"><a routerLink="/login" i18n=@@verification-result.signinButton>Sign in</a></button>
     </div>
-    <div *ngIf="!verified" style="margin-top: 120px;">
+    <div *ngIf="serverError || notFound" style="margin-top: 120px;">
         <img src="assets/images/red_cross.png" alt="error verification" style="margin-bottom: 20px;">
         <alert *ngIf="serverError" [type]="'danger'" i18n=@@verification-result.error>Unexpected error, please try again later</alert>
         <alert *ngIf="notFound" [type]="'warning'" i18n=@@verification-result.notFoundError>Invalid registration token or user ir already verified</alert>
