@@ -10,7 +10,7 @@
                             <img *ngIf="hasImage" class="rounded mb-2 img-thumbnail" id="profilePicture"
                                  [src]='profilePicture'/>
                             <img *ngIf="!hasImage" class="rounded mb-2 img-thumbnail" id="defaultImage"
-                                 src="/assets/images/profile-default.jpg"/>
+                                 src="./assets/images/profile-default.jpg"/>
                         </div>
                         <button *ngIf="user?.id == loggedUser?.id" (click)="openModal(modalTemplate)"
                                 class="btn btn-outline-dark btn-sm btn-block" i18n=@@profile.editProfileButton>Edit

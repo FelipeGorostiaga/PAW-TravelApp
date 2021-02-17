@@ -35,7 +35,7 @@ const routes: Routes = [
         component: VerificationComponent
     },
     {
-        path: 'verify/:code',
+        path: 'verify',
         component: VerificationResultComponent
     },
     {

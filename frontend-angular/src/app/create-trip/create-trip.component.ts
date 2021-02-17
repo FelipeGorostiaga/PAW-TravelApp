@@ -62,7 +62,7 @@ export class CreateTripComponent implements OnInit {
         }, {
             validators: validInterval('startDate', 'endDate')
         });
-        this.tripStatus = this.userLang === 'en' ? "Public" : "Publico";
+        this.tripStatus = this.userLang === 'en' ? "Public" : "Público";
         this.submittedPlace = false;
         this.zoom = 14;
         this.searchControl = new FormControl();
@@ -98,7 +98,10 @@ export class CreateTripComponent implements OnInit {
     }
 
     setCurrentPosition() {
-        if ('geolocation' in navigator) {
+        this.latitude = -34.603722;
+        this.longitude = -58.381592;
+        //production: google requires https for getCurrentPosition()
+/*        if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
                 this.latitude = position.coords.latitude;
                 this.longitude = position.coords.longitude;
@@ -106,13 +109,13 @@ export class CreateTripComponent implements OnInit {
         } else {
             this.latitude = -34.603722;
             this.longitude = -58.381592;
-        }
+        }*/
     }
 
     changeTripStatus() {
         if (this.userLang === 'es') {
             if (this.tripStatus === "Privado") {
-                this.tripStatus = "Publico";
+                this.tripStatus = "Público";
             }
             else {
                 this.tripStatus = "Privado";
@@ -161,12 +164,15 @@ export class CreateTripComponent implements OnInit {
     }
 
     onReset() {
-        this.tripStatus = "Public";
+        this.tripStatus = this.userLang === 'es' ? "Público" : "Public";
         this.submitted = false;
         this.tripForm.reset();
         this.latitude = null;
         this.longitude = null;
         this.placeId = null;
+        this.latlongs = [];
+        this.setCurrentPosition();
+        this.submittedPlace = false;
     }
 
     get f() {

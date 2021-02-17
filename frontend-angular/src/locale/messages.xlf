@@ -817,6 +817,13 @@
           <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="verification-result.notFoundError" datatype="html">
+        <source>Invalid registration token or user ir already verified</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/register/verification-result/verification-result.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="verification.registerSuccess" datatype="html">
         <source>Register Successful</source>
         <context-group purpose="location">

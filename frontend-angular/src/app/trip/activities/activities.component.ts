@@ -137,6 +137,8 @@ export class ActivitiesComponent implements OnInit {
         this.submitted = false;
         this.submittedPlace = false;
         this.latlongs = [];
+        this.latitude = null;
+        this.longitude = null;
         this.zoom = 14;
         this.setCurrentPosition();
     }
@@ -146,7 +148,11 @@ export class ActivitiesComponent implements OnInit {
     }
 
     private setCurrentPosition() {
-        if ('geolocation' in navigator) {
+
+        this.latitude = -34.603722;
+        this.longitude = -58.381592;
+        // Google maps does not accept non https calls to getCurrentPosition() anymore
+/*        if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
                 this.latitude = position.coords.latitude;
                 this.longitude = position.coords.longitude;
@@ -154,7 +160,7 @@ export class ActivitiesComponent implements OnInit {
         } else {
             this.latitude = -34.603722;
             this.longitude = -58.381592;
-        }
+        }*/
     }
 
     deleteActivity(activity: Activity) {

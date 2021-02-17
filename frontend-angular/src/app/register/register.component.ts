@@ -63,13 +63,10 @@ export class RegisterComponent implements OnInit {
 
         this.authService.register(formData).subscribe(
             data => {
-                console.log(data);
                 this.router.navigate(['/verification']);
             },
             error => {
-                console.error(error);
                 this.errors = error;
-                console.log(this.errors);
             });
     }
 
