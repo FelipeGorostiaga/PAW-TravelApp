@@ -26,6 +26,7 @@ export class VerificationResultComponent implements OnInit {
         let verificationCode = this.route.snapshot.queryParams['code'];
         if (!verificationCode) {
             this.notFound = true;
+            this.spinner.hide();
             return;
         }
         this.authService.verifyAccount(verificationCode).subscribe(
