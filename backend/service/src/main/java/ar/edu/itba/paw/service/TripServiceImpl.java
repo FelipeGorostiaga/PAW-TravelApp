@@ -252,10 +252,15 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void editTripImage(Trip trip, byte[] imageBytes) {
-        if (tripPicturesService.findByTripId(trip.getId()).isPresent()) {
-            tripPicturesService.deleteByTripId(trip.getId());
+        Optional<Trip> tripOptional = findById(trip.getId());
+        if (tripOptional.isPresent()) {
+            if (tripPicturesService.findByTripId(trip.getId()).isPresent()) {
+                tripPicturesService.deleteByTripId(trip.getId());
+            }
+            TripPicture picture = tripPicturesService.create(trip, imageBytes);
+            tripOptional.get().setProfilePicture(picture);
         }
-        tripPicturesService.create(trip, imageBytes);
+
     }
 
     @Override

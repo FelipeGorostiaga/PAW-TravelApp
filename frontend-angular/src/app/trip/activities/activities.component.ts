@@ -24,7 +24,6 @@ export class ActivitiesComponent implements OnInit {
     @Input() isMember: boolean;
     @Input() completed: boolean;
 
-
     zoom: number;
     latitude: number;
     longitude: number;
@@ -32,6 +31,10 @@ export class ActivitiesComponent implements OnInit {
     submittedPlace: boolean;
     activityForm: FormGroup;
     submitted = false;
+
+    activites: Activity[];
+
+    createActivityError: boolean;
 
     isEmpty: boolean;
     bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, {containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY'});
@@ -95,7 +98,6 @@ export class ActivitiesComponent implements OnInit {
         const values = this.activityForm.value;
         this.submitted = true;
         if (this.activityForm.invalid) {
-            console.log("form is invalid");
             return;
         }
 
@@ -109,16 +111,13 @@ export class ActivitiesComponent implements OnInit {
             longitude: this.longitude,
             description: values.description
         };
-    /*    let form = new ActivityForm(values.name, values.category, values.placeInput, this.latitude, this.longitude, this.dateUtilService.convertToDateString(values.startDate),
-            this.dateUtilService.convertToDateString(values.endDate), values.description);*/
-        console.log(JSON.stringify(postData));
         this.ts.createTripActivity(this.trip.id, postData).subscribe(
             data => {
                 this.trip.activities.push(data);
                 this.closeModal('custom-modal-1');
             },
             error => {
-                console.log(error);
+                this.createActivityError = true;
             }
         );
     }
@@ -213,10 +212,10 @@ export function hasActivityConflict(activities: Activity[], startDate: Date, end
             let eday = Number(aedate.slice(0, 2));
             let emonth = Number(aedate.slice(3, 5)) - 1;
             let eyear = Number(aedate.slice(6, 10));
-            let eSDate = new Date(Number(eyear), Number(emonth), Number(eday));
-            eSDate.setHours(0, 0, 0, 0);
-            if ((startDate <= aSDate && endDate >= eSDate) || (startDate >= aSDate && endDate <= eSDate) || (startDate >= aSDate && endDate > eSDate)
-                || (startDate <= aSDate && endDate > aSDate)) {
+            let aEDate = new Date(Number(eyear), Number(emonth), Number(eday));
+            aEDate.setHours(0, 0, 0, 0);
+            if ((startDate <= aSDate && endDate >= aEDate) || (startDate >= aSDate && endDate <= aEDate) || (startDate >= aSDate && endDate > aEDate)
+                || (startDate <= aSDate && endDate > aEDate)) {
                 return true;
             }
         }

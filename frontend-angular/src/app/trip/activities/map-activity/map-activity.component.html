@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="margin-top: 20px;">
     <div class="card">
         <div class="card-title">
             <div class="row">
@@ -11,7 +11,7 @@
         </div>
         <div class="card-body" style="padding-top: 1px; padding-bottom: 0;">
             <p class="card-text">{{activity?.description}}</p>
-            <button class="btn btn-outline-primary" (click)="toggle()" style="margin-bottom: 10px;"
+            <button class="btn btn-outline-secondary" (click)="toggle()" style="margin-bottom: 10px;"
                     i18n=@@map-activity.locationButton>Location
             </button>
             <div *ngIf="showMap">

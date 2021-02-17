@@ -1130,7 +1130,7 @@
       </trans-unit>
       <trans-unit id="activities.create.startDate.invalidDate" datatype="html">
         <source>Invalid dates</source>
-        <target>Fechas inválidas</target>
+        <target>Fechas inválidas, no pueden sobreponerse con las fechas de viaje o actividades</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
           <context context-type="linenumber">62</context>

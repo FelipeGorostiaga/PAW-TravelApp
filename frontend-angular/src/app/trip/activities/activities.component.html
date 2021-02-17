@@ -2,13 +2,15 @@
     <div class="alert alert-primary" role="alert" style="margin-top: 40px" i18n=@@activities.emptyAlert>This trip has no activities</div>
 </div>
 <div *ngIf="trip?.activities?.length !== 0">
-    <div class="list-group" style="margin-bottom: 20px">
+    <div class="list-group">
         <app-map-activity *ngFor="let activity of trip?.activities"
                           [activity]="activity" [completed]="completed" (deleteActivityEvent)="deleteActivity(activity)">
         </app-map-activity>
     </div>
+    <div class="text-center">
+        <button *ngIf="isAdmin && !completed" class="btn btn-primary" style="margin-top: 20px;" (click)="openModal('custom-modal-1')" i18n=@@activities.addButton>Add activity</button>
+    </div>
 </div>
-<button *ngIf="isAdmin && !completed" class="btn btn-primary" (click)="openModal('custom-modal-1')" i18n=@@activities.addButton>Add activity</button>
 
 <jw-modal id="custom-modal-1">
     <form [formGroup]="activityForm" (ngSubmit)="createActivity()">
@@ -59,7 +61,7 @@
                        [bsConfig]="bsConfig">
                 <div *ngIf="submitted && f.startDate.errors" class="invalid-feedback">
                     <p *ngIf="f.startDate.errors.required" i18n=@@activities.create.startDate.required>Start date is required</p>
-                    <p *ngIf="f.startDate.errors.invalidInterval" i18n=@@activities.create.startDate.invalidDate>Invalid dates</p>
+                    <p *ngIf="f.startDate.errors.invalidInterval" i18n=@@activities.create.startDate.invalidDate>Invalid dates, make sure they dont collide with other activities</p>
                 </div>
             </div>
             <div class="form-group col-6">
@@ -75,7 +77,7 @@
                        [bsConfig]="bsConfig">
                 <div *ngIf="submitted && f.endDate.errors" class="invalid-feedback">
                     <p *ngIf="f.endDate.errors.required" i18n=@@activities.create.endDate.required>End date is required</p>
-                    <p *ngIf="f.endDate.errors.invalidInterval" i18n=@@activities.create.endDate.invalidDate>Invalid dates</p>
+                    <p *ngIf="f.endDate.errors.invalidInterval" i18n=@@activities.create.endDate.invalidDate>Invalid dates, make sure they dont collide with other activities</p>
                 </div>
             </div>
         </div>

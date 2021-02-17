@@ -141,7 +141,6 @@ export class InformationComponent implements OnInit {
             tripName: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(25)]],
         });
         this.populateForm();
-
         if (this.trip != null) {
             if (!this.isAdmin && !this.isMember) {
                 this.tripService.isWaitingTripConfirmation(this.trip.id, this.authService.getLoggedUser().id).subscribe(
@@ -154,29 +153,22 @@ export class InformationComponent implements OnInit {
                 );
             }
             this.loadingImage = true;
-            if (this.trip.hasImage) {
-                this.tripService.getTripImage(this.trip.id).subscribe(
-                    data => {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            // @ts-ignore
-                            this.tripImage = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
-                            this.loadingImage = false;
-                            this.hasImage = true;
-                        };
-                        reader.readAsDataURL(new Blob([data]));
-                    },
-                    error => {
+            this.tripService.getTripImage(this.trip.id).subscribe(
+                data => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        // @ts-ignore
+                        this.tripImage = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
                         this.loadingImage = false;
-                        this.hasImage = false;
-                    }
-                );
-            }
-            else {
-                this.loadingImage = false;
-                this.hasImage = false;
-            }
-
+                        this.hasImage = true;
+                    };
+                    reader.readAsDataURL(new Blob([data]));
+                },
+                error => {
+                    this.loadingImage = false;
+                    this.hasImage = false;
+                }
+            );
         }
     }
 

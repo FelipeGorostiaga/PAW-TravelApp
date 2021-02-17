@@ -2,12 +2,12 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.annotation.FieldMatch;
 import ar.edu.itba.paw.webapp.form.annotation.ValidBirthday;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@ValidBirthday(message = "Invalid birthday")
 @FieldMatch(first = "password", second = "pswrepeat", message = "Passwords do not match")
 public class UserCreateForm {
 
@@ -26,7 +26,7 @@ public class UserCreateForm {
     private String lastname;
 
     @NotNull
-    @Pattern(regexp =  "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+    @Pattern(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     private String email;
 
     @NotNull
@@ -38,6 +38,7 @@ public class UserCreateForm {
     private String pswrepeat;
 
     @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String birthday;
 
     @NotNull
@@ -46,16 +47,6 @@ public class UserCreateForm {
     @NotNull
     private String sex;
 
-    @NotNull
-    private String verificationURL;
-
-    public String getVerificationURL() {
-        return verificationURL;
-    }
-
-    public void setVerificationURL(String verificationURL) {
-        this.verificationURL = verificationURL;
-    }
 
     public String getSex() {
         return sex;

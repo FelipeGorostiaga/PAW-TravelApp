@@ -37,7 +37,7 @@ public class FullTripDTO {
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
         this.comments = trip.getComments().stream().distinct().sorted().map(TripCommentDTO::new).collect(Collectors.toSet());
-        this.activities = trip.getActivities().stream().sorted().map(ActivityDTO::new).collect(Collectors.toList());
+        this.activities = trip.getActivities().stream().distinct().sorted().map(ActivityDTO::new).collect(Collectors.toList());
         this.members = trip.getMembers().stream().map(TripMemberDTO::new).collect(Collectors.toSet());
         TripStatus status = trip.getStatus();
         if (!status.equals(TripStatus.COMPLETED)) {

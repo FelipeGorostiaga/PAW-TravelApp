@@ -42,19 +42,16 @@ public class Trip implements Comparable<Trip> {
     @JoinColumn(name = "place_id")
     private Place startPlace;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TripMember> members = new HashSet<>();
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Activity> activities = new LinkedList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip")
     private List<UserRate> rates = new LinkedList<>();
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private TripPicture profilePicture;
 
     @OnDelete(action = OnDeleteAction.CASCADE)

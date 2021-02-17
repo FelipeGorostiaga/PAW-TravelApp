@@ -13,10 +13,10 @@ public class TripCreateForm {
         // Empty constructor needed by JAX-RS
     }
 
-    @Size(min = 5, max = 50)
+    @Size(min = 5, max = 15)
     private String name;
 
-    @Size(min = 25, max = 100)
+    @Size(min = 25, max = 400)
     private String description;
 
     @NotNull
@@ -30,7 +30,7 @@ public class TripCreateForm {
     @NotNull
     private boolean isPrivate;
 
-    @Size(max = 100)
+    @Size(max = 200)
     private String placeInput;
 
     @NotNull

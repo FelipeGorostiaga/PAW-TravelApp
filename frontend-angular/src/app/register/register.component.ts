@@ -57,9 +57,8 @@ export class RegisterComponent implements OnInit {
         if (this.registerForm.invalid) {
             return;
         }
-        let url = `${environment.frontEndURL}` + '/verify';
         const formData = new UserForm(values.firstName, values.lastName, values.email, values.password, values.confirmPassword,
-            values.nationality, this.dateUtilService.convertToDateString(values.birthDate), values.customRadioInline1, url);
+            values.nationality, this.dateUtilService.convertToDateString(values.birthDate), values.customRadioInline1);
 
         this.authService.register(formData).subscribe(
             data => {
