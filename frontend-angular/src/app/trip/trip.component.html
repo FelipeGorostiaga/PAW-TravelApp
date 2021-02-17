@@ -40,14 +40,14 @@
                             'show':selectedIndex == 0,
                             'active':selectedIndex == 0}"
                             id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                        <app-information [trip]="trip" [isAdmin]="isAdmin" [isMember]="isMember" [isCreator]="isCreator" [completed]="completed"></app-information>
+                        <app-information [trip]="trip" [isAdmin]="isAdmin" [isMember]="isMember" [isCreator]="isCreator" [completed]="completed" [loggedUser]="loggedUser"></app-information>
                     </div>
                     <div *ngIf="selectedIndex == 1" class="tab-pane fade"
                          [ngClass]="{
                             'show':selectedIndex == 1,
                             'active':selectedIndex == 1}"
                          id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                        <app-activities [trip]="trip" [isAdmin]="isAdmin" [isMember]="isMember" [completed]="completed"></app-activities>
+                        <app-activities [trip]="trip" [isAdmin]="isAdmin" [isMember]="isMember" [completed]="completed" [isCreator]="isCreator"></app-activities>
                     </div>
                     <div *ngIf="selectedIndex == 2"
                          class="tab-pane fade"

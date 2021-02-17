@@ -27,6 +27,7 @@ export class InformationComponent implements OnInit {
     @Input() isMember: boolean;
     @Input() isCreator: boolean;
     @Input() completed: boolean;
+    @Input() loggedUser: User;
 
 
     waitingConfirmation = true;
@@ -100,6 +101,10 @@ export class InformationComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.isAdmin = !!this.trip.members.find(member => (member.role === TripRole.CREATOR || member.role === TripRole.ADMIN) &&
+            member.user.id === this.loggedUser.id);
+        this.isMember = !!(this.isAdmin || this.trip.members.find(member => member.user.id === this.loggedUser.id));
+        this.isCreator = !!this.trip.members.find(member => (member.role === TripRole.CREATOR && member.user.id === this.loggedUser.id));
         // @ts-ignore
         this.userLang = (navigator.language || navigator.userLanguage).substr(0, 2);
         if (this.userLang === 'es') {

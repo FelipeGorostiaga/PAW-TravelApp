@@ -70,8 +70,6 @@
             </plugin>
         </plugins>
     </build>
-<!--
-
     <profiles>
         <profile>
             <id>frontend</id>
@@ -121,8 +119,6 @@
             </build>
         </profile>
     </profiles>
--->
-
     <repositories>
         <repository>
             <id>jersey-snapshot</id>

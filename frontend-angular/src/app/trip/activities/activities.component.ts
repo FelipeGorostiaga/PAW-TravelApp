@@ -21,6 +21,7 @@ export class ActivitiesComponent implements OnInit {
 
     @Input() trip: FullTrip;
     @Input() isAdmin: boolean;
+    @Input() isCreator: boolean;
     @Input() isMember: boolean;
     @Input() completed: boolean;
 

@@ -7,9 +7,9 @@
                           [activity]="activity" [completed]="completed" (deleteActivityEvent)="deleteActivity(activity)">
         </app-map-activity>
     </div>
-    <div class="text-center">
-        <button *ngIf="isAdmin && !completed" class="btn btn-primary" style="margin-top: 20px;" (click)="openModal('custom-modal-1')" i18n=@@activities.addButton>Add activity</button>
-    </div>
+</div>
+<div class="text-center">
+    <button *ngIf="isAdmin && !completed" class="btn btn-primary" style="margin-top: 20px;" (click)="openModal('custom-modal-1')" i18n=@@activities.addButton>Add activity</button>
 </div>
 
 <jw-modal id="custom-modal-1">

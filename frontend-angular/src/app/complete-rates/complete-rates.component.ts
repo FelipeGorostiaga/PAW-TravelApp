@@ -13,6 +13,7 @@ import {Rate} from "../model/rate";
 export class CompleteRatesComponent implements OnInit {
 
     pendingRates: Rate[];
+    loading: boolean;
 
     constructor(private spinner: NgxSpinnerService,
                 private route: ActivatedRoute,
@@ -25,18 +26,18 @@ export class CompleteRatesComponent implements OnInit {
         const userId = Number(this.route.snapshot.paramMap.get("id"));
         this.userService.getUserPendingRates(userId).subscribe(
             res => {
-                console.log(res);
                 this.pendingRates = res;
                 this.spinner.hide();
             },
             error => {
                 this.spinner.hide();
-                console.log(error);
             }
         );
     }
 
     submitRate(data: any) {
+        if (this.loading) return;
+        this.loading = true;
         let rate = data.rate;
         this.userService.submitRate({
             rateId: data.id,
@@ -46,9 +47,9 @@ export class CompleteRatesComponent implements OnInit {
             ok => {
                 let index = this.pendingRates.indexOf(rate);
                 this.pendingRates.splice(index, 1);
-            },
-            error => {
-                console.log(error);
+                this.loading = false;
+            },error => {
+                this.loading = false;
             }
         );
     }
