@@ -40,7 +40,7 @@ public class MailingServiceImpl implements MailingService {
     private static final String EMAIL_PASS = "power123321";
     private static final Locale locale = getLocale();
 
-    private static final String frontEndURL = "http://localhost:8080";
+    private static final String frontEndURL = "http://pawserver.it.itba.edu.ar/paw-2019a-4";
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -63,7 +63,7 @@ public class MailingServiceImpl implements MailingService {
         List<Recipient> recipients = new ArrayList<>();
         recipients.add(new Recipient(user.getFirstname() + " " + user.getLastname(), user.getEmail(), null));
         String subject = applicationContext.getMessage("mailRegisterSubject", null, locale);
-        String verifyURL = frontEndURL + "/verify/" + user.getVerificationCode();
+        String verifyURL = frontEndURL + "/verify?code=" + user.getVerificationCode();
         Context ctx = new Context(locale);
         ctx.setVariable("email", user.getEmail());
         ctx.setVariable("name", user.getFirstname());

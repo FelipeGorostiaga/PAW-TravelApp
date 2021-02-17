@@ -110,7 +110,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [AuthService, AuthGuard, {
-        provide: HTTP_INTERCEPTORS,
+        provide:  HTTP_INTERCEPTORS,
         useClass: TokenInterceptor,
         multi: true
     }],

@@ -7,7 +7,6 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>paw2019a</name>
-
     <properties>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
@@ -29,7 +28,7 @@
         <org.slf4j.version>1.7.5</org.slf4j.version>
         <logback.version>1.1.2</logback.version>
         <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
-        <maven-war-plugin.version>2.6</maven-war-plugin.version>
+        <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
         <spring-security.version>4.0.4.RELEASE</spring-security.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <jersey.version>3.0-SNAPSHOT</jersey.version>
@@ -38,6 +37,10 @@
         <google-places-api-java-version>2.1.7</google-places-api-java-version>
         <simple-java-mail-version>5.1.6</simple-java-mail-version>
         <bootstrap-version>4.6.0</bootstrap-version>
+        <maven-resources-plugin-version>3.1.0</maven-resources-plugin-version>
+        <frontend-maven-plugin.version>1.7.6</frontend-maven-plugin.version>
+        <frontend-src-dir>../frontend-angular</frontend-src-dir>
+        <frontend-build-src-dir-relative-webapp-module>../${frontend-src-dir}/build</frontend-build-src-dir-relative-webapp-module>
     </properties>
 
     <build>
@@ -57,30 +60,68 @@
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
                     <packagingExcludes>**/logback-test.xml</packagingExcludes>
+                    <webResources>
+                        <resource>
+                            <!-- Relative to webapp module -->
+                            <directory>${frontend-build-src-dir-relative-webapp-module}</directory>
+                        </resource>
+                    </webResources>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${build.directory}/classes/static/</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>../frontend-angular/dist</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
+<!--
+
+    <profiles>
+        <profile>
+            <id>frontend</id>
+            <activation>
+                <file>
+                    <exists>${frontend-src-dir}/package.json</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>${frontend-maven-plugin.version}</version>
+                        <configuration>
+                            <workingDirectory>${frontend-src-dir}</workingDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>Install Node and NPM</id>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <configuration>
+                                    <nodeVersion>v15.8.0</nodeVersion>
+                                    <npmVersion>7.5.4</npmVersion>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm install</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>npm build</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>run buildProduction</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+-->
 
     <repositories>
         <repository>

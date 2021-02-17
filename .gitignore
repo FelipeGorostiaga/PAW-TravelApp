@@ -20,6 +20,7 @@ hs_err_pid*
 # Only exists if Bazel was run
 /bazel-out
 /frontend-angular/dist
+/frontend-angular/build
 # dependencies
 /node_modules
 /frontend-angular/node_modules
@@ -35,6 +36,8 @@ speed-measure-plugin*.json
 *.launch
 .settings/
 *.sublime-workspace
+
+/frontend-angular/node/*
 
 # IDE - VSCode - Visual Studio
 .vs/
