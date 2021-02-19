@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit {
         this.loggedUser = this.authService.getLoggedUser();
         const profileId = Number(this.route.snapshot.paramMap.get("id"));
         if (!profileId) {
-            this.router.navigate(['/404']);
+            this.navigateNotFound();
         }
         this.isProfileOwner = this.loggedUser.id === profileId;
         this.editProfileForm = this.formBuilder.group({
@@ -76,10 +76,11 @@ export class ProfileComponent implements OnInit {
                 this.editProfileForm.get('biography').setValue(this.userProfile.user.biography);
                 this.calculateUserRate();
                 this.spinner.hide();
+                this.loading = false;
             },
             error => {
-                console.log(error);
                 this.spinner.hide();
+                this.navigateNotFound();
             }
         )
 
@@ -101,7 +102,6 @@ export class ProfileComponent implements OnInit {
                 this.hasImage = false;
             }
         );
-        this.loading = false;
     }
 
 
@@ -185,5 +185,9 @@ export class ProfileComponent implements OnInit {
 
     validImgSize() {
         return this.selectedFile.size <= this.maxImageSize;
+    }
+
+    navigateNotFound() {
+        this.router.navigate(['/404']);
     }
 }

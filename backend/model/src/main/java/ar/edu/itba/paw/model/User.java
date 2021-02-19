@@ -227,11 +227,6 @@ public class User {
         return Objects.hash(id, firstname, lastname, email, password, birthday, nationality);
     }
 
-    @Override
-    public String toString() {
-        return "USER = [" + id + "]" + firstname + " " + lastname;
-    }
-
     public String getBiography() {
         return biography;
     }
@@ -247,30 +242,6 @@ public class User {
     public void setTrips(List<TripMember> trips) {
         this.trips = trips;
     }
-
-    /*public List<TripComment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<TripComment> comments) {
-        this.comments = comments;
-    }*/
-
-    /*public Set<Trip> getTrips() {
-        return trips;
-    }
-
-    public void setTrips(Set<Trip> trips) {
-        this.trips = trips;
-    }
-
-    public Set<Trip> getAdminTrips() {
-        return adminTrips;
-    }
-
-    public void setAdminTrips(Set<Trip> adminTrips) {
-        this.adminTrips = adminTrips;
-    }*/
 
     public List<UserRate> getMyRates() {
         return myRates;
