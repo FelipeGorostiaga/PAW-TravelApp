@@ -198,7 +198,9 @@ export function validInterval(startControlName: string, endControlName: string) 
         let now = new Date();
         now.setHours(0,0,0,0);
         let startDate = startControl.value;
+        startDate.setHours(0,0,0,0);
         let endDate = endControl.value;
+        endDate.setHours(0,0,0,0);
         if (startDate < now || startDate > endDate) {
             startControl.setErrors({invalidInterval: true});
             endControl.setErrors({invalidInterval: true});

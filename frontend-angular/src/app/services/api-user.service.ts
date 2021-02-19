@@ -49,7 +49,7 @@ export class ApiUserService {
 
     // rates the user need to write
     getUserPendingRates(userId: number): Observable<any> {
-        const url = this.usersBaseURL + userId + '/pending/rates';
+        const url = this.usersBaseURL + userId + '/pending-rates';
         return this.http.get(url);
     }
 

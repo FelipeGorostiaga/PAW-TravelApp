@@ -33,8 +33,6 @@ export class ActivitiesComponent implements OnInit {
     activityForm: FormGroup;
     submitted = false;
 
-    activites: Activity[];
-
     createActivityError: boolean;
 
     isEmpty: boolean;
@@ -139,7 +137,7 @@ export class ActivitiesComponent implements OnInit {
         this.latlongs = [];
         this.latitude = null;
         this.longitude = null;
-        this.zoom = 14;
+        this.zoom = 16;
         this.setCurrentPosition();
     }
 

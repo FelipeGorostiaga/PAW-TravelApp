@@ -11,6 +11,7 @@ import {DateUtilService} from "../../../services/date-util.service";
 export class MapActivityComponent implements OnInit {
 
     @Input() activity: Activity;
+    @Input() isAdmin: boolean;
     @Input() completed: boolean;
     @Output()
     deleteActivityEvent: EventEmitter<number> = new EventEmitter<number>();

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Path("search")
 @Controller
 @Produces(value = {MediaType.APPLICATION_JSON})
-public class SearchControllerREST {
+public class SearchController {
 
     @Autowired
     TripService tripService;
@@ -32,15 +32,7 @@ public class SearchControllerREST {
     UserService userService;
 
     @GET
-    @Path("/users")
-    public Response searchUsersByName(@QueryParam("name") String name) {
-        List<UserDTO> resultUsers = userService.findByName(name).stream().map(UserDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<UserDTO>>(resultUsers) {
-        }).build();
-    }
-
-    @GET
-    @Path("/{tripId}/users/invite")
+    @Path("/{tripId}/users")
     public Response searchInvitableUsers(@PathParam("tripId") long tripId, @QueryParam("name") String name) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
@@ -50,7 +42,7 @@ public class SearchControllerREST {
     }
 
     @GET
-    @Path("/trips/name")
+    @Path("/trips")
     public Response searchTripByName(@QueryParam("nameInput") String name) {
         System.out.println(name);
         List<TripDTO> resultTrips = tripService.findByName(name).stream().map(TripDTO::new).collect(Collectors.toList());

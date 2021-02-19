@@ -20,7 +20,7 @@ public interface TripDao {
 
     void deleteTrip(long tripId);
 
-    int countAllTrips();
+    int countAllPublicTrips();
 
     List<Trip> findByCategory(String category);
 
@@ -29,8 +29,6 @@ public interface TripDao {
     List<Trip> findWithFilters(Map<String, Object> filterMap);
 
     List<TripComment> getTripComments(long tripId);
-
-    List<Trip> getAllTrips();
 
     List<Trip> getAllTripsPerPage(int pageNum);
 
@@ -65,4 +63,5 @@ public interface TripDao {
     void deleteAllTripMembers(long tripId);
 
     void deleteTripInvitations(long tripId);
+
 }

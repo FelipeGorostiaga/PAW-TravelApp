@@ -14,9 +14,9 @@ public interface TripService {
 
     Optional<Trip> findById(long id);
 
-    List<Trip> getAllTripsPerPage(int pageNum);
+    int countAllPublicTrips();
 
-    List<Trip> getAllTrips();
+    List<Trip> getAllTripsPerPage(int pageNum);
 
     List<Trip> findByName(String name);
 
@@ -31,12 +31,6 @@ public interface TripService {
     void deleteTrip(Trip trip);
 
     void deleteTripActivity(long activityId, long tripId);
-
-    int countAllTrips();
-
-    List<Trip> findByCategory(String category);
-
-    List<Trip> findByPlace(String placeName);
 
     List<Trip> findWithFilters(Map<String, Object> filterMap);
 
@@ -66,15 +60,18 @@ public interface TripService {
 
     void grantAdminRole(long tripId, long invitedUserId);
 
-    boolean traveledTogether(Trip trip, User ratedUser, User ratedBy);
-
     boolean isCreator(Trip trip, User loggedUser);
 
     boolean isAdmin(Trip trip, User loggedUser);
 
     boolean isMember(Trip trip, User user);
 
-    List<Trip> getUserTrips(User user);
+    List<Trip> getUserTrips(User user, int page);
 
     void markTripAsCompleted(long tripId);
+
+    int countUserTrips(User user);
+
+    int countUserTripsWithStatus(long userId, TripStatus status);
+
 }

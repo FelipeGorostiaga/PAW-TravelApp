@@ -4,7 +4,7 @@
 <div *ngIf="trip?.activities?.length !== 0">
     <div class="list-group">
         <app-map-activity *ngFor="let activity of trip?.activities"
-                          [activity]="activity" [completed]="completed" (deleteActivityEvent)="deleteActivity(activity)">
+                          [activity]="activity" [completed]="completed" [isAdmin]="isAdmin" (deleteActivityEvent)="deleteActivity(activity)">
         </app-map-activity>
     </div>
 </div>

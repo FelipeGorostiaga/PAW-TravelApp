@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.PlaceService;
 import ar.edu.itba.paw.model.Place;
-import ar.edu.itba.paw.webapp.dto.ErrorDTO;
 import ar.edu.itba.paw.webapp.dto.PlaceDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +21,9 @@ import java.util.Optional;
 @Path("places")
 @Controller
 @Produces(value = {MediaType.APPLICATION_JSON})
-public class PlaceControllerREST {
+public class PlaceController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TripControllerREST.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TripController.class);
 
     @Autowired
     PlaceService placeService;

@@ -38,15 +38,17 @@ import java.util.stream.Collectors;
 @Path("trips")
 @Controller
 @Produces(value = {MediaType.APPLICATION_JSON})
-public class TripControllerREST {
+public class TripController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TripControllerREST.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TripController.class);
 
     private static final int TRIP_IMAGE_WIDTH = 480;
     private static final int TRIP_IMAGE_HEIGHT = 360;
 
     private static final int TRIP_CARD_IMAGE_WIDTH = 478;
     private static final int TRIP_CARD_IMAGE_HEIGHT = 280;
+
+    private static final int PAGE_SIZE = 4;
 
     @Autowired
     SecurityUserService securityUserService;
@@ -88,23 +90,18 @@ public class TripControllerREST {
 
 
     @GET
-    @Path("/all/{page}")
-    public Response getAllTripsForPage(@PathParam("page") final int pageNum) {
-        List<TripDTO> trips = tripService.getAllTripsPerPage(pageNum).stream().map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripDTO>>(trips) {
-        }).build();
+    @Path("/")
+    public Response getAllTripsForPage(@DefaultValue("1") @QueryParam("page") int page) {
+        page = (page < 1) ? 1 : page;
+        final int totalPublicTrips = this.tripService.countAllPublicTrips();
+        final int maxPage = (int) (Math.ceil((float) totalPublicTrips / PAGE_SIZE));;
+        if (page > maxPage) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        List<TripDTO> trips = tripService.getAllTripsPerPage(page).stream().map(TripDTO::new).collect(Collectors.toList());
+        return Response.ok(new TripListDTO(trips, totalPublicTrips, maxPage)).build();
     }
 
-    @GET
-    @Path("/all")
-    public Response getAllTrips() {
-        List<TripDTO> trips = tripService.getAllTrips().stream()
-                .filter(trip -> !trip.isPrivate())
-                .map(TripDTO::new)
-                .collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripDTO>>(trips) {
-        }).build();
-    }
 
     @POST
     @Path("/{id}/edit")
@@ -150,7 +147,7 @@ public class TripControllerREST {
     }
 
     @POST
-    @Path("/create")
+    @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
         System.out.println(tripCreateForm);
@@ -194,7 +191,7 @@ public class TripControllerREST {
     }
 
     @DELETE
-    @Path("/{id}/delete")
+    @Path("/{id}")
     public Response deleteTrip(@PathParam("id") final long tripId) {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
@@ -279,7 +276,7 @@ public class TripControllerREST {
 
 
     @POST
-    @Path("/{id}/comments/add")
+    @Path("/{id}/comments")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addCommentToTripChat(@PathParam("id") final long tripId, @Valid TripCommentForm tripCommentForm) {
         User loggedUser = securityUserService.getLoggedUser();
@@ -314,7 +311,7 @@ public class TripControllerREST {
 
 
     @POST
-    @Path("/{id}/activities/create")
+    @Path("/{id}/activities")
     public Response createTripActivity(@PathParam("id") final long tripId, @Valid ActivityCreateForm activityCreateForm) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         User loggedUser = securityUserService.getLoggedUser();
@@ -338,7 +335,7 @@ public class TripControllerREST {
     }
 
     @DELETE
-    @Path("/{id}/activities/delete/{activityId}")
+    @Path("/{id}/activities/{activityId}")
     public Response deleteTripActivity(@PathParam("id") final long tripId, @PathParam("activityId") final long activityId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         User loggedUser = securityUserService.getLoggedUser();
@@ -356,7 +353,7 @@ public class TripControllerREST {
     }
 
     @POST
-    @Path("/{id}/request/invite")
+    @Path("/{id}/request-invite")
     public Response requestJoinTrip(@PathParam("id") final long tripId) {
         Optional<Trip> tripOpt = tripService.findById(tripId);
         User user = securityUserService.getLoggedUser();
@@ -380,7 +377,7 @@ public class TripControllerREST {
     }
 
     @POST
-    @Path("/{id}/invitation/pending")
+    @Path("/{id}/invitation")
     public Response acceptOrDenyTripPendingConfirmation(@PathParam("id") final long tripId, @QueryParam("accepted") boolean accepted, @QueryParam("token") String token) {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);

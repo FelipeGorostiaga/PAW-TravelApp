@@ -116,4 +116,17 @@ public class UserCreateForm {
         return password.equals(pswrepeat);
     }
 
+    @Override
+    public String toString() {
+        return "UserCreateForm{" +
+                "firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", pswrepeat='" + pswrepeat + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", sex='" + sex + '\'' +
+                '}';
+    }
 }

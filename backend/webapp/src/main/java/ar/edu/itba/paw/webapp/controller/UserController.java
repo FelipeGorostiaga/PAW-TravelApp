@@ -41,15 +41,14 @@ import java.util.stream.Collectors;
 @Path("users")
 @RestController
 @Produces(value = {MediaType.APPLICATION_JSON})
-public class UserControllerREST {
+public class UserController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserControllerREST.class);
-
-    private static final int JWT_ACCESS_EXPIRATION = 3600 * 4 * 1000; //4 hours
-    private static final int JWT_REFRESH_EXPIRATION = 900000 * 1000; //10+ days
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     private static final int PROFILE_WIDTH = 220;
     private static final int PROFILE_HEIGHT = 200;
+
+    private static final int PAGE_SIZE = 4;
 
     @Autowired
     Validator validator;
@@ -64,85 +63,12 @@ public class UserControllerREST {
     private TripService tripService;
 
     @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private TravelUserDetailsService userDetailsService;
-
-    @Autowired
     private UserRatesService userRatesService;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Autowired
     SecurityUserService securityUserService;
 
-    @POST
-    @Path("/authenticate")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response login(@Valid AuthenticationRequestDTO authenticationRequest) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
-                            authenticationRequest.getPassword()));
-        } catch (AuthenticationException e) {
-            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Invalid username or password", "credentials")).build();
-        }
-        UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        Optional<User> userOptional = userService.findByUsername(userDetails.getUsername());
-        if (!userOptional.isPresent() || !userOptional.get().isVerified()) {
-            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Please verify your email", "verification")).build();
-        }
-        final UserDTO user = new UserDTO(userOptional.get());
-        final String accessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
-        final String refreshToken = jwtUtil.generateToken(userDetails, JWT_REFRESH_EXPIRATION);
-        return Response.ok(new AuthenticationResponseDTO(accessToken, refreshToken, user)).build();
-    }
-
-    @GET
-    @Path("/refresh")
-    public Response refreshJwtToken(@HeaderParam("x-refresh-token") String refreshToken) {
-        if (refreshToken != null) {
-            try {
-                String username = jwtUtil.extractUsername(refreshToken);
-                if (username != null) {
-                    UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-                    if (jwtUtil.validateToken(refreshToken, userDetails)) {
-                        final String newAccessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
-                        return Response.ok(new RefreshResponseDTO(newAccessToken)).build();
-                    }
-                }
-            } catch (Exception ignored) {
-                return Response.status(Response.Status.BAD_REQUEST).build();
-            }
-        }
-        return Response.status(Response.Status.BAD_REQUEST).build();
-    }
-
-    @GET
-    @Path("/verify")
-    public Response verifyUserRegistration(@QueryParam("code") final String verificationCode) {
-        Optional<User> userOptional = userService.findByVerificationCode(verificationCode);
-        if (!userOptional.isPresent() || userOptional.get().isVerified()) {
-            return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid user verification code or user is already verified", "verification")).build();
-        }
-        userService.verify(userOptional.get());
-        return Response.ok().build();
-    }
-
-    @GET
-    @Path("/{id}")
-    public Response getUserById(@PathParam("id") final int id) {
-        final Optional<User> userOptional = userService.findById(id);
-        if (userOptional.isPresent()) {
-            return Response.ok(new UserDTO(userOptional.get())).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-    }
-
-    @Path("/create")
+    @Path("/")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(@Valid UserCreateForm userForm) {
@@ -155,14 +81,24 @@ public class UserControllerREST {
         }
         User user;
         try {
-            String verificationToken = RandomStringUtils.random(64, true, true);
             user = userService.create(userForm.getFirstname(), userForm.getLastname(), userForm.getEmail(),
                     userForm.getPassword(), DateManipulation.stringToLocalDate(userForm.getBirthday()),
-                    userForm.getNationality(), userForm.getSex(), verificationToken);
+                    userForm.getNationality(), userForm.getSex());
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Email already in use", "email")).build();
         }
         return Response.ok(new UserDTO(user)).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    public Response getUserById(@PathParam("id") final int id) {
+        final Optional<User> userOptional = userService.findById(id);
+        if (userOptional.isPresent()) {
+            return Response.ok(new UserDTO(userOptional.get())).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 
     @GET
@@ -177,28 +113,30 @@ public class UserControllerREST {
     }
 
     @GET
-    @Path("/{userId}/trips")
-    public Response getUserTrips(@PathParam("userId") final int id) {
+    @Path("/{id}/trips")
+    public Response getUserTrips(@PathParam("id") final int id, @DefaultValue("1") @QueryParam("page") int page) {
+        page = (page < 1) ? 1 : page;
         final Optional<User> userOptional = userService.findById(id);
         if (!userOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         User user = userOptional.get();
-        List<TripDTO> trips = tripService.getUserTrips(user).stream().map(TripDTO::new).collect(Collectors.toList());
-        if (trips.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        final int totalUserTrips = tripService.countUserTrips(user);
+        final int maxPage = (int) (Math.ceil((float) totalUserTrips / PAGE_SIZE));
+        if (page > maxPage) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        return Response.ok(new GenericEntity<List<TripDTO>>(trips) {
-        }).build();
+        List<TripDTO> trips = tripService.getUserTrips(user, page).stream().map(TripDTO::new).collect(Collectors.toList());
+        return Response.ok(new TripListDTO(trips, totalUserTrips, maxPage)).build();
     }
 
     @POST
-    @Path("/{userId}/editProfile")
+    @Path("/{id}/editProfile")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response editProfile(@FormDataParam("biography") FormDataBodyPart biography,
                                 @FormDataParam("image") File imageFile,
                                 @FormDataParam("image") FormDataContentDisposition fileMetaData,
-                                @PathParam("userId") final long id) {
+                                @PathParam("id") final long id) {
         User loggedUser = securityUserService.getLoggedUser();
         if (id != loggedUser.getId()) return Response.status(Response.Status.FORBIDDEN).build();
         if (biography == null && imageFile == null) {
@@ -230,8 +168,8 @@ public class UserControllerREST {
     }
 
     @GET
-    @Path("/{userId}/rates")
-    public Response getUserRates(@PathParam("userId") final long userId) {
+    @Path("/{id}/rates")
+    public Response userRates(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
         List<RateDTO> rateDTOs = userService.getUserRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
@@ -265,65 +203,32 @@ public class UserControllerREST {
 
     }
 
-    @GET
-    @Path("/{userId}/trips/due")
-    public Response getDueTrips(@PathParam("userId") final long userId) {
-        Optional<User> userOptional = userService.findById(userId);
-        if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
-        List<Trip> userTrips = tripService.getUserTrips(userOptional.get());
-        List<TripDTO> activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.DUE && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripDTO>>(activeTrips) {
-        }).build();
-    }
 
+    // TODO: WTF
     @GET
-    @Path("/{userId}/trips/active")
-    public Response getActiveTrips(@PathParam("userId") final long userId) {
-        Optional<User> userOptional = userService.findById(userId);
-        if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
-        List<Trip> userTrips = tripService.getUserTrips(userOptional.get());
-        List<TripDTO> activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.IN_PROGRESS && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripDTO>>(activeTrips) {
-        }).build();
-    }
-
-    @GET
-    @Path("/{userId}/trips/completed")
-    public Response getCompletedTrips(@PathParam("userId") final long userId) {
-        Optional<User> userOptional = userService.findById(userId);
-        if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        List<Trip> userTrips = tripService.getUserTrips(userOptional.get());
-        List<TripDTO> activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripDTO>>(activeTrips) {
-        }).build();
-    }
-
-    @GET
-    @Path("/{userId}/profile")
-    public Response getUserProfileData(@PathParam("userId") final long userId) {
+    @Path("/{id}/profile")
+    public Response getUserProfileData(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         boolean isProfileOwner = securityUserService.getLoggedUser().getId() == userOptional.get().getId();
-        List<Trip> userTrips = tripService.getUserTrips(userOptional.get());
-        List<TripDTO> dueTrips;
-        List<TripDTO> activeTrips;
-        List<TripDTO> completedTrips;
+        List<Trip> userTrips = tripService.getUserTrips(userOptional.get(), 1);
+        // rates, trips (due), completed, in progress
+
         List<RateDTO> rates = this.userService.getUserRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
-        if (isProfileOwner) {
+        int dueTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.DUE);
+        int activeTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.IN_PROGRESS);
+        int completedTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.COMPLETED);
+
+/*        if (isProfileOwner) {
             dueTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.DUE).map(TripDTO::new).collect(Collectors.toList());
             activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.IN_PROGRESS).map(TripDTO::new).collect(Collectors.toList());
-            completedTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED).map(TripDTO::new).collect(Collectors.toList());
-        } else {
-            dueTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.DUE && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
-            activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.IN_PROGRESS && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
-            completedTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED && !t.isPrivate()).map(TripDTO::new).collect(Collectors.toList());
-        }
+            completedTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED).map(TripDTO::new).collect(Collectors.toList());*/
         return Response.ok(new ProfileDataDTO(userOptional.get(), rates, dueTrips, activeTrips, completedTrips)).build();
     }
 
     @GET
-    @Path("/{userId}/pending/invitations")
-    public Response getUserInvitations(@PathParam("userId") final long userId) {
+    @Path("/{id}/invitations")
+    public Response getUserInvitations(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         if (!userOptional.get().equals(securityUserService.getLoggedUser()))
@@ -337,8 +242,8 @@ public class UserControllerREST {
     }
 
     @GET
-    @Path("/{userId}/pending/rates")
-    public Response getUserPendingRates(@PathParam("userId") final long userId) {
+    @Path("/{id}/pending-rates")
+    public Response getUserPendingRates(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         if (!userOptional.get().equals(securityUserService.getLoggedUser()))
@@ -349,9 +254,9 @@ public class UserControllerREST {
     }
 
     @GET
-    @Path("/{userId}/rating")
+    @Path("/{id}/rating")
     @Produces(value = {MediaType.TEXT_PLAIN})
-    public Response getUserRating(@PathParam("userId") final long userId) {
+    public Response getUserRating(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         double rate = userService.calculateRate(userId);

@@ -16,6 +16,8 @@ export class AuthService {
 
     private usersBaseURL = `${environment.apiURL}/users`;
 
+    private authBaseURL = `${environment.apiURL}/authenticate`;
+
     constructor(private http: HttpClient, private router: Router) {
     }
 
@@ -24,8 +26,7 @@ export class AuthService {
     }
 
     register(userForm: UserForm): Observable<any> {
-        const url = this.usersBaseURL + '/create';
-        return this.http.post<User>(url, userForm).pipe(
+        return this.http.post<User>(this.usersBaseURL, userForm).pipe(
             catchError(err => {
                 return throwError(err.error);
             })
@@ -33,12 +34,11 @@ export class AuthService {
     }
 
     login(userAuth: UserAuth): Observable<any> {
-        const url = this.usersBaseURL + '/authenticate';
-        return this.http.post<string>(url, userAuth);
+        return this.http.post<string>(this.authBaseURL, userAuth);
     }
 
     refreshToken() {
-        return this.http.get(`${this.usersBaseURL}/refresh`, {
+        return this.http.get(`${this.authBaseURL}/refresh`, {
             headers: {
                 'x-refresh-token': this.getRefreshToken()
             }
@@ -83,7 +83,7 @@ export class AuthService {
     }
 
     verifyAccount(verificationCode: string) {
-        const url = this.usersBaseURL + '/verify';
+        const url = this.authBaseURL + '/verify';
         let params = new HttpParams().set("code", verificationCode);
         return this.http.get(url, {params: params});
     }

@@ -8,20 +8,20 @@ public class ProfileDataDTO {
 
     private UserDTO user;
     private List<RateDTO> rates;
-    private List<TripDTO> dueTrips;
-    private List<TripDTO> activeTrips;
-    private List<TripDTO> completedTrips;
+    private int dueTripsAmount;
+    private int activeTripsAmount;
+    private int completedTripsAmount;
 
     public ProfileDataDTO() {
         // Empty constructor needed by JAX-RS
     }
 
-    public ProfileDataDTO(User user, List<RateDTO> rates, List<TripDTO> dueTrips, List<TripDTO> activeTrips, List<TripDTO> completedTrips) {
+    public ProfileDataDTO(User user, List<RateDTO> rates, int dueTripsAmount, int activeTripsAmount, int completedTripsAmount) {
         this.user = new UserDTO(user);
         this.rates = rates;
-        this.dueTrips = dueTrips;
-        this.activeTrips = activeTrips;
-        this.completedTrips = completedTrips;
+        this.dueTripsAmount = dueTripsAmount;
+        this.activeTripsAmount = activeTripsAmount;
+        this.completedTripsAmount = completedTripsAmount;
     }
 
     public UserDTO getUser() {
@@ -40,27 +40,27 @@ public class ProfileDataDTO {
         this.rates = rates;
     }
 
-    public List<TripDTO> getDueTrips() {
-        return dueTrips;
+    public int getDueTripsAmount() {
+        return dueTripsAmount;
     }
 
-    public void setDueTrips(List<TripDTO> dueTrips) {
-        this.dueTrips = dueTrips;
+    public void setDueTripsAmount(int dueTripsAmount) {
+        this.dueTripsAmount = dueTripsAmount;
     }
 
-    public List<TripDTO> getActiveTrips() {
-        return activeTrips;
+    public int getActiveTripsAmount() {
+        return activeTripsAmount;
     }
 
-    public void setActiveTrips(List<TripDTO> activeTrips) {
-        this.activeTrips = activeTrips;
+    public void setActiveTripsAmount(int activeTripsAmount) {
+        this.activeTripsAmount = activeTripsAmount;
     }
 
-    public List<TripDTO> getCompletedTrips() {
-        return completedTrips;
+    public int getCompletedTripsAmount() {
+        return completedTripsAmount;
     }
 
-    public void setCompletedTrips(List<TripDTO> completedTrips) {
-        this.completedTrips = completedTrips;
+    public void setCompletedTripsAmount(int completedTripsAmount) {
+        this.completedTripsAmount = completedTripsAmount;
     }
 }

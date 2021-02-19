@@ -15,13 +15,13 @@ export class ApiSearchService {
   private searchBaseURL = `${environment.apiURL}/search/`;
 
   searchTripsByName(name: string): Observable<Trip[]> {
-    const url = this.searchBaseURL + 'trips/name';
+    const url = this.searchBaseURL + 'trips';
     const params = new HttpParams().set('nameInput', name);
     return this.http.get<Trip[]>(url, {params});
   }
 
   searchInvitableUsersByName(name: string, tripId: number): Observable<User>{
-    const url = this.searchBaseURL + tripId + "/users/invite";
+    const url = this.searchBaseURL + tripId + "/users";
     let params = new HttpParams().set("name", name);
     return this.http.get<User>(url, {params: params});
   }

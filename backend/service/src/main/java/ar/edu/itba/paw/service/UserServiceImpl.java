@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.UserDao;
 import ar.edu.itba.paw.interfaces.UserPicturesService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,11 +47,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex, String verificationCode) {
-        User user = ud.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality, sex, verificationCode);
-        if (user != null) {
-            mailService.sendRegisterMail(user);
+    public User create(String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex) throws Exception {
+        if (findByUsername(email).isPresent()) {
+            throw new Exception();
         }
+        String verificationCode;
+        do {
+            verificationCode = RandomStringUtils.random(64, true, true);
+        }
+        while (!findByVerificationCode(verificationCode).isPresent());
+        User user = ud.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality, sex, verificationCode);
+        mailService.sendRegisterMail(user);
         return user;
     }
 

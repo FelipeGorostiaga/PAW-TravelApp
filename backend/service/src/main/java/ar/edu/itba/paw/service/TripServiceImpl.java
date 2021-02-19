@@ -38,10 +38,15 @@ public class TripServiceImpl implements TripService {
     private MailingService mailService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private TripPicturesService tripPicturesService;
 
     @Autowired
     private UserRatesService userRatesService;
+
+    private static final int ROWS = 4;
 
     @Override
     public Trip create(long userId, double latitude, double longitude, String name, String description,
@@ -66,19 +71,10 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> getAllTrips() {
-        return td.getAllTrips();
-    }
-
-    @Override
     public List<Trip> findByName(String name) {
         return td.findByName(name);
     }
 
-    @Override
-    public List<Trip> getUserTrips(User user) {
-        return user.getTrips().stream().map(TripMember::getTrip).distinct().collect(Collectors.toList());
-    }
 
     @Override
     public void markTripAsCompleted(long tripId) {
@@ -89,7 +85,6 @@ public class TripServiceImpl implements TripService {
         Trip trip = tripOptional.get();
         td.markTripAsCompleted(tripId);
         Set<TripMember> tripMembers = trip.getMembers();
-        // create bidirectional rates for trip members
         for (TripMember member : tripMembers) {
             for (TripMember member2 : tripMembers) {
                 if (!member.equals(member2)) {
@@ -144,6 +139,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void deleteTrip(Trip trip) {
+        // todo: pending confirmations
         mailService.sendDeleteTripMail(trip);
         tpd.deleteByTripId(trip.getId());
         td.deleteTripInvitations(trip.getId());
@@ -165,18 +161,8 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public int countAllTrips() {
-        return td.countAllTrips();
-    }
-
-    @Override
-    public List<Trip> findByCategory(String category) {
-        return td.findByCategory(category);
-    }
-
-    @Override
-    public List<Trip> findByPlace(String placeName) {
-        return td.findByPlace(placeName);
+    public int countAllPublicTrips() {
+        return td.countAllPublicTrips();
     }
 
     @Override
@@ -273,10 +259,6 @@ public class TripServiceImpl implements TripService {
         td.updateRoleToAdmin(tripId, invitedUserId);
     }
 
-    @Override
-    public boolean traveledTogether(Trip trip, User ratedUser, User ratedBy) {
-        return isMember(trip, ratedUser) && isMember(trip, ratedBy);
-    }
 
     @Override
     public boolean isCreator(Trip trip, User user) {
@@ -292,6 +274,27 @@ public class TripServiceImpl implements TripService {
     @Override
     public boolean isMember(Trip trip, User user) {
         return trip.getMembers().stream().anyMatch(member -> member.getUser().equals(user));
+    }
+
+
+    @Override
+    public int countUserTrips(User user) {
+        return (int) user.getTrips().stream().map(TripMember::getTrip).distinct().count();
+    }
+
+    @Override
+    public int countUserTripsWithStatus(long userId, TripStatus status) {
+        Optional<User> userOptional = userService.findById(userId);
+        return userOptional.map(user -> (int) user.getTrips().stream().map(TripMember::getTrip).filter(trip -> trip.getStatus().equals(status)).distinct().count()).orElse(0);
+    }
+
+    @Override
+    public List<Trip> getUserTrips(User user, int pageNum) {
+        List<Trip> userTrips = user.getTrips().stream().map(TripMember::getTrip).distinct().collect(Collectors.toList());
+        int offset = (pageNum - 1) * ROWS;
+        int size = userTrips.size();
+        int end = Math.min((offset + ROWS), size);
+        return userTrips.subList(offset, end);
     }
 
 }

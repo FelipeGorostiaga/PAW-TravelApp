@@ -20,7 +20,7 @@ public interface UserService {
     Optional<User> findByVerificationCode(final String verificationCode);
 
     User create(final String firstname, final String lastname, final String email, final String password,
-                final LocalDate birthday, final String nationality, final String sex, final String verificationCOde);
+                final LocalDate birthday, final String nationality, final String sex) throws Exception;
 
     boolean update(User user);
 

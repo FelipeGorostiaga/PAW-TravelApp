@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Repository
 public class TripHibernateDao implements TripDao {
 
-    private static final int MAX_ROWS = 6;
+    private static final int MAX_ROWS = 4;
 
     @PersistenceContext
     EntityManager em;
@@ -46,8 +46,14 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
+    public int countAllPublicTrips() {
+        TypedQuery<Long> query = em.createQuery("SELECT count(*) FROM Trip WHERE isPrivate = false", Long.class);
+        return query.getSingleResult().intValue();
+    }
+
+    @Override
     public List<Trip> getAllTripsPerPage(int pageNum) {
-        final TypedQuery<Trip> query = em.createQuery("From Trip", Trip.class);
+        final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.isPrivate = false ", Trip.class);
         query.setFirstResult((pageNum - 1) * MAX_ROWS);
         query.setMaxResults(MAX_ROWS);
         return query.getResultList();
@@ -179,12 +185,6 @@ public class TripHibernateDao implements TripDao {
 
 
     @Override
-    public List<Trip> getAllTrips() {
-        final TypedQuery<Trip> query = em.createQuery("FROM Trip", Trip.class);
-        return query.getResultList().stream().distinct().collect(Collectors.toList());
-    }
-
-    @Override
     public List<Trip> findUserCreatedTrips(long userId) {
         final TypedQuery<Trip> query = em.createQuery("FROM Trip AS t WHERE t.adminId = :userId ", Trip.class);
         query.setParameter("userId", userId);
@@ -198,10 +198,6 @@ public class TripHibernateDao implements TripDao {
         tripDelete.executeUpdate();
     }
 
-    public int countAllTrips() {
-        TypedQuery<Long> query = em.createQuery("SELECT count(*) FROM Trip", Long.class);
-        return query.getSingleResult().intValue();
-    }
 
     @Override
     public List<Trip> findByCategory(String category) {
@@ -311,6 +307,12 @@ public class TripHibernateDao implements TripDao {
     public List<TripComment> getTripComments(long tripId) {
         final TypedQuery<TripComment> query = em.createQuery("FROM TripComment as tc where tc.trip.id = :tripId", TripComment.class);
         query.setParameter("tripId", tripId);
+        return query.getResultList();
+    }
+
+    private List<Trip> pagedResult(final TypedQuery<Trip> query, final int offset, final int length) {
+        query.setFirstResult(offset);
+        query.setMaxResults(length);
         return query.getResultList();
     }
 
