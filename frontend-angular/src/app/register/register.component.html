@@ -328,7 +328,7 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col">
-                                <label i18n=@@register.birthday>Date of birth</label>
+                                <label i18n=@@register.birthday>Birthday</label>
                                 <input formControlName="birthDate"
                                        type="text"
                                        class="form-control"
@@ -339,7 +339,7 @@
                                        i18n-placeholder=@@register.birthdayPlaceholder
                                        placeholder="Enter a valid birthday">
                                 <div *ngIf="submitted && f.birthDate?.errors" class="invalid-feedback">
-                                    <div *ngIf="f.birthDate?.errors.required" i18n=@@register.birthday.required>Date of birth is required</div>
+                                    <div *ngIf="f.birthDate?.errors.required" i18n=@@register.birthday.required>Birthday is required</div>
                                     <div *ngIf="f.birthDate?.errors.validBirthday" i18n=@@register.birthday.invalidDate>Invalid date</div>
                                     <div *ngIf="f.birthDate?.errors.invalidDate" i18n=@@register.birthday.invalidFormat>Must be a valid date format
                                         'dd/mm/yyy'

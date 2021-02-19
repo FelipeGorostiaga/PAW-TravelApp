@@ -8,11 +8,11 @@
                     <div class="profile mr-3">
                         <div *ngIf="!loadingImage">
                             <img *ngIf="hasImage" class="rounded mb-2 img-thumbnail" id="profilePicture"
-                                 [src]='profilePicture'/>
+                                 [src]="profilePicture"/>
                             <img *ngIf="!hasImage" class="rounded mb-2 img-thumbnail" id="defaultImage"
                                  src="./assets/images/profile-default.jpg"/>
                         </div>
-                        <button *ngIf="user?.id == loggedUser?.id" (click)="openModal(modalTemplate)"
+                        <button *ngIf="user?.id === loggedUser?.id" (click)="openModal(modalTemplate)"
                                 class="btn btn-outline-dark btn-sm btn-block" i18n=@@profile.editProfileButton>Edit
                             profile
                         </button>
@@ -29,23 +29,24 @@
             <div class="bg-light p-4 d-flex justify-content-end text-center">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item" style="margin-left: 10px">
-                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.dueTrips?.length}}</h5><small
+                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.dueTripsAmount}}</h5><small
                             class="text-muted" i18n=@@profile.due><i class="fa fa-calendar mr-1"></i>Due</small>
                     </li>
                     <li class="list-inline-item" style="margin-left: 10px">
-                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.activeTrips?.length}}</h5><small
+                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.activeTripsAmount}}</h5><small
                             class="text-muted" i18n=@@profile.active><i class="fa fa-suitcase mr-1"></i>In
                         progress</small>
                     </li>
                     <li class="list-inline-item" style="margin-left: 10px">
-                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.completedTrips?.length}}</h5><small
+                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.completedTripsAmount}}</h5><small
                             class="text-muted" i18n=@@profile.completed><i
                             class="fa fa-check mr-1"></i>Completed</small>
                     </li>
                     <li class="list-inline-item" style="margin-left: 10px">
                     <li class="list-inline-item">
                         <h5 *ngIf="hasRates" class="font-weight-bold mb-0 d-block">{{userRate}}</h5>
-                        <h5 *ngIf="!hasRates" class="font-weight-bold mb-0 d-block">-</h5><small class="text-muted" i18n=@@profile.rate><i
+                        <h5 *ngIf="!hasRates" class="font-weight-bold mb-0 d-block">-</h5><small class="text-muted"
+                                                                                                 i18n=@@profile.rate><i
                             class="fa fa-heart mr-1"></i>Rate</small>
                     </li>
                 </ul>

@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ApiTripService} from "../services/api-trip.service";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 import {Trip} from "../model/trip";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, NavigationStart, Router, RoutesRecognized} from "@angular/router";
+import * as url from "url";
 
 @Component({
     selector: 'app-home',
@@ -25,21 +26,42 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.currentPage = this.route.snapshot.queryParams['name'] | 1;
-        this.getPageTrips(this.currentPage);
+        this.currentPage = this.route.snapshot.queryParams['page'] || 1;
+        if (Number(this.currentPage)) {
+            this.getPageTrips(this.currentPage);
+        } else {
+            this.router.navigate(['/404']);
+        }
+        this.router.events.subscribe((val) => {
+                if (val instanceof RoutesRecognized) {
+                    const url = val.state.url
+                    if (url.includes('?page=',4)) {
+                        let maybePage = url.slice(11, val.state.url.length);
+                        if (Number(maybePage)) {
+                            this.getPageTrips(Number(maybePage));
+                        }
+                    }
+                }
+            }
+        );
     }
 
     getPageTrips(page: number) {
         this.spinner.show();
-        this.ts.getTripsForPage(this.currentPage).subscribe(
+        this.ts.getTripsForPage(page).subscribe(
             data => {
                 this.trips = data.trips;
                 this.numberOfPages = data.maxPage;
                 this.totalTrips = data.totalAmount;
+                this.spinner.hide();
             },
             err => {
                 switch (err.status) {
                     case (400):
+                        this.spinner.hide();
+                        this.router.navigate(["/404"]);
+                        break;
+                    case (404):
                         this.spinner.hide();
                         this.router.navigate(["/404"]);
                         break;
@@ -53,11 +75,11 @@ export class HomeComponent implements OnInit {
         );
     }
 
-
     updatePage(newPage) {
         if (this.currentPage === newPage) {
             return;
         }
+        this.currentPage = newPage;
         this.getPageTrips(newPage);
     }
 

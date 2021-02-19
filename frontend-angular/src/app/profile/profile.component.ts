@@ -85,15 +85,18 @@ export class ProfileComponent implements OnInit {
 
         this.userService.getUserPicture(profileId).subscribe(
             data => {
-                const reader = new FileReader();
+                this.hasImage = true;
+                this.profilePicture = data;
+/*                const reader = new FileReader();
                 reader.onload = (e) => {
                     // @ts-ignore
                     this.profilePicture = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
                     this.loadingImage = false;
                 };
                 reader.readAsDataURL(new Blob([data]));
-                this.hasImage = true;
+                this.hasImage = true;*/
             },
+
             error => {
                 this.loadingImage = false;
                 this.hasImage = false;

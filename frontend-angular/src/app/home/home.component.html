@@ -5,7 +5,7 @@
     <div class="card-deck" *ngIf="trips?.length > 0">
         <div class="row justify-content-center">
             <app-trip-card
-                    *ngFor="let trip of trips[currentPage]"
+                    *ngFor="let trip of trips"
                     [trip]="trip">
             </app-trip-card>
         </div>
@@ -14,7 +14,8 @@
 <app-paginator
         *ngIf="numberOfPages > 1"
         [numberOfPages]="numberOfPages"
-        (pageNumberClick)="updatePage($event)">
+        (pageNumberClick)="updatePage($event)"
+        [currentPage]="currentPage">
 </app-paginator>
 
 

@@ -8,7 +8,9 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 export class PaginatorComponent implements OnInit {
 
   @Input() numberOfPages: number;
+  @Input() currentPage: number;
   @Output() pageNumberClick = new EventEmitter<number>();
+
   pages: number[];
 
   constructor() { }

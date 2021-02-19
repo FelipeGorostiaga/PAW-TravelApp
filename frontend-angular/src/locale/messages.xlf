@@ -3,7 +3,7 @@
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
       <trans-unit id="about.title" datatype="html">
-        <source>Software Engineering Student @ Instituto Tecnologico de Buenos Aires</source>
+        <source>Software Engineering Student @ Instituto Tecnológico de Buenos Aires</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/about/about.component.html</context>
           <context context-type="linenumber">6</context>
@@ -59,7 +59,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="advanced-search.noTripsMessage" datatype="html">
-        <source>No trips where found with selected specifications</source>
+        <source>No trips where found with the selected specifications</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/advanced-search/advanced-search.component.html</context>
           <context context-type="linenumber">46</context>
@@ -263,7 +263,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="forbidden.errorDetails" datatype="html">
-        <source> You don&apos;t have the required permissions to access this page! </source>
+        <source> You do not have the required permissions to access this page! </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/errors/forbidden/forbidden.component.html</context>
           <context context-type="linenumber">11,12</context>
@@ -699,7 +699,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="register.birthday" datatype="html">
-        <source>Date of birth</source>
+        <source>Birthday</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/register/register.component.html</context>
           <context context-type="linenumber">331</context>
@@ -713,7 +713,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="register.birthday.required" datatype="html">
-        <source>Date of birth is required</source>
+        <source>Birthday is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/register/register.component.html</context>
           <context context-type="linenumber">342</context>

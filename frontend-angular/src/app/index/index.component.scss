@@ -5,16 +5,20 @@
 }
 
 #image-background {
-  background-image: url("../../assets/images/trekkingcouple.jpg");
+
+
+  background: url("../../assets/images/trekkingcouple.jpg");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
   background-size: cover;
-  background-repeat: no-repeat;
-  height: 1191px;
+  height: 907px;
   width: 100%;
 }
 
 #custom-text {
-  padding-top: 200px;
-  padding-left: 1100px;
+  padding-top: 100px;
+  padding-left: 900px;
 }
 
 #inner-text {
@@ -22,8 +26,8 @@
 }
 
 #custom-buttons {
-  padding-top: 50px;
-  padding-left: 1300px;
+  padding-top: 100px;
+  padding-left: 1100px;
 }
 
 #main-container {
