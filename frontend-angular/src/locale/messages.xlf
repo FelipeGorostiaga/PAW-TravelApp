@@ -3,7 +3,7 @@
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
       <trans-unit id="about.title" datatype="html">
-        <source>Software Engineering Student @ Instituto Tecnológico de Buenos Aires</source>
+        <source>Software Engineering Student @ Instituto Tecnologico de Buenos Aires</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/about/about.component.html</context>
           <context context-type="linenumber">6</context>
@@ -59,7 +59,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="advanced-search.noTripsMessage" datatype="html">
-        <source>No trips where found with the selected specifications</source>
+        <source>No trips where found with selected specifications</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/advanced-search/advanced-search.component.html</context>
           <context context-type="linenumber">46</context>
@@ -304,6 +304,13 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="home.serverError" datatype="html">
+        <source>Unexpected error occurred, please try again later</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/home/home.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="index.companyDescription" datatype="html">
         <source>The best place to make new friends and travel the world!</source>
         <context-group purpose="location">
@@ -464,91 +471,91 @@
                             class=&quot;fa fa-heart mr-1&quot;&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/>Rate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">48,49</context>
+          <context context-type="linenumber">49,50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.aboutMe" datatype="html">
         <source>About Me</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.recentReviews" datatype="html">
         <source>Recent reviews</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.showAllLink" datatype="html">
         <source>Show all</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.editTrip.title" datatype="html">
         <source>Edit Trip</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.fileInput" datatype="html">
         <source>File input</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.editTrip.invalidFileExtension" datatype="html">
         <source>Invalid file extension, only jpg and png allowed.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">87,88</context>
+          <context context-type="linenumber">88,89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.editTrip.invalidFileSize" datatype="html">
         <source> Image size too big (max 5MB)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.editTrip.aboutMe" datatype="html">
         <source>About Me</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">93</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.editTrip.biography.required" datatype="html">
         <source>Biography</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.editTrip.biography.maxlength" datatype="html">
         <source>Max length is 150 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">98,99</context>
+          <context context-type="linenumber">99,100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.editTrip.submitButton" datatype="html">
         <source>Submit </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">105,106</context>
+          <context context-type="linenumber">106,107</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.editTrip.closeButton" datatype="html">
         <source>Close </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/profile/profile.component.html</context>
-          <context context-type="linenumber">108,109</context>
+          <context context-type="linenumber">109,110</context>
         </context-group>
       </trans-unit>
       <trans-unit id="register.title" datatype="html">
@@ -849,238 +856,238 @@
         <source>Add activity</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.name" datatype="html">
         <source>Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.namePlaceholder" datatype="html">
         <source>Give your activity a name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.name.required" datatype="html">
         <source>Name is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.name.minlength" datatype="html">
         <source>Min 6 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.name.maxlength" datatype="html">
         <source>Max 25 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.category" datatype="html">
         <source>Category</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.category.cultural" datatype="html">
         <source>Cultural</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.category.sports" datatype="html">
         <source>Sports</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.category.social" datatype="html">
         <source>Social</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.category.romantic" datatype="html">
         <source>Romantic</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.category.adventure" datatype="html">
         <source>Adventure</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.category.family" datatype="html">
         <source>Family</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.category.friends" datatype="html">
         <source>Friends</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.category.business" datatype="html">
         <source>Business</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.category.relax" datatype="html">
         <source>Relax</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.category.nightlife" datatype="html">
         <source>Nightlife</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.category.required" datatype="html">
         <source>Category is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.startDate" datatype="html">
         <source>Start date</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.startDate.required" datatype="html">
         <source>Start date is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.startDate.invalidDate" datatype="html">
-        <source>Invalid dates</source>
+        <source>Invalid dates, make sure they dont collide with other activities</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.endDate" datatype="html">
         <source>End date</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.endDate.required" datatype="html">
         <source>End date is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.endDate.invalidDate" datatype="html">
-        <source>Invalid dates</source>
+        <source>Invalid dates, make sure they dont collide with other activities</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.location" datatype="html">
         <source>Location</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.locationPlaceholder" datatype="html">
         <source>Enter location</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.location.required" datatype="html">
         <source>Location is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">101</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.description" datatype="html">
         <source>Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">105</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.descriptionPlaceholder" datatype="html">
         <source>Write a description for this activity...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.description.required" datatype="html">
         <source>Description is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">118</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.description.minlength" datatype="html">
         <source>Min length is 10 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">119</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.description.maxlength" datatype="html">
         <source>Max length is 300 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">120</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.createButton" datatype="html">
         <source>Create</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">125</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activities.create.closeButton" datatype="html">
         <source>Close </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/activities/activities.component.html</context>
-          <context context-type="linenumber">124,125</context>
+          <context context-type="linenumber">126,127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="map-activity.locationButton" datatype="html">
@@ -1136,140 +1143,140 @@
         <source> Invite User </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">70,71</context>
+          <context context-type="linenumber">68,69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.exitTripButton" datatype="html">
         <source>Exit </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">88,89</context>
+          <context context-type="linenumber">86,87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.requestJoinButton" datatype="html">
         <source> Request to join </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">98,99</context>
+          <context context-type="linenumber">96,97</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.finishTripButton" datatype="html">
         <source>Finish Trip </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">115,116</context>
+          <context context-type="linenumber">113,114</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.inviteUser.title" datatype="html">
         <source>Invite user</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">121</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.inviteUser.success" datatype="html">
         <source>User invite sent. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">131,132</context>
+          <context context-type="linenumber">129,130</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.inviteUser.error" datatype="html">
         <source>User was already invited. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">136,137</context>
+          <context context-type="linenumber">134,135</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.inviteUser.closeButton" datatype="html">
         <source>Close </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">152,153</context>
+          <context context-type="linenumber">151,152</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.title" datatype="html">
         <source>Edit Trip</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">160</context>
+          <context context-type="linenumber">159</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.file" datatype="html">
         <source>File input</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">169</context>
+          <context context-type="linenumber">168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.name" datatype="html">
         <source>Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">174</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.name.required" datatype="html">
         <source>Name is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">179,180</context>
+          <context context-type="linenumber">178,179</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.name.minlength" datatype="html">
         <source>Min length is 5 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">181,182</context>
+          <context context-type="linenumber">180,181</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.name.maxlength" datatype="html">
         <source>Max length is 15 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">183,184</context>
+          <context context-type="linenumber">182,183</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.description" datatype="html">
         <source>Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">188</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.description.required" datatype="html">
         <source> Description is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">194</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.description.minlength" datatype="html">
         <source>Min length is 25 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">196,197</context>
+          <context context-type="linenumber">195,196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.description.maxlength" datatype="html">
         <source>Max length is 400 characters</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">198,199</context>
+          <context context-type="linenumber">197,198</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.submitButton" datatype="html">
         <source>Submit </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">205,206</context>
+          <context context-type="linenumber">204,205</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trip.information.editTrip.closeButton" datatype="html">
         <source>Close </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/information/information.component.html</context>
-          <context context-type="linenumber">208,209</context>
+          <context context-type="linenumber">207,208</context>
         </context-group>
       </trans-unit>
       <trans-unit id="respond-invite.error" datatype="html">
@@ -1389,6 +1396,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user-trips/user-trips.component.html</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="user-trips.serverError" datatype="html">
+        <source>Unexpected error occurred, please try again later</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/user-trips/user-trips.component.html</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
     </body>

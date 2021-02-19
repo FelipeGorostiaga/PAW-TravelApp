@@ -1,11 +1,12 @@
 <app-navigation></app-navigation>
 <ngx-bootstrap-spinner></ngx-bootstrap-spinner>
 <alert *ngIf="!loading && !trips" [type]="'primary'" [dismissible]="false" i18n=@@user-trips.noTrips>You are not a member of any trip</alert>
+<alert *ngIf="!loading && !trips" [type]="'danger'" [dismissible]="false" i18n=@@user-trips.serverError>Unexpected error occurred, please try again later</alert>
 <div class="container-fluid mt-4" id="main-container">
     <div class="card-deck" *ngIf="trips?.length > 0">
         <div class="row">
             <app-trip-card
-                    *ngFor="let trip of trips[currentPage]"
+                    *ngFor="let trip of trips"
                     [trip]="trip">
             </app-trip-card>
         </div>
@@ -14,6 +15,7 @@
 <app-paginator
         *ngIf="numberOfPages > 1"
         [numberOfPages]="numberOfPages"
+        [currentPage]="currentPage"
         (pageNumberClick)="updatePage($event)">
 </app-paginator>
 

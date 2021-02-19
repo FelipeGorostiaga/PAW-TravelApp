@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router, RoutesRecognized} from "@angular/router";
 import {Trip} from "../model/trip";
 import {ApiUserService} from "../services/api-user.service";
 import {AuthService} from "../services/auth/auth.service";
@@ -7,51 +7,94 @@ import {User} from "../model/user";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 
 @Component({
-  selector: 'app-user-trips',
-  templateUrl: './user-trips.component.html',
-  styleUrls: ['./user-trips.component.scss']
+    selector: 'app-user-trips',
+    templateUrl: './user-trips.component.html',
+    styleUrls: ['./user-trips.component.scss']
 })
 export class UserTripsComponent implements OnInit {
 
-  trips: Trip[][];
-  currentPage = 0;
-  tripsPerPage = 8;
-  numberOfPages: number;
-  loggedUser: User;
-  loading = true;
+    trips: Trip[];
 
-  constructor(private userService: ApiUserService, private authService: AuthService, private router: Router,
-              private spinner: NgxSpinnerService) { }
+    loggedUser: User;
 
-  ngOnInit(): void {
-    this.spinner.show();
-    this.loggedUser = this.authService.getLoggedUser();
-    this.userService.getUserTrips(this.loggedUser.id).subscribe(
-        res => {
-          let totalTrips = res.length;
-          this.trips = this.chopList(res);
-          this.numberOfPages = Math.ceil(totalTrips / this.tripsPerPage);
-          this.loading = false;
-          this.spinner.hide();
-        },
-        error => {
-          this.spinner.hide();
-          this.loading = false;
-        }
-    );
-  }
+    loading = true;
 
-  chopList(arr: any) {
-    const newarr = [];
-    for (let i = 0; i < arr.length; i = i + this.tripsPerPage) {
-      let tempArray = arr.slice(i, i + this.tripsPerPage)
-      newarr.push(tempArray);
+    numberOfPages: number;
+    currentPage;
+    totalTrips: number;
+
+    serverError: boolean;
+
+    constructor(private userService: ApiUserService, private authService: AuthService,
+                private router: Router,
+                private spinner: NgxSpinnerService,
+                private route: ActivatedRoute) {
     }
-    return newarr;
-  }
 
+    ngOnInit(): void {
+        this.loggedUser = this.authService.getLoggedUser();
+        this.currentPage = this.route.snapshot.queryParams['page'] || 1;
 
-  updatePage(newPage) {
-    this.currentPage = newPage;
-  }
+        if (Number(this.currentPage)) {
+            this.getPageTrips(this.currentPage);
+        } else {
+            this.navigateNotFound();
+        }
+
+        this.router.events.subscribe((val) => {
+                if (val instanceof RoutesRecognized) {
+                    const url = val.state.url;
+                    if (url.includes('?page=', 4)) {
+                        let maybePage = url.slice(17, url.length);
+                        if (Number(maybePage)) {
+                            this.getPageTrips(Number(maybePage));
+                        } else {
+                            this.navigateNotFound();
+                        }
+                    }
+                }
+            }
+        );
+    }
+
+    getPageTrips(page: number) {
+        this.currentPage = page;
+        this.spinner.show();
+        this.userService.getUserTrips(this.loggedUser.id, page).subscribe(
+            data => {
+                this.trips = data.trips;
+                this.numberOfPages = data.maxPage;
+                this.totalTrips = data.totalAmount;
+                this.spinner.hide();
+            },
+            err => {
+                switch (err.status) {
+                    case (400):
+                        this.spinner.hide();
+                        this.navigateNotFound();
+                        break;
+                    case (404):
+                        this.spinner.hide();
+                        this.navigateNotFound();
+                        break;
+                    case (500):
+                        this.spinner.hide();
+                        this.serverError = true;
+                        break;
+                }
+                this.spinner.hide();
+            }
+        );
+    }
+
+    updatePage(newPage) {
+        if (this.currentPage === newPage) {
+            return;
+        }
+        this.getPageTrips(newPage);
+    }
+
+    navigateNotFound() {
+        this.router.navigate(["/404"]);
+    }
 }

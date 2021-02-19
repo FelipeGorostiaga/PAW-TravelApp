@@ -27,19 +27,24 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
         this.currentPage = this.route.snapshot.queryParams['page'] || 1;
+
         if (Number(this.currentPage)) {
             this.getPageTrips(this.currentPage);
         } else {
-            this.router.navigate(['/404']);
+            this.navigateNotFound();
         }
+
         this.router.events.subscribe((val) => {
                 if (val instanceof RoutesRecognized) {
-                    const url = val.state.url
-                    if (url.includes('?page=',4)) {
-                        let maybePage = url.slice(11, val.state.url.length);
+                    const url = val.state.url;
+                    if (url.includes('?page=', 4)) {
+                        let maybePage = url.slice(11, url.length);
                         if (Number(maybePage)) {
                             this.getPageTrips(Number(maybePage));
+                        } else {
+                            this.navigateNotFound();
                         }
+
                     }
                 }
             }
@@ -54,16 +59,17 @@ export class HomeComponent implements OnInit {
                 this.numberOfPages = data.maxPage;
                 this.totalTrips = data.totalAmount;
                 this.spinner.hide();
+                this.currentPage = page;
             },
             err => {
                 switch (err.status) {
                     case (400):
                         this.spinner.hide();
-                        this.router.navigate(["/404"]);
+                        this.navigateNotFound();
                         break;
                     case (404):
                         this.spinner.hide();
-                        this.router.navigate(["/404"]);
+                        this.navigateNotFound();
                         break;
                     case (500):
                         this.spinner.hide();
@@ -81,6 +87,10 @@ export class HomeComponent implements OnInit {
         }
         this.currentPage = newPage;
         this.getPageTrips(newPage);
+    }
+
+    navigateNotFound() {
+        this.router.navigate(["/404"]);
     }
 
 }

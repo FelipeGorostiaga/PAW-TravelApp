@@ -202,27 +202,16 @@ public class UserController {
         return Response.serverError().build();
 
     }
-
-
-    // TODO: WTF
+    
     @GET
     @Path("/{id}/profile")
     public Response getUserProfileData(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        boolean isProfileOwner = securityUserService.getLoggedUser().getId() == userOptional.get().getId();
-        List<Trip> userTrips = tripService.getUserTrips(userOptional.get(), 1);
-        // rates, trips (due), completed, in progress
-
         List<RateDTO> rates = this.userService.getUserRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
         int dueTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.DUE);
         int activeTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.IN_PROGRESS);
         int completedTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.COMPLETED);
-
-/*        if (isProfileOwner) {
-            dueTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.DUE).map(TripDTO::new).collect(Collectors.toList());
-            activeTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.IN_PROGRESS).map(TripDTO::new).collect(Collectors.toList());
-            completedTrips = userTrips.stream().filter(t -> t.getStatus() == TripStatus.COMPLETED).map(TripDTO::new).collect(Collectors.toList());*/
         return Response.ok(new ProfileDataDTO(userOptional.get(), rates, dueTrips, activeTrips, completedTrips)).build();
     }
 

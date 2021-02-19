@@ -21,9 +21,10 @@ export class ApiUserService {
         return this.http.get(url);
     }
 
-    getUserTrips(userId: number): Observable<Trip[]> {
+    getUserTrips(userId: number, page: number): Observable<any> {
         const url = this.usersBaseURL + userId + '/trips';
-        return this.http.get<Trip[]>(url);
+        const params = new HttpParams().set('page', String(page));
+        return this.http.get<Trip[]>(url, {params: params});
     }
 
     getUserPicture(id: number): Observable<any> {
