@@ -1014,7 +1014,7 @@
             </trans-unit>
             <trans-unit id="verification-result.error" datatype="html">
                 <source>Unexpected error, please try again later</source>
-                <target>Error inesperado, pruebe de nuevo más tarde</target>
+                <target>Error inesperado, inténtelo de nuevo más tarde</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">
                         src/app/register/verification-result/verification-result.component.html
@@ -1038,6 +1038,22 @@
                     <context context-type="sourcefile">src/app/register/verification/verification.component.html
                     </context>
                     <context context-type="linenumber">5</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="search-result.noTrips" datatype="html">
+                <source>No trips where found with selected specifications</source>
+                <target>No se encontraron viajes con esas especificaciones</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/search-result/search-result.component.html</context>
+                    <context context-type="linenumber">13</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="search-result.serverError" datatype="html">
+                <source>Unexpected error occurred, please try again</source>
+                <source>Error inesperado, inténtelo de nuevo más tarde</source>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/search-result/search-result.component.html</context>
+                    <context context-type="linenumber">14</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="activities.emptyAlert" datatype="html">

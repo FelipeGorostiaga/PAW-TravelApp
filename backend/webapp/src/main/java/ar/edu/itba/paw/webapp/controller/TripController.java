@@ -150,7 +150,6 @@ public class TripController {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createTrip(@Valid TripCreateForm tripCreateForm) {
-        System.out.println(tripCreateForm);
         User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
         List<ErrorDTO> errorDTOS = new ArrayList<>();

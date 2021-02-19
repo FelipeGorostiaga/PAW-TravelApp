@@ -27,13 +27,11 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
         this.currentPage = this.route.snapshot.queryParams['page'] || 1;
-
         if (Number(this.currentPage)) {
             this.getPageTrips(this.currentPage);
         } else {
             this.navigateNotFound();
         }
-
         this.router.events.subscribe((val) => {
                 if (val instanceof RoutesRecognized) {
                     const url = val.state.url;

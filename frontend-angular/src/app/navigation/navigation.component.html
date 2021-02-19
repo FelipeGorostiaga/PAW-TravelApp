@@ -19,21 +19,22 @@
             <li class="nav-item" id="about-item"><a class="nav-link" routerLink="/about" i18n=@@navbar.about>About</a></li>
         </ul>
         <div *ngIf="isLoggedIn" class="form-inline my-2 my-lg-0">
-            <input
-                    id="nameInput"
-                    name="nameInput"
-                    class="form-control mr-sm-2"
-                    type="search"
-                    [(ngModel)] = "searchInput"
-                    placeholder="Search trips by name..."
-                    i18n-placeholder=@@navbar.searchPlaceholder/>
+            <form (ngSubmit)="search()">
+                <input
+                        id="nameInput"
+                        name="nameInput"
+                        class="form-control mr-sm-2"
+                        type="search"
+                        [(ngModel)] = "searchInput"
+                        placeholder="Search trips by name..."
+                        i18n-placeholder=@@navbar.searchPlaceholder/>
 
-            <button
-                    class="btn btn-success my-2 my-sm-0"
-                    type="submit"
-                    (click)="search()"
-                    i18n=@@navbar.searchButton>Search
-            </button>
+                <button
+                        class="btn btn-success my-2 my-sm-0"
+                        type="submit"
+                        i18n=@@navbar.searchButton>Search
+                </button>
+            </form>
         </div>
         <a
                 *ngIf="isLoggedIn"

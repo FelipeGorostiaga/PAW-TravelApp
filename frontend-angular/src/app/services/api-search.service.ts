@@ -14,10 +14,10 @@ export class ApiSearchService {
 
   private searchBaseURL = `${environment.apiURL}/search/`;
 
-  searchTripsByName(name: string): Observable<Trip[]> {
+  searchTripsByName(name: string, page: number): Observable<any> {
     const url = this.searchBaseURL + 'trips';
-    const params = new HttpParams().set('nameInput', name);
-    return this.http.get<Trip[]>(url, {params});
+    const params = new HttpParams().set('nameInput', name).set('page', String(page));
+    return this.http.get(url, {params});
   }
 
   searchInvitableUsersByName(name: string, tripId: number): Observable<User>{

@@ -71,8 +71,13 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> findByName(String name) {
-        return td.findByName(name);
+    public List<Trip> findByName(String name, int page) {
+        return td.findByName(name, page);
+    }
+
+    @Override
+    public int countByNameSearch(String name) {
+        return td.countByNameSearch(name);
     }
 
 

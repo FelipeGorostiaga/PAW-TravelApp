@@ -18,7 +18,7 @@ public interface TripService {
 
     List<Trip> getAllTripsPerPage(int pageNum);
 
-    List<Trip> findByName(String name);
+    List<Trip> findByName(String name, int page);
 
     List<Place> findTripPlaces(Trip trip);
 
@@ -74,4 +74,5 @@ public interface TripService {
 
     int countUserTripsWithStatus(long userId, TripStatus status);
 
+    int countByNameSearch(String name);
 }

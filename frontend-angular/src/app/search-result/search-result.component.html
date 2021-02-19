@@ -5,14 +5,17 @@
         <div class="card-deck" *ngIf="trips?.length > 0">
             <div class="row justify-content-center">
                 <app-trip-card
-                        *ngFor="let trip of trips[currentPage]"
+                        *ngFor="let trip of trips"
                         [trip]="trip">
                 </app-trip-card>
             </div>
         </div>
+        <alert *ngIf="trips?.length === 0 || invalidInput" [type]="'warning'" [dismissible]="false" i18n=@@search-result.noTrips>No trips where found with selected specifications</alert>
+        <alert *ngIf="serverError" [type]="'danger'" [dismissible]="false" i18n=@@search-result.serverError>Unexpected error occurred, please try again</alert>
     </div>
 </div>
-<app-paginator  *ngIf="numberOfPages > 1"
-                [numberOfPages]="numberOfPages"
-                (pageNumberClick)="updatePage($event)">>
+<app-paginator *ngIf="numberOfPages > 1"
+               [numberOfPages]="numberOfPages"
+               (pageNumberClick)="updatePage($event)"
+               [currentPage]="currentPage">
 </app-paginator>

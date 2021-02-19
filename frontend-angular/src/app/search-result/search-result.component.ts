@@ -11,13 +11,16 @@ import {ApiSearchService} from "../services/api-search.service";
 })
 export class SearchResultComponent implements OnInit {
 
-
     nameInput: string;
-    trips: Trip[][];
+
+    trips: Trip[];
+
+    serverError: boolean;
+    invalidInput: boolean;
+
     currentPage: number;
     numberOfPages: number;
-    tripsPerPage = 4;
-    error: boolean;
+    totalTrips: number;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
@@ -26,37 +29,46 @@ export class SearchResultComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.spinner.show();
-        this.currentPage = 0;
+        this.currentPage = this.route.snapshot.queryParams['page'] || 1;
         this.nameInput = this.route.snapshot.queryParams['name'];
         if (!this.nameInput) {
-            this.error = true;
+            this.invalidInput = true;
         }
-        this.searchService.searchTripsByName(this.nameInput).subscribe(
+        if (Number(this.currentPage)) {
+            this.getPageTrips(this.currentPage);
+        } else {
+            this.navigateNotFound();
+        }
+    }
+
+    updatePage(newPage) {
+        if (newPage === this.currentPage) {
+            return;
+        }
+        this.currentPage = newPage;
+        this.getPageTrips(newPage);
+    }
+
+
+    getPageTrips(page: number) {
+        this.spinner.show();
+        this.searchService.searchTripsByName(this.nameInput, page).subscribe(
             data => {
-                this.trips = this.chopList(data);
-                this.numberOfPages = Math.ceil(data.length / this.tripsPerPage);
+                this.trips = data.trips;
+                this.numberOfPages = data.maxPage;
+                this.totalTrips = data.totalAmount;
+                console.log(data);
                 this.spinner.hide();
             },
             err => {
-                this.error = true;
+                this.serverError = true;
                 this.spinner.hide();
             }
         );
     }
 
-
-    chopList(arr: any) {
-        const newarr = new Array();
-        for (let i = 0; i < arr.length; i = i + this.tripsPerPage) {
-            let tempArray = arr.slice(i, i + this.tripsPerPage);
-            newarr.push(tempArray);
-        }
-        return newarr;
-    }
-
-    updatePage(newPage) {
-        this.currentPage = newPage;
+    navigateNotFound() {
+        this.router.navigate(['/404']);
     }
 
 }

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.webapp.dto.TripDTO;
+import ar.edu.itba.paw.webapp.dto.TripListDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class SearchController {
 
+    private static final int SEARCH_PAGE_SIZE = 3;
+
     @Autowired
     TripService tripService;
 
@@ -43,11 +46,16 @@ public class SearchController {
 
     @GET
     @Path("/trips")
-    public Response searchTripByName(@QueryParam("nameInput") String name) {
-        System.out.println(name);
-        List<TripDTO> resultTrips = tripService.findByName(name).stream().map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripDTO>>(resultTrips) {
-        }).build();
+    public Response searchTripByName(@QueryParam("nameInput") String name, @DefaultValue("1") @QueryParam("page") int page) {
+        page = (page < 1) ? 1 : page;
+        final int totalTrips = this.tripService.countByNameSearch(name);
+        final int maxPage = (int) (Math.ceil((float) totalTrips / SEARCH_PAGE_SIZE));;
+        List<TripDTO> resultTrips = tripService.findByName(name, page)
+                .stream()
+                .map(TripDTO::new)
+                .collect(Collectors.toList());
+
+        return Response.ok(new TripListDTO(resultTrips,totalTrips, maxPage)).build();
     }
 
     @GET

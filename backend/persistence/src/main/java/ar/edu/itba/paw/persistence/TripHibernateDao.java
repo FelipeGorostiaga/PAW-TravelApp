@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class TripHibernateDao implements TripDao {
 
     private static final int MAX_ROWS = 4;
+    private static final int MAX_SEARCH_RESULTS = 3;
 
     @PersistenceContext
     EntityManager em;
@@ -38,11 +39,19 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
-    public List<Trip> findByName(String name) {
+    public List<Trip> findByName(String name, int page) {
         final TypedQuery<Trip> query = em.createQuery("From Trip as t where lower(t.name) like lower(:name)", Trip.class);
         query.setParameter("name", "%" + name + "%");
-        query.setMaxResults(MAX_ROWS);
+        query.setFirstResult((page - 1) * MAX_SEARCH_RESULTS);
+        query.setMaxResults(MAX_SEARCH_RESULTS);
         return query.getResultList();
+    }
+
+    @Override
+    public int countByNameSearch(String name) {
+        final TypedQuery<Long> query = em.createQuery("SELECT count(*) FROM Trip as t WHERE lower(t.name) LIKE lower(:name)", Long.class);
+        query.setParameter("name", "%" + name + "%");
+        return query.getSingleResult().intValue();
     }
 
     @Override
@@ -182,6 +191,8 @@ public class TripHibernateDao implements TripDao {
         query.setParameter("tripId", tripId);
         query.executeUpdate();
     }
+
+
 
 
     @Override

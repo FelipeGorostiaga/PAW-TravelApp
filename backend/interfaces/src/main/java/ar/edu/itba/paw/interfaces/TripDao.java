@@ -14,7 +14,7 @@ public interface TripDao {
 
     Optional<Trip> findById(long id);
 
-    List<Trip> findByName(String name);
+    List<Trip> findByName(String name, int page);
 
     List<Trip> findUserCreatedTrips(long userId);
 
@@ -64,4 +64,5 @@ public interface TripDao {
 
     void deleteTripInvitations(long tripId);
 
+    int countByNameSearch(String name);
 }
