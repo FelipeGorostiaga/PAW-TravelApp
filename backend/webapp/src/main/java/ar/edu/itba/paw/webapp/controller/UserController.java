@@ -202,7 +202,7 @@ public class UserController {
         return Response.serverError().build();
 
     }
-    
+
     @GET
     @Path("/{id}/profile")
     public Response getUserProfileData(@PathParam("id") final long userId) {

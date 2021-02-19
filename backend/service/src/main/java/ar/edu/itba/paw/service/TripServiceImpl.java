@@ -285,7 +285,16 @@ public class TripServiceImpl implements TripService {
     @Override
     public int countUserTripsWithStatus(long userId, TripStatus status) {
         Optional<User> userOptional = userService.findById(userId);
-        return userOptional.map(user -> (int) user.getTrips().stream().map(TripMember::getTrip).filter(trip -> trip.getStatus().equals(status)).distinct().count()).orElse(0);
+        List<Trip> userTrips = userOptional.get().getTrips().stream().map(TripMember::getTrip).collect(Collectors.toList());
+        userTrips.forEach(trip -> {
+            if (trip.getStatus().equals(TripStatus.DUE) && (trip.getStartDate().isBefore(LocalDate.now()) || trip.getStartDate().isEqual(LocalDate.now()))) {
+                trip.setStatus(TripStatus.IN_PROGRESS);
+            }
+        });
+        return (int) userTrips.stream()
+                .filter(trip -> trip.getStatus().equals(status))
+                .distinct()
+                .count();
     }
 
     @Override
