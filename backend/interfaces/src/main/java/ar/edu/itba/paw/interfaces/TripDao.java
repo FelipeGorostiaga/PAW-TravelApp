@@ -26,7 +26,7 @@ public interface TripDao {
 
     List<Trip> findByPlace(String placeName);
 
-    List<Trip> findWithFilters(Map<String, Object> filterMap);
+    TripPaginatedResult findWithFilters(Map<String, Object> filterMap, int page);
 
     List<TripComment> getTripComments(long tripId);
 

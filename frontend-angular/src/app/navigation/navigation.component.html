@@ -36,10 +36,9 @@
                 </button>
             </form>
         </div>
-        <a
-                *ngIf="isLoggedIn"
-                [routerLink] = "['/profile/' + loggedUser.id]">
-            <img alt="Profile icon" style="margin-left: 10px" src="./assets/icons/man.png"/>
+        <a *ngIf="isLoggedIn" [routerLink] = "['/profile/' + loggedUser.id]">
+            <img *ngIf="loggedUser.sex === 'M'" alt="Male icon" style="margin-left: 10px" src="./assets/icons/man.png"/>
+            <img *ngIf="loggedUser.sex === 'F'" alt="Female icon" style="margin-left: 10px" src="./assets/icons/woman.png"/>
         </a>
         <a *ngIf="isLoggedIn" class="btn btn-dark my-2 my-sm-0" (click)="logout()">
             <img src="./assets/icons/logout.png" alt="Logout icon"/>

@@ -37,14 +37,14 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary" (click)="searchTrips()" i18n=@@advanced-search.searchButton>Search</button>
+                    <button class="btn btn-primary" (click)="getPageTripsWithFilters()" i18n=@@advanced-search.searchButton>Search</button>
                 </div>
             </form>
         </div>
         <div class="col-10">
             <div style="width: 1000px; margin-left: 20%; margin-right: 20%">
                 <alert *ngIf="searched && trips?.length === 0" [type]="'warning'" class="text-center" i18n=@@advanced-search.noTripsMessage>No trips where found with selected specifications</alert>
-                <alert *ngIf="searched && error" [type]="'danger'" class="text-center" i18n=@@advanced-search.errorMessage>Error getting trips, please try again later</alert>
+                <alert *ngIf="searched && serverError" [type]="'danger'" class="text-center" i18n=@@advanced-search.errorMessage>Error getting trips, please try again later</alert>
             </div>
             <div class="card-deck" *ngIf="trips?.length > 0" style="margin-left: 50px;">
                 <div class="row justify-content-center">
@@ -57,6 +57,7 @@
             <app-paginator
                     *ngIf="numberOfPages > 1"
                     [numberOfPages]="numberOfPages"
+                    [currentPage]="currentPage"
                     (pageNumberClick)="updatePage($event)">
             </app-paginator>
         </div>

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripPaginatedResult;
 import ar.edu.itba.paw.webapp.dto.TripDTO;
 import ar.edu.itba.paw.webapp.dto.TripListDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
@@ -39,7 +40,10 @@ public class SearchController {
     public Response searchInvitableUsers(@PathParam("tripId") long tripId, @QueryParam("name") String name) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        List<UserDTO> resultUsers = userService.findInvitableUsersByName(name, tripOptional.get()).stream().map(UserDTO::new).collect(Collectors.toList());
+        List<UserDTO> resultUsers = userService.findInvitableUsersByName(name, tripOptional.get())
+                .stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<UserDTO>>(resultUsers) {
         }).build();
     }
@@ -49,13 +53,13 @@ public class SearchController {
     public Response searchTripByName(@QueryParam("nameInput") String name, @DefaultValue("1") @QueryParam("page") int page) {
         page = (page < 1) ? 1 : page;
         final int totalTrips = this.tripService.countByNameSearch(name);
-        final int maxPage = (int) (Math.ceil((float) totalTrips / SEARCH_PAGE_SIZE));;
+        final int maxPage = (int) (Math.ceil((float) totalTrips / SEARCH_PAGE_SIZE));
         List<TripDTO> resultTrips = tripService.findByName(name, page)
                 .stream()
                 .map(TripDTO::new)
                 .collect(Collectors.toList());
 
-        return Response.ok(new TripListDTO(resultTrips,totalTrips, maxPage)).build();
+        return Response.ok(new TripListDTO(resultTrips, totalTrips, maxPage)).build();
     }
 
     @GET
@@ -63,8 +67,9 @@ public class SearchController {
     public Response searchByMultipleParams(@QueryParam("place") String place,
                                            @QueryParam("startDate") String startDate,
                                            @QueryParam("endDate") String endDate,
-                                           @QueryParam("name") String name) {
-
+                                           @QueryParam("name") String name,
+                                           @DefaultValue("1") @QueryParam("page") int page) {
+        page = (page < 1) ? 1 : page;
         Map<String, Object> filterMap = new HashMap<>();
         if (place != null && place.length() > 0)
             filterMap.put("place", place);
@@ -76,11 +81,13 @@ public class SearchController {
             filterMap.put("name", name);
 
         if (filterMap.isEmpty()) {
+            // todo: maybe should return all -public- trips?
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        List<TripDTO> resultTrips = tripService.findWithFilters(filterMap).stream().map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<TripDTO>>(resultTrips) {
-        }).build();
+        TripPaginatedResult paginatedResult = tripService.findWithFilters(filterMap, page);
+        final int maxPage = (int) (Math.ceil((float) paginatedResult.getTotalTrips() / SEARCH_PAGE_SIZE));
+        List<TripDTO> resultTrips = paginatedResult.getTrips().stream().map(TripDTO::new).collect(Collectors.toList());
+        return Response.ok(new TripListDTO(resultTrips, paginatedResult.getTotalTrips(), maxPage)).build();
     }
 
 }

@@ -32,7 +32,7 @@ public interface TripService {
 
     void deleteTripActivity(long activityId, long tripId);
 
-    List<Trip> findWithFilters(Map<String, Object> filterMap);
+    TripPaginatedResult findWithFilters(Map<String, Object> filterMap, int page);
 
     List<TripComment> getTripComments(long tripId);
 

@@ -171,8 +171,8 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> findWithFilters(Map<String, Object> filterMap) {
-        return td.findWithFilters(filterMap);
+    public TripPaginatedResult findWithFilters(Map<String, Object> filterMap, int page) {
+        return td.findWithFilters(filterMap, page);
     }
 
     @Override

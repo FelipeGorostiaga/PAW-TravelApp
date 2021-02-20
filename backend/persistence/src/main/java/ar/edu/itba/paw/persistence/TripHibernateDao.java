@@ -192,9 +192,6 @@ public class TripHibernateDao implements TripDao {
         query.executeUpdate();
     }
 
-
-
-
     @Override
     public List<Trip> findUserCreatedTrips(long userId) {
         final TypedQuery<Trip> query = em.createQuery("FROM Trip AS t WHERE t.adminId = :userId ", Trip.class);
@@ -208,7 +205,6 @@ public class TripHibernateDao implements TripDao {
         tripDelete.setParameter("tripId", tripId);
         tripDelete.executeUpdate();
     }
-
 
     @Override
     public List<Trip> findByCategory(String category) {
@@ -229,36 +225,42 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
-    public List<Trip> findWithFilters(Map<String, Object> filterMap) {
+    public TripPaginatedResult findWithFilters(Map<String, Object> filterMap, int page) {
 
-        System.out.println("select distinct t From Trip as t, Place as p " +
-                filtersQuery(filterMap));
+        final String searchQueryString = "select distinct t From Trip as t, Place as p " + filtersQuery(filterMap) +  "order by t.startDate";
+        final String countQueryString = "select count(distinct t) From Trip as t, Place as p " + filtersQuery(filterMap);
 
-        final TypedQuery<Trip> query = em.createQuery("select distinct t From Trip as t, Place as p " +
-                filtersQuery(filterMap), Trip.class);
-        setQueryParameters(query, filterMap);
-        return query.getResultList();
+        final TypedQuery<Trip> query = em.createQuery(searchQueryString, Trip.class);
+        final TypedQuery<Long> queryCount = em.createQuery(countQueryString, Long.class);
+        setQueryParameters(query, queryCount, filterMap);
+        query.setFirstResult((page - 1) * MAX_SEARCH_RESULTS);
+        query.setMaxResults(MAX_SEARCH_RESULTS);
+        List<Trip> resultList = query.getResultList();
+        int resultCount = queryCount.getSingleResult().intValue();
+        return new TripPaginatedResult(resultList, resultCount);
     }
 
-    private void setQueryParameters(TypedQuery<Trip> query, Map<String, Object> filterMap) {
-
+    private void setQueryParameters(TypedQuery<Trip> query, TypedQuery<Long> countQuery, Map<String, Object> filterMap) {
 
         for (String filter : filterMap.keySet()) {
             if (filter.equals("place")) {
                 query.setParameter("placeName", "%" + filterMap.get(filter) + "%");
+                countQuery.setParameter("placeName", "%" + filterMap.get(filter) + "%");
             }
             if (filter.equals("name")) {
                 query.setParameter("name", "%" + filterMap.get(filter) + "%");
+                countQuery.setParameter("name", "%" + filterMap.get(filter) + "%");
             }
             if (filter.equals("startDate")) {
                 query.setParameter("startDate", filterMap.get(filter));
+                countQuery.setParameter("startDate", filterMap.get(filter));
             }
             if (filter.equals("endDate")) {
                 query.setParameter("endDate", filterMap.get(filter));
+                countQuery.setParameter("endDate", filterMap.get(filter));
             }
         }
     }
-
 
     private String filtersQuery(Map<String, Object> filterMap) {
         int count = 0;
@@ -296,7 +298,7 @@ public class TripHibernateDao implements TripDao {
                     } else {
                         buffer.append(" and ");
                     }
-                    buffer.append("(t.startDate = :startDate)");
+                    buffer.append("(t.startDate >= :startDate)");
                     count++;
                     break;
 
@@ -306,7 +308,7 @@ public class TripHibernateDao implements TripDao {
                     } else {
                         buffer.append(" and ");
                     }
-                    buffer.append("(t.endDate = :endDate)");
+                    buffer.append("(t.endDate <= :endDate)");
                     count++;
                     break;
             }

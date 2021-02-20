@@ -4,6 +4,7 @@ import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
 import {DateUtilService} from "../services/date-util.service";
 import {Trip} from "../model/trip";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
     selector: 'app-advanced-search',
@@ -19,14 +20,15 @@ export class AdvancedSearchComponent implements OnInit {
     placeInput;
 
     numberOfPages: number;
-    tripsPerPage = 3;
+    totalTrips: number;
     currentPage: number;
 
-    trips: Trip[][];
+    trips: Trip[];
 
     submitted: boolean;
 
-    error: boolean;
+    serverError: boolean;
+    badRequestError: boolean;
 
     searched: boolean;
 
@@ -34,17 +36,37 @@ export class AdvancedSearchComponent implements OnInit {
 
     constructor(private searchService: ApiSearchService,
                 private spinner: NgxSpinnerService,
-                private dateUtil: DateUtilService) {
+                private dateUtil: DateUtilService,
+                private route: ActivatedRoute,
+                private router: Router) {
     }
 
     ngOnInit(): void {
-        this.currentPage = 0;
+
+        this.currentPage = this.route.snapshot.queryParams['page'] || 1;
+        this.nameInput = this.route.snapshot.queryParams['name'];
+        this.placeInput = this.route.snapshot.queryParams['place'];
+
+        let startString = this.route.snapshot.queryParams['startDate'];
+        let endString = this.route.snapshot.queryParams['endDate'];
+
+        if (!Number(this.currentPage)) {
+            this.navigateNotFound();
+        }
+
+        if ((!this.currentPage || this.currentPage === 1) && !this.nameInput && !this.placeInput && !this.startDate && !this.endDate) {
+            console.log("NO FILTERS IN URL");
+        }
+
         this.submitted = false;
         this.searched = false;
     }
 
-    searchTrips() {
-        if (this.submitted) return;
+    public getPageTripsWithFilters() {
+        if (this.submitted) {
+            return;
+        }
+
         if (!!this.nameInput) {
             if (this.containsSpecialCharacters(this.nameInput)) {
                 this.nameInput = null;
@@ -58,9 +80,12 @@ export class AdvancedSearchComponent implements OnInit {
         if (!this.startDate && !this.endDate && !this.placeInput && !this.nameInput) {
             return;
         }
-        this.error = false;
+
         this.spinner.show();
         this.submitted = true;
+
+        this.serverError = false;
+
         let formData = new FormData();
         if (!!this.startDate) {
             formData.append('startDate', this.dateUtil.convertToDateString(this.startDate));
@@ -74,15 +99,24 @@ export class AdvancedSearchComponent implements OnInit {
         if (!!this.nameInput) {
             formData.append('name', this.nameInput);
         }
-        this.searchService.advancedSearch(formData).subscribe(
+
+        this.searchService.advancedSearch(formData, this.currentPage).subscribe(
             data => {
-                this.trips = this.chopList(data);
-                this.submitted = false;
+                this.trips = data.trips;
+                this.numberOfPages = data.maxPage;
+                this.totalTrips = data.totalAmount;
                 this.searched = true;
                 this.spinner.hide();
             },
             error => {
-                this.error = true;
+                switch (error.status) {
+                    case 400:
+                        this.badRequestError = true;
+                        break;
+                    case 500:
+                        this.serverError = true;
+                        break;
+                }
                 this.searched = true;
                 this.submitted = false;
                 this.spinner.hide();
@@ -91,20 +125,21 @@ export class AdvancedSearchComponent implements OnInit {
     }
 
 
-    chopList(arr: any) {
-        const newarr = new Array();
-        for (let i = 0; i < arr.length; i = i + this.tripsPerPage) {
-            let tempArray = arr.slice(i, i + this.tripsPerPage)
-            newarr.push(tempArray);
+    public updatePage(newPage) {
+        if (this.currentPage === newPage) {
+            return;
         }
-        return newarr;
-    }
-
-    updatePage(newPage) {
         this.currentPage = newPage;
+        this.getPageTripsWithFilters();
     }
 
-    containsSpecialCharacters(input: string): boolean {
+    private containsSpecialCharacters(input: string): boolean {
         return input.includes('%') || input.includes('_');
     }
+
+
+    private navigateNotFound() {
+        this.router.navigate(["/404"]);
+    }
+
 }
