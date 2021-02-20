@@ -26,7 +26,7 @@ export class ApiTripService {
     }
 
     getTrip(id: number): Observable<any> {
-        const url = this.tripsBaseURL + "/" +  id;
+        const url = this.tripsBaseURL + "/" + id;
         return this.http.get<Trip>(url);
     }
 
@@ -93,13 +93,13 @@ export class ApiTripService {
     respondJoinRequest(id: number, token: string, accepted: boolean): Observable<any> {
         const url = this.tripsBaseURL + "/" + id + "/invitation";
         let params = new HttpParams().set("token", token).set("accepted", String(accepted));
-        return this.http.post(url, {},{params: params});
+        return this.http.post(url, {}, {params: params});
     }
 
-    isWaitingTripConfirmation(id: number, userId: number) : Observable<any> {
+    isWaitingTripConfirmation(id: number, userId: number): Observable<any> {
         const url = this.tripsBaseURL + "/" + id + "/pendingConfirmations/user";
         let params = new HttpParams().set("user", String(userId));
-        return this.http.get(url, {params: params})
+        return this.http.get(url, {params: params});
     }
 
     respondTripInvite(id: number, token: string, accepted: boolean): Observable<any> {
@@ -123,5 +123,8 @@ export class ApiTripService {
         return this.http.post(url, {});
     }
 
-
+    hasImage(tripId: number) {
+        const url = this.tripsBaseURL + "/" + tripId + '/hasImage';
+        return this.http.get(url);
+    }
 }

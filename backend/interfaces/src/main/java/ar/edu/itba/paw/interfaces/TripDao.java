@@ -58,6 +58,8 @@ public interface TripDao {
 
     void markTripAsCompleted(long tripId);
 
+    Boolean hasImage(long tripId);
+
     void deleteTripMember(long userId, long tripId);
 
     void deleteAllTripMembers(long tripId);
@@ -69,4 +71,5 @@ public interface TripDao {
     void deleteTripPendingConfirmations(long id);
 
     PaginatedResult<Trip> findUserTrips(long userId, int page);
+
 }

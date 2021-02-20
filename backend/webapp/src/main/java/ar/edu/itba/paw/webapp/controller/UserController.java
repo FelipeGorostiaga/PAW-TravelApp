@@ -29,6 +29,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.ws.rs.*;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -48,7 +49,7 @@ public class UserController {
     private static final int PROFILE_WIDTH = 220;
     private static final int PROFILE_HEIGHT = 200;
 
-    private static final int PAGE_SIZE = 4;
+    private static final int PAGE_SIZE = 6;
 
     @Autowired
     Validator validator;
@@ -109,7 +110,11 @@ public class UserController {
         if (!pictureOpt.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(pictureOpt.get().getPicture()).build();
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(50000);
+        cacheControl.setPrivate(false);
+        cacheControl.setMustRevalidate(true);
+        return Response.ok(pictureOpt.get().getPicture()).cacheControl(cacheControl).build();
     }
 
     @GET

@@ -4,7 +4,7 @@
     <div *ngIf="verified"  style="margin-top: 120px;">
         <h1 i18n=@@verification-result.congrats>Congratulations!</h1>
         <h4 i18n=@@verification-result.success>Your account has been successfully verified</h4>
-        <button class=" btn-lg btn-primary" style="margin-top: 20px;"><a routerLink="/login" i18n=@@verification-result.signinButton>Sign in</a></button>
+        <button class=" btn-lg btn-primary" style="margin-top: 20px;"><a routerLink="/home" i18n=@@verification-result.Home>Home</a></button>
     </div>
     <div *ngIf="serverError || notFound" style="margin-top: 120px;">
         <img src="assets/images/red_cross.png" alt="error verification" style="margin-bottom: 20px;">

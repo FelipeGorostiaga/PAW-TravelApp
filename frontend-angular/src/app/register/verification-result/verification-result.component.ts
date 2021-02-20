@@ -32,6 +32,7 @@ export class VerificationResultComponent implements OnInit {
         this.authService.verifyAccount(verificationCode).subscribe(
             data => {
                 this.verified = true;
+                this.authService.createSession(data.accessToken, data.refreshToken, data.user);
                 this.spinner.hide();
             },
             error => {

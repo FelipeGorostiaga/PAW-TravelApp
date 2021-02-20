@@ -98,7 +98,11 @@ public class AuthController {
         if (!userOptional.isPresent() || userOptional.get().isVerified()) {
             return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid user verification code or user is already verified", "verification")).build();
         }
-        userService.verify(userOptional.get());
-        return Response.ok().build();
+        User user = userOptional.get();
+        userService.verify(user);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+        final String accessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
+        final String refreshToken = jwtUtil.generateToken(userDetails, JWT_REFRESH_EXPIRATION);
+        return Response.ok(new AuthenticationResponseDTO(accessToken, refreshToken, new UserDTO(user))).build();
     }
 }

@@ -82,7 +82,7 @@ export class AuthService {
         return localStorage.getItem('refreshToken');
     }
 
-    verifyAccount(verificationCode: string) {
+    verifyAccount(verificationCode: string): Observable<any> {
         const url = this.authBaseURL + '/verify';
         let params = new HttpParams().set("code", verificationCode);
         return this.http.get(url, {params: params});

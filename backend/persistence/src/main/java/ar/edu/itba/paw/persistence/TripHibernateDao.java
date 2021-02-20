@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Repository
 public class TripHibernateDao implements TripDao {
 
-    private static final int MAX_ROWS = 4;
+    private static final int MAX_ROWS = 6;
     private static final int MAX_SEARCH_RESULTS = 3;
     private static final int ADV_MAX_SEARCH_RESULTS = 2;
 
@@ -316,6 +316,13 @@ public class TripHibernateDao implements TripDao {
         List<Trip> result = query.getResultList();
         int total = queryCount.getSingleResult().intValue();
         return new PaginatedResult<>(result, total);
+    }
+
+    @Override
+    public Boolean hasImage(long tripId) {
+        final TypedQuery<TripPicture> query = em.createQuery("FROM TripPicture as tp WHERE tp.trip.id = :tripId", TripPicture.class);
+        query.setParameter("tripId", tripId);
+        return !query.getResultList().isEmpty();
     }
 
 

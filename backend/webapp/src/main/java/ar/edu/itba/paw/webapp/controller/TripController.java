@@ -9,7 +9,6 @@ import ar.edu.itba.paw.webapp.form.TripCommentForm;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import ar.edu.itba.paw.webapp.utils.ImageUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -24,6 +23,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.ws.rs.*;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -48,7 +48,7 @@ public class TripController {
     private static final int TRIP_CARD_IMAGE_WIDTH = 478;
     private static final int TRIP_CARD_IMAGE_HEIGHT = 280;
 
-    private static final int PAGE_SIZE = 4;
+    private static final int PAGE_SIZE = 6;
 
     @Autowired
     SecurityUserService securityUserService;
@@ -237,7 +237,11 @@ public class TripController {
         } catch (IOException e) {
             return Response.serverError().build();
         }
-        return Response.ok(resizedImage).build();
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(50000);
+        cacheControl.setPrivate(false);
+        cacheControl.setMustRevalidate(true);
+        return Response.ok(resizedImage).cacheControl(cacheControl).build();
     }
 
     @GET
@@ -256,7 +260,11 @@ public class TripController {
         } catch (IOException e) {
             return Response.serverError().build();
         }
-        return Response.ok(resizedImage).build();
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(50000);
+        cacheControl.setPrivate(false);
+        cacheControl.setMustRevalidate(true);
+        return Response.ok(resizedImage).cacheControl(cacheControl).build();
     }
 
 
@@ -497,6 +505,16 @@ public class TripController {
         }
 
         return Response.status(Response.Status.FORBIDDEN).build();
+    }
+
+    @GET
+    @Path("/{id}/hasImage")
+    @Produces({MediaType.TEXT_PLAIN})
+    public Response hasTripImage(@PathParam("id") final long tripId) {
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.ok(tripService.hasImage(tripId)).build();
+
     }
 
 }

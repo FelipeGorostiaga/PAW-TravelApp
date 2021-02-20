@@ -70,10 +70,13 @@ public interface TripService {
 
     void markTripAsCompleted(long tripId);
 
+    Boolean hasImage(long tripId);
+
     int countUserTrips(User user);
 
     int countUserTripsWithStatus(long userId, TripStatus status);
 
     int countByNameSearch(String name);
+
 
 }

@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         do {
             verificationCode = RandomStringUtils.random(64, true, true);
         }
-        while (!findByVerificationCode(verificationCode).isPresent());
+        while (findByVerificationCode(verificationCode).isPresent());
         User user = ud.create(firstname, lastname, email, passwordEncoder.encode(password), birthday, nationality, sex, verificationCode);
         mailService.sendRegisterMail(user);
         return user;

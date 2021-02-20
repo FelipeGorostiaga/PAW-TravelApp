@@ -187,7 +187,7 @@ public class TripServiceImpl implements TripService {
         String token;
         do {
            token = RandomStringUtils.random(64, true, true);
-        } while (!findJoinRequestByToken(token).isPresent());
+        } while (findJoinRequestByToken(token).isPresent());
         TripPendingConfirmation pendingConfirmation = td.createPendingConfirmation(trip, user, token);
         mailService.sendJoinRequestMail(trip, user, token);
         return pendingConfirmation != null;
@@ -208,6 +208,12 @@ public class TripServiceImpl implements TripService {
         }
         return false;
     }
+
+    @Override
+    public Boolean hasImage(long tripId) {
+        return td.hasImage(tripId);
+    }
+
 
     @Override
     public Optional<TripPendingConfirmation> findJoinRequestByToken(String token) {
@@ -251,8 +257,7 @@ public class TripServiceImpl implements TripService {
             if (tripPicturesService.findByTripId(trip.getId()).isPresent()) {
                 tripPicturesService.deleteByTripId(trip.getId());
             }
-            TripPicture picture = tripPicturesService.create(trip, imageBytes);
-            tripOptional.get().setProfilePicture(picture);
+            tripPicturesService.create(trip, imageBytes);
         }
 
     }

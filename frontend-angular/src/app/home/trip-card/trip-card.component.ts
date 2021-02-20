@@ -32,10 +32,13 @@ export class TripCardComponent implements OnInit {
 
     ngOnInit() {
         // @ts-ignore
-        this.userLang = (navigator.language || navigator.userLanguage).substr(0,2);
+        this.userLang = (navigator.language || navigator.userLanguage).substr(0, 2);
         this.startDate = this.dateUtil.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtil.stringToDate(this.trip.endDate);
         this.loadingImage = true;
+
+        this.tripService.hasImage(this.trip.id).subscribe();
+
         if (this.trip.hasImage) {
             this.tripService.getTripCardImage(this.trip.id).subscribe(
                 data => {
@@ -53,11 +56,12 @@ export class TripCardComponent implements OnInit {
                     this.hasImage = false;
                 }
             );
-        }
-        else {
-            this.hasImage = false;
+        } else {
             this.loadingImage = false;
+            this.hasImage = false;
         }
+
+
     }
 
     navigateToTrip() {

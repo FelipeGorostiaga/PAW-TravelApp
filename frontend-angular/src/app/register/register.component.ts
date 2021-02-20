@@ -5,7 +5,6 @@ import {AuthService} from "../services/auth/auth.service";
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DateUtilService} from "../services/date-util.service";
-import {environment} from "../../environments/environment";
 import {ErrorDTO} from "../model/ErrorDTO";
 
 
@@ -46,7 +45,6 @@ export class RegisterComponent implements OnInit {
         });
     }
 
-    // convenience getter for easy access to form fields
     get f() {
         return this.registerForm.controls;
     }
@@ -112,42 +110,4 @@ export function validBirthday(controlName: string) {
     };
 }
 
-
-/*export function ValidDate(controlName: string) {
-    return (formGroup: FormGroup) => {
-        const control = formGroup.controls[controlName];
-        if (control.errors) {
-            return;
-        }
-        // set error on matchingControl if validation fails
-        if (validDate(control.value)) {
-            control.setErrors({invalidDate: true});
-        } else {
-            control.setErrors(null);
-        }
-    };
-}
-
-export function validDate(date: string): boolean {
-    // First check for the pattern
-    if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(date)) {
-        return false;
-    }
-    // Parse the date parts to integers
-    const parts = date.split("/");
-    const month = parseInt(parts[0], 10);
-    const day = parseInt(parts[1], 10);
-    const year = parseInt(parts[2], 10);
-    // Check the ranges of month and year
-    if (year < 1000 || year > 3000 || month === 0 || month > 12) {
-        return false;
-    }
-    const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    // Adjust for leap years
-    if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
-        monthLength[1] = 29;
-    }
-    // Check the range of the day
-    return day > 0 && day <= monthLength[month - 1];
-}*/
 
