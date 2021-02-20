@@ -57,7 +57,6 @@ export class SearchResultComponent implements OnInit {
                 this.trips = data.trips;
                 this.numberOfPages = data.maxPage;
                 this.totalTrips = data.totalAmount;
-                console.log(data);
                 this.spinner.hide();
             },
             err => {

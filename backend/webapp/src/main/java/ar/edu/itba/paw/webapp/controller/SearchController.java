@@ -4,8 +4,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.TripService;
 import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.DateManipulation;
+import ar.edu.itba.paw.model.PaginatedResult;
 import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.TripPaginatedResult;
 import ar.edu.itba.paw.webapp.dto.TripDTO;
 import ar.edu.itba.paw.webapp.dto.TripListDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
@@ -81,7 +81,7 @@ public class SearchController {
             filterMap.put("endDate", DateManipulation.stringToLocalDate(endDate));
         if (name != null && name.length() > 0)
             filterMap.put("name", name);
-        TripPaginatedResult paginatedResult = tripService.findWithFilters(filterMap, page);
+        PaginatedResult<Trip> paginatedResult = tripService.findWithFilters(filterMap, page);
         final int maxPage = (int) (Math.ceil((float) paginatedResult.getTotalTrips() / ADV_SEARCH_PAGE_SIZE));
         if (page > maxPage) {
             return Response.status(Response.Status.BAD_REQUEST).build();

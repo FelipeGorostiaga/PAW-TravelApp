@@ -56,6 +56,13 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
+    public void deleteTripPendingConfirmations(long tripId) {
+        Query query = em.createQuery("DELETE TripPendingConfirmation AS tpc WHERE tpc.trip.id = :tripId");
+        query.setParameter("tripId", tripId);
+        query.executeUpdate();
+    }
+
+    @Override
     public int countAllPublicTrips() {
         TypedQuery<Long> query = em.createQuery("SELECT count(*) FROM Trip WHERE isPrivate = false", Long.class);
         return query.getSingleResult().intValue();
@@ -224,7 +231,7 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
-    public TripPaginatedResult findWithFilters(Map<String, Object> filterMap, int page) {
+    public PaginatedResult<Trip> findWithFilters(Map<String, Object> filterMap, int page) {
 
         final String searchQueryString = "select distinct t From Trip as t, Place as p " + filtersQuery(filterMap) +  "order by t.startDate";
         final String countQueryString = "select count(distinct t) From Trip as t, Place as p " + filtersQuery(filterMap);
@@ -236,7 +243,7 @@ public class TripHibernateDao implements TripDao {
         query.setMaxResults(ADV_MAX_SEARCH_RESULTS);
         List<Trip> resultList = query.getResultList();
         int resultCount = queryCount.getSingleResult().intValue();
-        return new TripPaginatedResult(resultList, resultCount);
+        return new PaginatedResult<>(resultList, resultCount);
     }
 
     private void setQueryParameters(TypedQuery<Trip> query, TypedQuery<Long> countQuery, Map<String, Object> filterMap) {
@@ -295,6 +302,20 @@ public class TripHibernateDao implements TripDao {
         final TypedQuery<TripComment> query = em.createQuery("FROM TripComment as tc where tc.trip.id = :tripId", TripComment.class);
         query.setParameter("tripId", tripId);
         return query.getResultList();
+    }
+
+    @Override
+    public PaginatedResult<Trip> findUserTrips(long userId, int page) {
+        String queryString = "from Trip as t left join t.members as m left join m.user as u where u.id = :userId ";
+        final TypedQuery<Trip> query = em.createQuery( "select t " + queryString + "order by t.startDate", Trip.class );
+        final TypedQuery<Long> queryCount = em.createQuery( "select count(t) " + queryString, Long.class );
+        query.setParameter("userId", userId );
+        queryCount.setParameter("userId", userId );
+        query.setFirstResult((page - 1) * MAX_ROWS);
+        query.setMaxResults(MAX_ROWS);
+        List<Trip> result = query.getResultList();
+        int total = queryCount.getSingleResult().intValue();
+        return new PaginatedResult<>(result, total);
     }
 
 

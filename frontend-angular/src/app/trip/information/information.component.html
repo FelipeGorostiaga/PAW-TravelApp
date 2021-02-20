@@ -4,24 +4,14 @@
         <img *ngIf="!hasImage" src="./assets/images/trip-default-info.jpg" alt="Trip image">
     </div>
     <div class="col-6">
-        <h3 *ngIf="trip?.status === 'DUE' && userLang === 'es'" style="color: white"><span class="badge bg-primary">Pendiente</span>
-        </h3>
-        <h3 *ngIf="trip?.status === 'COMPLETED' && userLang === 'es'" style="color: white"><span
-                class="badge bg-danger">Completado</span></h3>
-        <h3 *ngIf="trip?.status === 'IN_PROGRESS' && userLang === 'es'" style="color: white"><span
-                class="badge bg-success">En progreso</span></h3>
-        <h3 *ngIf="trip?.status === 'DUE' && userLang !== 'es'" style="color: white"><span
-                class="badge bg-primary">Due</span></h3>
-        <h3 *ngIf="trip?.status === 'COMPLETED' && userLang !== 'es'" style="color: white"><span
-                class="badge bg-danger">Completed</span></h3>
-        <h3 *ngIf="trip?.status === 'IN_PROGRESS' && userLang !== 'es'" style="color: white"><span
-                class="badge bg-success">In progress</span></h3>
+        <h3 *ngIf="trip?.status === 'DUE'" style="color: white"><span class="badge bg-primary">Due</span></h3>
+        <h3 *ngIf="trip?.status === 'COMPLETED'" style="color: white"><span class="badge bg-danger">Completed</span></h3>
+        <h3 *ngIf="trip?.status === 'IN_PROGRESS'" style="color: white"><span class="badge bg-success">In progress</span></h3>
         <div class="display-3">{{trip?.name}}</div>
         <p class="text-justify" style="font-size: 150%;margin-top: 10px;">{{trip?.description}}</p>
     </div>
 </div>
-
-<div class="row" style="margin-top: 40px;">
+<div class="row row-custom">
     <div class="col-6 form-group">
         <div class="form-control" placeholder="Datepicker" bsDatepicker #dp="bsDatepicker"
              [isDisabled]="true" [(bsValue)]="startDate" [bsConfig]="bsConfig" i18n=@@trip.information.startDate>Start
@@ -34,12 +24,10 @@
         </div>
     </div>
 </div>
-
-<div class="row" style="margin-top: 50px;">
+<div class="row row-custom">
     <div class="col-8">
         <agm-map [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude" [zoom]="14"
-                 [zoomControl]="true"
-                 style="height: 400px;width: 700px;">
+                 [zoomControl]="true" id="googleMaps">
             <agm-marker [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude"></agm-marker>
         </agm-map>
     </div>
@@ -55,11 +43,11 @@
                     <button *ngIf="isAdmin && !completed && member.role === 'MEMBER' "
                             tooltip="Make trip administrator"
                             mwlConfirmationPopover
-                            [popoverTitle]="makeAdminTitle"
-                            [popoverMessage]="makeAdminMessage"
+                            [popoverTitle]="'Administrator role'"
+                            [popoverMessage]="'Are you sure you want to grant administrator role?'"
                             placement="right"
                             (confirm)="grantAdminRole(member.user)"
-                    ><img src="assets/icons/plus.png" alt="plus icon"></button>
+                    ><img src="./assets/icons/plus.png" alt="plus icon"></button>
                 </div>
             </div>
         </div>
@@ -71,25 +59,25 @@
     </div>
 </div>
 
-<div class="row justify-content-around" style="margin-top: 40px;">
+<div class="row justify-content-around" id="button-row">
     <div class="col-12">
         <button *ngIf="isAdmin && !completed" type="button" class="btn btn-outline-dark button-list"
                 (click)="openEditTripModal(editTripTemplate)"><img
-                src="assets/icons/editar.png" alt="remove icon" i18n=@@trip.information.editTripButton>Edit Trip
+                src="./assets/icons/editar.png" alt="remove icon" i18n=@@trip.information.editTripButton>Edit Trip
         </button>
         <button *ngIf="(isAdmin || isMember) && !isCreator && !completed" type="button"
                 class="btn btn-danger button-list" (click)="exitTrip()" i18n=@@trip.information.exitTripButton
                 mwlConfirmationPopover
-                [popoverTitle]="exitTripTitle"
-                [popoverMessage]="exitTripMessage"
+                [popoverTitle]="'Exit trip'"
+                [popoverMessage]="'Are you sure you want to exit this trip?'"
                 placement="right"
                 (confirm)="exitTrip()">Exit
         </button>
         <button *ngIf="!loading && !completed && !isMember && !waitingConfirmation" type="button"
                 class=" btn btn-primary button-list"
                 mwlConfirmationPopover
-                [popoverTitle]="requestJoinTitle"
-                [popoverMessage]="requestJoinMessage"
+                [popoverTitle]="'Request access'"
+                [popoverMessage]="'Are you sure you want to ask to join this trip?'"
                 placement="right"
                 (confirm)="requestJoinTrip()"
                 i18n=@@trip.information.requestJoinButton>
@@ -97,8 +85,8 @@
         </button>
         <button *ngIf="isCreator && !completed" class="btn btn-outline-dark button-list" type="button"
                 mwlConfirmationPopover
-                [popoverTitle]="deleteTripTitle"
-                [popoverMessage]="deleteTripMessage"
+                [popoverTitle]="'Delete trip'"
+                [popoverMessage]="'Are you sure you want to delete this trip?'"
                 placement="right"
                 (confirm)="deleteTrip()">
             <img src="assets/icons/eliminar-small.png" alt="remove icon" style="margin-right: 5px;"
@@ -107,8 +95,8 @@
         <button *ngIf="canFinish && !completed" class="btn btn-outline-primary button-list" type="button"
                 i18n=@@trip.information.finishTripButton
                 mwlConfirmationPopover
-                [popoverTitle]="finishTripTitle"
-                [popoverMessage]="finishTripMessage"
+                [popoverTitle]="'End trip'"
+                [popoverMessage]="'Are you sure you want to end this trip?'"
                 placement="right"
                 (confirm)="finishTrip()">Finish Trip
         </button>

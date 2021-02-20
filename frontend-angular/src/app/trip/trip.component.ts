@@ -35,7 +35,6 @@ export class TripComponent implements OnInit {
     }
 
     ngOnInit() {
-
         this.spinner.show();
         this.selectedIndex = 0;
         this.tripId = Number(this.route.snapshot.paramMap.get("id"));

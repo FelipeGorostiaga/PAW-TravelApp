@@ -121,13 +121,13 @@ public class UserController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         User user = userOptional.get();
-        final int totalUserTrips = tripService.countUserTrips(user);
-        final int maxPage = (int) (Math.ceil((float) totalUserTrips / PAGE_SIZE));
+        PaginatedResult<Trip> paginatedResult = tripService.getUserTrips(user, page);
+        final int maxPage = (int) (Math.ceil((float) paginatedResult.getTotalTrips() / PAGE_SIZE));
         if (page > maxPage) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        List<TripDTO> trips = tripService.getUserTrips(user, page).stream().map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new TripListDTO(trips, totalUserTrips, maxPage)).build();
+        return Response.ok(new TripListDTO(paginatedResult.getTrips().stream().map(TripDTO::new).collect(Collectors.toList()),
+                paginatedResult.getTotalTrips(), maxPage)).build();
     }
 
     @POST

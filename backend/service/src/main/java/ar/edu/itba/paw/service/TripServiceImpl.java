@@ -144,7 +144,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void deleteTrip(Trip trip) {
-        // todo: pending confirmations
+        td.deleteTripPendingConfirmations(trip.getId());
         mailService.sendDeleteTripMail(trip);
         tpd.deleteByTripId(trip.getId());
         td.deleteTripInvitations(trip.getId());
@@ -171,7 +171,7 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public TripPaginatedResult findWithFilters(Map<String, Object> filterMap, int page) {
+    public PaginatedResult<Trip> findWithFilters(Map<String, Object> filterMap, int page) {
         return td.findWithFilters(filterMap, page);
     }
 
@@ -183,10 +183,13 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public boolean createJoinRequest(Trip trip, User user, String token) {
+    public boolean createJoinRequest(Trip trip, User user) {
+        String token;
+        do {
+           token = RandomStringUtils.random(64, true, true);
+        } while (!findJoinRequestByToken(token).isPresent());
         TripPendingConfirmation pendingConfirmation = td.createPendingConfirmation(trip, user, token);
-        if (pendingConfirmation != null)
-            mailService.sendJoinRequestMail(trip, user, token);
+        mailService.sendJoinRequestMail(trip, user, token);
         return pendingConfirmation != null;
     }
 
@@ -303,12 +306,8 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> getUserTrips(User user, int pageNum) {
-        List<Trip> userTrips = user.getTrips().stream().map(TripMember::getTrip).distinct().collect(Collectors.toList());
-        int offset = (pageNum - 1) * ROWS;
-        int size = userTrips.size();
-        int end = Math.min((offset + ROWS), size);
-        return userTrips.subList(offset, end);
+    public PaginatedResult<Trip> getUserTrips(User user, int pageNum) {
+        return td.findUserTrips(user.getId(), pageNum);
     }
 
 }

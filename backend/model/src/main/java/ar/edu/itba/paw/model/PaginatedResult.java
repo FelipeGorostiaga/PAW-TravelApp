@@ -2,23 +2,23 @@ package ar.edu.itba.paw.model;
 
 import java.util.List;
 
-public class TripPaginatedResult {
+public class PaginatedResult<T> {
 
-    private List<Trip> trips;
+    private List<T> trips;
 
     private int totalTrips;
 
 
-    public TripPaginatedResult(List<Trip> trips, int totalTrips) {
+    public PaginatedResult(List<T> trips, int totalTrips) {
         this.trips = trips;
         this.totalTrips = totalTrips;
     }
 
-    public List<Trip> getTrips() {
+    public List<T> getTrips() {
         return trips;
     }
 
-    public void setTrips(List<Trip> trips) {
+    public void setTrips(List<T> trips) {
         this.trips = trips;
     }
 

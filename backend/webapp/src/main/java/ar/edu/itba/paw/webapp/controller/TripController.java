@@ -368,8 +368,7 @@ public class TripController {
                 .collect(Collectors.toList());
         if (!pendingConfirmations.isEmpty())
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Cannot send multiple join requests", "repeated")).build();
-        String token = RandomStringUtils.random(64, true, true);
-        if (tripService.createJoinRequest(t, user, token)) {
+        if (tripService.createJoinRequest(t, user)) {
             return Response.ok().build();
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO("Error creating request, please try again...", "error")).build();
@@ -404,10 +403,7 @@ public class TripController {
         Optional<User> userOptional = userService.findById(userId);
         if (!tripOptional.isPresent() || !userOptional.isPresent())
             return Response.status(Response.Status.BAD_REQUEST).build();
-        if (tripService.isWaitingJoinTripConfirmation(tripOptional.get(), userOptional.get())) {
-            return Response.ok().build();
-        }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.ok(new GenericEntity<Boolean>(tripService.isWaitingJoinTripConfirmation(tripOptional.get(), userOptional.get())){}).build();
     }
 
     @GET

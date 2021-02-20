@@ -26,7 +26,7 @@ public interface TripDao {
 
     List<Trip> findByPlace(String placeName);
 
-    TripPaginatedResult findWithFilters(Map<String, Object> filterMap, int page);
+    PaginatedResult<Trip> findWithFilters(Map<String, Object> filterMap, int page);
 
     List<TripComment> getTripComments(long tripId);
 
@@ -65,4 +65,8 @@ public interface TripDao {
     void deleteTripInvitations(long tripId);
 
     int countByNameSearch(String name);
+
+    void deleteTripPendingConfirmations(long id);
+
+    PaginatedResult<Trip> findUserTrips(long userId, int page);
 }

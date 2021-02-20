@@ -10,22 +10,33 @@
                             <div class="form-group col-6">
                                 <label i18n=@@register.firstname>First Name</label>
                                 <input type="text" formControlName="firstName" class="form-control"
-                                       [ngClass]="{ 'is-invalid': submitted && f.firstName?.errors }"/>
-                                <div *ngIf="submitted && f.firstName?.errors" class="invalid-feedback">
-                                    <div *ngIf="f.firstName?.errors.required" i18n=@@register.firstname.required>First name is required
+                                       [ngClass]="{ 'is-invalid': f.firstName?.errors }"/>
+                                <div *ngIf="f.firstName?.errors" class="invalid-feedback">
+                                    <div *ngIf="f.firstName?.errors.required" i18n=@@register.firstname.required>First
+                                        name is required
                                     </div>
-                                    <div *ngIf="f.firstname?.errors.minlength" i18n=@@register.firstanme.minlength>Min length is 2 characters</div>
-                                    <div *ngIf="f.firstname?.errors.maxlength" i18n=@@register.firstname.maxlength>Max length is 20 characters</div>
+                                    <div *ngIf="f.firstName?.errors.minlength" i18n=@@register.firstanme.minlength>Min
+                                        length is 2 characters
+                                    </div>
+                                    <div *ngIf="f.firstName?.errors.maxlength" i18n=@@register.firstname.maxlength>Max
+                                        length is 20 characters
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group col-6">
-                                <label  i18n=@@register.lastname>Last Name</label>
+                                <label i18n=@@register.lastname>Last Name</label>
                                 <input type="text" formControlName="lastName" class="form-control"
-                                       [ngClass]="{ 'is-invalid': submitted && f.lastName?.errors }"/>
-                                <div *ngIf="submitted && f.lastName?.errors" class="invalid-feedback">
-                                    <div *ngIf="f.lastName?.errors.required" i18n=@@register.lastname.required>Last Name is required</div>
-                                    <div *ngIf="f.lastName?.errors.minlength" i18n=@@register.lastname.minlength>Min length is 2 characters</div>
-                                    <div *ngIf="f.lastName?.errors.maxlength" i18n=@@register.lastname.maxlength>Max length is 20 characters</div>
+                                       [ngClass]="{ 'is-invalid': f.lastName?.errors }"/>
+                                <div *ngIf="f.lastName?.errors" class="invalid-feedback">
+                                    <div *ngIf="f.lastName?.errors.required" i18n=@@register.lastname.required>Last Name
+                                        is required
+                                    </div>
+                                    <div *ngIf="f.lastName?.errors.minlength" i18n=@@register.lastname.minlength>Min
+                                        length is 2 characters
+                                    </div>
+                                    <div *ngIf="f.lastName?.errors.maxlength" i18n=@@register.lastname.maxlength>Max
+                                        length is 20 characters
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -33,16 +44,20 @@
                             <div class="form-group col-6">
                                 <label i18n=@@register.email>Email</label>
                                 <input type="text" formControlName="email" class="form-control"
-                                       [ngClass]="{ 'is-invalid': submitted && f.email?.errors }"/>
-                                <div *ngIf="submitted && f.email?.errors" class="invalid-feedback">
-                                    <div *ngIf="f.email?.errors.required" i18n=@@register.email.required>Email is required</div>
-                                    <div *ngIf="f.email?.errors.email" i18n=@@register.email.emailFormat>Email must be a valid email address</div>
+                                       [ngClass]="{ 'is-invalid': f.email?.errors }"/>
+                                <div *ngIf="f.email?.errors" class="invalid-feedback">
+                                    <div *ngIf="f.email?.errors.required" i18n=@@register.email.required>Email is
+                                        required
+                                    </div>
+                                    <div *ngIf="f.email?.errors.email" i18n=@@register.email.emailFormat>Email must be a
+                                        valid email address
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group col">
                                 <label i18n=@@register.nationality>Nationality</label>
                                 <select formControlName="nationality" class="form-control"
-                                        [ngClass]="{'is-invalid': submitted && f.nationality?.errors}">
+                                        [ngClass]="{'is-invalid': f.nationality?.errors}">
                                     <option value="Afghanistan">Afghanistan</option>
                                     <option value="Albania">Albania</option>
                                     <option value="Algeria">Algeria</option>
@@ -298,8 +313,10 @@
                                     <option value="Zambia">Zambia</option>
                                     <option value="Zimbabwe">Zimbabwe</option>
                                 </select>
-                                <div *ngIf="submitted && f.nationality?.errors" class="invalid-feedback">
-                                    <div *ngIf="f.nationality?.errors.required" i18n=@@register.nationality.required>Nationality is required</div>
+                                <div *ngIf="f.nationality?.errors" class="invalid-feedback">
+                                    <div *ngIf="f.nationality?.errors.required" i18n=@@register.nationality.required>
+                                        Nationality is required
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -307,22 +324,30 @@
                             <div class="form-group col">
                                 <label i18n=@@register.password>Password</label>
                                 <input type="password" formControlName="password" class="form-control"
-                                       [ngClass]="{ 'is-invalid': submitted && f.password?.errors }"/>
-                                <div *ngIf="submitted && f.password?.errors" class="invalid-feedback">
-                                    <div *ngIf="f.password?.errors.required" i18n=@@register.password.required>Password is required</div>
-                                    <div *ngIf="f.password?.errors.minlength" i18n=@@register.password.minlength>Password must be at least 6 characters
+                                       [ngClass]="{ 'is-invalid': f.password?.errors }"/>
+                                <div *ngIf="f.password?.errors" class="invalid-feedback">
+                                    <div *ngIf="f.password?.errors.required" i18n=@@register.password.required>Password
+                                        is required
                                     </div>
-                                    <div *ngIf="f.password?.errors.maxlength" i18n=@@register.password.maxlength>Max length 20 characters
+                                    <div *ngIf="f.password?.errors.minlength" i18n=@@register.password.minlength>
+                                        Password must be at least 6 characters
+                                    </div>
+                                    <div *ngIf="f.password?.errors.maxlength" i18n=@@register.password.maxlength>Max
+                                        length 20 characters
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col">
                                 <label i18n=@@register.confirmPassword>Confirm Password</label>
                                 <input type="password" formControlName="confirmPassword" class="form-control"
-                                       [ngClass]="{ 'is-invalid': submitted && f.confirmPassword?.errors }"/>
-                                <div *ngIf="submitted && f.confirmPassword?.errors" class="invalid-feedback">
-                                    <div *ngIf="f.confirmPassword?.errors.required" i18n=@@register.confirmPassword.required>Confirm Password is required</div>
-                                    <div *ngIf="f.confirmPassword?.errors.mustMatch" i18n=@@register.confirmPassword.noMatch>Passwords must match</div>
+                                       [ngClass]="{ 'is-invalid': f.confirmPassword?.errors }"/>
+                                <div *ngIf="f.confirmPassword?.errors" class="invalid-feedback">
+                                    <div *ngIf="f.confirmPassword?.errors.required"
+                                         i18n=@@register.confirmPassword.required>Confirm Password is required
+                                    </div>
+                                    <div *ngIf="f.confirmPassword?.errors.mustMatch"
+                                         i18n=@@register.confirmPassword.noMatch>Passwords must match
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -333,15 +358,20 @@
                                        type="text"
                                        class="form-control"
                                        autocomplete="off"
-                                       [ngClass]="{ 'is-invalid': submitted && f.birthDate?.errors }"
+                                       [ngClass]="{ 'is-invalid': f.birthDate?.errors }"
                                        bsDatepicker
                                        [bsConfig]="bsConfig"
                                        i18n-placeholder=@@register.birthdayPlaceholder
                                        placeholder="Enter a valid birthday">
-                                <div *ngIf="submitted && f.birthDate?.errors" class="invalid-feedback">
-                                    <div *ngIf="f.birthDate?.errors.required" i18n=@@register.birthday.required>Birthday is required</div>
-                                    <div *ngIf="f.birthDate?.errors.validBirthday" i18n=@@register.birthday.invalidDate>Invalid date</div>
-                                    <div *ngIf="f.birthDate?.errors.invalidDate" i18n=@@register.birthday.invalidFormat>Must be a valid date format
+                                <div *ngIf="f.birthDate?.errors" class="invalid-feedback">
+                                    <div *ngIf="f.birthDate?.errors.required" i18n=@@register.birthday.required>Birthday
+                                        is required
+                                    </div>
+                                    <div *ngIf="f.birthDate?.errors.validBirthday" i18n=@@register.birthday.invalidDate>
+                                        Invalid date
+                                    </div>
+                                    <div *ngIf="f.birthDate?.errors.invalidDate" i18n=@@register.birthday.invalidFormat>
+                                        Must be a valid date format
                                         'dd/mm/yyy'
                                     </div>
                                 </div>
@@ -357,8 +387,9 @@
                                            name="customRadioInline1" class="custom-control-input" value="F">
                                     <label class="custom-control-label" for="customRadioInline2" i18n=@@register.female>Female</label>
                                 </div>
-                                <div *ngIf="submitted && f.customRadioInline1.errors" class="text-danger">
-                                    <small *ngIf="submitted && f.customRadioInline1.errors.required" i18n=@@register.sex.required>Sex is
+                                <div *ngIf="f.customRadioInline1.errors" class="text-danger">
+                                    <small *ngIf="f.customRadioInline1.errors.required"
+                                           i18n=@@register.sex.required>Sex is
                                         required</small>
                                 </div>
                             </div>
@@ -366,15 +397,19 @@
                         <div class="form-group form-check">
                             <input type="checkbox" formControlName="acceptTerms" id="acceptTerms"
                                    class="form-check-input"
-                                   [ngClass]="{ 'is-invalid': submitted && f.acceptTerms?.errors }"/>
-                            <label for="acceptTerms" class="form-check-label" i18n=@@register.termsAndConditions>Accept Terms & Conditions</label>
-                            <div *ngIf="submitted && f.acceptTerms?.errors" class="invalid-feedback" i18n=@@register.termsAndConditions.required>Accept Terms &
+                                   [ngClass]="{ 'is-invalid': f.acceptTerms?.errors }"/>
+                            <label for="acceptTerms" class="form-check-label" i18n=@@register.termsAndConditions>Accept
+                                Terms & Conditions</label>
+                            <div *ngIf="f.acceptTerms?.errors" class="invalid-feedback"
+                                 i18n=@@register.termsAndConditions.required>Accept Terms &
                                 Conditions is required
                             </div>
                         </div>
                         <div class="text-center">
                             <button class="btn btn-primary mr-1" i18n=@@register.registerButton>Register</button>
-                            <button class="btn btn-secondary" type="reset" (click)="onReset()" i18n=@@register.cancelButton>Cancel</button>
+                            <button class="btn btn-secondary" type="reset" (click)="onReset()"
+                                    i18n=@@register.cancelButton>Cancel
+                            </button>
                         </div>
                     </form>
                 </div>

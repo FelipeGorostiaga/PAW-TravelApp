@@ -32,11 +32,11 @@ public interface TripService {
 
     void deleteTripActivity(long activityId, long tripId);
 
-    TripPaginatedResult findWithFilters(Map<String, Object> filterMap, int page);
+    PaginatedResult<Trip> findWithFilters(Map<String, Object> filterMap, int page);
 
     List<TripComment> getTripComments(long tripId);
 
-    boolean createJoinRequest(Trip trip, User user, String token);
+    boolean createJoinRequest(Trip trip, User user);
 
     List<TripPendingConfirmation> getTripJoinRequests(long tripId);
 
@@ -66,7 +66,7 @@ public interface TripService {
 
     boolean isMember(Trip trip, User user);
 
-    List<Trip> getUserTrips(User user, int page);
+    PaginatedResult<Trip> getUserTrips(User user, int page);
 
     void markTripAsCompleted(long tripId);
 
@@ -75,4 +75,5 @@ public interface TripService {
     int countUserTripsWithStatus(long userId, TripStatus status);
 
     int countByNameSearch(String name);
+
 }

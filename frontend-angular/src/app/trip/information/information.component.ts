@@ -105,39 +105,6 @@ export class InformationComponent implements OnInit {
             member.user.id === this.loggedUser.id);
         this.isMember = !!(this.isAdmin || this.trip.members.find(member => member.user.id === this.loggedUser.id));
         this.isCreator = !!this.trip.members.find(member => (member.role === TripRole.CREATOR && member.user.id === this.loggedUser.id));
-        // @ts-ignore
-        this.userLang = (navigator.language || navigator.userLanguage).substr(0, 2);
-        if (this.userLang === 'es') {
-            this.exitTripTitle = "Salir del viaje";
-            this.exitTripMessage = "Estas seguro que deseas salir de este viaje?";
-
-            this.deleteTripTitle = "Borrar viaje";
-            this.deleteTripMessage = "Estas seguro que quieres borrar este viaje?";
-
-            this.makeAdminTitle = "Rol de administrador";
-            this.makeAdminMessage = "Estas seguro que quieres otorgar permisos de administrador a este usuario?";
-
-            this.finishTripTitle = "Terminar viaje";
-            this.finishTripMessage = "Estas seguro que quieres terminar este viaje?";
-
-            this.requestJoinTitle = "Pedir unirse";
-            this.requestJoinMessage = "Estas seguro que quieres pedir unirte a este viaje?";
-        } else {
-            this.exitTripTitle = "Exit trip";
-            this.exitTripMessage = "Are you sure you want to exit this trip?";
-
-            this.deleteTripTitle = "Delete trip";
-            this.deleteTripMessage = "Are you sure you want to delete this trip?";
-
-            this.makeAdminTitle = "Administrator role";
-            this.makeAdminMessage = "Are you sure you want to grant administrator role?";
-
-            this.finishTripTitle = "End trip";
-            this.finishTripMessage = "Are you sure you want to end this trip?";
-
-            this.requestJoinTitle = "Ask to join";
-            this.requestJoinMessage = "Are you sure you want to ask to join this trip?";
-        }
         this.startDate = this.dateUtils.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtils.stringToDate(this.trip.endDate);
         this.canFinish = this.canMarkAsCompleted();
@@ -150,10 +117,7 @@ export class InformationComponent implements OnInit {
             if (!this.isAdmin && !this.isMember) {
                 this.tripService.isWaitingTripConfirmation(this.trip.id, this.authService.getLoggedUser().id).subscribe(
                     data => {
-                        this.waitingConfirmation = true;
-                    },
-                    error => {
-                        this.waitingConfirmation = false;
+                        this.waitingConfirmation = data;
                     }
                 );
             }
