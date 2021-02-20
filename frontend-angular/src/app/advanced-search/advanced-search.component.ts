@@ -28,7 +28,6 @@ export class AdvancedSearchComponent implements OnInit {
     submitted: boolean;
 
     serverError: boolean;
-    badRequestError: boolean;
 
     searched: boolean;
 
@@ -42,23 +41,14 @@ export class AdvancedSearchComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
         this.currentPage = this.route.snapshot.queryParams['page'] || 1;
-        this.nameInput = this.route.snapshot.queryParams['name'];
-        this.placeInput = this.route.snapshot.queryParams['place'];
-
-        let startString = this.route.snapshot.queryParams['startDate'];
-        let endString = this.route.snapshot.queryParams['endDate'];
-
         if (!Number(this.currentPage)) {
             this.navigateNotFound();
         }
-
-        this.submitted = false;
-        this.searched = false;
+        this.getPageTripsWithFilters(this.currentPage);
     }
 
-    public getPageTripsWithFilters() {
+    public getPageTripsWithFilters(page: number) {
         if (this.submitted) {
             return;
         }
@@ -73,13 +63,9 @@ export class AdvancedSearchComponent implements OnInit {
                 this.placeInput = null;
             }
         }
-        if (!this.startDate && !this.endDate && !this.placeInput && !this.nameInput) {
-            return;
-        }
 
         this.spinner.show();
         this.submitted = true;
-
         this.serverError = false;
 
         let formData = new FormData();
@@ -96,7 +82,7 @@ export class AdvancedSearchComponent implements OnInit {
             formData.append('name', this.nameInput);
         }
 
-        this.searchService.advancedSearch(formData, this.currentPage).subscribe(
+        this.searchService.advancedSearch(formData, page).subscribe(
             data => {
                 this.trips = data.trips;
                 this.numberOfPages = data.maxPage;
@@ -104,11 +90,12 @@ export class AdvancedSearchComponent implements OnInit {
                 this.searched = true;
                 this.spinner.hide();
                 this.submitted = false;
+                //this.addParamsToURL();
             },
             error => {
                 switch (error.status) {
                     case 400:
-                        this.badRequestError = true;
+                        this.navigateNotFound();
                         break;
                     case 500:
                         this.serverError = true;
@@ -127,16 +114,37 @@ export class AdvancedSearchComponent implements OnInit {
             return;
         }
         this.currentPage = newPage;
-        this.getPageTripsWithFilters();
+        this.getPageTripsWithFilters(newPage);
     }
 
     private containsSpecialCharacters(input: string): boolean {
         return input.includes('%') || input.includes('_');
     }
 
-
     private navigateNotFound() {
         this.router.navigate(["/404"]);
     }
+
+/*    addParamsToURL() {
+        let queryParams = {
+            page: this.currentPage
+        };
+        if (!!this.nameInput) {
+            queryParams["name"] = this.nameInput;
+        }
+        if (!!this.placeInput) {
+            queryParams["place"] = this.placeInput;
+        }
+        if (!!this.startDate) {
+            queryParams["startDate"] = this.dateUtil.convertToDateString(this.startDate);
+        }
+        if (!!this.endDate) {
+            queryParams["endDate"] = this.dateUtil.convertToDateString(this.endDate);
+        }
+        this.router.navigate(['/advanced-search'], {
+            queryParams: queryParams,
+            queryParamsHandling: 'merge',
+        });
+    }*/
 
 }

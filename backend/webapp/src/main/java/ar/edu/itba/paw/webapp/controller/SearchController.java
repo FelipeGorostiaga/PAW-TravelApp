@@ -81,13 +81,11 @@ public class SearchController {
             filterMap.put("endDate", DateManipulation.stringToLocalDate(endDate));
         if (name != null && name.length() > 0)
             filterMap.put("name", name);
-
-        if (filterMap.isEmpty()) {
-            // todo: maybe should return all -public- trips?
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
         TripPaginatedResult paginatedResult = tripService.findWithFilters(filterMap, page);
         final int maxPage = (int) (Math.ceil((float) paginatedResult.getTotalTrips() / ADV_SEARCH_PAGE_SIZE));
+        if (page > maxPage) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         List<TripDTO> resultTrips = paginatedResult.getTrips().stream().map(TripDTO::new).collect(Collectors.toList());
         return Response.ok(new TripListDTO(resultTrips, paginatedResult.getTotalTrips(), maxPage)).build();
     }

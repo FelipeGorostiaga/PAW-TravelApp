@@ -37,17 +37,8 @@ export class ApiSearchService {
       params = params.set('startDate', formData.get('startDate').toString());
     if (formData.get('endDate'))
       params = params.set('endDate', formData.get('endDate').toString());
-    this.printParams(params);
     return this.http.get(url, {params});
   }
 
-  printParams(params: HttpParams) {
-    console.log(params.get('page'));
-    console.log(params.get('place'));
-    console.log(params.get('name'));
-    console.log(params.get('startDate'));
-    console.log(params.get('endDateDate'));
-
-  }
 
 }
