@@ -29,6 +29,8 @@ public class SearchController {
 
     private static final int SEARCH_PAGE_SIZE = 3;
 
+    private static final int ADV_SEARCH_PAGE_SIZE = 2;
+
     @Autowired
     TripService tripService;
 
@@ -85,7 +87,7 @@ public class SearchController {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         TripPaginatedResult paginatedResult = tripService.findWithFilters(filterMap, page);
-        final int maxPage = (int) (Math.ceil((float) paginatedResult.getTotalTrips() / SEARCH_PAGE_SIZE));
+        final int maxPage = (int) (Math.ceil((float) paginatedResult.getTotalTrips() / ADV_SEARCH_PAGE_SIZE));
         List<TripDTO> resultTrips = paginatedResult.getTrips().stream().map(TripDTO::new).collect(Collectors.toList());
         return Response.ok(new TripListDTO(resultTrips, paginatedResult.getTotalTrips(), maxPage)).build();
     }

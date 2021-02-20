@@ -20,6 +20,7 @@ public class TripHibernateDao implements TripDao {
 
     private static final int MAX_ROWS = 4;
     private static final int MAX_SEARCH_RESULTS = 3;
+    private static final int ADV_MAX_SEARCH_RESULTS = 2;
 
     @PersistenceContext
     EntityManager em;
@@ -40,7 +41,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> findByName(String name, int page) {
-        final TypedQuery<Trip> query = em.createQuery("From Trip as t where lower(t.name) like lower(:name)", Trip.class);
+        final TypedQuery<Trip> query = em.createQuery("From Trip as t where lower(t.name) like lower(:name) order by t.startDate", Trip.class);
         query.setParameter("name", "%" + name + "%");
         query.setFirstResult((page - 1) * MAX_SEARCH_RESULTS);
         query.setMaxResults(MAX_SEARCH_RESULTS);
@@ -62,7 +63,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> getAllTripsPerPage(int pageNum) {
-        final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.isPrivate = false ", Trip.class);
+        final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.isPrivate = false order by t.startDate", Trip.class);
         query.setFirstResult((pageNum - 1) * MAX_ROWS);
         query.setMaxResults(MAX_ROWS);
         return query.getResultList();
@@ -211,7 +212,6 @@ public class TripHibernateDao implements TripDao {
         final TypedQuery<Trip> query = em.createQuery("SELECT t FROM Trip AS t, Activity AS a" +
                 " WHERE a.trip.id = t.id AND a.category LIKE :category", Trip.class);
         query.setParameter("category", category);
-        query.setMaxResults(MAX_ROWS);
         return query.getResultList();
     }
 
@@ -220,7 +220,6 @@ public class TripHibernateDao implements TripDao {
         final TypedQuery<Trip> query = em.createQuery("SELECT t FROM Trip AS t, Place AS p" +
                 " WHERE t.startPlace.id = p.id and lower(p.address) like lower(:placeName)", Trip.class);
         query.setParameter("placeName", "%" + placeName + "%");
-        query.setMaxResults(MAX_ROWS);
         return query.getResultList();
     }
 
@@ -233,8 +232,8 @@ public class TripHibernateDao implements TripDao {
         final TypedQuery<Trip> query = em.createQuery(searchQueryString, Trip.class);
         final TypedQuery<Long> queryCount = em.createQuery(countQueryString, Long.class);
         setQueryParameters(query, queryCount, filterMap);
-        query.setFirstResult((page - 1) * MAX_SEARCH_RESULTS);
-        query.setMaxResults(MAX_SEARCH_RESULTS);
+        query.setFirstResult((page - 1) * ADV_MAX_SEARCH_RESULTS);
+        query.setMaxResults(ADV_MAX_SEARCH_RESULTS);
         List<Trip> resultList = query.getResultList();
         int resultCount = queryCount.getSingleResult().intValue();
         return new TripPaginatedResult(resultList, resultCount);
@@ -263,53 +262,28 @@ public class TripHibernateDao implements TripDao {
     }
 
     private String filtersQuery(Map<String, Object> filterMap) {
-        int count = 0;
         StringBuilder buffer = new StringBuilder();
 
         if (filterMap.containsKey("place")) {
             buffer.append(", Activity as a ");
         }
+        buffer.append(" where t.isPrivate = false ");
 
         for (String filter : filterMap.keySet()) {
             switch (filter) {
                 case "place":
-                    if (count == 0) {
-                        buffer.append(" where ");
-                    } else {
-                        buffer.append(" and ");
-                    }
-                    buffer.append("((t.startPlace.id = p.id and (lower(p.address) like lower(:placeName) or lower(p.name) like lower(:placeName)) )");
+                    buffer.append(" and ((t.startPlace.id = p.id and (lower(p.address) like lower(:placeName) or lower(p.name) like lower(:placeName)) )");
                     buffer.append("or (a.trip.id = t.id and ( lower(a.place.name) like lower(:placeName) or lower(a.place.address) like lower(:placeName))))");
-                    count++;
                     break;
-
                 case "name":
-                    if (count == 0) {
-                        buffer.append(" where ");
-                    } else {
-                        buffer.append(" and ");
-                    }
-                    buffer.append("lower(t.name) LIKE lower(:name)");
-                    count++;
+                    buffer.append(" and lower(t.name) LIKE lower(:name)");
                     break;
                 case "startDate":
-                    if (count == 0) {
-                        buffer.append(" where ");
-                    } else {
-                        buffer.append(" and ");
-                    }
-                    buffer.append("(t.startDate >= :startDate)");
-                    count++;
+                    buffer.append(" and (t.startDate >= :startDate)");
                     break;
 
                 case "endDate":
-                    if (count == 0) {
-                        buffer.append(" where ");
-                    } else {
-                        buffer.append(" and ");
-                    }
-                    buffer.append("(t.endDate <= :endDate)");
-                    count++;
+                    buffer.append(" and (t.endDate <= :endDate)");
                     break;
             }
         }
@@ -323,10 +297,5 @@ public class TripHibernateDao implements TripDao {
         return query.getResultList();
     }
 
-    private List<Trip> pagedResult(final TypedQuery<Trip> query, final int offset, final int length) {
-        query.setFirstResult(offset);
-        query.setMaxResults(length);
-        return query.getResultList();
-    }
 
 }

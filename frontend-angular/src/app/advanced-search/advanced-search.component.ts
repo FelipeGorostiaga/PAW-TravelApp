@@ -54,10 +54,6 @@ export class AdvancedSearchComponent implements OnInit {
             this.navigateNotFound();
         }
 
-        if ((!this.currentPage || this.currentPage === 1) && !this.nameInput && !this.placeInput && !this.startDate && !this.endDate) {
-            console.log("NO FILTERS IN URL");
-        }
-
         this.submitted = false;
         this.searched = false;
     }
@@ -107,6 +103,7 @@ export class AdvancedSearchComponent implements OnInit {
                 this.totalTrips = data.totalAmount;
                 this.searched = true;
                 this.spinner.hide();
+                this.submitted = false;
             },
             error => {
                 switch (error.status) {

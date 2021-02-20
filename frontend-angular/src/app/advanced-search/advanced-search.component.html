@@ -1,7 +1,7 @@
 <app-navigation></app-navigation>
 <ngx-bootstrap-spinner></ngx-bootstrap-spinner>
 <div class="container-fluid">
-    <div class="row" style="margin-top: 100px; margin-left: 20px">
+    <div class="row" style="margin-top: 100px; margin-left: 20px; height: 550px;">
         <div class="col-2" id="custom-container">
             <h4 style="margin-bottom: 20px;" i18n=@@advanced-search.title>Advanced Search</h4>
             <form>
@@ -43,17 +43,21 @@
         </div>
         <div class="col-10">
             <div style="width: 1000px; margin-left: 20%; margin-right: 20%">
-                <alert *ngIf="searched && trips?.length === 0" [type]="'warning'" class="text-center" i18n=@@advanced-search.noTripsMessage>No trips where found with selected specifications</alert>
-                <alert *ngIf="searched && serverError" [type]="'danger'" class="text-center" i18n=@@advanced-search.errorMessage>Error getting trips, please try again later</alert>
+                <alert *ngIf="trips?.length === 0" [type]="'warning'" class="text-center" i18n=@@advanced-search.noTripsMessage>No trips where found with selected specifications</alert>
+                <alert *ngIf="serverError" [type]="'danger'" class="text-center" i18n=@@advanced-search.errorMessage>Error getting trips, please try again later</alert>
             </div>
-            <div class="card-deck" *ngIf="trips?.length > 0" style="margin-left: 50px;">
+            <div class="card-deck" *ngIf="trips?.length > 0" style="margin-left: 50px">
                 <div class="row justify-content-center">
                     <app-trip-card
-                            *ngFor="let trip of trips[currentPage]"
+                            *ngFor="let trip of trips"
                             [trip]="trip">
                     </app-trip-card>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row" style="padding-top: 250px;">
+        <div class="col">
             <app-paginator
                     *ngIf="numberOfPages > 1"
                     [numberOfPages]="numberOfPages"
@@ -63,3 +67,4 @@
         </div>
     </div>
 </div>
+

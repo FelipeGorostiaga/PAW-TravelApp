@@ -28,8 +28,7 @@ export class ApiSearchService {
 
   advancedSearch(formData: FormData, page: number): Observable<any> {
     const url = this.searchBaseURL + 'advanced';
-    let params = new HttpParams();
-    params.set('page', String(page));
+    let params = new HttpParams().set('page', String(page));
     if (formData.get('name'))
       params = params.set('name', formData.get('name').toString());
     if (formData.get('place'))
@@ -38,7 +37,17 @@ export class ApiSearchService {
       params = params.set('startDate', formData.get('startDate').toString());
     if (formData.get('endDate'))
       params = params.set('endDate', formData.get('endDate').toString());
+    this.printParams(params);
     return this.http.get(url, {params});
+  }
+
+  printParams(params: HttpParams) {
+    console.log(params.get('page'));
+    console.log(params.get('place'));
+    console.log(params.get('name'));
+    console.log(params.get('startDate'));
+    console.log(params.get('endDateDate'));
+
   }
 
 }
