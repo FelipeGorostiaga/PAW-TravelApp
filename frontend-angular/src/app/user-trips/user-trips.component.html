@@ -1,7 +1,15 @@
 <app-navigation></app-navigation>
 <ngx-bootstrap-spinner></ngx-bootstrap-spinner>
-<alert *ngIf="!loading && !trips" [type]="'primary'" [dismissible]="false" i18n=@@user-trips.noTrips>You are not a member of any trip</alert>
-<alert *ngIf="!loading && !trips" [type]="'danger'" [dismissible]="false" i18n=@@user-trips.serverError>Unexpected error occurred, please try again later</alert>
+
+<div class="container" *ngIf="trips?.length === 0 || serverError">
+    <div class="row">
+        <div class="col">
+            <alert *ngIf="trips?.length === 0" [type]="'warning'" [dismissible]="false" i18n=@@user-trips.noTrips>You are not participating in any trip</alert>
+            <alert *ngIf="serverError" [type]="'danger'" [dismissible]="false" i18n=@@user-trips.serverError>Unexpected error occurred, please try again later</alert>
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid mt-4" id="main-container">
     <div class="card-deck" *ngIf="trips?.length > 0">
         <div class="row">

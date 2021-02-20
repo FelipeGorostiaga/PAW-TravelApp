@@ -17,8 +17,8 @@
                                i18n-placeholder=@@create-trip.namePlaceholder
                                placeholder="Enter a name for your trip"
                                style="margin-bottom: 10px;"
-                               [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
-                        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                               [ngClass]="{ 'is-invalid': f.name.errors }">
+                        <div *ngIf="f.name.errors" class="invalid-feedback">
                             <p *ngIf="f.name.errors.required"  i18n=@@create-trip.name.required>Name is required</p>
                             <p *ngIf="f.name.errors.minlength" i18n=@@create-trip.name.minlength>Name must be at least 5 characters long</p>
                             <p *ngIf="f.name.errors.maxlength" i18n=@@create-trip.name.maxlength>Maximum length is 30 characters</p>
@@ -35,9 +35,9 @@
                                   placeholder="Write a description for your new adventure!"
                                   style="margin-bottom: 10px;resize:none;"
                                   maxlength="300"
-                                  [ngClass]="{ 'is-invalid': submitted && f.description.errors }">
+                                  [ngClass]="{ 'is-invalid': f.description.errors }">
                         </textarea>
-                        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+                        <div *ngIf="f.description.errors" class="invalid-feedback">
                             <p *ngIf="f.description.errors.required" i18n=@@create-trip.description.required>Description is required</p>
                             <p *ngIf="f.description.errors.minlength" i18n=@@create-trip.description.minlength>Description must be at least 25 characters
                                 long</p>
@@ -56,10 +56,10 @@
                                    id="startDate"
                                    autocomplete="off"
                                    placeholder="dd/mm/yyyy"
-                                   [ngClass]="{ 'is-invalid': submitted && f.startDate.errors }"
+                                   [ngClass]="{ 'is-invalid': f.startDate.errors }"
                                    bsDatepicker
                                    [bsConfig]="bsConfig">
-                            <div *ngIf="submitted && f.startDate.errors" class="invalid-feedback">
+                            <div *ngIf="f.startDate.errors" class="invalid-feedback">
                                 <p *ngIf="f.startDate.errors.required" i18n=@@create-trip.startDate.required>Start date is required</p>
                                 <p *ngIf="f.startDate.errors.invalidInterval" i18n=@@create-trip.startDate.invalidInterval>Invalid dates</p>
                             </div>
@@ -71,11 +71,11 @@
                                    class="form-control"
                                    autocomplete="off"
                                    placeholder="dd/mm/yyyy"
-                                   [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }"
+                                   [ngClass]="{ 'is-invalid': f.endDate.errors }"
                                    bsDatepicker
                                    id="endDate"
                                    [bsConfig]="bsConfig">
-                            <div *ngIf="submitted && f.endDate.errors" class="invalid-feedback">
+                            <div *ngIf="f.endDate.errors" class="invalid-feedback">
                                 <p *ngIf="f.endDate.errors.required"  i18n=@@create-trip.endDate.required>End date is required</p>
                                 <p *ngIf="f.endDate.errors.invalidInterval"  i18n=@@create-trip.endDate.invalidInterval>Invalid dates</p>
                             </div>
@@ -109,12 +109,12 @@
                         type="text"
                         autocomplete="off"
                         autocapitalize="off"
-                        [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }"/>
+                        [ngClass]="{ 'is-invalid': f.placeInput.errors }"/>
                     <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom"
                              style="height: 500px;width: 100%;">
                         <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
                     </agm-map>
-                    <div *ngIf="submitted && f.placeInput.errors" class="invalid-feedback">
+                    <div *ngIf="f.placeInput.errors" class="invalid-feedback">
                         <p *ngIf="f.placeInput.errors.required" i18n=@@create-trip.placeInput.required>Location is required</p>
                     </div>
                     <div class="text-center flex-fill" style="margin-bottom: 20px; margin-top: 10px;">
