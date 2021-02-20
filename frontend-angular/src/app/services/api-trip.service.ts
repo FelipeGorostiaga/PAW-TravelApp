@@ -19,8 +19,14 @@ export class ApiTripService {
 
     private tripsBaseURL = `${environment.apiURL}/trips`;
 
+
+    createTrip(tripForm: TripForm): Observable<Trip> {
+        const url = this.tripsBaseURL;
+        return this.http.post<Trip>(url, tripForm);
+    }
+
     getTrip(id: number): Observable<any> {
-        const url = this.tripsBaseURL + id;
+        const url = this.tripsBaseURL + "/" +  id;
         return this.http.get<Trip>(url);
     }
 
@@ -30,95 +36,90 @@ export class ApiTripService {
     }
 
     editTrip(formData: FormData, tripId: number): Observable<any> {
-        const url = this.tripsBaseURL + tripId + '/edit';
+        const url = this.tripsBaseURL + "/" + tripId + '/edit';
         return this.http.post(url, formData);
     }
 
-    createTrip(tripForm: TripForm): Observable<Trip> {
-        const url = this.tripsBaseURL;
-        return this.http.post<Trip>(url, tripForm);
-    }
-
     getTripPlaces(id: number): Observable<any> {
-        const url = this.tripsBaseURL + id + '/places';
+        const url = this.tripsBaseURL + "/" + id + '/places';
         return this.http.get(url);
     }
 
     deleteTrip(id: number): Observable<any> {
-        const url = this.tripsBaseURL + id;
+        const url = this.tripsBaseURL + "/" + id;
         return this.http.delete(url);
     }
 
     exitTrip(tripId: number): Observable<any> {
-        const url = this.tripsBaseURL + tripId + '/exit';
+        const url = this.tripsBaseURL + "/" + tripId + '/exit';
         return this.http.post(url, {});
     }
 
     inviteUserToTrip(id: number, userId: number): Observable<any> {
-        const url = this.tripsBaseURL + id + '/invite/' + userId;
+        const url = this.tripsBaseURL + "/" + id + '/invite/' + userId;
         return this.http.post(url, {});
     }
 
     getTripImage(id: number): Observable<any> {
-        const url = this.tripsBaseURL + id + '/image';
+        const url = this.tripsBaseURL + "/" + id + '/image';
         return this.http.get(url, {responseType: 'blob'});
     }
 
     getTripCardImage(tripId: number) {
-        const url = this.tripsBaseURL + tripId + '/image/card';
+        const url = this.tripsBaseURL + "/" + tripId + '/image/card';
         return this.http.get(url, {responseType: 'blob'});
     }
 
     postComment(id: number, form: CommentForm): Observable<any> {
-        const url = this.tripsBaseURL + id + '/comments';
+        const url = this.tripsBaseURL + "/" + id + '/comments';
         return this.http.post(url, form).pipe(shareReplay());
     }
 
     createTripActivity(id: number, activityForm: ActivityForm): Observable<any> {
-        const url = this.tripsBaseURL + id + '/activities';
+        const url = this.tripsBaseURL + "/" + id + '/activities';
         return this.http.post(url, activityForm);
     }
 
     deleteTripActivity(id: number, activityId: number): Observable<any> {
-        const url = this.tripsBaseURL + id + '/activities/' + activityId;
+        const url = this.tripsBaseURL + "/" + id + '/activities/' + activityId;
         return this.http.delete(url);
     }
 
     sendJoinRequest(id: number, userId: number): Observable<any> {
-        const url = this.tripsBaseURL + id + '/request-invite';
+        const url = this.tripsBaseURL + "/" + id + '/request-invite';
         return this.http.post(url, {});
     }
 
     respondJoinRequest(id: number, token: string, accepted: boolean): Observable<any> {
-        const url = this.tripsBaseURL + id + "/invitation";
+        const url = this.tripsBaseURL + "/" + id + "/invitation";
         let params = new HttpParams().set("token", token).set("accepted", String(accepted));
         return this.http.post(url, {},{params: params});
     }
 
     isWaitingTripConfirmation(id: number, userId: number) : Observable<any> {
-        const url = this.tripsBaseURL + id + "/pendingConfirmations/user";
+        const url = this.tripsBaseURL + "/" + id + "/pendingConfirmations/user";
         let params = new HttpParams().set("user", String(userId));
         return this.http.get(url, {params: params})
     }
 
     respondTripInvite(id: number, token: string, accepted: boolean): Observable<any> {
-        const url = this.tripsBaseURL + id + "/invite-request/response";
+        const url = this.tripsBaseURL + "/" + id + "/invite-request/response";
         let params = new HttpParams().set("token", token).set("accepted", String(accepted));
         return this.http.post(url, {}, {params: params}).pipe(mergeMap(res => this.getTrip(id)));
     }
 
     getTripPendingConfirmations(id: number, userId: number): Observable<any> {
-        const url = this.tripsBaseURL + id + "/pendingConfirmations";
+        const url = this.tripsBaseURL + "/" + id + "/pendingConfirmations";
         return this.http.get(url);
     }
 
     grantAdminRole(trip: FullTrip, user: User) {
-        const url = this.tripsBaseURL + trip.id + '/make-admin/' + user.id;
+        const url = this.tripsBaseURL + "/" + trip.id + '/make-admin/' + user.id;
         return this.http.post(url, {});
     }
 
     finishTrip(tripId: number) {
-        const url = this.tripsBaseURL + tripId + '/finish';
+        const url = this.tripsBaseURL + "/" + tripId + '/finish';
         return this.http.post(url, {});
     }
 

@@ -333,6 +333,7 @@ export class InformationComponent implements OnInit {
         this.tripService.finishTrip(this.trip.id).subscribe(
             res => {
                 this.trip.status = TripStatus.COMPLETED;
+                this.completed = true;
             }
         );
     }
