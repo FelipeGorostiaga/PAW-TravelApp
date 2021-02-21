@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.CacheControl;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -35,6 +36,10 @@ import javax.sql.DataSource;
 import javax.validation.Validator;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.DAYS;
+import static org.springframework.http.CacheControl.maxAge;
 
 @EnableTransactionManagement
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.service"})
@@ -56,6 +61,18 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+
+        final CacheControl cacheControl = maxAge(100, DAYS)
+                .cachePrivate();
+
+        registry.addResourceHandler("*.js")
+                .setCacheControl(cacheControl)
+                .addResourceLocations("classpath:/public/");
+
+        registry.addResourceHandler("*.css")
+                .setCacheControl(cacheControl)
+                .addResourceLocations("classpath:/public/");
+
     }
 
     @Bean
@@ -71,12 +88,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
         ds.setDriverClass(org.postgresql.Driver.class);
-        ds.setUrl("jdbc:postgresql://10.16.1.110/paw-2019a-4");
+/*        ds.setUrl("jdbc:postgresql://10.16.1.110/paw-2019a-4");
         ds.setUsername("paw-2019a-4");
-        ds.setPassword("qwQf3Kj2g");
-/*        ds.setUrl("jdbc:postgresql://localhost/paw");
+        ds.setPassword("qwQf3Kj2g");*/
+        ds.setUrl("jdbc:postgresql://localhost/paw");
         ds.setUsername("postgres");
-        ds.setPassword("postgres");*/
+        ds.setPassword("postgres");
         return ds;
     }
 

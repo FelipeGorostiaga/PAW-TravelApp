@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.service;
 
-import ar.edu.itba.paw.interfaces.MailingService;
-import ar.edu.itba.paw.interfaces.UserDao;
-import ar.edu.itba.paw.interfaces.UserPicturesService;
-import ar.edu.itba.paw.interfaces.UserService;
+import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private MailingService mailService;
+
+    @Autowired
+    private TripService tripService;
 
     @Override
     public Optional<User> findById(long id) {
@@ -77,10 +77,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findInvitableUsersByName(String name, Trip trip) {
+    public List<User> findInvitableUsersByName(String name, long tripId) {
         List<User> users = findByName(name);
-        List<User> tripUsers = trip.getMembers().stream().map(TripMember::getUser).collect(Collectors.toList());
-        return users.stream().filter(u -> !tripUsers.contains(u) && !ud.hasTripInvitation(trip, u)).collect(Collectors.toList());
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        if (tripOptional.isPresent()) {
+            List<User> tripUsers = tripOptional.get().getMembers().stream().map(TripMember::getUser).collect(Collectors.toList());
+            return users.stream().filter(u -> !tripUsers.contains(u) && !ud.hasTripInvitation(tripOptional.get(), u)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override

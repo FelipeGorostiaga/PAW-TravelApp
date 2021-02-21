@@ -28,7 +28,7 @@ public interface UserService {
 
     List<User> findByName(final String name);
 
-    List<User> findInvitableUsersByName(String name, Trip trip);
+    List<User> findInvitableUsersByName(String name, long tripId);
 
     void changeProfilePicture(User loggedUser, byte[] imageBytes);
 

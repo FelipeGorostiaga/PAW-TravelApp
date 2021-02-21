@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Trip} from "../../model/trip";
-import {ApiUserService} from "../../services/api-user.service";
 import {ApiTripService} from "../../services/api-trip.service";
 import {Router} from '@angular/router';
 import {DomSanitizer} from "@angular/platform-browser";
@@ -36,9 +35,6 @@ export class TripCardComponent implements OnInit {
         this.startDate = this.dateUtil.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtil.stringToDate(this.trip.endDate);
         this.loadingImage = true;
-
-        this.tripService.hasImage(this.trip.id).subscribe();
-
         if (this.trip.hasImage) {
             this.tripService.getTripCardImage(this.trip.id).subscribe(
                 data => {

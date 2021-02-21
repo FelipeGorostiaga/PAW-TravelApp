@@ -42,7 +42,7 @@ public class SearchController {
     public Response searchInvitableUsers(@PathParam("tripId") long tripId, @QueryParam("name") String name) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        List<UserDTO> resultUsers = userService.findInvitableUsersByName(name, tripOptional.get())
+        List<UserDTO> resultUsers = userService.findInvitableUsersByName(name, tripId)
                 .stream()
                 .map(UserDTO::new)
                 .collect(Collectors.toList());
