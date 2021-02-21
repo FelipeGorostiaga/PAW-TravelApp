@@ -992,7 +992,7 @@
                     <context context-type="linenumber">6</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="verification-result.signinButton" datatype="html">
+            <trans-unit id="verification-result.Home" datatype="html">
                 <source>Home</source>
                 <target>Inicio</target>
                 <context-group purpose="location">

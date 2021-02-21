@@ -319,14 +319,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="index.registerButton" datatype="html">
-        <source>Create account</source>
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span style=&quot;margin: 5px;&quot;&gt;"/>Create account<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/index/index.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="index.signinButton" datatype="html">
-        <source>Sign in</source>
+        <source><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span style=&quot;margin: 5px;&quot;&gt;"/>Sign in<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/index/index.component.html</context>
           <context context-type="linenumber">13</context>

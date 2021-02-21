@@ -41,7 +41,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> findByName(String name, int page) {
-        final TypedQuery<Trip> query = em.createQuery("From Trip as t where lower(t.name) like lower(:name) order by t.startDate", Trip.class);
+        final TypedQuery<Trip> query = em.createQuery("From Trip as t where lower(t.name) like lower(:name) AND t.isPrivate = false order by t.startDate", Trip.class);
         query.setParameter("name", "%" + name + "%");
         query.setFirstResult((page - 1) * MAX_SEARCH_RESULTS);
         query.setMaxResults(MAX_SEARCH_RESULTS);
@@ -50,7 +50,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public int countByNameSearch(String name) {
-        final TypedQuery<Long> query = em.createQuery("SELECT count(*) FROM Trip as t WHERE lower(t.name) LIKE lower(:name)", Long.class);
+        final TypedQuery<Long> query = em.createQuery("SELECT count(*) FROM Trip as t WHERE lower(t.name) LIKE lower(:name) AND t.isPrivate = false", Long.class);
         query.setParameter("name", "%" + name + "%");
         return query.getSingleResult().intValue();
     }
