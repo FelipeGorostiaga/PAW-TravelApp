@@ -15,7 +15,7 @@ import java.util.Optional;
 public class TripPicturesHibernateDao implements TripPicturesDao {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public TripPicture create(Trip trip, byte[] image) {

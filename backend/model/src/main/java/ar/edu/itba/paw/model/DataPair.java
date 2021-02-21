@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.model;
+
 import java.util.Objects;
 
-public class DataPair<K,V> {
+public class DataPair<K, V> {
 
     private final K key;
     private final V value;
@@ -20,15 +21,15 @@ public class DataPair<K,V> {
     }
 
     public boolean equals(Object o) {
-            return o instanceof DataPair && Objects.equals(key, ((DataPair<?,?>)o).key) && Objects.equals(value, ((DataPair<?,?>)o).value);
-        }
+        return o instanceof DataPair && Objects.equals(key, ((DataPair<?, ?>) o).key) && Objects.equals(value, ((DataPair<?, ?>) o).value);
+    }
 
-        public int hashCode() {
-            return 31 * Objects.hashCode(key) + Objects.hashCode(value);
-        }
+    public int hashCode() {
+        return 31 * Objects.hashCode(key) + Objects.hashCode(value);
+    }
 
-        public String toString() {
-            return key + "=" + value;
-        }
+    public String toString() {
+        return key + "=" + value;
+    }
 
 }

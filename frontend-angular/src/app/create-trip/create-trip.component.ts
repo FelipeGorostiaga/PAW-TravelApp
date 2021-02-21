@@ -50,7 +50,7 @@ export class CreateTripComponent implements OnInit {
 
     ngOnInit() {
         // @ts-ignore
-        this.userLang = (navigator.language || navigator.userLanguage).substr(0,2);
+        this.userLang = (navigator.language || navigator.userLanguage).substr(0, 2);
         this.spinner.show();
         this.tripForm = this.formBuilder.group({
             name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(15)]],
@@ -62,7 +62,7 @@ export class CreateTripComponent implements OnInit {
         }, {
             validators: validInterval('startDate', 'endDate')
         });
-        this.tripStatus = this.userLang === 'en' ? "Public" : "Público";
+        this.tripStatus = "Public";
         this.submittedPlace = false;
         this.zoom = 14;
         this.searchControl = new FormControl();
@@ -101,32 +101,22 @@ export class CreateTripComponent implements OnInit {
         this.latitude = -34.603722;
         this.longitude = -58.381592;
         //production: google requires https for getCurrentPosition()
-/*        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                this.latitude = position.coords.latitude;
-                this.longitude = position.coords.longitude;
-            });
-        } else {
-            this.latitude = -34.603722;
-            this.longitude = -58.381592;
-        }*/
+        /*        if ('geolocation' in navigator) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        this.latitude = position.coords.latitude;
+                        this.longitude = position.coords.longitude;
+                    });
+                } else {
+                    this.latitude = -34.603722;
+                    this.longitude = -58.381592;
+                }*/
     }
 
     changeTripStatus() {
-        if (this.userLang === 'es') {
-            if (this.tripStatus === "Privado") {
-                this.tripStatus = "Público";
-            }
-            else {
-                this.tripStatus = "Privado";
-            }
-        }
-        else {
-            if (this.tripStatus === "Private") {
-                this.tripStatus = "Public";
-            } else {
-                this.tripStatus = "Private";
-            }
+        if (this.tripStatus === "Private") {
+            this.tripStatus = "Public";
+        } else {
+            this.tripStatus = "Private";
         }
     }
 
@@ -164,7 +154,7 @@ export class CreateTripComponent implements OnInit {
     }
 
     onReset() {
-        this.tripStatus = this.userLang === 'es' ? "Público" : "Public";
+        this.tripStatus = "Public";
         this.submitted = false;
         this.tripForm.reset();
         this.latitude = null;
@@ -196,11 +186,11 @@ export function validInterval(startControlName: string, endControlName: string) 
             return;
         }
         let now = new Date();
-        now.setHours(0,0,0,0);
+        now.setHours(0, 0, 0, 0);
         let startDate = startControl.value;
-        startDate.setHours(0,0,0,0);
+        startDate.setHours(0, 0, 0, 0);
         let endDate = endControl.value;
-        endDate.setHours(0,0,0,0);
+        endDate.setHours(0, 0, 0, 0);
         if (startDate < now || startDate > endDate) {
             startControl.setErrors({invalidInterval: true});
             endControl.setErrors({invalidInterval: true});

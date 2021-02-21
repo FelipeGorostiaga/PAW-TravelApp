@@ -30,7 +30,6 @@ public class AuthController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
 
-
     private static final int JWT_ACCESS_EXPIRATION = 3600 * 4 * 1000; //4 hours
     private static final int JWT_REFRESH_EXPIRATION = 900000 * 1000; //10+ days
 
@@ -39,9 +38,6 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    SecurityUserService securityUserService;
 
     @Autowired
     private UserService userService;

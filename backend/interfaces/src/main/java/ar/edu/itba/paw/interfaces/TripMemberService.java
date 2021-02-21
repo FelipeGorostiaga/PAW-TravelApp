@@ -7,9 +7,9 @@ import ar.edu.itba.paw.model.User;
 
 public interface TripMemberService {
 
-    TripMember create(Trip trip, User user, TripMemberRole role);
+    public TripMember create(Trip trip, User user, TripMemberRole role);
 
-    TripMember findById(long id);
+    public TripMember findById(long id);
 
-    TripMember find(Trip trip, User user);
+    public TripMember find(Trip trip, User user);
 }

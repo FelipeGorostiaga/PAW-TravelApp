@@ -10,66 +10,66 @@ import java.util.Optional;
 
 public interface TripDao {
 
-    Trip create(User creator, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate);
+    public Trip create(User creator, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate);
 
-    Optional<Trip> findById(long id);
+    public Optional<Trip> findById(long id);
 
-    List<Trip> findByName(String name, int page);
+    public List<Trip> findByName(String name, int page);
 
-    List<Trip> findUserCreatedTrips(long userId);
+    public List<Trip> findUserCreatedTrips(long userId);
 
-    void deleteTrip(long tripId);
+    public void deleteTrip(long tripId);
 
-    int countAllPublicTrips();
+    public int countAllPublicTrips();
 
-    List<Trip> findByCategory(String category);
+    public List<Trip> findByCategory(String category);
 
-    List<Trip> findByPlace(String placeName);
+    public List<Trip> findByPlace(String placeName);
 
-    PaginatedResult<Trip> findWithFilters(Map<String, Object> filterMap, int page);
+    public PaginatedResult<Trip> findWithFilters(Map<String, Object> filterMap, int page);
 
-    List<TripComment> getTripComments(long tripId);
+    public List<TripComment> getTripComments(long tripId);
 
-    List<Trip> getAllTripsPerPage(int pageNum);
+    public List<Trip> getAllTripsPerPage(int pageNum);
 
-    TripPendingConfirmation createPendingConfirmation(Trip trip, User user, String token);
+    public TripPendingConfirmation createPendingConfirmation(Trip trip, User user, String token);
 
-    List<TripPendingConfirmation> getTripJoinRequests(long tripId);
+    public List<TripPendingConfirmation> getTripJoinRequests(long tripId);
 
-    boolean editJoinRequest(Trip trip, User u, String token, boolean accepted);
+    public boolean editJoinRequest(Trip trip, User u, String token, boolean accepted);
 
-    Optional<TripPendingConfirmation> findJoinRequestByToken(String token);
+    public Optional<TripPendingConfirmation> findJoinRequestByToken(String token);
 
-    TripInvitation createTripInvitation(Trip trip, User invitedUser, User admin, String token);
+    public TripInvitation createTripInvitation(Trip trip, User invitedUser, User admin, String token);
 
-    Optional<TripPendingConfirmation> findTripConfirmationByUser(Trip trip, User user);
+    public Optional<TripPendingConfirmation> findTripConfirmationByUser(Trip trip, User user);
 
-    Optional<TripInvitation> findTripInvitationByToken(String token);
+    public Optional<TripInvitation> findTripInvitationByToken(String token);
 
-    void deleteTripInvitation(String token, Trip trip);
+    public void deleteTripInvitation(String token, Trip trip);
 
-    Optional<TripInvitation> findTripInvitationByUser(Trip trip, User user);
+    public Optional<TripInvitation> findTripInvitationByUser(Trip trip, User user);
 
-    void updateTripData(String tripName, String description, long tripId);
+    public void updateTripData(String tripName, String description, long tripId);
 
-    TripMember createTripMember(Trip trip, User user, TripMemberRole role);
+    public TripMember createTripMember(Trip trip, User user, TripMemberRole role);
 
-    void updateRoleToAdmin(long tripId, long invitedUserId);
+    public void updateRoleToAdmin(long tripId, long invitedUserId);
 
-    void markTripAsCompleted(long tripId);
+    public void markTripAsCompleted(long tripId);
 
-    Boolean hasImage(long tripId);
+    public Boolean hasImage(long tripId);
 
-    void deleteTripMember(long userId, long tripId);
+    public void deleteTripMember(long userId, long tripId);
 
-    void deleteAllTripMembers(long tripId);
+    public void deleteAllTripMembers(long tripId);
 
-    void deleteTripInvitations(long tripId);
+    public void deleteTripInvitations(long tripId);
 
-    int countByNameSearch(String name);
+    public int countByNameSearch(String name);
 
-    void deleteTripPendingConfirmations(long id);
+    public void deleteTripPendingConfirmations(long id);
 
-    PaginatedResult<Trip> findUserTrips(long userId, int page);
+    public PaginatedResult<Trip> findUserTrips(long userId, int page);
 
 }

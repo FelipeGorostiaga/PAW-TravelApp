@@ -17,7 +17,7 @@ import java.util.Optional;
 public class TripCommentHibernateDao implements TripCommentsDao {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public TripComment create(Trip trip, User user, String comment) {

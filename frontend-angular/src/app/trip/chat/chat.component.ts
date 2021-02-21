@@ -36,10 +36,6 @@ export class ChatComponent implements OnInit {
             data => {
                 this.trip.comments.push(data);
                 this.sendingMessage = false;
-            },
-            error => {
-                console.log(error);
-                this.sendingMessage = false;
             }
         );
     }

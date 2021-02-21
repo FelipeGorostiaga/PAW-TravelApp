@@ -13,7 +13,7 @@ import java.util.Optional;
 public class PlaceHibernateDao implements PlaceDao {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public Place create(String googleId, String name, double latitude, double longitude, String address) {

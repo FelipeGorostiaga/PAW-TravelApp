@@ -23,7 +23,7 @@ public class TripHibernateDao implements TripDao {
     private static final int ADV_MAX_SEARCH_RESULTS = 2;
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public Trip create(User creator, Place startPlace, String name, String description, LocalDate startDate, LocalDate endDate, boolean isPrivate) {

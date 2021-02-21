@@ -176,9 +176,6 @@ export class InformationComponent implements OnInit {
             ok => {
                 this.router.navigate(["/user-trips"]);
             }
-            , error => {
-                console.log(error);
-            }
         );
     }
 
@@ -299,8 +296,7 @@ export class InformationComponent implements OnInit {
         this.tripService.deleteTrip(this.trip.id).subscribe(
             ok => {
                 this.router.navigate(["/home"]);
-            },
-            error => console.log(error)
+            }
         );
     }
 

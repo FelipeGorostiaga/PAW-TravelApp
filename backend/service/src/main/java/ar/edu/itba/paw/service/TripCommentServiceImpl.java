@@ -18,10 +18,10 @@ import java.util.Optional;
 public class TripCommentServiceImpl implements TripCommentsService {
 
     @Autowired
-    TripCommentsDao tripCommentsDao;
+    private TripCommentsDao tripCommentsDao;
 
     @Autowired
-    TripMemberService tripMemberService;
+    private TripMemberService tripMemberService;
 
 
     @Override

@@ -25,13 +25,13 @@ import java.util.Optional;
 public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
-    ActivityDao ad;
+    private ActivityDao ad;
 
     @Autowired
-    TripService tripService;
+    private TripService tripService;
 
     @Autowired
-    GoogleMapsService googleMapsService;
+    private GoogleMapsService googleMapsService;
 
     @Override
     public Optional<Activity> findById(final long id) {

@@ -23,10 +23,8 @@ export class RateFormComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log(this.rate);
         this.userService.getUserRating(this.rate.ratedUser.id).subscribe(
             data => {
-                console.log(data);
                 this.userRating = data;
             }
         );

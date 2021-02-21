@@ -7,7 +7,7 @@ import ar.edu.itba.paw.model.User;
 import java.util.Optional;
 
 public interface TripCommentsService {
-    TripComment create(User user, Trip trip, String comment);
-    Optional<TripComment> getById(long id);
+    public TripComment create(User user, Trip trip, String comment);
+    public Optional<TripComment> getById(long id);
 
 }

@@ -32,10 +32,10 @@ public class SearchController {
     private static final int ADV_SEARCH_PAGE_SIZE = 2;
 
     @Autowired
-    TripService tripService;
+    private TripService tripService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @GET
     @Path("/{tripId}/users")

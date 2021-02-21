@@ -151,7 +151,6 @@ export class ProfileComponent implements OnInit {
                 window.location.reload();
             },
             error => {
-                console.log(error);
                 this.imageError = error.message;
             }
         );
@@ -162,7 +161,6 @@ export class ProfileComponent implements OnInit {
     }
 
     onFileSelected(event) {
-        console.log(event.target.files[0]);
         this.selectedFile = event.target.files[0];
     }
 

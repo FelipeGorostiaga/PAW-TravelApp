@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TripMemberServiceImpl implements TripMemberService {
 
     @Autowired
-    TripMemberDao tripMemberDao;
+    private TripMemberDao tripMemberDao;
 
     @Override
     public TripMember create(Trip trip, User user, TripMemberRole role) {

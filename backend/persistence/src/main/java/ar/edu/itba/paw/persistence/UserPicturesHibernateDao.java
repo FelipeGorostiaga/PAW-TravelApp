@@ -15,7 +15,7 @@ import java.util.Optional;
 public class UserPicturesHibernateDao implements UserPicturesDao {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public UserPicture create(User user, byte[] image) {

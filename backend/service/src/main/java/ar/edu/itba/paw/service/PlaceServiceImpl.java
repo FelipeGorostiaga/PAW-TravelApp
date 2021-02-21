@@ -15,7 +15,7 @@ import java.util.Optional;
 public class PlaceServiceImpl implements PlaceService {
 
     @Autowired
-    PlaceDao pd;
+    private PlaceDao pd;
 
     @Override
     public Place create(String googleId, String name, double latitude, double longitude, String address) {

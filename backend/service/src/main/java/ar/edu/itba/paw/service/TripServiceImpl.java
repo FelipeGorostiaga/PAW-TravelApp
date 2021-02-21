@@ -46,7 +46,6 @@ public class TripServiceImpl implements TripService {
     @Autowired
     private UserRatesService userRatesService;
 
-    private static final int ROWS = 4;
 
     @Override
     public Trip create(long userId, double latitude, double longitude, String name, String description,

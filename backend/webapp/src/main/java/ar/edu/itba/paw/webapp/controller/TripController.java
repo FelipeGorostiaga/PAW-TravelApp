@@ -51,34 +51,25 @@ public class TripController {
     private static final int PAGE_SIZE = 6;
 
     @Autowired
-    SecurityUserService securityUserService;
+    private SecurityUserService securityUserService;
 
     @Autowired
-    TripService tripService;
+    private TripService tripService;
 
     @Autowired
-    GooglePlaces googleClient;
+    private UserService userService;
 
     @Autowired
-    PlaceService placeService;
+    private TripPicturesService tripPicturesService;
 
     @Autowired
-    UserService userService;
+    private TripCommentsService tripCommentsService;
 
     @Autowired
-    MailingService mailService;
+    private ActivityService activityService;
 
     @Autowired
-    TripPicturesService tripPicturesService;
-
-    @Autowired
-    TripCommentsService tripCommentsService;
-
-    @Autowired
-    ActivityService activityService;
-
-    @Autowired
-    Validator validator;
+    private Validator validator;
 
     @GET
     @Path("/{id}")

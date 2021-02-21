@@ -20,7 +20,7 @@ public class ActivityHibernateDao implements ActivityDao {
     private static final int MAX_ROWS = 5;
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public Optional<Activity> findById(long id) {

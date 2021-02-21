@@ -52,7 +52,7 @@ public class UserController {
     private static final int PAGE_SIZE = 6;
 
     @Autowired
-    Validator validator;
+    private Validator validator;
 
     @Autowired
     private UserPicturesService userPicturesService;
@@ -67,7 +67,7 @@ public class UserController {
     private UserRatesService userRatesService;
 
     @Autowired
-    SecurityUserService securityUserService;
+    private SecurityUserService securityUserService;
 
     @Path("/")
     @POST

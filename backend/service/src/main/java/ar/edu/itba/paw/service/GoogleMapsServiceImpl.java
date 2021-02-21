@@ -17,10 +17,10 @@ import java.util.Optional;
 public class GoogleMapsServiceImpl implements GoogleMapsService {
 
     @Autowired
-    GooglePlaces googleClient;
+    private GooglePlaces googleClient;
 
     @Autowired
-    PlaceService placeService;
+    private PlaceService placeService;
 
     @Override
     public List<Place> queryGoogleMapsPlaces(double latitude, double longitude) throws GooglePlacesException {

@@ -166,9 +166,6 @@ export class ActivitiesComponent implements OnInit {
             res => {
                 let index = this.trip.activities.indexOf(activity);
                 this.trip.activities.splice(index, 1);
-            },
-            error => {
-                console.log(error);
             }
         );
     }

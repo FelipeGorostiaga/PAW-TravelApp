@@ -21,7 +21,7 @@ import java.util.Optional;
 public class TripPicturesServiceImpl implements TripPicturesService {
 
     @Autowired
-    TripPicturesDao tpd;
+    private TripPicturesDao tpd;
 
     private static final int RESOLUTION = 1000;
 

@@ -26,7 +26,7 @@ public class PlaceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TripController.class);
 
     @Autowired
-    PlaceService placeService;
+    private PlaceService placeService;
 
     @GET
     @Path("/{id}")

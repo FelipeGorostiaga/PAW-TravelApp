@@ -49,6 +49,7 @@ import { SearchResultComponent } from './search-result/search-result.component';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -81,8 +82,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         RateFormComponent,
         ForbiddenComponent,
         RateTileComponent,
-        SearchResultComponent,
-
+        SearchResultComponent
     ],
     imports: [
         BrowserModule,

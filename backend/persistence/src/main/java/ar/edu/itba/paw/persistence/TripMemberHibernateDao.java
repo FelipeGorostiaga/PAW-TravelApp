@@ -16,7 +16,7 @@ import java.util.Optional;
 public class TripMemberHibernateDao implements TripMemberDao {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     public TripMember create(Trip trip, User user, TripMemberRole role) {

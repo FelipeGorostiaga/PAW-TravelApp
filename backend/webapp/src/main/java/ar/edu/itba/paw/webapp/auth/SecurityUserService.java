@@ -13,7 +13,7 @@ import java.util.Optional;
 public class SecurityUserService {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     public User getLoggedUser() {
         String loggedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();

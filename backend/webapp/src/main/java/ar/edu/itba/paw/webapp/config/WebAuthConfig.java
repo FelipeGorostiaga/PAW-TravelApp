@@ -38,30 +38,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationEntryPoint restAuthenticationEntryPoint;
 
-/*
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.userDetailsService(userDetailsService).sessionManagement()
-                .and()
-                .csrf().disable().exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
-                .and().authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/login").anonymous()
-                .antMatchers(HttpMethod.POST, "/api/users").anonymous()
-                .antMatchers("/api/user/**").authenticated()
-                .antMatchers(HttpMethod.POST).authenticated()
-                .antMatchers(HttpMethod.DELETE).authenticated()
-                .antMatchers(HttpMethod.PUT).authenticated()
-                .antMatchers("/api/**").permitAll()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .formLogin().usernameParameter("j_username").passwordParameter("j_password").loginProcessingUrl("/api/login")
-                .successHandler(statelessLoginSuccessHandler)
-                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
-                .and()
-                .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-    }
-*/
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -80,26 +56,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
-/*
-    @Override
-    protected void configure(final HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/**")
-                .permitAll()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/api/authenticate/", "/api/users/", "/api/authenticate/refresh", "/api/authenticate/verify")
-                .permitAll()
-                .and()
-                .authorizeRequests()
-                .anyRequest()
-                .authenticated()
-                .and().exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-    }*/
 
     @Override
     public void configure(final WebSecurity web) throws Exception {
