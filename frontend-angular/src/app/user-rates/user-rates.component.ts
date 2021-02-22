@@ -16,7 +16,7 @@ export class UserRatesComponent implements OnInit {
     currentPage: number;
     numberOfPages: number;
     ratesPerPage = 3;
-    rates: Rate[][];
+    rates: Rate[];
 
     user: User;
     userRating: number;
@@ -43,24 +43,15 @@ export class UserRatesComponent implements OnInit {
             data => {
                 this.user = data[0];
                 this.userRating = data[1];
-                this.rates = this.chopList(data[2]);
-                this.numberOfPages = Math.ceil(data.length / this.ratesPerPage );
+                this.rates = data[2];
                 this.spinner.hide();
             },
             error => {
+                this.spinner.hide();
                 this.error = true;
             }
         );
 
-    }
-
-    chopList(arr: any) {
-        const newarr = new Array();
-        for (let i = 0; i < arr.length; i = i + this.ratesPerPage) {
-            let tempArray = arr.slice(i, i + this.ratesPerPage);
-            newarr.push(tempArray);
-        }
-        return newarr;
     }
 
     updatePage(newPage: number) {

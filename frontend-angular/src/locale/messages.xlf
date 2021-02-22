@@ -416,25 +416,32 @@
           <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="navbar.myRates" datatype="html">
+        <source>My Rates</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/navigation/navigation.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="navbar.about" datatype="html">
         <source>About</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/navigation/navigation.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="navbar.searchPlaceholder" datatype="html">
         <source>Search trips by name...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/navigation/navigation.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="navbar.searchButton" datatype="html">
         <source>Search </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/navigation/navigation.component.html</context>
-          <context context-type="linenumber">34,35</context>
+          <context context-type="linenumber">35,36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.editProfileButton" datatype="html">
@@ -1297,35 +1304,35 @@
         <source>Invalid token or invitation does not exist</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/respond-invite/respond-invite.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
       <trans-unit id="respond-invite.success" datatype="html">
         <source>You have joined <x id="INTERPOLATION" equiv-text="{{tripName}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/respond-invite/respond-invite.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
       <trans-unit id="respond-invite.tripButton" datatype="html">
         <source>Go to Trip</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/respond-invite/respond-invite.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="respond-invite.declined" datatype="html">
         <source>You have declined the invitation to join <x id="INTERPOLATION" equiv-text="{{tripName}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/respond-invite/respond-invite.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="respond-invite.homeButton" datatype="html">
         <source>Home</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/trip/respond-invite/respond-invite.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="respond-join-req.serverError" datatype="html">
@@ -1406,17 +1413,17 @@
         </context-group>
       </trans-unit>
       <trans-unit id="user-trips.noTrips" datatype="html">
-        <source>You are not participating in any trip</source>
+        <source>You are not participating in any trips</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user-trips/user-trips.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user-trips.serverError" datatype="html">
         <source>Unexpected error occurred, please try again later</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/user-trips/user-trips.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
     </body>

@@ -1,20 +1,21 @@
 <app-navigation></app-navigation>
+<ngx-bootstrap-spinner></ngx-bootstrap-spinner>
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h1 style="margin-top: 35px;margin-bottom: 25px;">{{user?.firstname}} {{user?.lastname}}</h1>
+            <h1 style="margin-top: 35px;margin-bottom: 25px;">{{user?.firstname}} {{user?.lastname}}    <small>{{userRating}}</small></h1>
             <alert *ngIf="rates?.length === 0" [type]="'primary'" i18n=@@user-rates.noRates>This user has no available rates</alert>
             <alert *ngIf="error" [type]="'danger'" i18n=@@user-rates.error>Error fetching data from server, please try again later</alert>
             <div *ngIf="rates?.length > 0"class="list-group list-group-flush">
-                <app-rate-tile *ngFor="let rate of rates[currentPage]" [rate]="rate"></app-rate-tile>
+                <app-rate-tile *ngFor="let rate of rates" [rate]="rate"></app-rate-tile>
             </div>
         </div>
     </div>
-    <app-paginator
+<!--    <app-paginator
             *ngIf="numberOfPages > 1"
             [numberOfPages]="numberOfPages"
             (pageNumberClick)="updatePage($event)">
-    </app-paginator>
+    </app-paginator>-->
 </div>
 
 

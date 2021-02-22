@@ -397,12 +397,13 @@ public class TripController {
 
     @GET
     @Path("/{id}/pendingConfirmations/user")
+    @Produces({MediaType.TEXT_PLAIN})
     public Response isWaitingTripConfirmation(@PathParam("id") final long tripId, @QueryParam("user") long userId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         Optional<User> userOptional = userService.findById(userId);
         if (!tripOptional.isPresent() || !userOptional.isPresent())
             return Response.status(Response.Status.BAD_REQUEST).build();
-        return Response.ok(new GenericEntity<Boolean>(tripService.isWaitingJoinTripConfirmation(tripOptional.get(), userOptional.get())){}).build();
+        return Response.ok(tripService.isWaitingJoinTripConfirmation(tripOptional.get(), userOptional.get())).build();
     }
 
     @GET

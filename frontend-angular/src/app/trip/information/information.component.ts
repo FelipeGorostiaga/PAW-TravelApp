@@ -49,8 +49,6 @@ export class InformationComponent implements OnInit {
 
     bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, {containerClass: 'theme-dark-blue'});
 
-    loading: boolean;
-
     showSuccessAlert;
     showErrorAlert;
 

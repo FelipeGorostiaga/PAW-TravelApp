@@ -32,6 +32,7 @@ public class TripDTO {
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
         this.membersAmount = trip.getMembers().size();
+        this.hasImage = trip.getProfilePicture() != null;
         TripStatus status = trip.getStatus();
         if (!status.equals(TripStatus.COMPLETED)) {
             LocalDate now = LocalDate.now();
@@ -40,7 +41,6 @@ public class TripDTO {
                 return;
             }
         }
-        this.hasImage = trip.getProfilePicture() != null;
         this.status = trip.getStatus().name();
     }
 

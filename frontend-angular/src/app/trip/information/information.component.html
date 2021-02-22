@@ -73,7 +73,7 @@
                 placement="right"
                 (confirm)="exitTrip()">Exit
         </button>
-        <button *ngIf="!loading && !completed && !isMember && !waitingConfirmation" type="button"
+        <button *ngIf="!completed && !isMember && !waitingConfirmation" type="button"
                 class=" btn btn-primary button-list"
                 mwlConfirmationPopover
                 [popoverTitle]="'Request access'"

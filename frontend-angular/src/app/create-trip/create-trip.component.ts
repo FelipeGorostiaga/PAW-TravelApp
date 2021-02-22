@@ -139,15 +139,19 @@ export class CreateTripComponent implements OnInit {
                 this.router.navigate([tripUrl]);
             },
             err => {
-                if (err.status === 400) {
-                    err.error.forEach(e => {
-                        if (e.invalidField === 'dates') {
-                            this.datesError = true;
-                        }
-                        if (e.invalidField === 'googleMaps') {
-                            this.mapsError = true;
-                        }
-                    });
+                switch (err.status) {
+                    case 400:
+                        err.error.forEach(e => {
+                            if (e.invalidField === 'dates') {
+                                this.datesError = true;
+                            }
+                            if (e.invalidField === 'googleMaps') {
+                                this.mapsError = true;
+                            }
+                        });
+                        break;
+                    case 409:
+                        this.mapsError = true;
                 }
             }
         );
