@@ -5,17 +5,17 @@ import ar.edu.itba.paw.model.User;
 
 public interface MailingService {
 
-    void sendRegisterMail(User user);
+    public void sendRegisterMail(User user);
 
-    void sendJoinTripMail(User tripMember, Trip trip);
+    public void sendJoinTripMail(User tripMember, Trip trip);
 
-    void sendExitTripMail(User tripMember, Trip trip);
+    public void sendExitTripMail(User tripMember, Trip trip);
 
-    void sendDeleteTripMail(Trip trip);
+    public void sendDeleteTripMail(Trip trip);
 
-    void sendJoinRequestMail(Trip t, User user, String token);
+    public void sendJoinRequestMail(Trip t, User user, String token);
 
-    void sendEditedJoinRequestMail(Trip trip, User requester, User loggedUser, boolean accepted);
+    public void sendEditedJoinRequestMail(Trip trip, User requester, User loggedUser, boolean accepted);
 
-    void sendTripInviteMail(Trip trip, User invitedUser, User admin, String token);
+    public void sendTripInviteMail(Trip trip, User invitedUser, User admin, String token);
 }

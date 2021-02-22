@@ -83,7 +83,7 @@ public class SearchController {
             filterMap.put("name", name);
         PaginatedResult<Trip> paginatedResult = tripService.findWithFilters(filterMap, page);
         final int maxPage = (int) (Math.ceil((float) paginatedResult.getTotalTrips() / ADV_SEARCH_PAGE_SIZE));
-        if (page > maxPage) {
+        if (maxPage != 0 && page > maxPage) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         List<TripDTO> resultTrips = paginatedResult.getTrips().stream().map(TripDTO::new).collect(Collectors.toList());

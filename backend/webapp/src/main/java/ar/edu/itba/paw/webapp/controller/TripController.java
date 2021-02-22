@@ -86,7 +86,7 @@ public class TripController {
         page = (page < 1) ? 1 : page;
         final int totalPublicTrips = this.tripService.countAllPublicTrips();
         final int maxPage = (int) (Math.ceil((float) totalPublicTrips / PAGE_SIZE));;
-        if (page > maxPage) {
+        if (maxPage != 0 && page > maxPage) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         List<TripDTO> trips = tripService.getAllTripsPerPage(page).stream().map(TripDTO::new).collect(Collectors.toList());

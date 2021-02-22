@@ -1,9 +1,8 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ApiTripService} from "../services/api-trip.service";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 import {Trip} from "../model/trip";
-import {ActivatedRoute, NavigationStart, Router, RoutesRecognized} from "@angular/router";
-import * as url from "url";
+import {ActivatedRoute, Router, RoutesRecognized} from "@angular/router";
 
 @Component({
     selector: 'app-home',

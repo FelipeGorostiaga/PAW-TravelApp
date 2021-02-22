@@ -38,7 +38,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationEntryPoint restAuthenticationEntryPoint;
 
-
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http.csrf().disable()

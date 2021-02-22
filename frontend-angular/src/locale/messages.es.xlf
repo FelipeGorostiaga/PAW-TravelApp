@@ -624,7 +624,7 @@
             </trans-unit>
             <trans-unit id="profile.fileInput" datatype="html">
                 <source>File input</source>
-                <target>Imágen</target>
+                <target>Imagen</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/profile/profile.component.html</context>
                     <context context-type="linenumber">83</context>
@@ -632,7 +632,7 @@
             </trans-unit>
             <trans-unit id="profile.editTrip.invalidFileExtension" datatype="html">
                 <source>Invalid file extension, only jpg and png allowed.</source>
-                <target>Extension inválida, solo imagenes .jpg y .png permitidas</target>
+                <target>Extension inválida, solo imágenes .jpg y .png permitidas</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/profile/profile.component.html</context>
                     <context context-type="linenumber">87,88</context>
@@ -640,7 +640,7 @@
             </trans-unit>
             <trans-unit id="profile.editTrip.invalidFileSize" datatype="html">
                 <source>Image size too big (max 5MB)</source>
-                <target>Imagen demsiado grande (max 5MB)</target>
+                <target>Imagen demasiado grande (max 5MB)</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/profile/profile.component.html</context>
                     <context context-type="linenumber">90</context>
@@ -1713,7 +1713,7 @@
             </trans-unit>
             <trans-unit id="user-trips.noTrips" datatype="html">
                 <source>You are not a member of any trip</source>
-                <target>No eres un miembro de este viaje</target>
+                <target>No estas participando en ningún viaje</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/user-trips/user-trips.component.html</context>
                     <context context-type="linenumber">3</context>

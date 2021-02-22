@@ -128,7 +128,7 @@ public class UserController {
         User user = userOptional.get();
         PaginatedResult<Trip> paginatedResult = tripService.getUserTrips(user, page);
         final int maxPage = (int) (Math.ceil((float) paginatedResult.getTotalTrips() / PAGE_SIZE));
-        if (page > maxPage) {
+        if (maxPage != 0 && page > maxPage) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         return Response.ok(new TripListDTO(paginatedResult.getTrips().stream().map(TripDTO::new).collect(Collectors.toList()),
@@ -205,7 +205,6 @@ public class UserController {
             return Response.ok().build();
         }
         return Response.serverError().build();
-
     }
 
     @GET

@@ -36,7 +36,6 @@ import javax.sql.DataSource;
 import javax.validation.Validator;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.DAYS;
 import static org.springframework.http.CacheControl.maxAge;
@@ -60,19 +59,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-
-        final CacheControl cacheControl = maxAge(100, DAYS)
-                .cachePrivate();
-
-        registry.addResourceHandler("*.js")
-                .setCacheControl(cacheControl)
-                .addResourceLocations("classpath:/public/");
-
-        registry.addResourceHandler("*.css")
-                .setCacheControl(cacheControl)
-                .addResourceLocations("classpath:/public/");
-
+        final CacheControl cc = maxAge(365, DAYS).cachePrivate();
+        registry.addResourceHandler("/**").addResourceLocations("classpath:static/").setCacheControl(cc);
+        registry.addResourceHandler("/resources/**").setCacheControl(cc).addResourceLocations("/resources/");
     }
 
     @Bean
@@ -88,12 +77,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
         ds.setDriverClass(org.postgresql.Driver.class);
-/*        ds.setUrl("jdbc:postgresql://10.16.1.110/paw-2019a-4");
+        ds.setUrl("jdbc:postgresql://10.16.1.110/paw-2019a-4");
         ds.setUsername("paw-2019a-4");
-        ds.setPassword("qwQf3Kj2g");*/
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("postgres");
-        ds.setPassword("postgres");
+        ds.setPassword("qwQf3Kj2g");
         return ds;
     }
 
@@ -116,8 +102,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         final Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
-        // TODO: Do not include in production
-        properties.setProperty("hibernate.show_sql", "true");
+        //properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("format_sql", "true");
         factoryBean.setJpaProperties(properties);
         return factoryBean;
