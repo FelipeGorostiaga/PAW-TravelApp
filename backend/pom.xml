@@ -43,6 +43,8 @@
         <email-address-rfc.version>2.3.0</email-address-rfc.version>
         <org.thymeleaf.version>3.0.10.RELEASE</org.thymeleaf.version>
         <frontend-build-src-dir-relative-webapp-module>../${frontend-src-dir}/build</frontend-build-src-dir-relative-webapp-module>
+        <npm-version>7.5.4</npm-version>
+        <node-version>v15.8.0</node-version>
     </properties>
 
     <build>
@@ -72,7 +74,7 @@
             </plugin>
         </plugins>
     </build>
-   <!-- <profiles>
+    <profiles>
         <profile>
             <id>frontend</id>
             <activation>
@@ -96,8 +98,8 @@
                                     <goal>install-node-and-npm</goal>
                                 </goals>
                                 <configuration>
-                                    <nodeVersion>v15.8.0</nodeVersion>
-                                    <npmVersion>7.5.4</npmVersion>
+                                    <nodeVersion>${node-version}</nodeVersion>
+                                    <npmVersion>${npm-version}</npmVersion>
                                 </configuration>
                             </execution>
                             <execution>
@@ -120,7 +122,7 @@
                 </plugins>
             </build>
         </profile>
-    </profiles>-->
+    </profiles>
     <repositories>
         <repository>
             <id>jersey-snapshot</id>
