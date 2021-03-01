@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
 import ar.edu.itba.paw.webapp.form.TripCommentForm;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import ar.edu.itba.paw.webapp.utils.ImageUtils;
+import ar.edu.itba.paw.webapp.utils.PaginationLinkFactory;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -23,32 +24,16 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.ws.rs.*;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Path("trips")
 @Controller
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class TripController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TripController.class);
-
-    private static final int TRIP_IMAGE_WIDTH = 480;
-    private static final int TRIP_IMAGE_HEIGHT = 360;
-
-    private static final int TRIP_CARD_IMAGE_WIDTH = 478;
-    private static final int TRIP_CARD_IMAGE_HEIGHT = 280;
-
-    private static final int PAGE_SIZE = 6;
 
     @Autowired
     private SecurityUserService securityUserService;
@@ -71,6 +56,23 @@ public class TripController {
     @Autowired
     private Validator validator;
 
+    @Autowired
+    private PaginationLinkFactory paginationLinkFactory;
+
+    @Context
+    private UriInfo uriContext;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TripController.class);
+
+    private static final int TRIP_IMAGE_WIDTH = 480;
+    private static final int TRIP_IMAGE_HEIGHT = 360;
+
+    private static final int TRIP_CARD_IMAGE_WIDTH = 478;
+    private static final int TRIP_CARD_IMAGE_HEIGHT = 280;
+
+    private static final int PAGE_SIZE = 6;
+
+
     @GET
     @Path("/{id}")
     public Response getTrip(@PathParam("id") final long tripId) {
@@ -82,20 +84,22 @@ public class TripController {
 
     @GET
     @Path("/")
-    public Response getAllTripsForPage(@DefaultValue("1") @QueryParam("page") int page) {
+    public Response getTrips(@DefaultValue("1") @QueryParam("page") int page) {
         page = (page < 1) ? 1 : page;
         final int totalPublicTrips = this.tripService.countAllPublicTrips();
-        final int maxPage = (int) (Math.ceil((float) totalPublicTrips / PAGE_SIZE));;
+        final int maxPage = (int) (Math.ceil((float) totalPublicTrips / PAGE_SIZE));
         if (maxPage != 0 && page > maxPage) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         List<TripDTO> trips = tripService.getAllTripsPerPage(page).stream().map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new TripListDTO(trips, totalPublicTrips, maxPage)).build();
+        final Map<String, Link> links = paginationLinkFactory.createLinks(uriContext, page, maxPage);
+        final Link[] linkArray = links.values().toArray(new Link[0]);
+        return Response.ok(new TripListDTO(trips, totalPublicTrips, maxPage)).links(linkArray).build();
     }
 
 
-    @POST
-    @Path("/{id}/edit")
+    @PUT
+    @Path("/{id}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response editTrip(@FormDataParam("tripName") FormDataBodyPart name,
                              @FormDataParam("description") FormDataBodyPart description,
@@ -134,7 +138,7 @@ public class TripController {
             imageFile.delete();
         }
         tripService.editTripData(name.getValue(), description.getValue(), trip.getId());
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 
     @POST
@@ -236,7 +240,7 @@ public class TripController {
     }
 
     @GET
-    @Path("/{id}/image/card")
+    @Path("/{id}/image_card")
     @Produces(value = {"image/png", "image/jpeg"})
     public Response getTripCardImage(@PathParam("id") final long tripId) {
         final Optional<TripPicture> tripPictureOptional = tripPicturesService.findByTripId(tripId);
@@ -351,7 +355,7 @@ public class TripController {
     }
 
     @POST
-    @Path("/{id}/request-invite")
+    @Path("/{id}/request_invite")
     public Response requestJoinTrip(@PathParam("id") final long tripId) {
         Optional<Trip> tripOpt = tripService.findById(tripId);
         User user = securityUserService.getLoggedUser();
@@ -371,6 +375,24 @@ public class TripController {
             return Response.ok().build();
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorDTO("Error creating request, please try again...", "error")).build();
+    }
+
+    @POST
+    @Path("/{id}/invite_result")
+    public Response respondTripInvitation(@PathParam("id") final long tripId, @QueryParam("token") String token, @QueryParam("accepted") boolean accepted) {
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        User loggedUser = securityUserService.getLoggedUser();
+        Optional<TripInvitation> tripInvitation = tripService.findTripInvitationByToken(token);
+        if (!tripInvitation.isPresent() || !tripOptional.isPresent())
+            return Response.status(Response.Status.NOT_FOUND).build();
+        if (tripOptional.get().getStatus().equals(TripStatus.COMPLETED))
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        if (tripInvitation.get().getInvitee().getId() != loggedUser.getId())
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(new ErrorDTO("Only the invitee can accept or reject this invitation", "permission-denied"))
+                    .build();
+        tripService.acceptOrRejectTripInvitation(token, accepted, loggedUser, tripOptional.get());
+        return Response.ok().build();
     }
 
     @POST
@@ -396,7 +418,7 @@ public class TripController {
     }
 
     @GET
-    @Path("/{id}/pendingConfirmations/user")
+    @Path("/{id}/pending_confirmations")
     @Produces({MediaType.TEXT_PLAIN})
     public Response isWaitingTripConfirmation(@PathParam("id") final long tripId, @QueryParam("user") long userId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
@@ -444,26 +466,9 @@ public class TripController {
         return Response.ok().build();
     }
 
-    @POST
-    @Path("/{id}/invite-request/response")
-    public Response acceptOrDenyTripInvitation(@PathParam("id") final long tripId, @QueryParam("token") String token, @QueryParam("accepted") boolean accepted) {
-        Optional<Trip> tripOptional = tripService.findById(tripId);
-        User loggedUser = securityUserService.getLoggedUser();
-        Optional<TripInvitation> tripInvitation = tripService.findTripInvitationByToken(token);
-        if (!tripInvitation.isPresent() || !tripOptional.isPresent())
-            return Response.status(Response.Status.NOT_FOUND).build();
-        if (tripOptional.get().getStatus().equals(TripStatus.COMPLETED))
-            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
-        if (tripInvitation.get().getInvitee().getId() != loggedUser.getId())
-            return Response.status(Response.Status.FORBIDDEN)
-                    .entity(new ErrorDTO("Only the invitee can accept or reject this invitation", "permission-denied"))
-                    .build();
-        tripService.acceptOrRejectTripInvitation(token, accepted, loggedUser, tripOptional.get());
-        return Response.ok().build();
-    }
 
     @POST
-    @Path("/{id}/make-admin/{userId}")
+    @Path("/{id}/admin_role/{userId}")
     public Response grantAdminRole(@PathParam("id") final long tripId, @PathParam("userId") final long userId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         Optional<User> userOptional = userService.findById(userId);
@@ -506,7 +511,6 @@ public class TripController {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
         return Response.ok(tripService.hasImage(tripId)).build();
-
     }
 
 }

@@ -11,6 +11,7 @@ import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import ar.edu.itba.paw.webapp.form.UserRateForm;
 import ar.edu.itba.paw.webapp.utils.ImageUtils;
 import ar.edu.itba.paw.model.TripStatus;
+import ar.edu.itba.paw.webapp.utils.PaginationLinkFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
@@ -29,10 +30,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.ws.rs.*;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -48,7 +46,6 @@ public class UserController {
 
     private static final int PROFILE_WIDTH = 220;
     private static final int PROFILE_HEIGHT = 200;
-
     private static final int PAGE_SIZE = 6;
 
     @Autowired
@@ -68,6 +65,12 @@ public class UserController {
 
     @Autowired
     private SecurityUserService securityUserService;
+
+    @Autowired
+    private PaginationLinkFactory paginationLinkFactory;
+
+    @Context
+    private UriInfo uriContext;
 
     @Path("/")
     @POST
@@ -93,7 +96,7 @@ public class UserController {
 
     @GET
     @Path("/{id}")
-    public Response getUserById(@PathParam("id") final int id) {
+    public Response getUser(@PathParam("id") final int id) {
         final Optional<User> userOptional = userService.findById(id);
         if (userOptional.isPresent()) {
             return Response.ok(new UserDTO(userOptional.get())).build();
@@ -105,7 +108,7 @@ public class UserController {
     @GET
     @Path("/{id}/picture")
     @Produces(value = {"image/png", "image/jpeg"})
-    public Response getUserProfilePicture(@PathParam("id") final int id) {
+    public Response getProfilePicture(@PathParam("id") final int id) {
         final Optional<UserPicture> pictureOpt = userPicturesService.findByUserId(id);
         if (!pictureOpt.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -131,12 +134,14 @@ public class UserController {
         if (maxPage != 0 && page > maxPage) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
+        final Map<String, Link> links = paginationLinkFactory.createLinks(uriContext, page, maxPage);
+        final Link[] linkArray = links.values().toArray(new Link[0]);
         return Response.ok(new TripListDTO(paginatedResult.getTrips().stream().map(TripDTO::new).collect(Collectors.toList()),
-                paginatedResult.getTotalTrips(), maxPage)).build();
+                paginatedResult.getTotalTrips(), maxPage)).links(linkArray).build();
     }
 
-    @POST
-    @Path("/{id}/editProfile")
+    @PUT
+    @Path("/{id}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response editProfile(@FormDataParam("biography") FormDataBodyPart biography,
                                 @FormDataParam("image") File imageFile,
@@ -174,7 +179,7 @@ public class UserController {
 
     @GET
     @Path("/{id}/rates")
-    public Response userRates(@PathParam("id") final long userId) {
+    public Response getUserRates(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
         List<RateDTO> rateDTOs = userService.getUserRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
@@ -183,7 +188,7 @@ public class UserController {
     }
 
     @POST
-    @Path("/rateUser")
+    @Path("/rates")
     public Response rateUser(@Valid UserRateForm form) {
         User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<UserRateForm>> violations = validator.validate(form);
@@ -235,7 +240,7 @@ public class UserController {
     }
 
     @GET
-    @Path("/{id}/pending-rates")
+    @Path("/{id}/pending_rates")
     public Response getUserPendingRates(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();

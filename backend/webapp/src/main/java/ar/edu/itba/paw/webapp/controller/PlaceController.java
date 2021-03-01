@@ -17,7 +17,6 @@ import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 
-
 @Path("places")
 @Controller
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -32,7 +31,7 @@ public class PlaceController {
     @Path("/{id}")
     public Response getPlace(@PathParam("id") final long placeId) {
         Optional<Place> placeOptional = this.placeService.findById(placeId);
-        if(!placeOptional.isPresent()) {
+        if (!placeOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(new PlaceDTO(placeOptional.get())).build();

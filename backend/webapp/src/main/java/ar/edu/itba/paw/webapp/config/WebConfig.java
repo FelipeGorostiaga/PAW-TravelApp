@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.webapp.config;
 
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,6 +24,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -40,10 +43,11 @@ import java.util.Properties;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static org.springframework.http.CacheControl.maxAge;
 
+@EnableWebMvc
 @EnableTransactionManagement
-@ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.service"})
+@ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.service","ar.edu.itba.paw.webapp.utils"})
 @Configuration
-public class WebConfig extends WebMvcConfigurerAdapter {
+public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -77,9 +81,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
         ds.setDriverClass(org.postgresql.Driver.class);
-        ds.setUrl("jdbc:postgresql://10.16.1.110/paw-2019a-4");
+/*        ds.setUrl("jdbc:postgresql://10.16.1.110/paw-2019a-4");
         ds.setUsername("paw-2019a-4");
-        ds.setPassword("qwQf3Kj2g");
+        ds.setPassword("qwQf3Kj2g");*/
+        ds.setUrl("jdbc:postgresql://localhost/paw");
+        ds.setUsername("postgres");
+        ds.setPassword("postgres");
         return ds;
     }
 
@@ -152,4 +159,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
                 .allowCredentials(true).maxAge(3600);
     }
 
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+
+    }
 }
