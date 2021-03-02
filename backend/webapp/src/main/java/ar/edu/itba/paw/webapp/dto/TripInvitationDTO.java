@@ -26,7 +26,7 @@ public class TripInvitationDTO {
         this.invitee = new UserDTO(invitation.getInvitee(), baseUri);
         this.token = invitation.getToken();
         this.responded = invitation.isResponded();
-        this.trip = new TripDTO(invitation.getTrip());
+        this.trip = new TripDTO(invitation.getTrip(), baseUri);
     }
 
     public TripDTO getTrip() {

@@ -26,6 +26,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -91,8 +92,12 @@ public class TripController {
         if (maxPage != 0 && page > maxPage) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
+        final URI baseUri = uriContext.getBaseUri();
+        List<TripDTO> trips = tripService.getAllTripsPerPage(page)
+                .stream()
+                .map(trip -> new TripDTO(trip, baseUri))
+                .collect(Collectors.toList());
 
-        List<TripDTO> trips = tripService.getAllTripsPerPage(page).stream().map(TripDTO::new).collect(Collectors.toList());
         final Map<String, Link> links = paginationLinkFactory.createLinks(uriContext, page, maxPage);
         final Link[] linkArray = links.values().toArray(new Link[0]);
         return Response.ok(new TripListDTO(trips, totalPublicTrips, maxPage)).links(linkArray).build();
@@ -137,14 +142,17 @@ public class TripController {
                         .build();
             }
             byte[] resizedImage;
+
             try {
                 resizedImage = ImageUtils.resizeToProfileSize(imageBytes, TRIP_IMAGE_WIDTH, TRIP_IMAGE_HEIGHT);
             } catch (IOException e) {
                 return Response.serverError().build();
             }
+
             tripService.editTripImage(trip, resizedImage);
             imageFile.delete();
         }
+
         tripService.editTripData(name.getValue(), description.getValue(), trip.getId());
         return Response.noContent().build();
     }
@@ -179,7 +187,7 @@ public class TripController {
                     .build();
         }
         if (trip != null) {
-            return Response.ok(new TripDTO(trip)).build();
+            return Response.ok(new TripDTO(trip, uriContext.getBaseUri())).build();
         }
         return Response.serverError().build();
     }
@@ -234,7 +242,7 @@ public class TripController {
 
         if (tripService.isMember(trip, loggedUser)) {
             tripService.removeUserFromTrip(loggedUser, trip);
-            return Response.ok().build();
+            return Response.noContent().build();
         }
         return Response.status(Response.Status.BAD_REQUEST)
                 .entity(new ErrorDTO("User is not part of this trip", "invalid-user"))
@@ -259,10 +267,12 @@ public class TripController {
         } catch (IOException e) {
             return Response.serverError().build();
         }
+
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(50000);
         cacheControl.setPrivate(false);
         cacheControl.setMustRevalidate(true);
+
         return Response.ok(resizedImage).cacheControl(cacheControl).build();
     }
 
@@ -284,10 +294,12 @@ public class TripController {
         } catch (IOException e) {
             return Response.serverError().build();
         }
+
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(50000);
         cacheControl.setPrivate(false);
         cacheControl.setMustRevalidate(true);
+
         return Response.ok(resizedImage).cacheControl(cacheControl).build();
     }
 
@@ -393,6 +405,7 @@ public class TripController {
                 DateManipulation.stringToLocalDate(activityCreateForm.getStartDate()),
                 DateManipulation.stringToLocalDate(activityCreateForm.getEndDate()), activityCreateForm.getDescription(),
                 activityCreateForm.getPlaceInput());
+
         return Response.ok(new ActivityDTO(activity)).build();
     }
 

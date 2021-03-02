@@ -136,7 +136,10 @@ public class UserController {
         }
         final Map<String, Link> links = paginationLinkFactory.createLinks(uriContext, page, maxPage);
         final Link[] linkArray = links.values().toArray(new Link[0]);
-        final List<TripDTO> tripsDto = paginatedResult.getTrips().stream().map(TripDTO::new).collect(Collectors.toList());
+        final List<TripDTO> tripsDto = paginatedResult.getTrips()
+                .stream()
+                .map(trip -> new TripDTO(trip, uriContext.getBaseUri()))
+                .collect(Collectors.toList());
         return Response.ok(new TripListDTO(tripsDto, paginatedResult.getTotalTrips(), maxPage)).links(linkArray).build();
     }
 

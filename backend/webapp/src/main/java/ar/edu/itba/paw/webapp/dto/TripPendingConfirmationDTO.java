@@ -19,7 +19,7 @@ public class TripPendingConfirmationDTO {
     }
 
     public TripPendingConfirmationDTO(TripPendingConfirmation pendingConfirmation, final URI baseUri) {
-        this.trip = new TripDTO(pendingConfirmation.getTrip());
+        this.trip = new TripDTO(pendingConfirmation.getTrip(), baseUri);
         this.user = new UserDTO(pendingConfirmation.getRequestingUser(), baseUri);
         this.accepted = pendingConfirmation.isAccepted();
         this.edited = pendingConfirmation.isEdited();

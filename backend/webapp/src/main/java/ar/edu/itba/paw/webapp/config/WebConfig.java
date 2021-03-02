@@ -43,7 +43,6 @@ import java.util.Properties;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static org.springframework.http.CacheControl.maxAge;
 
-@EnableWebMvc
 @EnableTransactionManagement
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.service","ar.edu.itba.paw.webapp.utils"})
 @Configuration
@@ -108,7 +107,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         factoryBean.setJpaVendorAdapter(vendorAdapter);
         final Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");;
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
         properties.setProperty("format_sql", "true");
         factoryBean.setJpaProperties(properties);
         return factoryBean;

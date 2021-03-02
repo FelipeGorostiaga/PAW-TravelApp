@@ -25,6 +25,11 @@ public class FullTripDTO {
     private Set<TripMemberDTO> members;
     private List<ActivityDTO> activities;
 
+    private URI url;
+    private URI imageURL;
+    private URI imageCardURL;
+    private URI startPlaceURL;
+
     public FullTripDTO() {
         // Empty constructor needed by JAX-RS
     }
@@ -37,6 +42,7 @@ public class FullTripDTO {
         this.endDate = DateManipulation.changeDateFormat(trip.getEndDate());
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
+        this.hasImage = trip.getProfilePicture() != null;
         this.comments = trip.getComments()
                 .stream()
                 .distinct()
@@ -48,6 +54,12 @@ public class FullTripDTO {
                 .stream()
                 .map(member -> new TripMemberDTO(member, baseUri))
                 .collect(Collectors.toSet());
+
+        url = baseUri.resolve("trips/" + id);
+        imageURL = baseUri.resolve("trips/" + id + "/image");
+        imageCardURL = baseUri.resolve("trips/" + id + "/image_card");
+        startPlaceURL = baseUri.resolve("places/" + startPlace.getId());
+
         TripStatus status = trip.getStatus();
         if (!status.equals(TripStatus.COMPLETED)) {
             LocalDate now = LocalDate.now();
@@ -56,8 +68,39 @@ public class FullTripDTO {
                 return;
             }
         }
-        this.hasImage = trip.getProfilePicture() != null;
         this.status = trip.getStatus().name();
+    }
+
+    public URI getUrl() {
+        return url;
+    }
+
+    public void setUrl(URI url) {
+        this.url = url;
+    }
+
+    public URI getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(URI imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public URI getImageCardURL() {
+        return imageCardURL;
+    }
+
+    public void setImageCardURL(URI imageCardURL) {
+        this.imageCardURL = imageCardURL;
+    }
+
+    public URI getStartPlaceURL() {
+        return startPlaceURL;
+    }
+
+    public void setStartPlaceURL(URI startPlaceURL) {
+        this.startPlaceURL = startPlaceURL;
     }
 
     public Long getId() {

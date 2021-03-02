@@ -9,13 +9,12 @@ import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.webapp.dto.TripDTO;
 import ar.edu.itba.paw.webapp.dto.TripListDTO;
 import ar.edu.itba.paw.webapp.dto.UserDTO;
+import ar.edu.itba.paw.webapp.utils.PaginationLinkFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +28,12 @@ public class SearchController {
 
     @Autowired
     private TripService tripService;
+
+    @Autowired
+    private PaginationLinkFactory paginationLinkFactory;
+
+    @Context
+    private UriInfo uriContext;
 
     private static final int ADV_SEARCH_PAGE_SIZE = 2;
 
@@ -63,8 +68,15 @@ public class SearchController {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        List<TripDTO> resultTrips = paginatedResult.getTrips().stream().map(TripDTO::new).collect(Collectors.toList());
-        return Response.ok(new TripListDTO(resultTrips, paginatedResult.getTotalTrips(), maxPage)).build();
+        List<TripDTO> resultTrips = paginatedResult.getTrips()
+                .stream()
+                .map(trip -> new TripDTO(trip, uriContext.getBaseUri()))
+                .collect(Collectors.toList());
+
+        final Map<String, Link> links = paginationLinkFactory.createLinks(uriContext, page, maxPage);
+        final Link[] linkArray = links.values().toArray(new Link[0]);
+
+        return Response.ok(new TripListDTO(resultTrips, paginatedResult.getTotalTrips(), maxPage)).links(linkArray).build();
     }
 
 }

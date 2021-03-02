@@ -33,7 +33,7 @@ public class RateDTO {
         if (rate.getCreatedOn() != null) {
             this.createdOn = DateManipulation.changeDateTimeFormat(rate.getCreatedOn());
         }
-        this.trip = new TripDTO(rate.getTrip());
+        this.trip = new TripDTO(rate.getTrip(), baseUri);
         this.comment = rate.getComment();
     }
 

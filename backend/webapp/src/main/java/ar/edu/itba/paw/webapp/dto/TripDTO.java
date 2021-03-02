@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripStatus;
 
+import java.net.URI;
 import java.time.LocalDate;
 
 public class TripDTO {
@@ -19,20 +20,30 @@ public class TripDTO {
     private String status;
     private boolean hasImage;
 
+    private URI url;
+    private URI imageURL;
+    private URI imageCardURL;
+    private URI startPlaceURL;
+
     public TripDTO() {
         // Empty constructor needed by JAX-RS
     }
 
-    public TripDTO(Trip trip) {
-        this.id = trip.getId();
-        this.name = trip.getName();
-        this.description = trip.getDescription();
-        this.startDate = DateManipulation.changeDateFormat(trip.getStartDate());
-        this.endDate = DateManipulation.changeDateFormat(trip.getEndDate());
-        this.startPlace = new PlaceDTO(trip.getStartPlace());
-        this.isPrivate = trip.isPrivate();
-        this.membersAmount = trip.getMembers().size();
-        this.hasImage = trip.getProfilePicture() != null;
+    public TripDTO(Trip trip, final URI baseUri) {
+        id = trip.getId();
+        name = trip.getName();
+        description = trip.getDescription();
+        startDate = DateManipulation.changeDateFormat(trip.getStartDate());
+        endDate = DateManipulation.changeDateFormat(trip.getEndDate());
+        startPlace = new PlaceDTO(trip.getStartPlace());
+        isPrivate = trip.isPrivate();
+        membersAmount = trip.getMembers().size();
+        hasImage = trip.getProfilePicture() != null;
+        url = baseUri.resolve("trips/" + id);
+        imageURL = baseUri.resolve("trips/" + id + "/image");
+        imageCardURL = baseUri.resolve("trips/" + id + "/image_card");
+        startPlaceURL = baseUri.resolve("places/" + startPlace.getId());
+
         TripStatus status = trip.getStatus();
         if (!status.equals(TripStatus.COMPLETED)) {
             LocalDate now = LocalDate.now();
@@ -42,6 +53,38 @@ public class TripDTO {
             }
         }
         this.status = trip.getStatus().name();
+    }
+
+    public URI getUrl() {
+        return url;
+    }
+
+    public void setUrl(URI url) {
+        this.url = url;
+    }
+
+    public URI getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(URI imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public URI getImageCardURL() {
+        return imageCardURL;
+    }
+
+    public void setImageCardURL(URI imageCardURL) {
+        this.imageCardURL = imageCardURL;
+    }
+
+    public URI getStartPlaceURL() {
+        return startPlaceURL;
+    }
+
+    public void setStartPlaceURL(URI startPlaceURL) {
+        this.startPlaceURL = startPlaceURL;
     }
 
     public boolean isHasImage() {
