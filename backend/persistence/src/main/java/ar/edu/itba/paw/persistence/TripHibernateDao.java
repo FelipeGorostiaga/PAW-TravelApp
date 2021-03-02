@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.model.*;
+import org.apache.commons.lang3.reflect.Typed;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -17,6 +18,13 @@ import java.util.stream.Collectors;
 
 @Repository
 public class TripHibernateDao implements TripDao {
+
+    /* *
+    *
+    *   Hibernate Pagination as stated here:
+    *   https://thorben-janssen.com/pagination-jpa-hibernate/#Pitfall_2_Pagination_With_JOIN_FETCH_and_EntityGraphs_Clauses
+    *
+    * */
 
     private static final int MAX_ROWS = 6;
     private static final int MAX_SEARCH_RESULTS = 3;
@@ -41,11 +49,19 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> findByName(String name, int page) {
-        final TypedQuery<Trip> query = em.createQuery("From Trip as t where lower(t.name) like lower(:name) AND t.isPrivate = false order by t.startDate", Trip.class);
-        query.setParameter("name", "%" + name + "%");
-        query.setFirstResult((page - 1) * MAX_SEARCH_RESULTS);
-        query.setMaxResults(MAX_SEARCH_RESULTS);
-        return query.getResultList();
+
+        // Get primary keys with LIMIT and OFFSET
+        final TypedQuery<Long> idQuery = em.createQuery("SELECT t.id FROM Trip t where lower(t.name) like lower(:name) AND t.isPrivate = false order by t.startDate", Long.class);
+        List<Long> tripIds = idQuery
+                .setParameter("name", "%" + name + "%")
+                .setFirstResult((page - 1) * MAX_SEARCH_RESULTS)
+                .setMaxResults(MAX_SEARCH_RESULTS)
+                .getResultList();
+
+        // Get entities with associations
+        TypedQuery<Trip> tripQuery = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.id in (:ids)", Trip.class);
+        tripQuery.setParameter("ids", tripIds);
+        return tripQuery.getResultList();
     }
 
     @Override
@@ -70,10 +86,17 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public List<Trip> getAllTripsPerPage(int pageNum) {
-        final TypedQuery<Trip> query = em.createQuery("From Trip as t where t.isPrivate = false order by t.startDate", Trip.class);
-        query.setFirstResult((pageNum - 1) * MAX_ROWS);
-        query.setMaxResults(MAX_ROWS);
-        return query.getResultList();
+
+        // Get primary keys with LIMIT and OFFSET
+        final TypedQuery<Long> idQuery = em.createQuery("SELECT t.id FROM Trip t WHERE t.isPrivate = false order by t.startDate", Long.class);
+        List<Long> tripIds = idQuery.setFirstResult((pageNum - 1) * MAX_ROWS)
+                .setMaxResults(MAX_ROWS)
+                .getResultList();
+
+        // Get entities with associations
+        final TypedQuery<Trip> tripQuery = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.id in (:ids)", Trip.class);
+        tripQuery.setParameter("ids", tripIds);
+        return tripQuery.getResultList();
     }
 
     @Override
@@ -201,13 +224,6 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
-    public List<Trip> findUserCreatedTrips(long userId) {
-        final TypedQuery<Trip> query = em.createQuery("FROM Trip AS t WHERE t.adminId = :userId ", Trip.class);
-        query.setParameter("userId", userId);
-        return query.getResultList();
-    }
-
-    @Override
     public void deleteTrip(long tripId) {
         Query tripDelete = em.createQuery("DELETE Trip WHERE id = :tripId");
         tripDelete.setParameter("tripId", tripId);
@@ -215,38 +231,31 @@ public class TripHibernateDao implements TripDao {
     }
 
     @Override
-    public List<Trip> findByCategory(String category) {
-        final TypedQuery<Trip> query = em.createQuery("SELECT t FROM Trip AS t, Activity AS a" +
-                " WHERE a.trip.id = t.id AND a.category LIKE :category", Trip.class);
-        query.setParameter("category", category);
-        return query.getResultList();
-    }
-
-    @Override
-    public List<Trip> findByPlace(String placeName) {
-        final TypedQuery<Trip> query = em.createQuery("SELECT t FROM Trip AS t, Place AS p" +
-                " WHERE t.startPlace.id = p.id and lower(p.address) like lower(:placeName)", Trip.class);
-        query.setParameter("placeName", "%" + placeName + "%");
-        return query.getResultList();
-    }
-
-    @Override
     public PaginatedResult<Trip> findWithFilters(Map<String, Object> filterMap, int page) {
 
-        final String searchQueryString = "select distinct t From Trip as t, Place as p " + filtersQuery(filterMap) +  "order by t.startDate";
-        final String countQueryString = "select count(distinct t) From Trip as t, Place as p " + filtersQuery(filterMap);
+        final TypedQuery<Long> idQuery = em.createQuery("SELECT distinct t.id FROM Trip as t, Place as p"
+                + filtersQuery(filterMap) +  "order by t.id", Long.class);
 
-        final TypedQuery<Trip> query = em.createQuery(searchQueryString, Trip.class);
-        final TypedQuery<Long> queryCount = em.createQuery(countQueryString, Long.class);
-        setQueryParameters(query, queryCount, filterMap);
-        query.setFirstResult((page - 1) * ADV_MAX_SEARCH_RESULTS);
-        query.setMaxResults(ADV_MAX_SEARCH_RESULTS);
-        List<Trip> resultList = query.getResultList();
-        int resultCount = queryCount.getSingleResult().intValue();
-        return new PaginatedResult<>(resultList, resultCount);
+        final TypedQuery<Long> queryCount = em.createQuery("select count(distinct t) From Trip as t, Place as p "
+                + filtersQuery(filterMap), Long.class);
+
+        setQueryParameters(idQuery, queryCount, filterMap);
+
+        List<Long> tripIds = idQuery
+                .setFirstResult((page - 1) * ADV_MAX_SEARCH_RESULTS)
+                .setMaxResults(ADV_MAX_SEARCH_RESULTS)
+                .getResultList();
+
+        TypedQuery<Trip> tripQuery = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.id in (:ids)", Trip.class);
+        tripQuery.setParameter("ids", tripIds);
+        List<Trip> resultList = tripQuery.getResultList();
+
+        int count = queryCount.getSingleResult().intValue();
+
+        return new PaginatedResult<>(resultList, count);
     }
 
-    private void setQueryParameters(TypedQuery<Trip> query, TypedQuery<Long> countQuery, Map<String, Object> filterMap) {
+    private void setQueryParameters(TypedQuery<Long> query, TypedQuery<Long> countQuery, Map<String, Object> filterMap) {
 
         for (String filter : filterMap.keySet()) {
             if (filter.equals("place")) {
@@ -306,15 +315,26 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public PaginatedResult<Trip> findUserTrips(long userId, int page) {
-        String queryString = "from Trip as t left join t.members as m left join m.user as u where u.id = :userId ";
-        final TypedQuery<Trip> query = em.createQuery( "select t " + queryString + "order by t.startDate", Trip.class );
-        final TypedQuery<Long> queryCount = em.createQuery( "select count(t) " + queryString, Long.class );
-        query.setParameter("userId", userId );
+
+        // Get primary keys with LIMIT and OFFSET
+        final TypedQuery<Long> idQuery = em.createQuery("SELECT t.id FROM Trip t left join t.members as m" +
+                " left join m.user as u where u.id = :userId order by t.startDate", Long.class);
+        List<Long> tripIds = idQuery.setParameter("userId", userId)
+                .setFirstResult((page - 1) * MAX_ROWS)
+                .setMaxResults(MAX_ROWS)
+                .getResultList();
+
+        // Get entities with associations
+        TypedQuery<Trip> tripQuery = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.id in (:ids)", Trip.class);
+        tripQuery.setParameter("ids", tripIds);
+        List<Trip> result = tripQuery.getResultList();
+
+        // Count query
+        final TypedQuery<Long> queryCount = em.createQuery( "select count(distinct t) FROM Trip t left join t.members as m" +
+                " left join m.user as u where u.id = :userId", Long.class );
         queryCount.setParameter("userId", userId );
-        query.setFirstResult((page - 1) * MAX_ROWS);
-        query.setMaxResults(MAX_ROWS);
-        List<Trip> result = query.getResultList();
         int total = queryCount.getSingleResult().intValue();
+
         return new PaginatedResult<>(result, total);
     }
 
@@ -324,6 +344,5 @@ public class TripHibernateDao implements TripDao {
         query.setParameter("tripId", tripId);
         return !query.getResultList().isEmpty();
     }
-
 
 }

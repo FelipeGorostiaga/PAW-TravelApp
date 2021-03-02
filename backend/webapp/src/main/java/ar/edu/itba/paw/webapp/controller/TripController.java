@@ -26,7 +26,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -86,16 +85,16 @@ public class TripController {
     @Path("/")
     public Response getTrips(@DefaultValue("1") @QueryParam("page") int page) {
         page = (page < 1) ? 1 : page;
+
         final int totalPublicTrips = this.tripService.countAllPublicTrips();
         final int maxPage = (int) (Math.ceil((float) totalPublicTrips / PAGE_SIZE));
 
         if (maxPage != 0 && page > maxPage) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        final URI baseUri = uriContext.getBaseUri();
         List<TripDTO> trips = tripService.getAllTripsPerPage(page)
                 .stream()
-                .map(trip -> new TripDTO(trip, baseUri))
+                .map(trip -> new TripDTO(trip, uriContext.getBaseUri()))
                 .collect(Collectors.toList());
 
         final Map<String, Link> links = paginationLinkFactory.createLinks(uriContext, page, maxPage);

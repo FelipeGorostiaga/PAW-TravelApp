@@ -16,15 +16,9 @@ public interface TripDao {
 
     public List<Trip> findByName(String name, int page);
 
-    public List<Trip> findUserCreatedTrips(long userId);
-
     public void deleteTrip(long tripId);
 
     public int countAllPublicTrips();
-
-    public List<Trip> findByCategory(String category);
-
-    public List<Trip> findByPlace(String placeName);
 
     public PaginatedResult<Trip> findWithFilters(Map<String, Object> filterMap, int page);
 
