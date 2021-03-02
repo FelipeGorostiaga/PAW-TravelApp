@@ -3,6 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
                           http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
     <display-name>Meet and Travel</display-name>
 
     <servlet>
@@ -18,12 +19,6 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
-
-<!--    <error-page>
-        <error-code>404</error-code>
-        <location>index.html</location>
-    </error-page>
-    -->
 
     <servlet-mapping>
         <servlet-name>jersey-servlet</servlet-name>
@@ -46,6 +41,21 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+
+    <filter>
+        <filter-name>cacheControlFilter</filter-name>
+        <filter-class>ar.edu.itba.paw.webapp.filters.CacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>cacheControlFilter</filter-name>
+        <url-pattern>*.css</url-pattern>
+        <url-pattern>*.gif</url-pattern>
+        <url-pattern>*.html</url-pattern>
+        <url-pattern>*.ico</url-pattern>
+        <url-pattern>*.jpg</url-pattern>
+        <url-pattern>*.js</url-pattern>
+        <url-pattern>*.png</url-pattern>
+    </filter-mapping>
 
     <filter>
         <filter-name>encoding-filter</filter-name>
