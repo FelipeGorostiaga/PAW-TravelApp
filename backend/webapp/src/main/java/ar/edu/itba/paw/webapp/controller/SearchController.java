@@ -27,65 +27,42 @@ import java.util.stream.Collectors;
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class SearchController {
 
-    private static final int SEARCH_PAGE_SIZE = 3;
-
-    private static final int ADV_SEARCH_PAGE_SIZE = 2;
-
     @Autowired
     private TripService tripService;
 
-    @Autowired
-    private UserService userService;
-
-    @GET
-    @Path("/{tripId}/users")
-    public Response searchInvitableUsers(@PathParam("tripId") long tripId, @QueryParam("name") String name) {
-        Optional<Trip> tripOptional = tripService.findById(tripId);
-        if (!tripOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        List<UserDTO> resultUsers = userService.findInvitableUsersByName(name, tripId)
-                .stream()
-                .map(UserDTO::new)
-                .collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<UserDTO>>(resultUsers) {
-        }).build();
-    }
+    private static final int ADV_SEARCH_PAGE_SIZE = 2;
 
     @GET
     @Path("/trips")
-    public Response searchTripByName(@QueryParam("nameInput") String name, @DefaultValue("1") @QueryParam("page") int page) {
-        page = (page < 1) ? 1 : page;
-        final int totalTrips = this.tripService.countByNameSearch(name);
-        final int maxPage = (int) (Math.ceil((float) totalTrips / SEARCH_PAGE_SIZE));
-        List<TripDTO> resultTrips = tripService.findByName(name, page)
-                .stream()
-                .map(TripDTO::new)
-                .collect(Collectors.toList());
-
-        return Response.ok(new TripListDTO(resultTrips, totalTrips, maxPage)).build();
-    }
-
-    @GET
-    @Path("/advanced")
-    public Response searchByMultipleParams(@QueryParam("place") String place,
+    public Response searchTripsWithFilters(@QueryParam("place") String place,
                                            @QueryParam("startDate") String startDate,
                                            @QueryParam("endDate") String endDate,
                                            @QueryParam("name") String name,
                                            @DefaultValue("1") @QueryParam("page") int page) {
         page = (page < 1) ? 1 : page;
+
         Map<String, Object> filterMap = new HashMap<>();
-        if (place != null && place.length() > 0)
+        if (place != null && place.length() > 0) {
             filterMap.put("place", place);
-        if (startDate != null && DateManipulation.stringToLocalDate(startDate) != null)
+        }
+        if (startDate != null && DateManipulation.stringToLocalDate(startDate) != null) {
             filterMap.put("startDate", DateManipulation.stringToLocalDate(startDate));
-        if (endDate != null && DateManipulation.stringToLocalDate(endDate) != null)
+        }
+        if (endDate != null && DateManipulation.stringToLocalDate(endDate) != null) {
             filterMap.put("endDate", DateManipulation.stringToLocalDate(endDate));
-        if (name != null && name.length() > 0)
+        }
+        if (name != null && name.length() > 0) {
             filterMap.put("name", name);
+        }
+
         PaginatedResult<Trip> paginatedResult = tripService.findWithFilters(filterMap, page);
+
         final int maxPage = (int) (Math.ceil((float) paginatedResult.getTotalTrips() / ADV_SEARCH_PAGE_SIZE));
+
         if (maxPage != 0 && page > maxPage) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
+
         List<TripDTO> resultTrips = paginatedResult.getTrips().stream().map(TripDTO::new).collect(Collectors.toList());
         return Response.ok(new TripListDTO(resultTrips, paginatedResult.getTotalTrips(), maxPage)).build();
     }

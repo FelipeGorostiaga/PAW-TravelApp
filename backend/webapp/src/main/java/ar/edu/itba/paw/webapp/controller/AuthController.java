@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.Optional;
 
 
@@ -45,6 +47,9 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Context
+    private UriInfo uriContext;
+
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -61,7 +66,7 @@ public class AuthController {
         if (!userOptional.isPresent() || !userOptional.get().isVerified()) {
             return Response.status(Response.Status.FORBIDDEN).entity(new ErrorDTO("Please verify your email", "verification")).build();
         }
-        final UserDTO user = new UserDTO(userOptional.get());
+        final UserDTO user = new UserDTO(userOptional.get(), uriContext.getBaseUri());
         final String accessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
         final String refreshToken = jwtUtil.generateToken(userDetails, JWT_REFRESH_EXPIRATION);
         return Response.ok(new AuthenticationResponseDTO(accessToken, refreshToken, user)).build();
@@ -99,6 +104,6 @@ public class AuthController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         final String accessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
         final String refreshToken = jwtUtil.generateToken(userDetails, JWT_REFRESH_EXPIRATION);
-        return Response.ok(new AuthenticationResponseDTO(accessToken, refreshToken, new UserDTO(user))).build();
+        return Response.ok(new AuthenticationResponseDTO(accessToken, refreshToken, new UserDTO(user, uriContext.getBaseUri()))).build();
     }
 }

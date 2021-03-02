@@ -91,7 +91,7 @@ public class UserController {
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Email already in use", "email")).build();
         }
-        return Response.ok(new UserDTO(user)).build();
+        return Response.ok(new UserDTO(user, uriContext.getBaseUri())).build();
     }
 
     @GET
@@ -99,7 +99,7 @@ public class UserController {
     public Response getUser(@PathParam("id") final int id) {
         final Optional<User> userOptional = userService.findById(id);
         if (userOptional.isPresent()) {
-            return Response.ok(new UserDTO(userOptional.get())).build();
+            return Response.ok(new UserDTO(userOptional.get(), uriContext.getBaseUri())).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -136,8 +136,8 @@ public class UserController {
         }
         final Map<String, Link> links = paginationLinkFactory.createLinks(uriContext, page, maxPage);
         final Link[] linkArray = links.values().toArray(new Link[0]);
-        return Response.ok(new TripListDTO(paginatedResult.getTrips().stream().map(TripDTO::new).collect(Collectors.toList()),
-                paginatedResult.getTotalTrips(), maxPage)).links(linkArray).build();
+        final List<TripDTO> tripsDto = paginatedResult.getTrips().stream().map(TripDTO::new).collect(Collectors.toList());
+        return Response.ok(new TripListDTO(tripsDto, paginatedResult.getTotalTrips(), maxPage)).links(linkArray).build();
     }
 
     @PUT
@@ -147,8 +147,13 @@ public class UserController {
                                 @FormDataParam("image") File imageFile,
                                 @FormDataParam("image") FormDataContentDisposition fileMetaData,
                                 @PathParam("id") final long id) {
+
         User loggedUser = securityUserService.getLoggedUser();
-        if (id != loggedUser.getId()) return Response.status(Response.Status.FORBIDDEN).build();
+
+        if (id != loggedUser.getId()) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
         if (biography == null && imageFile == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -160,7 +165,9 @@ public class UserController {
                 return Response.serverError().build();
             }
             if (!ImageUtils.validateImage(fileMetaData, imageBytes.length)) {
-                return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Invalid image extension or file size too big", "image")).build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(new ErrorDTO("Invalid image extension or file size too big", "image"))
+                        .build();
             }
             byte[] resizedImage;
             try {
@@ -181,8 +188,15 @@ public class UserController {
     @Path("/{id}/rates")
     public Response getUserRates(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
-        if (!userOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
-        List<RateDTO> rateDTOs = userService.getUserRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
+
+        if (!userOptional.isPresent()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        List<RateDTO> rateDTOs = userService.getUserRates(userId)
+                .stream()
+                .map(userRate -> new RateDTO(userRate, uriContext.getBaseUri()))
+                .collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<RateDTO>>(rateDTOs) {
         }).build();
     }
@@ -192,6 +206,7 @@ public class UserController {
     public Response rateUser(@Valid UserRateForm form) {
         User loggedUser = securityUserService.getLoggedUser();
         Set<ConstraintViolation<UserRateForm>> violations = validator.validate(form);
+
         if (!violations.isEmpty()) {
             List<ErrorDTO> errors = violations.stream().map(violation -> new ErrorDTO(violation.getMessage(),
                     violation.getPropertyPath().toString())).collect(Collectors.toList());
@@ -199,15 +214,21 @@ public class UserController {
             }).build();
         }
         Optional<UserRate> rateOptional = userRatesService.findById(form.getRateId());
+
         if (!rateOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         UserRate rate = rateOptional.get();
-        if (!rate.getRatedByUser().equals(loggedUser)) return Response.status(Response.Status.FORBIDDEN).build();
-        if (rate.getTrip().getStatus() != TripStatus.COMPLETED)
+
+        if (!rate.getRatedByUser().equals(loggedUser)) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        if (rate.getTrip().getStatus() != TripStatus.COMPLETED) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
+
         if (userRatesService.rateUser(rate.getId(), form.getRate(), form.getComment())) {
-            return Response.ok().build();
+            return Response.noContent().build();
         }
         return Response.serverError().build();
     }
@@ -216,25 +237,40 @@ public class UserController {
     @Path("/{id}/profile")
     public Response getUserProfileData(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
-        if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        List<RateDTO> rates = this.userService.getUserRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
+
+        if (!userOptional.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        List<RateDTO> rates = this.userService.getUserRates(userId)
+                .stream()
+                .map(userRate -> new RateDTO(userRate, uriContext.getBaseUri()))
+                .collect(Collectors.toList());
+
         int dueTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.DUE);
         int activeTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.IN_PROGRESS);
         int completedTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.COMPLETED);
-        return Response.ok(new ProfileDataDTO(userOptional.get(), rates, dueTrips, activeTrips, completedTrips)).build();
+
+        return Response.ok(new ProfileDataDTO(userOptional.get(), rates, dueTrips, activeTrips, completedTrips, uriContext.getBaseUri())).build();
     }
 
     @GET
     @Path("/{id}/invitations")
     public Response getUserInvitations(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
-        if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        if (!userOptional.get().equals(securityUserService.getLoggedUser()))
+
+        if (!userOptional.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        if (!userOptional.get().equals(securityUserService.getLoggedUser())) {
             return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
         List<TripInvitationDTO> tripInvitations = userService.getTripInvitations(userId).stream()
                 .filter(tripInvitation -> !tripInvitation.isResponded())
-                .map(TripInvitationDTO::new)
+                .map(tripInvitation -> new TripInvitationDTO(tripInvitation, uriContext.getBaseUri()))
                 .collect(Collectors.toList());
+
         return Response.ok(new GenericEntity<List<TripInvitationDTO>>(tripInvitations) {
         }).build();
     }
@@ -243,10 +279,17 @@ public class UserController {
     @Path("/{id}/pending_rates")
     public Response getUserPendingRates(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
-        if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        if (!userOptional.get().equals(securityUserService.getLoggedUser()))
+
+        if (!userOptional.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        if (!userOptional.get().equals(securityUserService.getLoggedUser())) {
             return Response.status(Response.Status.FORBIDDEN).build();
-        List<RateDTO> rates = userService.getUserPendingRates(userId).stream().map(RateDTO::new).collect(Collectors.toList());
+        }
+        List<RateDTO> rates = userService.getUserPendingRates(userId)
+                .stream()
+                .map(userRate -> new RateDTO(userRate, uriContext.getBaseUri()))
+                .collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<RateDTO>>(rates) {
         }).build();
     }

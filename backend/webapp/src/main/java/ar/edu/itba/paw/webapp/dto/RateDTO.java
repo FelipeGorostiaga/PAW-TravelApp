@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.UserRate;
 
+import java.net.URI;
+
 public class RateDTO {
 
     private long id;
@@ -23,11 +25,11 @@ public class RateDTO {
         // Empty constructor needed by JAX-RS
     }
 
-    public RateDTO(UserRate rate) {
+    public RateDTO(UserRate rate, final URI baseUri) {
         this.id = rate.getId();
         this.rate = rate.getRate();
-        this.ratedBy = new UserDTO(rate.getRatedByUser());
-        this.ratedUser = new UserDTO(rate.getRatedUser());
+        this.ratedBy = new UserDTO(rate.getRatedByUser(), baseUri);
+        this.ratedUser = new UserDTO(rate.getRatedUser(), baseUri);
         if (rate.getCreatedOn() != null) {
             this.createdOn = DateManipulation.changeDateTimeFormat(rate.getCreatedOn());
         }

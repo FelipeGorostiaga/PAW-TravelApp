@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.TripInvitation;
 
+import java.net.URI;
+
 public class TripInvitationDTO {
 
 
@@ -19,9 +21,9 @@ public class TripInvitationDTO {
 
     }
 
-    public TripInvitationDTO(TripInvitation invitation) {
-        this.inviter = new UserDTO(invitation.getInviter());
-        this.invitee = new UserDTO(invitation.getInvitee());
+    public TripInvitationDTO(TripInvitation invitation,  final URI baseUri) {
+        this.inviter = new UserDTO(invitation.getInviter(), baseUri);
+        this.invitee = new UserDTO(invitation.getInvitee(), baseUri);
         this.token = invitation.getToken();
         this.responded = invitation.isResponded();
         this.trip = new TripDTO(invitation.getTrip());

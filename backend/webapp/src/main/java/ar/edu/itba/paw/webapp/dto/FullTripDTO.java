@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripStatus;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +29,7 @@ public class FullTripDTO {
         // Empty constructor needed by JAX-RS
     }
 
-    public FullTripDTO(Trip trip) {
+    public FullTripDTO(Trip trip, final URI baseUri) {
         this.id = trip.getId();
         this.name = trip.getName();
         this.description = trip.getDescription();
@@ -36,9 +37,17 @@ public class FullTripDTO {
         this.endDate = DateManipulation.changeDateFormat(trip.getEndDate());
         this.startPlace = new PlaceDTO(trip.getStartPlace());
         this.isPrivate = trip.isPrivate();
-        this.comments = trip.getComments().stream().distinct().sorted().map(TripCommentDTO::new).collect(Collectors.toSet());
+        this.comments = trip.getComments()
+                .stream()
+                .distinct()
+                .sorted()
+                .map(tripComment -> new TripCommentDTO(tripComment, baseUri))
+                .collect(Collectors.toSet());
         this.activities = trip.getActivities().stream().distinct().sorted().map(ActivityDTO::new).collect(Collectors.toList());
-        this.members = trip.getMembers().stream().map(TripMemberDTO::new).collect(Collectors.toSet());
+        this.members = trip.getMembers()
+                .stream()
+                .map(member -> new TripMemberDTO(member, baseUri))
+                .collect(Collectors.toSet());
         TripStatus status = trip.getStatus();
         if (!status.equals(TripStatus.COMPLETED)) {
             LocalDate now = LocalDate.now();

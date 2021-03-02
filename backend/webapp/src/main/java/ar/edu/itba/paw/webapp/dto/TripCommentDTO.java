@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.TripComment;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 
 public class TripCommentDTO {
@@ -15,9 +16,9 @@ public class TripCommentDTO {
         // Empty constructor needed by JAX-RS
     }
 
-    public TripCommentDTO(TripComment tripComment) {
+    public TripCommentDTO(TripComment tripComment, final URI baseUri) {
         this.comment = tripComment.getComment();
-        this.user = new UserDTO(tripComment.getUser());
+        this.user = new UserDTO(tripComment.getUser(), baseUri);
         this.tripId = tripComment.getTrip().getId();
         this.createdOn = tripComment.getCreatedOn();
     }

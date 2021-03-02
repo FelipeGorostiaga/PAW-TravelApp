@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.TripPendingConfirmation;
 
+import java.net.URI;
+
 public class TripPendingConfirmationDTO {
 
     private TripDTO trip;
@@ -16,9 +18,9 @@ public class TripPendingConfirmationDTO {
         // Empty constructor needed by JAX-RS
     }
 
-    public TripPendingConfirmationDTO(TripPendingConfirmation pendingConfirmation) {
+    public TripPendingConfirmationDTO(TripPendingConfirmation pendingConfirmation, final URI baseUri) {
         this.trip = new TripDTO(pendingConfirmation.getTrip());
-        this.user = new UserDTO(pendingConfirmation.getRequestingUser());
+        this.user = new UserDTO(pendingConfirmation.getRequestingUser(), baseUri);
         this.accepted = pendingConfirmation.isAccepted();
         this.edited = pendingConfirmation.isEdited();
     }

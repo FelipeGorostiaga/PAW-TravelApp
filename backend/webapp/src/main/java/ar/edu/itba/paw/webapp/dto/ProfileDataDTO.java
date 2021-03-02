@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.User;
 
+import java.net.URI;
 import java.util.List;
 
 public class ProfileDataDTO {
@@ -16,8 +17,8 @@ public class ProfileDataDTO {
         // Empty constructor needed by JAX-RS
     }
 
-    public ProfileDataDTO(User user, List<RateDTO> rates, int dueTripsAmount, int activeTripsAmount, int completedTripsAmount) {
-        this.user = new UserDTO(user);
+    public ProfileDataDTO(User user, List<RateDTO> rates, int dueTripsAmount, int activeTripsAmount, int completedTripsAmount, final URI baseUri) {
+        this.user = new UserDTO(user, baseUri);
         this.rates = rates;
         this.dueTripsAmount = dueTripsAmount;
         this.activeTripsAmount = activeTripsAmount;

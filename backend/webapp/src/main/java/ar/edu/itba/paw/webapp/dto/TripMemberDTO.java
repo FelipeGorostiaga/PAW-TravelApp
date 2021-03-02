@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.TripMember;
 
+import java.net.URI;
 import java.util.Objects;
 
 public class TripMemberDTO {
@@ -16,9 +17,9 @@ public class TripMemberDTO {
         // needed by JAX-RS
     }
 
-    public TripMemberDTO(TripMember member) {
+    public TripMemberDTO(TripMember member, final URI baseUri) {
         this.role = member.getRole().name();
-        this.user = new UserDTO(member.getUser());
+        this.user = new UserDTO(member.getUser(), baseUri);
         this.tripId = member.getTrip().getId();
     }
 
