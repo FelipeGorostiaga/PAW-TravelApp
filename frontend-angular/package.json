@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "buildProduction": "ng build --prod --base-href /paw-2019a-4/ --deploy-url /paw-2019a-4/ "
+    "buildProduction": "ng build --prod --base-href /paw-2019a-4/ --deploy-url /paw-2019a-4/ --output-hashing all --optimization true"
   },
   "private": true,
   "dependencies": {
