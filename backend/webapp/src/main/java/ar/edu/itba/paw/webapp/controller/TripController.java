@@ -79,28 +79,40 @@ public class TripController {
         return Response.ok(new FullTripDTO(tripOptional.get(), uriContext.getBaseUri())).build();
     }
 
-
-    @GET
+    @POST
     @Path("/")
-    public Response getTrips(@DefaultValue("1") @QueryParam("page") int page) {
-        page = (page < 1) ? 1 : page;
-
-        final int totalPublicTrips = this.tripService.countAllPublicTrips();
-        final int maxPage = (int) (Math.ceil((float) totalPublicTrips / PAGE_SIZE));
-
-        if (maxPage != 0 && page > maxPage) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createTrip(@Valid TripCreateForm tripCreateForm) {
+        User loggedUser = securityUserService.getLoggedUser();
+        Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
+        List<ErrorDTO> errorDTOS = new ArrayList<>();
+        if (!violations.isEmpty()) {
+            errorDTOS.addAll(violations.stream().map(violation -> new ErrorDTO(violation.getMessage(), violation.getInvalidValue().toString())).collect(Collectors.toList()));
         }
-        List<TripDTO> trips = tripService.getAllTripsPerPage(page)
-                .stream()
-                .map(trip -> new TripDTO(trip, uriContext.getBaseUri()))
-                .collect(Collectors.toList());
-
-        final Map<String, Link> links = paginationLinkFactory.createLinks(uriContext, page, maxPage);
-        final Link[] linkArray = links.values().toArray(new Link[0]);
-        return Response.ok(new TripListDTO(trips, totalPublicTrips, maxPage)).links(linkArray).build();
+        if (!tripCreateForm.validateDates()) {
+            errorDTOS.add(new ErrorDTO("Invalid dates, start date must be before end date", "dates"));
+        }
+        if (!errorDTOS.isEmpty())
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new GenericEntity<List<ErrorDTO>>(errorDTOS) {})
+                    .build();
+        Trip trip;
+        try {
+            trip = tripService.create(loggedUser.getId(), tripCreateForm.getLatitude(), tripCreateForm.getLongitude(),
+                    tripCreateForm.getName(), tripCreateForm.getDescription(),
+                    DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
+                    DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate(),
+                    tripCreateForm.getGooglePlaceId(), tripCreateForm.getPlaceInput());
+        } catch (GooglePlacesException exception) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity(new ErrorDTO("There was an error connecting to the GoogleMaps API", "googleMaps"))
+                    .build();
+        }
+        if (trip != null) {
+            return Response.ok(new TripDTO(trip, uriContext.getBaseUri())).build();
+        }
+        return Response.serverError().build();
     }
-
 
     @PUT
     @Path("/{id}")
@@ -155,39 +167,25 @@ public class TripController {
         return Response.noContent().build();
     }
 
-    @POST
+    @GET
     @Path("/")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response createTrip(@Valid TripCreateForm tripCreateForm) {
-        User loggedUser = securityUserService.getLoggedUser();
-        Set<ConstraintViolation<TripCreateForm>> violations = validator.validate(tripCreateForm);
-        List<ErrorDTO> errorDTOS = new ArrayList<>();
-        if (!violations.isEmpty()) {
-            errorDTOS.addAll(violations.stream().map(violation -> new ErrorDTO(violation.getMessage(), violation.getInvalidValue().toString())).collect(Collectors.toList()));
+    public Response getTrips(@DefaultValue("1") @QueryParam("page") int page) {
+        page = (page < 1) ? 1 : page;
+
+        final int totalPublicTrips = this.tripService.countAllPublicTrips();
+        final int maxPage = (int) (Math.ceil((float) totalPublicTrips / PAGE_SIZE));
+
+        if (maxPage != 0 && page > maxPage) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        if (!tripCreateForm.validateDates()) {
-            errorDTOS.add(new ErrorDTO("Invalid dates, start date must be before end date", "dates"));
-        }
-        if (!errorDTOS.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new GenericEntity<List<ErrorDTO>>(errorDTOS) {})
-                    .build();
-        Trip trip;
-        try {
-            trip = tripService.create(loggedUser.getId(), tripCreateForm.getLatitude(), tripCreateForm.getLongitude(),
-                    tripCreateForm.getName(), tripCreateForm.getDescription(),
-                    DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
-                    DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate(),
-                    tripCreateForm.getGooglePlaceId(), tripCreateForm.getPlaceInput());
-        } catch (GooglePlacesException exception) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity(new ErrorDTO("There was an error connecting to the GoogleMaps API", "googleMaps"))
-                    .build();
-        }
-        if (trip != null) {
-            return Response.ok(new TripDTO(trip, uriContext.getBaseUri())).build();
-        }
-        return Response.serverError().build();
+        List<TripDTO> trips = tripService.getAllTripsPerPage(page)
+                .stream()
+                .map(trip -> new TripDTO(trip, uriContext.getBaseUri()))
+                .collect(Collectors.toList());
+
+        final Map<String, Link> links = paginationLinkFactory.createLinks(uriContext, page, maxPage);
+        final Link[] linkArray = links.values().toArray(new Link[0]);
+        return Response.ok(new TripListDTO(trips, totalPublicTrips, maxPage)).links(linkArray).build();
     }
 
     @GET
@@ -226,8 +224,7 @@ public class TripController {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 
-
-    @POST
+    @PUT
     @Path("/{id}/exit")
     public Response exitTrip(@PathParam("id") final long tripId) {
         User loggedUser = securityUserService.getLoggedUser();
@@ -275,7 +272,7 @@ public class TripController {
     }
 
     @GET
-    @Path("/{id}/image_card")
+    @Path("/{id}/image-card")
     @Produces(value = {"image/png", "image/jpeg"})
     public Response getTripCardImage(@PathParam("id") final long tripId) {
         final Optional<TripPicture> tripPictureOptional = tripPicturesService.findByTripId(tripId);
@@ -328,7 +325,7 @@ public class TripController {
     @POST
     @Path("/{id}/comments")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addCommentToTripChat(@PathParam("id") final long tripId, @Valid TripCommentForm tripCommentForm) {
+    public Response createComment(@PathParam("id") final long tripId, @Valid TripCommentForm tripCommentForm) {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
 
@@ -427,7 +424,6 @@ public class TripController {
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
-
 
     @POST
     @Path("/{id}/invitation")
@@ -540,7 +536,7 @@ public class TripController {
 
     @PUT
     @Path("/{id}/inviteRequests")
-    public Response acceptOrDenyTripPendingConfirmation(@PathParam("id") final long tripId, @QueryParam("accepted") boolean accepted, @QueryParam("token") String token) {
+    public Response respondJoinRequest(@PathParam("id") final long tripId, @QueryParam("accepted") boolean accepted, @QueryParam("token") String token) {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         Optional<TripPendingConfirmation> pendingConfirmationOptional = tripService.findJoinRequestByToken(token);
@@ -568,22 +564,6 @@ public class TripController {
         return Response.serverError().build();
     }
 
-
-    // todo
-/*    @GET
-    @Path("/{id}/inviteRequests")
-    @Produces({MediaType.TEXT_PLAIN})
-    public Response isWaitingTripConfirmation(@PathParam("id") final long tripId, @QueryParam("user") long userId) {
-        Optional<Trip> tripOptional = tripService.findById(tripId);
-        Optional<User> userOptional = userService.findById(userId);
-
-        if (!tripOptional.isPresent() || !userOptional.isPresent()) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        return Response.ok(tripService.isWaitingJoinTripConfirmation(tripOptional.get(), userOptional.get())).build();
-    }*/
-
     @GET
     @Path("/{id}/inviteRequests")
     public Response getTripPendingConfirmations(@PathParam("id") final long tripId) {
@@ -606,11 +586,8 @@ public class TripController {
         }).build();
     }
 
-
-
-
     @POST
-    @Path("/{id}/admin/{userId}")
+    @Path("/{id}/admins/{userId}")
     public Response grantAdminRole(@PathParam("id") final long tripId, @PathParam("userId") final long userId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         Optional<User> userOptional = userService.findById(userId);

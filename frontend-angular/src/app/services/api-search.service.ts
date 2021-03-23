@@ -12,13 +12,7 @@ export class ApiSearchService {
 
   constructor(private http: HttpClient) {}
 
-  private searchBaseURL = `${environment.apiURL}/search/`;
-
-  searchTripsByName(name: string, page: number): Observable<any> {
-    const url = this.searchBaseURL + 'trips';
-    const params = new HttpParams().set('nameInput', name).set('page', String(page));
-    return this.http.get(url, {params});
-  }
+  private searchBaseURL = `${environment.apiURL}/search`;
 
   searchInvitableUsersByName(name: string, tripId: number): Observable<User>{
     const url = this.searchBaseURL + tripId + "/users";
@@ -27,17 +21,22 @@ export class ApiSearchService {
   }
 
   advancedSearch(formData: FormData, page: number): Observable<any> {
-    const url = this.searchBaseURL + 'advanced';
+
     let params = new HttpParams().set('page', String(page));
+
     if (formData.get('name'))
       params = params.set('name', formData.get('name').toString());
+
     if (formData.get('place'))
       params = params.set('place', formData.get('place').toString());
+
     if (formData.get('startDate'))
       params = params.set('startDate', formData.get('startDate').toString());
+
     if (formData.get('endDate'))
       params = params.set('endDate', formData.get('endDate').toString());
-    return this.http.get(url, {params});
+
+    return this.http.get(`${this.searchBaseURL}/trips`, {params});
   }
 
 

@@ -21,10 +21,6 @@ export class AuthService {
     constructor(private http: HttpClient, private router: Router) {
     }
 
-    isLoggedIn() {
-        return !!localStorage.getItem('accessToken');
-    }
-
     register(userForm: UserForm): Observable<any> {
         return this.http.post<User>(this.usersBaseURL, userForm).pipe(
             catchError(err => {
@@ -37,6 +33,12 @@ export class AuthService {
         return this.http.post<string>(this.authBaseURL, userAuth);
     }
 
+    verifyAccount(verificationCode: string): Observable<any> {
+        const url = this.authBaseURL + '/verify';
+        let params = new HttpParams().set("code", verificationCode);
+        return this.http.get(url, {params: params});
+    }
+
     refreshToken() {
         return this.http.get(`${this.authBaseURL}/refresh`, {
             headers: {
@@ -47,6 +49,10 @@ export class AuthService {
                 this.setAccessToken(data.accessToken);
             })
         );
+    }
+
+    isLoggedIn() {
+        return !!localStorage.getItem('accessToken');
     }
 
     logout() {
@@ -82,9 +88,4 @@ export class AuthService {
         return localStorage.getItem('refreshToken');
     }
 
-    verifyAccount(verificationCode: string): Observable<any> {
-        const url = this.authBaseURL + '/verify';
-        let params = new HttpParams().set("code", verificationCode);
-        return this.http.get(url, {params: params});
-    }
 }

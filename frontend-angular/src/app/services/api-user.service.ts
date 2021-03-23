@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Trip} from '../model/trip';
 import {environment} from "../../environments/environment";
 import {UserProfile} from "../model/UserProfile";
@@ -17,24 +17,20 @@ export class ApiUserService {
     private usersBaseURL = `${environment.apiURL}/users/`;
 
     getUserById(id: number): Observable<any> {
-        const url = this.usersBaseURL + id;
-        return this.http.get(url);
+        return this.http.get(`${this.usersBaseURL}/${id}`);
     }
 
-    getUserTrips(userId: number, page: number): Observable<any> {
-        const url = this.usersBaseURL + userId + '/trips';
+    getUserTrips(id: number, page: number): Observable<any> {
         const params = new HttpParams().set('page', String(page));
-        return this.http.get<Trip[]>(url, {params: params});
+        return this.http.get<Trip[]>(`${this.usersBaseURL}/${id}/trips`, {params: params});
     }
 
     getUserPicture(id: number): Observable<any> {
-        const url = this.usersBaseURL + id + '/picture';
-        return this.http.get(url, {responseType: 'blob'});
+        return this.http.get(`${this.usersBaseURL}/${id}/picture`, {responseType: 'blob'});
     }
 
-    editProfile(formData: FormData, userId: number): Observable<any> {
-        const url = this.usersBaseURL + userId + '/editProfile';
-        return this.http.post(url, formData);
+    editProfile(formData: FormData, id: number): Observable<any> {
+        return this.http.put(`${this.usersBaseURL}/${id}`, formData);
     }
 
     getUserProfileData(userId: number): Observable<UserProfile> {
@@ -43,24 +39,21 @@ export class ApiUserService {
     }
 
     // rates the user received
-    getUserRates(userId: number): Observable<any>  {
-        const url = this.usersBaseURL + userId + '/rates';
-        return this.http.get(url);
+    getUserRates(id: number): Observable<any>  {
+        return this.http.get(`${this.usersBaseURL}/${id}/rates`);
     }
 
-    // rates the user need to write
-    getUserPendingRates(userId: number): Observable<any> {
-        const url = this.usersBaseURL + userId + '/pending-rates';
-        return this.http.get(url);
+    // rates the user needs to write
+    getUserPendingRates(id: number): Observable<any> {
+        return this.http.get(`${this.usersBaseURL}/${id}/pending-rates`);
     }
 
-    getUserRating(userId: number): Observable<number> {
-        const url = this.usersBaseURL + userId + '/rating'
-        return this.http.get<number>(url);
+    rateUser(rateForm: any) {
+        return this.http.post(`${this.usersBaseURL}/rates`, rateForm);
     }
 
-    submitRate(data: any) {
-        const url = this.usersBaseURL + 'rateUser';
-        return this.http.post(url, data);
+    getUserRating(id: number): Observable<number> {
+        return this.http.get<number>(`${this.usersBaseURL}/${id}/rating`);
     }
+
 }

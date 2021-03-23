@@ -279,7 +279,7 @@ public class UserController {
     }
 
     @GET
-    @Path("/{id}/pending_rates")
+    @Path("/{id}/pending-rates")
     public Response getUserPendingRates(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
 
