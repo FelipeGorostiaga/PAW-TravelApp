@@ -14,7 +14,10 @@ export class Trip {
     startPlace: Place;
     membersAmount: number;
     status: TripStatus;
-    hasImage: boolean;
+    url: string;
+    imageURL: string;
+    imageCardURL: string;
+    startPlaceURL: string;
 }
 
 export class FullTrip extends Trip {

@@ -14,6 +14,7 @@ import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 import {TripRole} from "../../model/TripMember";
 import {DateUtilService} from "../../services/date-util.service";
 import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
+import {TripInvitation} from "../../model/forms/TripInvitation";
 
 @Component({
     selector: 'app-information',
@@ -66,21 +67,6 @@ export class InformationComponent implements OnInit {
     validExtensions: string[] = ['jpeg', 'png', 'jpg'];
     maxImageSize: number = 5242880;
 
-    exitTripTitle: string;
-    exitTripMessage: string;
-
-    deleteTripTitle: string;
-    deleteTripMessage: string;
-
-    finishTripTitle: string;
-    finishTripMessage: string;
-
-    requestJoinTitle: string;
-    requestJoinMessage: string;
-
-    makeAdminTitle: string;
-    makeAdminMessage: string;
-
     constructor(private tripService: ApiTripService,
                 private authService: AuthService,
                 private router: Router,
@@ -112,41 +98,38 @@ export class InformationComponent implements OnInit {
         });
         this.populateForm();
         if (this.trip != null) {
+
             if (!this.isAdmin && !this.isMember) {
-                this.tripService.isWaitingTripConfirmation(this.trip.id, this.authService.getLoggedUser().id).subscribe(
-                    data => {
-                        this.waitingConfirmation = data;
+                this.tripService.getPendingConfirmations(this.trip.id, this.authService.getLoggedUser().id).subscribe(
+                    pendingConfirmations => {
+                        this.waitingConfirmation = pendingConfirmations.some( p => p.trip.id === this.trip.id && p.user.id === this.authService.getLoggedUser().id);
                     }
                 );
             }
-            this.loadingImage = true;
-            this.tripService.hasImage(this.trip.id).subscribe(
-                res => {
-                    if (res) {
-                        this.tripService.getTripCardImage(this.trip.id).subscribe(
-                            data => {
-                                const reader = new FileReader();
-                                reader.onload = (e) => {
-                                    // @ts-ignore
-                                    this.tripImage = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
-                                    this.loadingImage = false;
-                                    this.hasImage = true;
-                                };
-                                reader.readAsDataURL(new Blob([data]));
-                            },
-                            error => {
-                                this.loadingImage = false;
-                                this.hasImage = false;
-                            }
-                        );
-                    }
-                    else {
+
+            // todo try: src = this.trip?.imageURL ? this.trip.imageURL : default trip image
+            if (this.trip.imageURL) {
+                this.loadingImage = true;
+                this.tripService.getTripCardImage(this.trip.id).subscribe(
+                    data => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            // @ts-ignore
+                            this.tripImage = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
+                            this.loadingImage = false;
+                            this.hasImage = true;
+                        };
+                        reader.readAsDataURL(new Blob([data]));
+                    },
+                    error => {
                         this.loadingImage = false;
                         this.hasImage = false;
                     }
-
-                }
-            );
+                );
+            }
+            else {
+                this.hasImage = false;
+            }
         }
     }
 
@@ -195,7 +178,7 @@ export class InformationComponent implements OnInit {
     }
 
     sendInvite(user: User) {
-        this.tripService.inviteUserToTrip(this.trip.id, user.id).subscribe(
+        this.tripService.inviteUserToTrip(this.trip.id, new TripInvitation(this.trip.id, user.id)).subscribe(
             next => {
                 this.showSuccessAlert = true;
             },
@@ -273,7 +256,7 @@ export class InformationComponent implements OnInit {
     }
 
     grantAdminRole(user: User) {
-        this.tripService.grantAdminRole(this.trip, user).subscribe(
+        this.tripService.grantAdminRole(this.trip.id, user.id).subscribe(
             ok => {
                 const index = this.trip.members.findIndex(member => member.user.id === user.id);
                 this.trip.members[index].role = TripRole.ADMIN;

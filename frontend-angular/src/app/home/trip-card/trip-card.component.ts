@@ -35,7 +35,7 @@ export class TripCardComponent implements OnInit {
         this.startDate = this.dateUtil.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtil.stringToDate(this.trip.endDate);
         this.loadingImage = true;
-        if (this.trip.hasImage) {
+        if (this.trip.imageURL) {
             this.tripService.getTripCardImage(this.trip.id).subscribe(
                 data => {
                     const reader = new FileReader();
@@ -56,8 +56,6 @@ export class TripCardComponent implements OnInit {
             this.loadingImage = false;
             this.hasImage = false;
         }
-
-
     }
 
     navigateToTrip() {

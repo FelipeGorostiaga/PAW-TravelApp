@@ -39,7 +39,7 @@ export class CompleteRatesComponent implements OnInit {
         if (this.loading) return;
         this.loading = true;
         let rate = data.rate;
-        this.userService.submitRate({
+        this.userService.rateUser({
             rateId: data.id,
             comment: data.comment,
             rate: data.rating

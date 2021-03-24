@@ -52,7 +52,9 @@ export class SearchResultComponent implements OnInit {
 
     getPageTrips(page: number) {
         this.spinner.show();
-        this.searchService.searchTripsByName(this.nameInput, page).subscribe(
+        const formData: FormData = new FormData();
+        formData.append('name', this.nameInput);
+        this.searchService.advancedSearch(formData, page).subscribe(
             data => {
                 this.trips = data.trips;
                 this.numberOfPages = data.maxPage;

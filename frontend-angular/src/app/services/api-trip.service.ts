@@ -9,6 +9,7 @@ import {CommentForm} from "../model/forms/comment-form";
 import {mergeMap, shareReplay} from "rxjs/operators";
 import {User} from "../model/user";
 import {TripInvitation} from "../model/forms/TripInvitation";
+import {InviteRequest} from "../model/InviteRequest";
 
 @Injectable({
     providedIn: 'root'
@@ -90,16 +91,8 @@ export class ApiTripService {
         return this.http.post(`${this.tripsBaseURL}/${id}/inviteRequests`, {}, {params: params});
     }
 
-/*    isWaitingTripConfirmation(id: number, userId: number): Observable<any> {
-        const url = this.tripsBaseURL + "/" + id + "/pendingConfirmations/user";
-        let params = new HttpParams().set("user", String(userId));
-        return this.http.get(url, {params: params});
-    }
-    */
-
-    getPendingConfirmations(id: number, userId: number): Observable<any> {
-        const url = this.tripsBaseURL + "/" + id + "/pendingConfirmations";
-        return this.http.get(url);
+    getPendingConfirmations(id: number, userId: number): Observable<InviteRequest[]> {
+        return this.http.get<InviteRequest[]>(`${this.tripsBaseURL}/${id}/inviteRequests`);
     }
 
     grantAdminRole(id: number, userId: number) {
@@ -110,8 +103,7 @@ export class ApiTripService {
         return this.http.post(`${this.tripsBaseURL}/${id}/finish`, {});
     }
 
-/*    hasImage(id: number) {
-        const url = this.tripsBaseURL + "/" + id + '/hasImage';
-        return this.http.get(`${this.tripsBaseURL}/${id}/admins/${userId}`);
-    }*/
+    hasImage(id: number) {
+        return this.http.get(`${this.tripsBaseURL}/${id}/hasImage/${id}`);
+    }
 }
