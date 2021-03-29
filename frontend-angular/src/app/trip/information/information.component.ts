@@ -55,7 +55,7 @@ export class InformationComponent implements OnInit {
 
     submitted: boolean;
 
-    tripImage;
+    tripImage: any;
     loadingImage: boolean;
     hasImage: boolean;
 

@@ -1,17 +1,15 @@
-#background {
-  background-image: url("../../assets/images/trekkingcouple.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-}
 
 #image-background {
   background: url("../../assets/images/trekkingcouple.jpg");
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
   background-size: cover;
-  height: 907px;
+  height:100%;
   width: 100%;
+  overflow: hidden;
+}
+
+.custom-cont {
+  padding: 0;
+  margin: 0;
 }
 
 #custom-text {
