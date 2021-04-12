@@ -14,7 +14,7 @@ export class ApiUserService {
     constructor(private http: HttpClient) {
     }
 
-    private usersBaseURL = `${environment.apiURL}/users/`;
+    private usersBaseURL = `${environment.apiURL}/users`;
 
     getUserById(id: number): Observable<any> {
         return this.http.get(`${this.usersBaseURL}/${id}`);
@@ -33,9 +33,8 @@ export class ApiUserService {
         return this.http.put(`${this.usersBaseURL}/${id}`, formData);
     }
 
-    getUserProfileData(userId: number): Observable<UserProfile> {
-        const url = this.usersBaseURL + userId + '/profile';
-        return this.http.get<UserProfile>(url);
+    getUserProfileData(id: number): Observable<UserProfile> {
+        return this.http.get<UserProfile>(`${this.usersBaseURL}/${id}/profile`);
     }
 
     // rates the user received
