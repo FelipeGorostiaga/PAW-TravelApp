@@ -42,12 +42,11 @@ import {AdvancedSearchComponent} from './advanced-search/advanced-search.compone
 import {UserRatesComponent} from './user-rates/user-rates.component';
 import {CompleteRatesComponent} from './complete-rates/complete-rates.component';
 import {RatingModule} from 'ngx-bootstrap/rating';
-import { RateFormComponent } from './complete-rates/rate-form/rate-form.component';
-import { ForbiddenComponent } from './errors/forbidden/forbidden.component';
-import { RateTileComponent } from './profile/rate-tile/rate-tile.component';
-import { SearchResultComponent } from './search-result/search-result.component';
-import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
-
+import {RateFormComponent} from './complete-rates/rate-form/rate-form.component';
+import {ForbiddenComponent} from './errors/forbidden/forbidden.component';
+import {RateTileComponent} from './profile/rate-tile/rate-tile.component';
+import {SearchResultComponent} from './search-result/search-result.component';
+import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
 
 
 @NgModule({
@@ -110,7 +109,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [AuthService, AuthGuard, {
-        provide:  HTTP_INTERCEPTORS,
+        provide: HTTP_INTERCEPTORS,
         useClass: TokenInterceptor,
         multi: true
     }],

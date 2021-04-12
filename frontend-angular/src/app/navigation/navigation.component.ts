@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../services/auth/auth.service";
-import {ApiUserService} from "../services/api-user.service";
 import {Router} from "@angular/router";
 import {User} from "../model/user";
 import {ApiSearchService} from "../services/api-search.service";
+
+declare var require: any;
 
 @Component({
     selector: 'app-navigation',
@@ -15,6 +16,8 @@ export class NavigationComponent implements OnInit {
     isLoggedIn: boolean;
     loggedUser: User;
     searchInput: string;
+
+    globe = require('!!file-loader!../../assets/images/earth-globe.png').default;
 
     constructor(private authService: AuthService,
                 private router: Router,
@@ -40,10 +43,11 @@ export class NavigationComponent implements OnInit {
         this.authService.logout();
     }
 
-    redirectTo(uri:string){
-        this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+    redirectTo(uri: string) {
+        this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
             this.router.navigate([uri], {
-                queryParams: {name: this.searchInput}}));
+                queryParams: {name: this.searchInput}
+            }));
     }
 
     containsSpecialCharacters(input: string): boolean {
