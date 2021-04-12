@@ -7,10 +7,8 @@
                 <div class="media align-items-end profile-head">
                     <div class="profile mr-3">
                         <div *ngIf="!loadingImage">
-                            <img *ngIf="hasImage" class="rounded mb-2 img-thumbnail" id="profilePicture"
-                                 [src]="profilePicture"/>
-                            <img *ngIf="!hasImage" class="rounded mb-2 img-thumbnail" id="defaultImage"
-                                 src="./assets/images/profile-default.jpg"/>
+                            <img *ngIf="hasImage" alt="trip image" class="rounded mb-2 img-thumbnail" id="profilePicture" [src]="profilePicture"/>
+                            <img *ngIf="!hasImage" alt="default trip image" class="rounded mb-2 img-thumbnail" id="defaultImage" src="{{defaultProfileImg}}"/>
                         </div>
                         <button *ngIf="user?.id === loggedUser?.id" (click)="openModal(modalTemplate)"
                                 class="btn btn-outline-dark btn-sm btn-block" i18n=@@profile.editProfileButton>Edit

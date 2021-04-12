@@ -5,6 +5,8 @@ import {Router} from '@angular/router';
 import {DomSanitizer} from "@angular/platform-browser";
 import {DateUtilService} from "../../services/date-util.service";
 
+declare var require: any;
+
 @Component({
     selector: 'app-trip-card',
     templateUrl: './trip-card.component.html',
@@ -22,6 +24,9 @@ export class TripCardComponent implements OnInit {
     endDate: Date;
 
     userLang: string;
+
+    defaultCardImg = require('!!file-loader!../../../assets/images/trip-default-card.jpg').default;
+    mapIcon = require('!!file-loader!../../../assets/icons/mapa.png').default;
 
     constructor(private tripService: ApiTripService,
                 private sanitizer: DomSanitizer,

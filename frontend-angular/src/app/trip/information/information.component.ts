@@ -16,6 +16,8 @@ import {DateUtilService} from "../../services/date-util.service";
 import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
 import {TripInvitation} from "../../model/forms/TripInvitation";
 
+declare var require: any;
+
 @Component({
     selector: 'app-information',
     templateUrl: './information.component.html',
@@ -66,6 +68,12 @@ export class InformationComponent implements OnInit {
     invalidFileSize: boolean;
     validExtensions: string[] = ['jpeg', 'png', 'jpg'];
     maxImageSize: number = 5242880;
+
+    // Webpack require for image fingerprinting
+    tripDefaultImg = require('!!file-loader!../../../assets/images/trip-default-info.jpg').default;
+    plusIcon = require('!!file-loader!../../../assets/icons/plus.png').default;
+    editIcon = require('!!file-loader!../../../assets/icons/editar.png').default;
+    deleteIcon = require('!!file-loader!../../../assets/icons/eliminar-small.png').default;
 
     constructor(private tripService: ApiTripService,
                 private authService: AuthService,

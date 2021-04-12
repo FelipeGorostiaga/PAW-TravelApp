@@ -9,6 +9,8 @@ import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserProfile} from "../model/UserProfile";
 
+declare var require: any;
+
 @Component({
     selector: 'app-profile',
     templateUrl: './profile.component.html',
@@ -43,6 +45,8 @@ export class ProfileComponent implements OnInit {
     invalidFileSize: boolean;
     validExtensions: string[] = ['jpeg', 'png', 'jpg'];
     maxImageSize: number = 5242880;
+
+    defaultProfileImg = require('!!file-loader!../../assets/images/profile-default.jpg').default;
 
     constructor(private userService: ApiUserService,
                 private authService: AuthService,

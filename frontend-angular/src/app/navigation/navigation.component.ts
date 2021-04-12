@@ -17,7 +17,11 @@ export class NavigationComponent implements OnInit {
     loggedUser: User;
     searchInput: string;
 
+    // Webpack require function to add fingerprinting to assets
     globe = require('!!file-loader!../../assets/images/earth-globe.png').default;
+    woman = require('!!file-loader!../../assets/icons/woman.png').default;
+    man = require('!!file-loader!../../assets/icons/man.png').default;
+    logoutIcon = require('!!file-loader!../../assets/icons/logout.png').default;
 
     constructor(private authService: AuthService,
                 private router: Router,

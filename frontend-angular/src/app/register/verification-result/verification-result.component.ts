@@ -3,6 +3,8 @@ import {ActivatedRoute} from "@angular/router";
 import {AuthService} from "../../services/auth/auth.service";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 
+declare var require: any;
+
 @Component({
     selector: 'app-verification-result',
     templateUrl: './verification-result.component.html',
@@ -10,15 +12,16 @@ import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 })
 export class VerificationResultComponent implements OnInit {
 
+    verified: boolean = false;
+    notFound: boolean;
+    serverError: boolean;
+
+    errorImg = require('!!file-loader!../../../assets/images/red_cross.png').default;
+
     constructor(private route: ActivatedRoute,
                 private authService: AuthService,
                 private spinner: NgxSpinnerService) {
     }
-
-    verified: boolean = false;
-
-    notFound: boolean;
-    serverError: boolean;
 
     ngOnInit(): void {
         this.spinner.show();

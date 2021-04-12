@@ -2,11 +2,11 @@
     <div class="col-auto mb-3">
         <div class="card trip-card" style="width: 30rem;">
             <img *ngIf="!loadingImage && hasImage" class="card-img-top" [src]="tripImage">
-            <img *ngIf="!loadingImage && !hasImage" class="card-img-top" src="./assets/images/trip-default-card.jpg">
+            <img *ngIf="!loadingImage && !hasImage" class="card-img-top" src="{{defaultCardImg}}">
             <div class="card-body">
                 <h5 class="card-title" style="font-size: 35px;">{{trip?.name}}</h5>
                 <p class="card-text">{{trip?.description}}</p>
-                <p class="card-text"><img src="./assets/icons/mapa.png" alt="map-icon" style="margin-right: 16px;">{{trip?.startPlace?.name}}</p>
+                <p class="card-text"><img src="{{mapIcon}}" alt="map-icon" style="margin-right: 16px;">{{trip?.startPlace?.name}}</p>
                 <p class="card-text">
                     <span *ngIf="trip?.status === 'DUE'" class="badge bg-primary card-badge">Due</span>
                     <span *ngIf="trip?.status === 'IN_PROGRESS'" class="badge bg-success card-badge">In progress</span>
