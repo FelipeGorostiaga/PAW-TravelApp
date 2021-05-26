@@ -10,8 +10,8 @@
                             <div class="form-group col-6">
                                 <label i18n=@@register.firstname>First Name</label>
                                 <input type="text" formControlName="firstName" class="form-control"
-                                       [ngClass]="{ 'is-invalid': f.firstName?.errors }"/>
-                                <div *ngIf="f.firstName?.errors" class="invalid-feedback">
+                                       [ngClass]="{ 'is-invalid': (f.firstName?.touched || submitted) && f.firstName?.errors }"/>
+                                <div *ngIf="(f.firstName?.touched || submitted) && f.firstName?.errors" class="invalid-feedback">
                                     <div *ngIf="f.firstName?.errors.required" i18n=@@register.firstname.required>First
                                         name is required
                                     </div>
@@ -26,8 +26,8 @@
                             <div class="form-group col-6">
                                 <label i18n=@@register.lastname>Last Name</label>
                                 <input type="text" formControlName="lastName" class="form-control"
-                                       [ngClass]="{ 'is-invalid': f.lastName?.errors }"/>
-                                <div *ngIf="f.lastName?.errors" class="invalid-feedback">
+                                       [ngClass]="{ 'is-invalid': (f.lastName.touched || submitted) && f.lastName?.errors }"/>
+                                <div *ngIf="(f.lastName.touched || submitted) && f.lastName?.errors" class="invalid-feedback">
                                     <div *ngIf="f.lastName?.errors.required" i18n=@@register.lastname.required>Last Name
                                         is required
                                     </div>
@@ -44,8 +44,8 @@
                             <div class="form-group col-6">
                                 <label i18n=@@register.email>Email</label>
                                 <input type="text" formControlName="email" class="form-control"
-                                       [ngClass]="{ 'is-invalid': f.email?.errors }"/>
-                                <div *ngIf="f.email?.errors" class="invalid-feedback">
+                                       [ngClass]="{ 'is-invalid': (f.email.touched || submitted) && f.email?.errors }"/>
+                                <div *ngIf="(f.email.touched || submitted) && f.email?.errors" class="invalid-feedback">
                                     <div *ngIf="f.email?.errors.required" i18n=@@register.email.required>Email is
                                         required
                                     </div>
@@ -57,7 +57,7 @@
                             <div class="form-group col">
                                 <label i18n=@@register.nationality>Nationality</label>
                                 <select formControlName="nationality" class="form-control"
-                                        [ngClass]="{'is-invalid': f.nationality?.errors}">
+                                        [ngClass]="{'is-invalid': (f.nationality?.touched || submitted) && f.nationality?.errors}">
                                     <option value="Afghanistan">Afghanistan</option>
                                     <option value="Albania">Albania</option>
                                     <option value="Algeria">Algeria</option>
@@ -89,8 +89,6 @@
                                     <option value="Botswana">Botswana</option>
                                     <option value="Bouvet Island">Bouvet Island</option>
                                     <option value="Brazil">Brazil</option>
-                                    <option value="British Indian Ocean Territory">British Indian Ocean Territory
-                                    </option>
                                     <option value="Brunei Darussalam">Brunei Darussalam</option>
                                     <option value="Bulgaria">Bulgaria</option>
                                     <option value="Burkina Faso">Burkina Faso</option>
@@ -114,7 +112,6 @@
                                     <option value="Côte d'Ivoire">Côte d'Ivoire</option>
                                     <option value="Croatia">Croatia</option>
                                     <option value="Cuba">Cuba</option>
-                                    <option value="Curaçao">Curaçao</option>
                                     <option value="Cyprus">Cyprus</option>
                                     <option value="Czech Republic">Czech Republic</option>
                                     <option value="Denmark">Denmark</option>
@@ -128,14 +125,13 @@
                                     <option value="Eritrea">Eritrea</option>
                                     <option value="Estonia">Estonia</option>
                                     <option value="Ethiopia">Ethiopia</option>
-                                    <option value="Falkland Islands (Malvinas)">Falkland Islands</option>
+                                    <option value="Islas Malvinas">Islas Malvinas</option>
                                     <option value="Faroe Islands">Faroe Islands</option>
                                     <option value="Fiji">Fiji</option>
                                     <option value="Finland">Finland</option>
                                     <option value="France">France</option>
                                     <option value="French Guiana">French Guiana</option>
                                     <option value="French Polynesia">French Polynesia</option>
-                                    <option value="French Southern Territories">French Southern Territories</option>
                                     <option value="Gabon">Gabon</option>
                                     <option value="Gambia">Gambia</option>
                                     <option value="Georgia">Georgia</option>
@@ -178,8 +174,6 @@
                                     <option value="South Korea">South Korea</option>
                                     <option value="Kuwait">Kuwait</option>
                                     <option value="Kyrgyzstan">Kyrgyzstan</option>
-                                    <option value="Lao People's Democratic Republic">Lao People's Democratic Republic
-                                    </option>
                                     <option value="Latvia">Latvia</option>
                                     <option value="Lebanon">Lebanon</option>
                                     <option value="Lesotho">Lesotho</option>
@@ -247,9 +241,6 @@
                                     <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
                                     <option value="Saint Lucia">Saint Lucia</option>
                                     <option value="Saint Martin">Saint Martin</option>
-                                    <option value="Saint Pierre and MiquelonPM">Saint Pierre and Miquelon</option>
-                                    <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines
-                                    </option>
                                     <option value="Samoa">Samoa</option>
                                     <option value="San Marino">San Marino</option>
                                     <option value="Sao Tome and Principe">Sao Tome and Principe</option>
@@ -259,21 +250,17 @@
                                     <option value="Seychelles">Seychelles</option>
                                     <option value="Sierra Leone">Sierra Leone</option>
                                     <option value="Singapore">Singapore</option>
-                                    <option value="Saint Maarten (Dutch part)">Saint Maarten (Dutch part)</option>
+                                    <option value="Saint Maarten (Dutch part)">Saint Maarten</option>
                                     <option value="Slovakia">Slovakia</option>
                                     <option value="Slovenia">Slovenia</option>
                                     <option value="Solomon Islands">Solomon Islands</option>
                                     <option value="Somalia">Somalia</option>
                                     <option value="South Africa">South Africa</option>
-                                    <option value="South Georgia and the South Sandwich Islands">South Georgia and the
-                                        South Sandwich Islands
-                                    </option>
                                     <option value="South Sudan">South Sudan</option>
                                     <option value="Spain">Spain</option>
                                     <option value="Sri Lanka">Sri Lanka</option>
                                     <option value="Sudan">Sudan</option>
                                     <option value="Suriname">Suriname</option>
-                                    <option value="Svalbard and Jan Mayen">Svalbard and Jan Mayen</option>
                                     <option value="Swaziland">Swaziland</option>
                                     <option value="Sweden">Sweden</option>
                                     <option value="Switzerland">Switzerland</option>
@@ -290,30 +277,25 @@
                                     <option value="Tunisia">Tunisia</option>
                                     <option value="Turkey">Turkey</option>
                                     <option value="Turkmenistan">Turkmenistan</option>
-                                    <option value="Turks and Caicos Islands">Turks and Caicos Islands</option>
+                                    <option value="Turks and Caicos Islands">Turks and Caicos</option>
                                     <option value="Tuvalu">Tuvalu</option>
                                     <option value="Uganda">Uganda</option>
                                     <option value="Ukraine">Ukraine</option>
                                     <option value="United Arab Emirates">United Arab Emirates</option>
                                     <option value="United Kingdom">United Kingdom</option>
                                     <option value="United States">United States</option>
-                                    <option value="United States Minor Outlying Islands">United States Minor Outlying
-                                        Islands
-                                    </option>
                                     <option value="Uruguay">Uruguay</option>
                                     <option value="Uzbekistan">Uzbekistan</option>
                                     <option value="Vanuatu">Vanuatu</option>
                                     <option value="Venezuela">Venezuela</option>
                                     <option value="Vietnam">Vietnam</option>
-                                    <option value="Virgin Islands, British">Virgin Islands, British</option>
-                                    <option value="Virgin Islands, U.S.">Virgin Islands, U.S.</option>
-                                    <option value="Wallis and Futuna">Wallis and Futuna</option>
+                                    <option value="Virgin Islands">Virgin Islands</option>
                                     <option value="Western Sahara">Western Sahara</option>
                                     <option value="Yemen">Yemen</option>
                                     <option value="Zambia">Zambia</option>
                                     <option value="Zimbabwe">Zimbabwe</option>
                                 </select>
-                                <div *ngIf="f.nationality?.errors" class="invalid-feedback">
+                                <div *ngIf="(f.nationality?.touched || submitted) && f.nationality?.errors" class="invalid-feedback">
                                     <div *ngIf="f.nationality?.errors.required" i18n=@@register.nationality.required>
                                         Nationality is required
                                     </div>
@@ -324,8 +306,8 @@
                             <div class="form-group col">
                                 <label i18n=@@register.password>Password</label>
                                 <input type="password" formControlName="password" class="form-control"
-                                       [ngClass]="{ 'is-invalid': f.password?.errors }"/>
-                                <div *ngIf="f.password?.errors" class="invalid-feedback">
+                                       [ngClass]="{ 'is-invalid': (f.password?.touched || submitted) && f.password?.errors }"/>
+                                <div *ngIf="(f.password?.touched || submitted) && f.password?.errors" class="invalid-feedback">
                                     <div *ngIf="f.password?.errors.required" i18n=@@register.password.required>Password
                                         is required
                                     </div>
@@ -340,8 +322,8 @@
                             <div class="form-group col">
                                 <label i18n=@@register.confirmPassword>Confirm Password</label>
                                 <input type="password" formControlName="confirmPassword" class="form-control"
-                                       [ngClass]="{ 'is-invalid': f.confirmPassword?.errors }"/>
-                                <div *ngIf="f.confirmPassword?.errors" class="invalid-feedback">
+                                       [ngClass]="{ 'is-invalid': (f.confirmPassword?.touched || submitted) && f.confirmPassword?.errors }"/>
+                                <div *ngIf="(f.confirmPassword?.touched || submitted) && f.confirmPassword?.errors" class="invalid-feedback">
                                     <div *ngIf="f.confirmPassword?.errors.required"
                                          i18n=@@register.confirmPassword.required>Confirm Password is required
                                     </div>
@@ -358,12 +340,12 @@
                                        type="text"
                                        class="form-control"
                                        autocomplete="off"
-                                       [ngClass]="{ 'is-invalid': f.birthDate?.errors }"
+                                       [ngClass]="{ 'is-invalid': (f.birthDate?.touched || submitted) && f.birthDate?.errors }"
                                        bsDatepicker
                                        [bsConfig]="bsConfig"
                                        i18n-placeholder=@@register.birthdayPlaceholder
                                        placeholder="Enter a valid birthday">
-                                <div *ngIf="f.birthDate?.errors" class="invalid-feedback">
+                                <div *ngIf="(f.birthDate?.touched || submitted) && f.birthDate?.errors" class="invalid-feedback">
                                     <div *ngIf="f.birthDate?.errors.required" i18n=@@register.birthday.required>Birthday
                                         is required
                                     </div>
@@ -387,7 +369,7 @@
                                            name="customRadioInline1" class="custom-control-input" value="F">
                                     <label class="custom-control-label" for="customRadioInline2" i18n=@@register.female>Female</label>
                                 </div>
-                                <div *ngIf="f.customRadioInline1.errors" class="text-danger">
+                                <div *ngIf="(f.customRadioInline1.touched || submitted) && f.customRadioInline1.errors" class="text-danger">
                                     <small *ngIf="f.customRadioInline1.errors.required"
                                            i18n=@@register.sex.required>Sex is
                                         required</small>
@@ -397,10 +379,10 @@
                         <div class="form-group form-check">
                             <input type="checkbox" formControlName="acceptTerms" id="acceptTerms"
                                    class="form-check-input"
-                                   [ngClass]="{ 'is-invalid': f.acceptTerms?.errors }"/>
+                                   [ngClass]="{ 'is-invalid': (f.acceptTerms?.touched || submitted) && f.acceptTerms?.errors }"/>
                             <label for="acceptTerms" class="form-check-label" i18n=@@register.termsAndConditions>Accept
                                 Terms & Conditions</label>
-                            <div *ngIf="f.acceptTerms?.errors" class="invalid-feedback"
+                            <div *ngIf="(f.acceptTerms?.touched || submitted) && f.acceptTerms?.errors" class="invalid-feedback"
                                  i18n=@@register.termsAndConditions.required>Accept Terms &
                                 Conditions is required
                             </div>
