@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FullTrip, TripStatus} from "../model/trip";
+import {Trip, TripStatus} from "../model/trip";
 import {ActivatedRoute, Router} from "@angular/router";
 import {User} from "../model/user";
 import {AuthService} from "../services/auth/auth.service";
@@ -15,7 +15,7 @@ import {TripRole} from "../model/TripMember";
 export class TripComponent implements OnInit {
 
     loggedUser: User;
-    trip: FullTrip;
+    trip: Trip;
 
     tripId: number;
 
@@ -40,16 +40,22 @@ export class TripComponent implements OnInit {
         this.tripId = Number(this.route.snapshot.paramMap.get("id"));
         this.loggedUser = this.authService.getLoggedUser();
         this.ts.getTrip(this.tripId).subscribe(
-            res => {
-                this.trip = res;
-                let members = this.trip.members;
-                this.isAdmin = !!members.find(member => (member.role === TripRole.CREATOR || member.role === TripRole.ADMIN) &&
-                    member.user.id === this.loggedUser.id);
-                this.isMember = !!(this.isAdmin || members.find(member => member.user.id === this.loggedUser.id));
-                this.isCreator = !!members.find(member => (member.role === TripRole.CREATOR && member.user.id === this.loggedUser.id));
-                this.completed = this.trip.status === TripStatus.COMPLETED;
-                this.spinner.hide();
-                this.loading = false;
+            data => {
+                this.trip = data;
+                this.trip = data;
+                this.ts.getTripMembers(this.trip.membersURL).subscribe(
+                    res => {
+                        this.trip.members = res;
+                        let members = this.trip.members;
+                        this.isAdmin = !!members.find(member => (member.role === TripRole.CREATOR || member.role === TripRole.ADMIN) &&
+                            member.user.id === this.loggedUser.id);
+                        this.isMember = !!(this.isAdmin || members.find(member => member.user.id === this.loggedUser.id));
+                        this.isCreator = !!members.find(member => (member.role === TripRole.CREATOR && member.user.id === this.loggedUser.id));
+                        this.completed = this.trip.status === TripStatus.COMPLETED;
+                        this.spinner.hide();
+                        this.loading = false;
+                    }
+                )
             },
             err => {
                 this.loading = false;

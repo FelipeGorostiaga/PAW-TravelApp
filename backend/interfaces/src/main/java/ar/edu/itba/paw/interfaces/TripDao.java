@@ -66,4 +66,5 @@ public interface TripDao {
 
     public PaginatedResult<Trip> findUserTrips(long userId, int page);
 
+    List<TripMember> getTripMembers(long tripId);
 }

@@ -79,6 +79,10 @@ public class TripServiceImpl implements TripService {
         return td.countByNameSearch(name);
     }
 
+    @Override
+    public List<TripMember> getTripMembers(long tripId) {
+        return td.getTripMembers(tripId);
+    }
 
     @Override
     public void markTripAsCompleted(long tripId) {

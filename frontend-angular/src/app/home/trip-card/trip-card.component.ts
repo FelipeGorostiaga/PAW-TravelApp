@@ -40,8 +40,8 @@ export class TripCardComponent implements OnInit {
         this.startDate = this.dateUtil.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtil.stringToDate(this.trip.endDate);
         this.loadingImage = true;
-        if (this.trip.imageURL) {
-            this.tripService.getTripCardImage(this.trip.id).subscribe(
+        if (this.trip.imageCardURL) {
+            this.tripService.getTripCardImage(this.trip.imageCardURL).subscribe(
                 data => {
                     const reader = new FileReader();
                     reader.onload = (e) => {
@@ -52,7 +52,7 @@ export class TripCardComponent implements OnInit {
                     };
                     reader.readAsDataURL(new Blob([data]));
                 },
-                error => {
+                () => {
                     this.loadingImage = false;
                     this.hasImage = false;
                 }

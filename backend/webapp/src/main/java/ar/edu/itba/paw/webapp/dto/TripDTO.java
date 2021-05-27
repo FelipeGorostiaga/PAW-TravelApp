@@ -2,15 +2,27 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
+import ar.edu.itba.paw.model.TripPicture;
 import ar.edu.itba.paw.model.TripStatus;
+import ar.edu.itba.paw.webapp.utils.ImageUtils;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TripDTO {
 
     private long id;
-    private PlaceDTO startPlace;
     private boolean isPrivate;
     private int membersAmount;
     private String name;
@@ -18,41 +30,77 @@ public class TripDTO {
     private String startDate;
     private String endDate;
     private String status;
-    private boolean hasImage;
+    private PlaceDTO startPlace;
 
     private URI url;
     private URI imageURL;
     private URI imageCardURL;
     private URI startPlaceURL;
 
+    private URI commentsURL;
+    private URI membersURL;
+    private URI activitiesURL;
+
     public TripDTO() {
         // Empty constructor needed by JAX-RS
     }
 
     public TripDTO(Trip trip, final URI baseUri) {
-        id = trip.getId();
-        name = trip.getName();
-        description = trip.getDescription();
-        startDate = DateManipulation.changeDateFormat(trip.getStartDate());
-        endDate = DateManipulation.changeDateFormat(trip.getEndDate());
-        startPlace = new PlaceDTO(trip.getStartPlace());
-        isPrivate = trip.isPrivate();
-        membersAmount = trip.getMembers().size();
-        hasImage = trip.getProfilePicture() != null;
-        url = baseUri.resolve("trips/" + id);
-        imageURL = baseUri.resolve("trips/" + id + "/image");
-        imageCardURL = baseUri.resolve("trips/" + id + "/image_card");
-        startPlaceURL = baseUri.resolve("places/" + startPlace.getId());
+        this.id = trip.getId();
+        this.name = trip.getName();
+        this.description = trip.getDescription();
+        this.startDate = DateManipulation.changeDateFormat(trip.getStartDate());
+        this.endDate = DateManipulation.changeDateFormat(trip.getEndDate());
+        this.isPrivate = trip.isPrivate();
+        this.membersAmount = trip.getMembers().size();
+        this.startPlace = new PlaceDTO(trip.getStartPlace());
 
+        this.url = baseUri.resolve("trips/" + id);
+        this.startPlaceURL = baseUri.resolve("places/" + startPlace.getId());
+        this.membersURL = baseUri.resolve("trips/" + id + "/members");
+        this.activitiesURL = baseUri.resolve("trips/" + id + "/activities");
+        this.commentsURL = baseUri.resolve("trips/" + id + "/comments");
+
+        if (trip.getProfilePicture() != null) {
+            imageURL = baseUri.resolve("trips/" + id + "/image");
+            imageCardURL = baseUri.resolve("trips/" + id + "/image-card");
+        }
+        this.status = checkStatus(trip);
+    }
+
+    private String checkStatus(Trip trip) {
         TripStatus status = trip.getStatus();
         if (!status.equals(TripStatus.COMPLETED)) {
             LocalDate now = LocalDate.now();
             if (now.isAfter(trip.getStartDate()) || now.isEqual(trip.getStartDate())) {
-                this.status = TripStatus.IN_PROGRESS.name();
-                return;
+                return TripStatus.IN_PROGRESS.name();
             }
         }
-        this.status = trip.getStatus().name();
+        return trip.getStatus().name();
+    }
+
+    public URI getCommentsURL() {
+        return commentsURL;
+    }
+
+    public void setCommentsURL(URI commentsURL) {
+        this.commentsURL = commentsURL;
+    }
+
+    public URI getMembersURL() {
+        return membersURL;
+    }
+
+    public void setMembersURL(URI membersURL) {
+        this.membersURL = membersURL;
+    }
+
+    public URI getActivitiesURL() {
+        return activitiesURL;
+    }
+
+    public void setActivitiesURL(URI activitiesURL) {
+        this.activitiesURL = activitiesURL;
     }
 
     public URI getUrl() {
@@ -85,14 +133,6 @@ public class TripDTO {
 
     public void setStartPlaceURL(URI startPlaceURL) {
         this.startPlaceURL = startPlaceURL;
-    }
-
-    public boolean isHasImage() {
-        return hasImage;
-    }
-
-    public void setHasImage(boolean hasImage) {
-        this.hasImage = hasImage;
     }
 
     public String getStatus() {

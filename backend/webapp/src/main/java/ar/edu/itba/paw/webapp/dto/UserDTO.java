@@ -14,7 +14,7 @@ public class UserDTO {
     private String lastname;
     private String email;
     private LocalDate birthday;
-    private String biography = null;
+    private String biography;
     private String nationality;
     private String sex;
 

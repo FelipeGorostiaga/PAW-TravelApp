@@ -78,5 +78,5 @@ public interface TripService {
 
     public int countByNameSearch(String name);
 
-
+    List<TripMember> getTripMembers(long tripId);
 }

@@ -11,21 +11,24 @@ export class Trip {
     startDate: string;
     endDate: string;
     private: boolean;
-    startPlace: Place;
     membersAmount: number;
     status: TripStatus;
+    startPlace: Place;
+
     url: string;
     imageURL: string;
     imageCardURL: string;
     startPlaceURL: string;
-}
+    activitiesURL: string;
+    commentsURL: string;
+    membersURL: string;
 
-export class FullTrip extends Trip {
     activities: Activity[];
     comments: Comment[];
     members: TripMember[];
     admins: User[];
 }
+
 
 export enum TripStatus {
     DUE = "DUE",

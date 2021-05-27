@@ -4,7 +4,10 @@ import ar.edu.itba.paw.interfaces.*;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.dto.*;
-import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
+import ar.edu.itba.paw.webapp.form.TripCommentForm;
+import ar.edu.itba.paw.webapp.form.TripCreateForm;
+import ar.edu.itba.paw.webapp.form.TripInvitationForm;
 import ar.edu.itba.paw.webapp.utils.ImageUtils;
 import ar.edu.itba.paw.webapp.utils.PaginationLinkFactory;
 import org.apache.commons.io.FileUtils;
@@ -15,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import se.walkercrou.places.exception.GooglePlacesException;
 
 import javax.validation.ConstraintViolation;
@@ -76,7 +78,7 @@ public class TripController {
         if (!tripOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(new FullTripDTO(tripOptional.get(), uriContext.getBaseUri())).build();
+        return Response.ok(new TripDTO(tripOptional.get(), uriContext.getBaseUri())).build();
     }
 
     @POST
@@ -94,7 +96,8 @@ public class TripController {
         }
         if (!errorDTOS.isEmpty())
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new GenericEntity<List<ErrorDTO>>(errorDTOS) {})
+                    .entity(new GenericEntity<List<ErrorDTO>>(errorDTOS) {
+                    })
                     .build();
         Trip trip;
         try {
@@ -298,26 +301,47 @@ public class TripController {
         return Response.ok(resizedImage).cacheControl(cacheControl).build();
     }
 
-
     @GET
     @Path("/{id}/comments")
     public Response getTripComments(@PathParam("id") final long tripId) {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (!tripOptional.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         Trip t = tripOptional.get();
         if (!tripService.isMember(t, loggedUser)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        List<TripCommentDTO> comments = tripService.getTripComments(tripId)
+        Set<TripCommentDTO> comments = tripService.getTripComments(tripId)
                 .stream()
+                .distinct()
+                .sorted()
                 .map(tripComment -> new TripCommentDTO(tripComment, uriContext.getBaseUri()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
-        return Response.ok(new GenericEntity<List<TripCommentDTO>>(comments) {
+        return Response.ok(new GenericEntity<Set<TripCommentDTO>>(comments) {
+        }).build();
+    }
+
+
+    @GET
+    @Path("/{id}/members")
+    public Response getTripMembers(@PathParam("id") final long tripId) {
+        User loggedUser = securityUserService.getLoggedUser();
+        Optional<Trip> tripOptional = tripService.findById(tripId);
+        if (!tripOptional.isPresent()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        if (tripOptional.get().isPrivate() && !tripService.isMember(tripOptional.get(), loggedUser)) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        Set<TripMemberDTO> members = tripService.getTripMembers(tripId)
+                .stream()
+                .map(member -> new TripMemberDTO(member, uriContext.getBaseUri()))
+                .collect(Collectors.toSet());
+        return Response.ok(new GenericEntity<Set<TripMemberDTO>>(members) {
         }).build();
     }
 
@@ -356,10 +380,11 @@ public class TripController {
     @Path("/{id}/activities")
     public Response getTripActivities(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
-
         if (tripOptional.isPresent()) {
             List<ActivityDTO> activities = activityService.getTripActivities(tripId)
                     .stream()
+                    .distinct()
+                    .sorted()
                     .map(ActivityDTO::new)
                     .collect(Collectors.toList());
             return Response.ok(new GenericEntity<List<ActivityDTO>>(activities) {
@@ -392,7 +417,8 @@ public class TripController {
         Set<ConstraintViolation<ActivityCreateForm>> violations = validator.validate(activityCreateForm);
         if (!violations.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new GenericEntity<Set<ConstraintViolation<ActivityCreateForm>>>(violations) {})
+                    .entity(new GenericEntity<Set<ConstraintViolation<ActivityCreateForm>>>(violations) {
+                    })
                     .build();
         }
         Activity activity = activityService.create(activityCreateForm.getName(), activityCreateForm.getCategory(),
@@ -568,20 +594,14 @@ public class TripController {
     @Path("/{id}/inviteRequests")
     public Response getTripPendingConfirmations(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
-        if (!tripOptional.isPresent()) return Response.status(Response.Status.BAD_REQUEST).build();
-        if (!tripService.isAdmin(tripOptional.get(), securityUserService.getLoggedUser())) {
-            return Response.status(Response.Status.FORBIDDEN)
-                    .entity(new ErrorDTO("Only trip admins can get pending confirmations", "permission-denied"))
-                    .build();
+        if (!tripOptional.isPresent()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
-
         List<TripPendingConfirmationDTO> pendingConfirmations = tripService.getTripJoinRequests(tripId)
                 .stream()
                 .map(pendingConfirmation -> new TripPendingConfirmationDTO(pendingConfirmation, uriContext.getBaseUri()))
                 .collect(Collectors.toList());
-        if (pendingConfirmations.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+
         return Response.ok(new GenericEntity<List<TripPendingConfirmationDTO>>(pendingConfirmations) {
         }).build();
     }

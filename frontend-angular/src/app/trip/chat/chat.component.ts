@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FullTrip, Trip} from "../../model/trip";
+import {Trip} from "../../model/trip";
 import {ApiTripService} from "../../services/api-trip.service";
 import {AuthService} from "../../services/auth/auth.service";
 import {CommentForm} from "../../model/forms/comment-form";
@@ -12,7 +12,7 @@ import {CommentForm} from "../../model/forms/comment-form";
 })
 export class ChatComponent implements OnInit {
 
-    @Input() trip: FullTrip;
+    @Input() trip: Trip;
     @Input() isAdmin: boolean;
     @Input() completed: boolean;
 
@@ -23,6 +23,14 @@ export class ChatComponent implements OnInit {
 
     ngOnInit() {
         this.sendingMessage = false;
+        if (!this.trip.comments) {
+            console.log('fetching comments...');
+            this.tripService.getTripComments(this.trip.commentsURL).subscribe(
+                data => {
+                    this.trip.comments = data;
+                }
+            );
+        }
     }
 
     sendMessage(input) {

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, TemplateRef} from '@angular/core';
-import {FullTrip, TripStatus} from "../../model/trip";
+import {Trip, TripStatus} from "../../model/trip";
 import {ApiTripService} from "../../services/api-trip.service";
 import {AuthService} from "../../services/auth/auth.service";
 import {Router} from "@angular/router";
@@ -25,13 +25,12 @@ declare var require: any;
 })
 export class InformationComponent implements OnInit {
 
-    @Input() trip: FullTrip;
+    @Input() trip: Trip;
     @Input() isAdmin: boolean;
     @Input() isMember: boolean;
     @Input() isCreator: boolean;
     @Input() completed: boolean;
     @Input() loggedUser: User;
-
 
     waitingConfirmation = true;
 
@@ -93,10 +92,12 @@ export class InformationComponent implements OnInit {
     }
 
     ngOnInit() {
+/*
         this.isAdmin = !!this.trip.members.find(member => (member.role === TripRole.CREATOR || member.role === TripRole.ADMIN) &&
             member.user.id === this.loggedUser.id);
         this.isMember = !!(this.isAdmin || this.trip.members.find(member => member.user.id === this.loggedUser.id));
         this.isCreator = !!this.trip.members.find(member => (member.role === TripRole.CREATOR && member.user.id === this.loggedUser.id));
+*/
         this.startDate = this.dateUtils.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtils.stringToDate(this.trip.endDate);
         this.canFinish = this.canMarkAsCompleted();
@@ -106,19 +107,17 @@ export class InformationComponent implements OnInit {
         });
         this.populateForm();
         if (this.trip != null) {
-
             if (!this.isAdmin && !this.isMember) {
                 this.tripService.getPendingConfirmations(this.trip.id, this.authService.getLoggedUser().id).subscribe(
                     pendingConfirmations => {
-                        this.waitingConfirmation = pendingConfirmations.some( p => p.trip.id === this.trip.id && p.user.id === this.authService.getLoggedUser().id);
+                        this.waitingConfirmation = pendingConfirmations.some(p => p.trip.id === this.trip.id && p.user.id === this.authService.getLoggedUser().id);
                     }
                 );
             }
 
-            // todo try: src = this.trip?.imageURL ? this.trip.imageURL : default trip image
             if (this.trip.imageURL) {
                 this.loadingImage = true;
-                this.tripService.getTripCardImage(this.trip.id).subscribe(
+                this.tripService.getTripImage(this.trip.imageURL).subscribe(
                     data => {
                         const reader = new FileReader();
                         reader.onload = (e) => {
@@ -129,7 +128,7 @@ export class InformationComponent implements OnInit {
                         };
                         reader.readAsDataURL(new Blob([data]));
                     },
-                    error => {
+                    () => {
                         this.loadingImage = false;
                         this.hasImage = false;
                     }
@@ -154,7 +153,7 @@ export class InformationComponent implements OnInit {
 
     requestJoinTrip() {
         this.tripService.sendJoinRequest(this.trip.id, this.authService.getLoggedUser().id).subscribe(
-            data => {
+            () => {
                 this.waitingConfirmation = true;
             }
         );
@@ -162,7 +161,7 @@ export class InformationComponent implements OnInit {
 
     exitTrip() {
         this.tripService.exitTrip(this.trip.id).subscribe(
-            ok => {
+            () => {
                 this.router.navigate(["/user-trips"]);
             }
         );
@@ -187,10 +186,10 @@ export class InformationComponent implements OnInit {
 
     sendInvite(user: User) {
         this.tripService.inviteUserToTrip(this.trip.id, new TripInvitation(this.trip.id, user.id)).subscribe(
-            next => {
+            () => {
                 this.showSuccessAlert = true;
             },
-            error => {
+            () => {
                 this.showErrorAlert = true;
             }
         );
@@ -246,7 +245,7 @@ export class InformationComponent implements OnInit {
         formData.append('tripName', this.editTripForm.get('tripName').value);
         formData.append('description', this.editTripForm.get('description').value);
         this.tripService.editTrip(formData, this.trip.id).subscribe(
-            data => {
+            () => {
                 window.location.reload();
             }
         );
@@ -265,7 +264,7 @@ export class InformationComponent implements OnInit {
 
     grantAdminRole(user: User) {
         this.tripService.grantAdminRole(this.trip.id, user.id).subscribe(
-            ok => {
+            () => {
                 const index = this.trip.members.findIndex(member => member.user.id === user.id);
                 this.trip.members[index].role = TripRole.ADMIN;
             }
@@ -283,7 +282,7 @@ export class InformationComponent implements OnInit {
 
     deleteTrip() {
         this.tripService.deleteTrip(this.trip.id).subscribe(
-            ok => {
+            () => {
                 this.router.navigate(["/home"]);
             }
         );
@@ -291,7 +290,7 @@ export class InformationComponent implements OnInit {
 
     finishTrip() {
         this.tripService.finishTrip(this.trip.id).subscribe(
-            res => {
+            () => {
                 this.trip.status = TripStatus.COMPLETED;
                 this.completed = true;
             }

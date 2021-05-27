@@ -9,6 +9,9 @@ import {CommentForm} from "../model/forms/comment-form";
 import {mergeMap, shareReplay} from "rxjs/operators";
 import {TripInvitation} from "../model/forms/TripInvitation";
 import {InviteRequest} from "../model/InviteRequest";
+import {TripMember} from "../model/TripMember";
+import {Activity} from "../model/activity";
+import {Comment} from "../model/comment";
 
 @Injectable({
     providedIn: 'root'
@@ -49,12 +52,13 @@ export class ApiTripService {
         return this.http.put(`${this.tripsBaseURL}/${id}/exit`, {});
     }
 
-    getTripImage(id: number): Observable<any> {
-        return this.http.get(`${this.tripsBaseURL}/${id}/image`, {responseType: 'blob'});
+    getTripImage(url: string): Observable<any> {
+        // `${this.tripsBaseURL}/${id}/image`
+        return this.http.get(url, {responseType: 'blob'});
     }
 
-    getTripCardImage(id: number) {
-        return this.http.get(`${this.tripsBaseURL}/${id}/image-card`, {responseType: 'blob'});
+    getTripCardImage(url: string) {
+        return this.http.get(url, {responseType: 'blob'});
     }
 
     postComment(id: number, form: CommentForm): Observable<any> {
@@ -102,5 +106,17 @@ export class ApiTripService {
 
     hasImage(id: number) {
         return this.http.get(`${this.tripsBaseURL}/${id}/hasImage/${id}`);
+    }
+
+    getTripMembers(url: string): Observable<TripMember[]> {
+        return this.http.get<TripMember[]>(url);
+    }
+
+    getTripActivities(url: string): Observable<Activity[]> {
+        return this.http.get<Activity[]>(url);
+    }
+
+    getTripComments(url: string): Observable<Comment[]> {
+        return this.http.get<Comment[]>(url);
     }
 }

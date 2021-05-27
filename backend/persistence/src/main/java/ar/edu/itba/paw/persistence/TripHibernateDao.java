@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.TripDao;
 import ar.edu.itba.paw.model.*;
-import org.apache.commons.lang3.reflect.Typed;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -10,11 +9,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class TripHibernateDao implements TripDao {
@@ -336,6 +333,13 @@ public class TripHibernateDao implements TripDao {
         int total = queryCount.getSingleResult().intValue();
 
         return new PaginatedResult<>(result, total);
+    }
+
+    @Override
+    public List<TripMember> getTripMembers(long tripId) {
+        final TypedQuery<TripMember> query = em.createQuery("FROM TripMember as tm where tm.trip.id = :tripId", TripMember.class);
+        query.setParameter("tripId", tripId);
+        return query.getResultList();
     }
 
     @Override

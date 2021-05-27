@@ -1,8 +1,8 @@
-<div *ngIf="trip?.activities?.length == 0">
+<div *ngIf="activitiesLoaded && trip?.activities?.length == 0">
     <div class="alert alert-primary" role="alert" style="margin-top: 40px" i18n=@@activities.emptyAlert>This trip has no activities</div>
 </div>
-<div *ngIf="trip?.activities?.length !== 0">
-    <div class="list-group">
+<div *ngIf="activitiesLoaded && trip?.activities?.length !== 0">
+    <div class="list-group" >
         <app-map-activity *ngFor="let activity of trip?.activities"
                           [activity]="activity" [completed]="completed" [isAdmin]="isAdmin" (deleteActivityEvent)="deleteActivity(activity)">
         </app-map-activity>

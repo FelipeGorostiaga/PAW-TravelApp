@@ -3,11 +3,11 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MapsAPILoader} from "@agm/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ApiTripService} from "../../services/api-trip.service";
-import {FullTrip} from "../../model/trip";
 import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
 import {DateUtilService} from "../../services/date-util.service";
 import {ModalService} from "../../modal";
 import {Activity} from "../../model/activity";
+import {Trip} from "../../model/trip";
 
 @Component({
     selector: 'app-activities',
@@ -19,7 +19,7 @@ export class ActivitiesComponent implements OnInit {
     @ViewChild('search') public searchElement: ElementRef;
     searchControl: FormControl;
 
-    @Input() trip: FullTrip;
+    @Input() trip: Trip;
     @Input() isAdmin: boolean;
     @Input() isCreator: boolean;
     @Input() isMember: boolean;
@@ -34,6 +34,8 @@ export class ActivitiesComponent implements OnInit {
     submitted = false;
 
     createActivityError: boolean;
+
+    activitiesLoaded: boolean = true;
 
     isEmpty: boolean;
     bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, {containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY'});
@@ -50,6 +52,17 @@ export class ActivitiesComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        if (!this.trip.activities) {
+            this.activitiesLoaded = false;
+            this.ts.getTripActivities(this.trip.activitiesURL).subscribe(
+                data => {
+                    this.trip.activities = data;
+                    this.activitiesLoaded = true;
+                }
+            );
+        }
+
         this.activityForm = this.formBuilder.group({
             name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(60)]],
             category: ['', Validators.required],
