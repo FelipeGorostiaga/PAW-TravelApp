@@ -19,8 +19,8 @@
                 <label i18n=@@activities.create.name>Name</label>
                 <input formControlName="name" type="text" placeholder="Give your activity a name" i18n-placeholder=@@activities.create.namePlaceholder
                        class="form-control"
-                       [ngClass]="{ 'is-invalid': f.name.errors }"/>
-                <div *ngIf="f.name.errors" class="invalid-feedback">
+                       [ngClass]="{ 'is-invalid': (f.name.touched || submitted) && f.name.errors }"/>
+                <div *ngIf="(f.name.touched || submitted) && f.name.errors" class="invalid-feedback">
                     <div *ngIf="f.name.errors.required" i18n=@@activities.create.name.required>Name is required</div>
                     <div *ngIf="f.name.errors.minlength" i18n=@@activities.create.name.minlength>Min 6 characters</div>
                     <div *ngIf="f.name.errors.maxlength" i18n=@@activities.create.name.maxlength>Max 25 characters</div>
@@ -29,7 +29,7 @@
             <div class="form-group col-6">
                 <label i18n=@@activities.create.category>Category</label>
                 <select formControlName="category" name="category" class="form-control" style="margin-bottom: 10px;"
-                        [ngClass]="{ 'is-invalid': f.category.errors }">
+                        [ngClass]="{ 'is-invalid': (f.category.touched || submitted) && f.category.errors }">
                     <option disabled selected>Select category</option>
                     <option value="Cultural" i18n=@@activities.create.category.cultural>Cultural</option>
                     <option value="Sports" i18n=@@activities.create.category.sports>Sports</option>
@@ -42,7 +42,7 @@
                     <option value="Pleasure" i18n=@@activities.create.category.relax>Pleasure</option>
                     <option value="Nightlife" i18n=@@activities.create.category.nightlife>Nightlife</option>
                 </select>
-                <div *ngIf="f.category.errors" class="invalid-feedback">
+                <div *ngIf="(f.category.touched || submitted) && f.category.errors" class="invalid-feedback">
                     <p *ngIf="f.category.errors.required" i18n=@@activities.create.category.required>Category is required</p>
                 </div>
             </div>
@@ -56,10 +56,10 @@
                        id="startDate"
                        placeholder="dd/mm/yyyy"
                        autocomplete="off"
-                       [ngClass]="{ 'is-invalid': f.startDate.errors }"
+                       [ngClass]="{ 'is-invalid': (f.startDate.touched || submitted) && f.startDate.errors }"
                        bsDatepicker
                        [bsConfig]="bsConfig">
-                <div *ngIf="f.startDate.errors" class="invalid-feedback">
+                <div *ngIf="(f.startDate.touched || submitted) && f.startDate.errors" class="invalid-feedback">
                     <p *ngIf="f.startDate.errors.required" i18n=@@activities.create.startDate.required>Start date is required</p>
                     <p *ngIf="f.startDate.errors.invalidInterval" i18n=@@activities.create.startDate.invalidDate>Invalid dates, make sure they dont collide with other activities</p>
                 </div>
@@ -71,11 +71,11 @@
                        class="form-control"
                        autocomplete="off"
                        placeholder="dd/mm/yyyy"
-                       [ngClass]="{ 'is-invalid': f.endDate.errors }"
+                       [ngClass]="{ 'is-invalid': (f.endDate.touched || submitted) && f.endDate.errors }"
                        bsDatepicker
                        id="endDate"
                        [bsConfig]="bsConfig">
-                <div *ngIf="f.endDate.errors" class="invalid-feedback">
+                <div *ngIf="(f.endDate.touched || submitted) && f.endDate.errors" class="invalid-feedback">
                     <p *ngIf="f.endDate.errors.required" i18n=@@activities.create.endDate.required>End date is required</p>
                     <p *ngIf="f.endDate.errors.invalidInterval" i18n=@@activities.create.endDate.invalidDate>Invalid dates, make sure they dont collide with other activities</p>
                 </div>
@@ -92,12 +92,12 @@
                        i18n-placeholder=@@activities.create.locationPlaceholder
                        class="form-control"
                        autocomplete="off"
-                       [ngClass]="{ 'is-invalid': f.placeInput.errors }"/>
+                       [ngClass]="{ 'is-invalid': (f.placeInput.touched || submitted) && f.placeInput.errors }"/>
                 <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom"
                          style="height: 400px;width: 100%;">
                     <agm-marker *ngIf="submittedPlace" [latitude]="latitude" [longitude]="longitude"></agm-marker>
                 </agm-map>
-                <div *ngIf="f.placeInput.errors" class="invalid-feedback">
+                <div *ngIf="(f.placeInput.touched || submitted) && f.placeInput.errors" class="invalid-feedback">
                     <p *ngIf="f.placeInput.errors.required" i18n=@@activities.create.location.required>Location is required</p>
                 </div>
             </div>
@@ -112,9 +112,9 @@
                           i18n-placeholder=@@activities.create.descriptionPlaceholder
                           style="margin-bottom: 10px;resize:none;"
                           maxlength="300"
-                          [ngClass]="{ 'is-invalid': f.description.errors }">
+                          [ngClass]="{ 'is-invalid': (f.description.touched || submitted) && f.description.errors }">
                         </textarea>
-                <div *ngIf="f.description.errors" class="invalid-feedback">
+                <div *ngIf="(f.description.touched || submitted) && f.description.errors" class="invalid-feedback">
                     <p *ngIf="f.description.errors.required" i18n=@@activities.create.description.required>Description is required</p>
                     <p *ngIf="f.description.errors.minlength" i18n=@@activities.create.description.minlength>Min length is 10 characters</p>
                     <p *ngIf="f.description.errors.maxlength" i18n=@@activities.create.description.maxlength>Max length is 300 characters</p>
