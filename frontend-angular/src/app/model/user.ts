@@ -1,4 +1,7 @@
+import {Rate} from "./rate";
+
 export class User {
+
     id: number;
     firstname: string;
     lastname: string;
@@ -7,6 +10,20 @@ export class User {
     biography: string;
     nationality: string;
     sex: string;
+
+    url: string;
+    imageURL: string;
+    tripsURL: string;
+    ratesURL: string;
+    pendingRatesURL: string;
+    invitationsURL: string;
+
+    rates: Rate[];
+    pendingRates: Rate[];
+    rating: number;
+
+    // todo
+    invitations: any[];
 
     constructor(id: number, firstname: string, lastname: string, email: string, birthday: string, biography: string, nationality: string, sex: string) {
         this.id = id;

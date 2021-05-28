@@ -8,10 +8,10 @@ import java.util.Optional;
 
 public interface PlaceDao {
 
-    public Place create(String googleId, String name, double latitude, double longitude, String address);
+    Place create(String googleId, String name, double latitude, double longitude, String address);
 
-    public Optional<Place> findById(long id);
+    Optional<Place> findById(long id);
 
-    public Optional<Place> findByGoogleId(String googleId);
+    Optional<Place> findByGoogleId(String googleId);
 
 }

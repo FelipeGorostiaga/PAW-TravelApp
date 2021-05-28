@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div class="col-8">
+            <alert *ngIf="user.invitations?.length === 0" [type]="'primary'" i18n=@@user-rates.noRates>You don't have any pending invitations</alert>
+            <div *ngIf="user.invitations?.length > 0" class="list-group list-group-flush">
+
+                <div *ngFor="let invitation of user?.invitations" class="card" style="margin-bottom: 20px;">
+                    <div class="card-header">
+
+                    </div>
+                    <div class="card-body" style="margin-top: 10px; margin-bottom: 5px;">
+                        <p class="card-text"></p>
+
+                    </div>
+                    <div class="card-footer text-center">
+                        <p style="font-size: 85%"></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

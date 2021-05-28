@@ -11,16 +11,16 @@ import java.util.Optional;
 
 public interface ActivityService {
 
-    public Optional<Activity> findById(long id);
+    Optional<Activity> findById(long id);
 
-    public Optional<Activity> findByName(String name);
+    Optional<Activity> findByName(String name);
 
-    public Activity create(String name, String category, double latitude, double longitude, Trip trip, LocalDate startDate, LocalDate endDate,
-                           String description, String placeInput);
+    Activity create(String name, String category, double latitude, double longitude, Trip trip, LocalDate startDate, LocalDate endDate,
+                    String description, String placeInput);
 
-    public Optional<Activity> findByCategory(String category);
+    Optional<Activity> findByCategory(String category);
 
     List<Activity> getTripActivities(long tripId);
 
-    public List<DataPair<Activity, Place>> getTripActivitiesDetails(Trip trip);
+    List<DataPair<Activity, Place>> getTripActivitiesDetails(Trip trip);
 }

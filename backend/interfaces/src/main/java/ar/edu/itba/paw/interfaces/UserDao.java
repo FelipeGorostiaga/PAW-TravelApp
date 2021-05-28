@@ -20,8 +20,6 @@ public interface UserDao {
     User create(final String firstname, final String lastname, final String email, final String password,
                 LocalDate birthday, final String nationality, final String sex, final String verificationCode);
 
-    boolean update(User u);
-
     void verify(User u);
 
     List<User> findByName(String name);

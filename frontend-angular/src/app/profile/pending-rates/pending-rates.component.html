@@ -1,0 +1,14 @@
+<div class="container-fluid">
+    <div class="container">
+        <div *ngIf="user?.pendingRates?.length === 0" class="alert alert-primary text-center" role="alertdialog"
+             style="margin-top: 50px"
+             i18n=@@complete-rates.noRatesAlert>You have no pending rates
+        </div>
+        <div *ngIf="user?.pendingRates?.length > 0">
+            <h1 style="margin-left: 50px; margin-top: 40px;" i18n=@@rate-form.title>Pending rates</h1>
+            <app-rate-form-tile *ngFor="let rate of user?.pendingRates" (rateSubmitEvent)="submitRate($event)"
+                                [rate]="rate"></app-rate-form-tile>
+        </div>
+    </div>
+</div>
+

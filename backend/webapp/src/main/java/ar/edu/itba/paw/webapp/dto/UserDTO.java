@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.model.User;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -19,32 +18,34 @@ public class UserDTO {
     private String sex;
 
     private URI url;
-    private URI pictureURL;
-    private URI userTripsURL;
-    private URI profileDataURL;
-    private URI userRatesURL;
-
-
+    private URI imageURL;
+    private URI tripsURL;
+    private URI ratesURL;
+    private URI pendingRatesURL;
+    private URI invitationsURL;
 
     public UserDTO() {
         // Empty constructor needed by JAX-RS
     }
 
     public UserDTO(User user, final URI baseUri) {
-        id = user.getId();
-        firstname = user.getFirstname();
-        lastname = user.getLastname();
-        email = user.getEmail();
-        birthday = user.getBirthday();
-        nationality = user.getNationality();
-        biography = user.getBiography();
-        sex = user.getSex();
+        this.id = user.getId();
+        this.firstname = user.getFirstname();
+        this.lastname = user.getLastname();
+        this.email = user.getEmail();
+        this.birthday = user.getBirthday();
+        this.nationality = user.getNationality();
+        this.biography = user.getBiography();
+        this.sex = user.getSex();
 
-        url = baseUri.resolve("users/" + id);
-        pictureURL = baseUri.resolve("users/picture/" + id);
-        userTripsURL = baseUri.resolve("users/" + id + "/trips");
-        profileDataURL = baseUri.resolve("users/" + id + "/profile");
-        userRatesURL = baseUri.resolve("users/" + id + "/rates");
+        this.url = baseUri.resolve("users/" + id);
+        this.tripsURL = baseUri.resolve("users/" + id + "/trips");
+        this.ratesURL = baseUri.resolve("users/" + id + "/rates");
+        this.pendingRatesURL = baseUri.resolve("users/" + id + "/pending-rates");
+        this.invitationsURL = baseUri.resolve("users/" + id + "/invitations");
+        if (user.getProfilePicture() != null) {
+            this.imageURL = baseUri.resolve("users/" + id + "/image");
+        }
 
     }
 
@@ -120,36 +121,36 @@ public class UserDTO {
         this.url = url;
     }
 
-    public URI getPictureURL() {
-        return pictureURL;
+    public URI getImageURL() {
+        return imageURL;
     }
 
-    public void setPictureURL(URI pictureURL) {
-        this.pictureURL = pictureURL;
+    public void setImageURL(URI imageURL) {
+        this.imageURL = imageURL;
     }
 
-    public URI getUserTripsURL() {
-        return userTripsURL;
+    public URI getPendingRatesURL() {
+        return pendingRatesURL;
     }
 
-    public void setUserTripsURL(URI userTripsURL) {
-        this.userTripsURL = userTripsURL;
+    public void setPendingRatesURL(URI pendingRatesURL) {
+        this.pendingRatesURL = pendingRatesURL;
     }
 
-    public URI getProfileDataURL() {
-        return profileDataURL;
+    public URI getTripsURL() {
+        return tripsURL;
     }
 
-    public void setProfileDataURL(URI profileDataURL) {
-        this.profileDataURL = profileDataURL;
+    public void setTripsURL(URI tripsURL) {
+        this.tripsURL = tripsURL;
     }
 
-    public URI getUserRatesURL() {
-        return userRatesURL;
+    public URI getRatesURL() {
+        return ratesURL;
     }
 
-    public void setUserRatesURL(URI userRatesURL) {
-        this.userRatesURL = userRatesURL;
+    public void setRatesURL(URI ratesURL) {
+        this.ratesURL = ratesURL;
     }
 
     @Override

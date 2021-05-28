@@ -1,0 +1,117 @@
+<div class="row py-8 px-12">
+    <div class="col-md-8 mx-auto">
+        <div class="bg-white shadow rounded overflow-hidden">
+            <div class="px-4 pt-0 pb-4 cover">
+                <div class="media align-items-end profile-head">
+                    <div class="profile mr-3">
+                        <div *ngIf="!loadingImage">
+                            <img *ngIf="hasImage" alt="trip image" class="rounded mb-2 img-thumbnail"
+                                 id="profilePicture" [src]="profilePicture"/>
+                            <img *ngIf="!hasImage" alt="default trip image" class="rounded mb-2 img-thumbnail"
+                                 id="defaultImage" src="{{defaultProfileImg}}"/>
+                        </div>
+                        <button *ngIf="isProfileOwner" (click)="openModal(modalTemplate)"
+                                class="btn btn-outline-dark btn-sm btn-block" i18n=@@profile.editProfileButton>Edit
+                            profile
+                        </button>
+                    </div>
+                    <div class="media-body mb-5">
+                        <h4 class="mt-0 mb-0 text-white">{{user?.firstname}} {{user?.lastname}}</h4>
+                        <p class="mb-4 text-white"><i class="fa fa-map-marker" aria-hidden="true"
+                                                      style="margin-right: 10px"></i>{{user?.nationality}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!--  <i class="fa fa-suitcase mr-1"> -->
+            <div class="bg-light p-4 d-flex justify-content-end text-center">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item" style="margin-left: 10px">
+                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.dueTripsAmount}}</h5><small
+                            class="text-muted" i18n=@@profile.due><i class="fa fa-calendar mr-1"></i>Due</small>
+                    </li>
+                    <li class="list-inline-item" style="margin-left: 10px">
+                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.activeTripsAmount}}</h5><small
+                            class="text-muted" i18n=@@profile.active><i class="fa fa-suitcase mr-1"></i>In
+                        progress</small>
+                    </li>
+                    <li class="list-inline-item" style="margin-left: 10px">
+                        <h5 class="font-weight-bold mb-0 d-block">{{userProfile?.completedTripsAmount}}</h5><small
+                            class="text-muted" i18n=@@profile.completed><i
+                            class="fa fa-check mr-1"></i>Completed</small>
+                    </li>
+                    <li class="list-inline-item" style="margin-left: 10px">
+                    <li class="list-inline-item">
+                        <h5 *ngIf="hasRates" class="font-weight-bold mb-0 d-block">{{userRate}}</h5>
+                        <h5 *ngIf="!hasRates" class="font-weight-bold mb-0 d-block">-</h5><small class="text-muted"
+                                                                                                 i18n=@@profile.rate><i
+                            class="fa fa-heart mr-1"></i>Rate</small>
+                    </li>
+                </ul>
+            </div>
+
+            <!--Edita tu perfil para agregar una biografia!-->
+
+            <div class="px-4 py-3">
+                <h5 class="mb-0" i18n=@@profile.aboutMe style="padding-bottom: 20px;">About Me</h5>
+                <alert *ngIf="!user?.biography || user?.biography?.length === 0" [dismissible]="true"
+                       style="margin-top: 10px;" [type]="'primary'" i18n=@@profile.editProfileAlert>Edit your profile to
+                    add a biography!
+                </alert>
+                <div *ngIf="user.biography && user?.biography?.length > 0" class="p-4 rounded shadow-sm bg-light">
+                    <p class="font-italic mb-0">{{user?.biography}}</p>
+                </div>
+            </div>
+            <!--<div class="py-4 px-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="mb-0" i18n=@@profile.recentReviews>Recent reviews</h5><a
+                        *ngIf="userProfile?.rates?.length > 3" class="btn btn-link text-muted"
+                        routerLink="/profile/{{user?.id}}/rates" i18n=@@profile.showAllLink>Show all</a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <app-rate-tile *ngFor="let rate of userProfile?.rates | slice:0:3; let i=index"
+                                   [rate]="rate"></app-rate-tile>
+                </ul>
+            </div>-->
+        </div>
+    </div>
+</div>
+
+<ng-template #modalTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left" i18n=@@profile.editTrip.title>Edit Trip</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()"><span
+                aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editProfileForm" (ngSubmit)="submitEditProfile()">
+            <div class="form-group">
+                <label for="imageUpload" i18n=@@profile.fileInput>File input</label>
+                <input type="file" class="form-control-file" id="imageUpload" (change)="onFileSelected($event)">
+            </div>
+            <p *ngIf="submitted && invalidFileExtension" class="invalid-feedback"
+               i18n=@@profile.editTrip.invalidFileExtension>Invalid file extension, only jpg and
+                png allowed.</p>
+            <p *ngIf="submitted && invalidFileSize" class="invalid-feedback" i18n=@@profile.editTrip.invalidFileSize>
+                Image size too big (max 5MB)</p>
+            <div class="form-group">
+                <label for="biography" i18n=@@profile.editTrip.aboutMe>About Me</label>
+                <textarea formControlName="biography" style="resize: none" class="form-control" id="biography"
+                          rows="4"></textarea>
+            </div>
+            <div *ngIf="submitted && f.biography?.errors" class="invalid-feedback">
+                <p *ngIf="f.biography.errors.required" i18n=@@profile.editTrip.biography.required>Biography</p>
+                <p *ngIf="f.biography.errors.maxlength" i18n=@@profile.editTrip.biography.maxlength>Max length is 150
+                    characters</p>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="submitEditProfile()"
+                i18n=@@profile.editTrip.submitButton>Submit
+        </button>
+        <button type="button" class="btn btn-outline-primary" (click)="closeModal()"
+                i18n=@@profile.editTrip.closeButton>Close
+        </button>
+    </div>
+</ng-template>

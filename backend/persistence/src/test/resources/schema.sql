@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS places (
 									  latitude double precision NOT NULL,
 									  longitude double precision NOT NULL,
 									  address varchar(500) NOT NULL
-)
+);
 
 CREATE TABLE IF NOT EXISTS users (
 									 id IDENTITY PRIMARY KEY,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
 									 nationality varchar(100) NOT NULL,
 									 token varchar(64) NOT NULL,
 									 birthday DATE
-)
+);
 
 CREATE TABLE IF NOT EXISTS trips (
 									 id IDENTITY PRIMARY KEY,
@@ -74,6 +74,8 @@ CREATE TABLE IF NOT EXISTS trip_pictures (
 );
 
 INSERT INTO places(id, google_id, name, latitude, longitude, address) values(3, 'google id', 'Bahamas', 100, 100, 'Bahamas address');
+
+INSERT INTO users(10, 'Felipe', 'Gorostiaga', 'felig@gmail.com', '123321', 'M', 'Argentina', 'ajshdjkashdjahs', current_date);
 
 
 

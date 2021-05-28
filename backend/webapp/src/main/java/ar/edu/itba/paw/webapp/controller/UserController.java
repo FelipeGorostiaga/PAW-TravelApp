@@ -1,29 +1,24 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
-import ar.edu.itba.paw.interfaces.*;
+import ar.edu.itba.paw.interfaces.TripService;
+import ar.edu.itba.paw.interfaces.UserPicturesService;
+import ar.edu.itba.paw.interfaces.UserRatesService;
+import ar.edu.itba.paw.interfaces.UserService;
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.webapp.auth.JwtUtil;
 import ar.edu.itba.paw.webapp.auth.SecurityUserService;
-import ar.edu.itba.paw.webapp.auth.TravelUserDetailsService;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import ar.edu.itba.paw.webapp.form.UserRateForm;
 import ar.edu.itba.paw.webapp.utils.ImageUtils;
-import ar.edu.itba.paw.model.TripStatus;
 import ar.edu.itba.paw.webapp.utils.PaginationLinkFactory;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ConstraintViolation;
@@ -33,8 +28,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("users")
@@ -106,9 +103,9 @@ public class UserController {
     }
 
     @GET
-    @Path("/{id}/picture")
+    @Path("/{id}/image")
     @Produces(value = {"image/png", "image/jpeg"})
-    public Response getProfilePicture(@PathParam("id") final int id) {
+    public Response getUserImage(@PathParam("id") final int id) {
         final Optional<UserPicture> pictureOpt = userPicturesService.findByUserId(id);
         if (!pictureOpt.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -236,6 +233,8 @@ public class UserController {
         return Response.serverError().build();
     }
 
+
+    // TODO: remove
     @GET
     @Path("/{id}/profile")
     public Response getUserProfileData(@PathParam("id") final long userId) {
@@ -297,6 +296,8 @@ public class UserController {
         }).build();
     }
 
+
+    // TODO: remove
     @GET
     @Path("/{id}/rating")
     @Produces(value = {MediaType.TEXT_PLAIN})

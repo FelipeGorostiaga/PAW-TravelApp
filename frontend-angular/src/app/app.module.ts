@@ -39,14 +39,16 @@ import {AlertModule} from "ngx-bootstrap/alert";
 import {ModalModule} from "ngx-bootstrap/modal";
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {AdvancedSearchComponent} from './advanced-search/advanced-search.component';
-import {UserRatesComponent} from './user-rates/user-rates.component';
-import {CompleteRatesComponent} from './complete-rates/complete-rates.component';
 import {RatingModule} from 'ngx-bootstrap/rating';
-import {RateFormComponent} from './complete-rates/rate-form/rate-form.component';
 import {ForbiddenComponent} from './errors/forbidden/forbidden.component';
-import {RateTileComponent} from './profile/rate-tile/rate-tile.component';
+import {RateTileComponent} from './profile/rates/rate-tile/rate-tile.component';
 import {SearchResultComponent} from './search-result/search-result.component';
 import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
+import {RatesComponent} from './profile/rates/rates.component';
+import {PendingRatesComponent} from './profile/pending-rates/pending-rates.component';
+import {InvitationsComponent} from './profile/invitations/invitations.component';
+import {RateFormTileComponent} from './profile/pending-rates/rate-form-tile/rate-form-tile.component';
+import {InfoComponent} from './profile/info/info.component';
 
 
 @NgModule({
@@ -76,12 +78,14 @@ import {ConfirmationPopoverModule} from 'angular-confirmation-popover';
         RespondInviteComponent,
         UserListItemComponent,
         AdvancedSearchComponent,
-        UserRatesComponent,
-        CompleteRatesComponent,
-        RateFormComponent,
         ForbiddenComponent,
         RateTileComponent,
-        SearchResultComponent
+        SearchResultComponent,
+        RatesComponent,
+        PendingRatesComponent,
+        InvitationsComponent,
+        RateFormTileComponent,
+        InfoComponent
     ],
     imports: [
         BrowserModule,

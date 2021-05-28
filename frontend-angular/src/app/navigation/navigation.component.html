@@ -14,8 +14,6 @@
             <li class="nav-item" id="my-trips-item"><a class="nav-link" routerLink="/user-trips" i18n=@@navbar.myTrips>My trips</a></li>
             <li class="nav-item" id="create-trip-item"><a class="nav-link" routerLink="/create-trip" i18n=@@navbar.createTrip>Create trip </a></li>
             <li class="nav-item" id="adv-search-item"><a class="nav-link" routerLink="/advanced-search" i18n=@@navbar.advancedSearch>Advanced Search</a></li>
-            <li class="nav-item" id="pending-rates"><a class="nav-link" routerLink="/user/{{loggedUser.id}}/pending/rates" i18n=@@navbar.pendingRates>Pending Rates</a></li>
-            <li class="nav-item" id="my-rates"><a class="nav-link" routerLink="/profile/{{loggedUser?.id}}/rates" i18n=@@navbar.myRates>My Rates</a></li>
             <li class="nav-item" id="about-item"><a class="nav-link" routerLink="/about" i18n=@@navbar.about>About</a></li>
         </ul>
         <div *ngIf="isLoggedIn" class="form-inline my-2 my-lg-0">

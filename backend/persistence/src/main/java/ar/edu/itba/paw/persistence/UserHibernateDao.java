@@ -30,11 +30,6 @@ public class UserHibernateDao implements UserDao {
     }
 
     @Override
-    public boolean update(User u) {
-        return em.merge(u) != null;
-    }
-
-    @Override
     public void verify(User u) {
         Query query = em.createQuery("UPDATE User SET verified = true WHERE id = :userId");
         query.setParameter("userId", u.getId());
@@ -104,6 +99,5 @@ public class UserHibernateDao implements UserDao {
         query.setParameter("verificationCode", verificationCode);
         return query.getResultList().stream().findFirst();
     }
-
 
 }

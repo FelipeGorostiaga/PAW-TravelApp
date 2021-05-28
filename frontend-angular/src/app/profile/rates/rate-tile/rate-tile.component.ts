@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Rate} from "../../model/rate";
-import {DateUtilService} from "../../services/date-util.service";
+import {Rate} from "../../../model/rate";
+import {DateUtilService} from "../../../services/date-util.service";
 
 @Component({
   selector: 'app-rate-tile',

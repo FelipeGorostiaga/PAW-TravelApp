@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public interface TripMemberDao {
 
-    public TripMember create(Trip trip, User user, TripMemberRole role);
+    TripMember create(Trip trip, User user, TripMemberRole role);
 
-    public Optional<TripMember> findById(long id);
+    Optional<TripMember> findById(long id);
 
-    public Optional<TripMember> find(Trip trip, User user);
+    Optional<TripMember> find(Trip trip, User user);
 }

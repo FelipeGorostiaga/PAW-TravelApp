@@ -4,6 +4,8 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Trip} from '../model/trip';
 import {environment} from "../../environments/environment";
 import {UserProfile} from "../model/UserProfile";
+import {User} from "../model/user";
+import {Rate} from "../model/rate";
 
 
 @Injectable({
@@ -16,8 +18,8 @@ export class ApiUserService {
 
     private usersBaseURL = `${environment.apiURL}/users`;
 
-    getUserById(id: number): Observable<any> {
-        return this.http.get(`${this.usersBaseURL}/${id}`);
+    getUser(id: number): Observable<User> {
+        return this.http.get<User>(`${this.usersBaseURL}/${id}`);
     }
 
     getUserTrips(id: number, page: number): Observable<any> {
@@ -38,21 +40,24 @@ export class ApiUserService {
     }
 
     // rates the user received
-    getUserRates(id: number): Observable<any>  {
-        return this.http.get(`${this.usersBaseURL}/${id}/rates`);
+    getUserRates(url: string): Observable<Rate[]>  {
+        return this.http.get<Rate[]>(url);
     }
 
     // rates the user needs to write
-    getUserPendingRates(id: number): Observable<any> {
-        return this.http.get(`${this.usersBaseURL}/${id}/pending-rates`);
-    }
-
-    rateUser(rateForm: any) {
-        return this.http.post(`${this.usersBaseURL}/rates`, rateForm);
+    getUserPendingRates(url: string): Observable<any> {
+        return this.http.get(url);
     }
 
     getUserRating(id: number): Observable<number> {
         return this.http.get<number>(`${this.usersBaseURL}/${id}/rating`);
     }
 
+    rateUser(rateForm: any) {
+        return this.http.post(`${this.usersBaseURL}/rates`, rateForm);
+    }
+
+    getUserInvitations(url: string): Observable<any> {
+        return this.http.get(url);
+    }
 }

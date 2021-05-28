@@ -62,11 +62,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean update(User user) {
-        return ud.update(user);
-    }
-
-    @Override
     public void verify(User user) {
         ud.verify(user);
     }

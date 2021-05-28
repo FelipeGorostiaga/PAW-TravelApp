@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface GoogleMapsService {
 
-    public List<Place> queryGoogleMapsPlaces(double latitude, double longitude) throws GooglePlacesException;
+    List<Place> queryGoogleMapsPlaces(double latitude, double longitude) throws GooglePlacesException;
 
-    public ar.edu.itba.paw.model.Place createGooglePlaceReference(List<se.walkercrou.places.Place> googlePlaces, String placeInput,
+    ar.edu.itba.paw.model.Place createGooglePlaceReference(List<se.walkercrou.places.Place> googlePlaces, String placeInput,
                                                            double latitude, double longitude) throws GooglePlacesException;
 
-    public Place findGooglePlaceById(String googlePlaceId);
+    Place findGooglePlaceById(String googlePlaceId);
 
 }

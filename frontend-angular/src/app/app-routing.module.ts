@@ -15,8 +15,6 @@ import {VerificationComponent} from "./register/verification/verification.compon
 import {VerificationResultComponent} from "./register/verification-result/verification-result.component";
 import {RespondJoinReqComponent} from "./trip/respond-join-req/respond-join-req.component";
 import {RespondInviteComponent} from "./trip/respond-invite/respond-invite.component";
-import {UserRatesComponent} from "./user-rates/user-rates.component";
-import {CompleteRatesComponent} from "./complete-rates/complete-rates.component";
 import {ForbiddenComponent} from "./errors/forbidden/forbidden.component";
 import {SearchResultComponent} from "./search-result/search-result.component";
 import {AdvancedSearchComponent} from "./advanced-search/advanced-search.component";
@@ -84,16 +82,6 @@ const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'profile/:id/rates',
-        component: UserRatesComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'user/:id/pending/rates',
-        component: CompleteRatesComponent,
-        canActivate: [AuthGuard]
-    },
-    {
         path: 'advanced-search',
         component: AdvancedSearchComponent,
         canActivate: [AuthGuard]
@@ -114,7 +102,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes,{useHash: true} )],
+    imports: [RouterModule.forRoot(routes, {useHash: true})],
     exports: [RouterModule]
 })
 export class AppRoutingModule {

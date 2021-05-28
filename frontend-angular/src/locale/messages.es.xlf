@@ -86,7 +86,7 @@
                 <source>You have no pending rates</source>
                 <target>No tienes calificaciones pendientes</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/complete-rates/complete-rates.component.html</context>
+                    <context context-type="sourcefile">src/app/profile/pending-rates/pending-rates.component.html</context>
                     <context context-type="linenumber">6</context>
                 </context-group>
             </trans-unit>
@@ -94,7 +94,7 @@
                 <source>Pending rates</source>
                 <target>Calificaciones pendientes</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/complete-rates/complete-rates.component.html</context>
+                    <context context-type="sourcefile">src/app/profile/pending-rates/pending-rates.component.html</context>
                     <context context-type="linenumber">8</context>
                 </context-group>
             </trans-unit>
@@ -102,8 +102,7 @@
                 <source>Write a short review (max 200 characters)</source>
                 <target>Escriba su opinión sobre viajar con esta persona (max 200 caracteres)</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/complete-rates/rate-form/rate-form.component.html
-                    </context>
+                    <context context-type="sourcefile">src/app/profile/pending-rates/pending-rates.component.html</context>
                     <context context-type="linenumber">22</context>
                 </context-group>
             </trans-unit>
@@ -111,8 +110,7 @@
                 <source>Please write a review, at least 20 characters long</source>
                 <target>Por favor escriba una opinión de al menos 20 caracteres</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/complete-rates/rate-form/rate-form.component.html
-                    </context>
+                    <context context-type="sourcefile">src/app/profile/pending-rates/pending-rates.component.html</context>
                     <context context-type="linenumber">28,29</context>
                 </context-group>
                 <note priority="1" from="description">rate-form.alertMinLength</note>
@@ -121,8 +119,7 @@
                 <source>Submit</source>
                 <target>Enviar</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/complete-rates/rate-form/rate-form.component.html
-                    </context>
+                    <context context-type="sourcefile">src/app/profile/pending-rates/pending-rates.component.html</context>
                     <context context-type="linenumber">34</context>
                 </context-group>
             </trans-unit>
@@ -1707,7 +1704,7 @@
                 <source>This user has no available rates</source>
                 <target>Este usuario no tiene calificaciones disponibles</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/user-rates/user-rates.component.html</context>
+                    <context context-type="sourcefile">src/app/profile/rates/rates.component.html</context>
                     <context context-type="linenumber">6</context>
                 </context-group>
             </trans-unit>
@@ -1715,7 +1712,7 @@
                 <source>Error fetching data from server, please try again later</source>
                 <target>Error obteniendo datos del servidor, inténtelo más tarde</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/user-rates/user-rates.component.html</context>
+                    <context context-type="sourcefile">src/app/profile/rates/rates.component.html</context>
                     <context context-type="linenumber">7</context>
                 </context-group>
             </trans-unit>
@@ -1733,6 +1730,46 @@
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/user-trips/user-trips.component.html</context>
                     <context context-type="linenumber">4</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="profile.infoTab" datatype="html">
+                <source>Information</source>
+                <target>Informacion</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/profile/profile.component.html</context>
+                    <context context-type="linenumber">20</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="profile.ratesTab" datatype="html">
+                <source>Rates</source>
+                <target>Calificaciones</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/profile/profile.component.html</context>
+                    <context context-type="linenumber">27</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="profile.pendingRatesTab" datatype="html">
+                <source>Pending Rates</source>
+                <target>Calificaciones Pendientes</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/profile/profile.component.html</context>
+                    <context context-type="linenumber">36</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="profile.invitationsTab" datatype="html">
+                <source>Invitations</source>
+                <target>Invitaciones</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/profile/profile.component.html</context>
+                    <context context-type="linenumber">45</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="profile.editProfileAlert" datatype="html">
+                <source>Edit your profile to add a biography! </source>
+                <target>Edita tu perfil para agregar una biografia!</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/profile/info/info.component.html</context>
+                    <context context-type="linenumber">58,60</context>
                 </context-group>
             </trans-unit>
         </body>

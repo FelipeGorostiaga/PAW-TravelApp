@@ -10,17 +10,17 @@ import java.util.Optional;
 
 public interface ActivityDao {
 
-    public Optional<Activity> findById(long id);
+    Optional<Activity> findById(long id);
 
-    public Optional<Activity> findByName(String name);
+    Optional<Activity> findByName(String name);
 
-    public Activity create(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate, String description);
+    Activity create(String name, String category, Place place, Trip trip, LocalDate startDate, LocalDate endDate, String description);
 
-    public Optional<Activity> findByCategory(String category);
+    Optional<Activity> findByCategory(String category);
 
-    public void deleteActivities(long tripId);
+    void deleteActivities(long tripId);
 
-    public void deleteActivity(long activityId);
+    void deleteActivity(long activityId);
 
-    public List<Activity> getTripActivities(long tripId);
+    List<Activity> getTripActivities(long tripId);
 }

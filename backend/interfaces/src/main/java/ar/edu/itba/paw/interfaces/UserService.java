@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.interfaces;
 
 
-import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripInvitation;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.UserRate;
@@ -21,8 +20,6 @@ public interface UserService {
 
     User create(final String firstname, final String lastname, final String email, final String password,
                 final LocalDate birthday, final String nationality, final String sex) throws Exception;
-
-    boolean update(User user);
 
     void verify(User user);
 
