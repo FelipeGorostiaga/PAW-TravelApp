@@ -234,26 +234,17 @@ public class UserController {
     }
 
 
-    // TODO: remove
     @GET
-    @Path("/{id}/profile")
-    public Response getUserProfileData(@PathParam("id") final long userId) {
+    @Path("/{id}/trips-data")
+    public Response getUserTripsData(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
-
         if (!userOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
-        List<RateDTO> rates = this.userService.getUserRates(userId)
-                .stream()
-                .map(userRate -> new RateDTO(userRate, uriContext.getBaseUri()))
-                .collect(Collectors.toList());
-
         int dueTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.DUE);
         int activeTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.IN_PROGRESS);
         int completedTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.COMPLETED);
-
-        return Response.ok(new ProfileDataDTO(userOptional.get(), rates, dueTrips, activeTrips, completedTrips, uriContext.getBaseUri())).build();
+        return Response.ok(new ProfileDataDTO(dueTrips, activeTrips, completedTrips)).build();
     }
 
     @GET
@@ -281,13 +272,16 @@ public class UserController {
     @Path("/{id}/pending-rates")
     public Response getUserPendingRates(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
+        User loggedUser = securityUserService.getLoggedUser();
 
         if (!userOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        if (!userOptional.get().equals(securityUserService.getLoggedUser())) {
+
+        if (!userOptional.get().equals(loggedUser)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
+
         List<RateDTO> rates = userService.getUserPendingRates(userId)
                 .stream()
                 .map(userRate -> new RateDTO(userRate, uriContext.getBaseUri()))
@@ -296,17 +290,6 @@ public class UserController {
         }).build();
     }
 
-
-    // TODO: remove
-    @GET
-    @Path("/{id}/rating")
-    @Produces(value = {MediaType.TEXT_PLAIN})
-    public Response getUserRating(@PathParam("id") final long userId) {
-        Optional<User> userOptional = userService.findById(userId);
-        if (!userOptional.isPresent()) return Response.status(Response.Status.NOT_FOUND).build();
-        double rate = userService.calculateRate(userId);
-        return Response.ok(rate).build();
-    }
 }
 
  

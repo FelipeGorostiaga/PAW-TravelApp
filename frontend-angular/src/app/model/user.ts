@@ -1,4 +1,5 @@
 import {Rate} from "./rate";
+import {UserTripsData} from "./UserTripsData";
 
 export class User {
 
@@ -10,20 +11,18 @@ export class User {
     biography: string;
     nationality: string;
     sex: string;
-
+    rates: Rate[];
+    pendingRates: Rate[];
+    invitations: any[];
+    rating: number;
+    tripsData: UserTripsData;
     url: string;
     imageURL: string;
     tripsURL: string;
     ratesURL: string;
     pendingRatesURL: string;
     invitationsURL: string;
-
-    rates: Rate[];
-    pendingRates: Rate[];
-    rating: number;
-
-    // todo
-    invitations: any[];
+    tripsDataURL: string;
 
     constructor(id: number, firstname: string, lastname: string, email: string, birthday: string, biography: string, nationality: string, sex: string) {
         this.id = id;

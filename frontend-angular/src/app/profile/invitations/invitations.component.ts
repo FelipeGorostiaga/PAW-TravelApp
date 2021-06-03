@@ -15,13 +15,13 @@ export class InvitationsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.userService.getUserInvitations(this.user.invitationsURL).subscribe(
-            data => {
-                console.log('invitations:');
-                console.log(data);
-                this.user.invitations = data;
-            }
-        )
+        if (!this.user.invitations) {
+            this.userService.getUserInvitations(this.user.invitationsURL).subscribe(
+                data => {
+                    this.user.invitations = data;
+                }
+            )
+        }
     }
 
 }

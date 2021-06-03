@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Rate} from "../../model/rate";
 import {User} from "../../model/user";
 import {ApiUserService} from "../../services/api-user.service";
 
@@ -15,7 +14,7 @@ export class RatesComponent implements OnInit {
 
     currentPage: number;
     numberOfPages: number;
-    ratesPerPage = 3;
+    maxShowedRates = 3;
 
     hasRates: boolean;
 
@@ -38,8 +37,7 @@ export class RatesComponent implements OnInit {
                     this.error = true;
                 }
             );
-        }
-        else {
+        } else {
             if (!this.user.rating) {
                 this.calculateUserRate();
             }
@@ -58,7 +56,4 @@ export class RatesComponent implements OnInit {
         this.user.rating = totalRate / len;
     }
 
-    updatePage(newPage: number) {
-        this.currentPage = newPage;
-    }
 }

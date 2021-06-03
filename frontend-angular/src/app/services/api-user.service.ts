@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Trip} from '../model/trip';
 import {environment} from "../../environments/environment";
-import {UserProfile} from "../model/UserProfile";
+import {UserTripsData} from "../model/UserTripsData";
 import {User} from "../model/user";
 import {Rate} from "../model/rate";
 
@@ -27,16 +27,16 @@ export class ApiUserService {
         return this.http.get<Trip[]>(`${this.usersBaseURL}/${id}/trips`, {params: params});
     }
 
-    getUserPicture(id: number): Observable<any> {
-        return this.http.get(`${this.usersBaseURL}/${id}/picture`, {responseType: 'blob'});
+    getUserPicture(url: string): Observable<any> {
+        return this.http.get(url, {responseType: 'blob'});
     }
 
     editProfile(formData: FormData, id: number): Observable<any> {
         return this.http.put(`${this.usersBaseURL}/${id}`, formData);
     }
 
-    getUserProfileData(id: number): Observable<UserProfile> {
-        return this.http.get<UserProfile>(`${this.usersBaseURL}/${id}/profile`);
+    getUserTripsData(url: string): Observable<UserTripsData> {
+        return this.http.get<UserTripsData>(url);
     }
 
     // rates the user received

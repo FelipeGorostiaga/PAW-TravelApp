@@ -86,15 +86,17 @@
                 <source>You have no pending rates</source>
                 <target>No tienes calificaciones pendientes</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/profile/pending-rates/pending-rates.component.html</context>
-                    <context context-type="linenumber">6</context>
+                    <context context-type="sourcefile">src/app/profile/pending-rates/pending-rates.component.html
+                    </context>
+                    <context context-type="linenumber">5,6</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="rate-form.title" datatype="html">
                 <source>Pending rates</source>
                 <target>Calificaciones pendientes</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/profile/pending-rates/pending-rates.component.html</context>
+                    <context context-type="sourcefile">src/app/profile/pending-rates/pending-rates.component.html
+                    </context>
                     <context context-type="linenumber">8</context>
                 </context-group>
             </trans-unit>
@@ -102,15 +104,19 @@
                 <source>Write a short review (max 200 characters)</source>
                 <target>Escriba su opinión sobre viajar con esta persona (max 200 caracteres)</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/profile/pending-rates/pending-rates.component.html</context>
+                    <context context-type="sourcefile">
+                        src/app/profile/pending-rates/rate-form-tile/rate-form-tile.component.html
+                    </context>
                     <context context-type="linenumber">22</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="5650e834adbeb94d10460829414d77810e13f404" datatype="html">
-                <source>Please write a review, at least 20 characters long</source>
-                <target>Por favor escriba una opinión de al menos 20 caracteres</target>
+                <source>Write a review, at least 20 characters long</source>
+                <target>Escriba una opinión de al menos 20 caracteres</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/profile/pending-rates/pending-rates.component.html</context>
+                    <context context-type="sourcefile">
+                        src/app/profile/pending-rates/rate-form-tile/rate-form-tile.component.html
+                    </context>
                     <context context-type="linenumber">28,29</context>
                 </context-group>
                 <note priority="1" from="description">rate-form.alertMinLength</note>
@@ -119,7 +125,9 @@
                 <source>Submit</source>
                 <target>Enviar</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/profile/pending-rates/pending-rates.component.html</context>
+                    <context context-type="sourcefile">
+                        src/app/profile/pending-rates/rate-form-tile/rate-form-tile.component.html
+                    </context>
                     <context context-type="linenumber">34</context>
                 </context-group>
             </trans-unit>
@@ -450,7 +458,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="navbar.home" datatype="html">
-                <source>Home<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/>
+                <source>Home
+                    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;sr-only&quot;&gt;"/>
                     (current)
                     <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>
                 </source>
@@ -613,7 +622,7 @@
             </trans-unit>
             <trans-unit id="profile.showAllLink" datatype="html">
                 <source>Show all</source>
-                <target>Mostrar todas</target>
+                <target>Ver todas</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/profile/profile.component.html</context>
                     <context context-type="linenumber">63</context>
@@ -1765,11 +1774,19 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="profile.editProfileAlert" datatype="html">
-                <source>Edit your profile to add a biography! </source>
+                <source>Edit your profile to add a biography!</source>
                 <target>Edita tu perfil para agregar una biografia!</target>
                 <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/profile/info/info.component.html</context>
-                    <context context-type="linenumber">58,60</context>
+                    <context context-type="sourcefile">src/app/profile/profile.component.html</context>
+                    <context context-type="linenumber">60,62</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="invitations.noInvitations" datatype="html">
+                <source>You don&apos;t have any pending invitations</source>
+                <target>No tienes invitaciones pendientes</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/profile/invitations/invitations.component.html</context>
+                    <context context-type="linenumber">4</context>
                 </context-group>
             </trans-unit>
         </body>

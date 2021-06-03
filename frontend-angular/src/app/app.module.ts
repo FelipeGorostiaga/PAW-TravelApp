@@ -48,7 +48,6 @@ import {RatesComponent} from './profile/rates/rates.component';
 import {PendingRatesComponent} from './profile/pending-rates/pending-rates.component';
 import {InvitationsComponent} from './profile/invitations/invitations.component';
 import {RateFormTileComponent} from './profile/pending-rates/rate-form-tile/rate-form-tile.component';
-import {InfoComponent} from './profile/info/info.component';
 
 
 @NgModule({
@@ -85,7 +84,6 @@ import {InfoComponent} from './profile/info/info.component';
         PendingRatesComponent,
         InvitationsComponent,
         RateFormTileComponent,
-        InfoComponent
     ],
     imports: [
         BrowserModule,

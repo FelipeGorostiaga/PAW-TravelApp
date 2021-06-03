@@ -23,6 +23,7 @@ public class UserDTO {
     private URI ratesURL;
     private URI pendingRatesURL;
     private URI invitationsURL;
+    private URI tripsDataURL;
 
     public UserDTO() {
         // Empty constructor needed by JAX-RS
@@ -43,6 +44,7 @@ public class UserDTO {
         this.ratesURL = baseUri.resolve("users/" + id + "/rates");
         this.pendingRatesURL = baseUri.resolve("users/" + id + "/pending-rates");
         this.invitationsURL = baseUri.resolve("users/" + id + "/invitations");
+        this.tripsDataURL = baseUri.resolve("users/" + id + "/trips-data");
         if (user.getProfilePicture() != null) {
             this.imageURL = baseUri.resolve("users/" + id + "/image");
         }
@@ -151,6 +153,22 @@ public class UserDTO {
 
     public void setRatesURL(URI ratesURL) {
         this.ratesURL = ratesURL;
+    }
+
+    public URI getInvitationsURL() {
+        return invitationsURL;
+    }
+
+    public void setInvitationsURL(URI invitationsURL) {
+        this.invitationsURL = invitationsURL;
+    }
+
+    public URI getTripsDataURL() {
+        return tripsDataURL;
+    }
+
+    public void setTripsDataURL(URI tripsDataURL) {
+        this.tripsDataURL = tripsDataURL;
     }
 
     @Override
