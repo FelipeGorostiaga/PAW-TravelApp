@@ -88,16 +88,10 @@ export class InformationComponent implements OnInit {
             debounceTime(300),
             distinctUntilChanged(),
             filter(term => !!term),
-            switchMap(term => this.searchService.searchInvitableUsersByName(term, this.trip.id)));
+            switchMap(term => this.tripService.searchInvitableUsers(term, this.trip.id)));
     }
 
     ngOnInit() {
-/*
-        this.isAdmin = !!this.trip.members.find(member => (member.role === TripRole.CREATOR || member.role === TripRole.ADMIN) &&
-            member.user.id === this.loggedUser.id);
-        this.isMember = !!(this.isAdmin || this.trip.members.find(member => member.user.id === this.loggedUser.id));
-        this.isCreator = !!this.trip.members.find(member => (member.role === TripRole.CREATOR && member.user.id === this.loggedUser.id));
-*/
         this.startDate = this.dateUtils.stringToDate(this.trip.startDate);
         this.endDate = this.dateUtils.stringToDate(this.trip.endDate);
         this.canFinish = this.canMarkAsCompleted();

@@ -14,12 +14,6 @@ export class ApiSearchService {
 
   private searchBaseURL = `${environment.apiURL}/search`;
 
-  searchInvitableUsersByName(name: string, tripId: number): Observable<User>{
-    const url = this.searchBaseURL + tripId + "/users";
-    let params = new HttpParams().set("name", name);
-    return this.http.get<User>(url, {params: params});
-  }
-
   advancedSearch(formData: FormData, page: number): Observable<any> {
 
     let params = new HttpParams().set('page', String(page));

@@ -12,6 +12,7 @@ import {InviteRequest} from "../model/InviteRequest";
 import {TripMember} from "../model/TripMember";
 import {Activity} from "../model/activity";
 import {Comment} from "../model/comment";
+import {User} from "../model/user";
 
 @Injectable({
     providedIn: 'root'
@@ -118,5 +119,10 @@ export class ApiTripService {
 
     getTripComments(url: string): Observable<Comment[]> {
         return this.http.get<Comment[]>(url);
+    }
+
+    searchInvitableUsers(name: string, id: number): Observable<User> {
+        let params = new HttpParams().set("name", name);
+        return this.http.get<User>(`${this.tripsBaseURL}/${id}/invitable_users`, {params: params});
     }
 }
