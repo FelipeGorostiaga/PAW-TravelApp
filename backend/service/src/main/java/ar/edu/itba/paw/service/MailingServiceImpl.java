@@ -89,6 +89,7 @@ public class MailingServiceImpl implements MailingService {
         ctx.setVariable("lastname", tripMember.getLastname());
         ctx.setVariable("tripname", trip.getName());
         ctx.setVariable("tripURL", tripURL);
+        ctx.setVariable("appURL", frontEndURL);
         String html = htmlTemplateEngine.process(JOIN_TRIP_TEMPLATE, ctx);
         sendMail(recipients, html, subject);
     }
@@ -106,6 +107,7 @@ public class MailingServiceImpl implements MailingService {
         ctx.setVariable("lastname", tripMember.getLastname());
         ctx.setVariable("tripname", trip.getName());
         ctx.setVariable("tripURL", tripURL);
+        ctx.setVariable("appURL", frontEndURL);
         String html = htmlTemplateEngine.process(EXIT_TRIP_TEMPLATE, ctx);
         sendMail(recipients, html, subject);
     }
@@ -118,7 +120,8 @@ public class MailingServiceImpl implements MailingService {
                 .map(user -> new Recipient(user.getFirstname(), user.getEmail(), null)).collect(Collectors.toList());
         String subject = applicationContext.getMessage("mailDeleteSubject", null, locale);
         Context ctx = new Context(locale);
-        ctx.setVariable("tripname", trip.getName());
+        ctx.setVariable("tripName", trip.getName());
+        ctx.setVariable("appURL", frontEndURL);
         String html = htmlTemplateEngine.process(DELETE_TRIP_TEMPLATE, ctx);
         sendMail(recipients, html, subject);
     }
@@ -137,6 +140,7 @@ public class MailingServiceImpl implements MailingService {
         ctx.setVariable("tripId", t.getId());
         ctx.setVariable("acceptedURL", acceptURL);
         ctx.setVariable("deniedURL", denyURL);
+        ctx.setVariable("appURL", frontEndURL);
         String html = htmlTemplateEngine.process(JOIN_REQUEST_TEMPLATE, ctx);
         List<Recipient> recipients = t.getMembers().stream()
                 .map(TripMember::getUser).map(u -> new Recipient(u.getFirstname() + u.getLastname(), u.getEmail(), null))
@@ -154,8 +158,9 @@ public class MailingServiceImpl implements MailingService {
         String tripURL = frontEndURL + "/trip/" + trip.getId();
         ctx.setVariable("requester", requesterName);
         ctx.setVariable("admin", loggedUser.getFirstname() + " " + loggedUser.getLastname());
-        ctx.setVariable("tripname", trip.getName());
+        ctx.setVariable("tripName", trip.getName());
         ctx.setVariable("tripURL", tripURL);
+        ctx.setVariable("appURL", frontEndURL);
         String subject;
         String html;
         if (accepted) {
@@ -185,6 +190,7 @@ public class MailingServiceImpl implements MailingService {
         ctx.setVariable("acceptInviteURL", acceptInviteURL);
         ctx.setVariable("denyInviteURL", denyInviteURL);
         ctx.setVariable("tripURL", tripURL);
+        ctx.setVariable("appURL", frontEndURL);
         String subject = applicationContext.getMessage("mailInviteToTripSubject", null, locale);
         String html = htmlTemplateEngine.process(INVITE_TO_TRIP_TEMPLATE, ctx);
         sendMail(recipients, html, subject);

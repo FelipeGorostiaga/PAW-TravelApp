@@ -11,7 +11,7 @@
                 <alert *ngIf="verificationError" [dismissible]="true" [type]="'warning'"
                        (onClosed)="closeVerificationAlert()" i18n=@@login.verificationError>Please verify your email</alert>
                 <alert *ngIf="serverError" [dismissible]="true" [type]="'danger'"
-                       (onClosed)="closeVerificationAlert()" i18n=@@login.serverError>Unexpected error, try again later</alert>
+                       (onClosed)="closeVerificationAlert()" i18n=@@login.serverError>Server not responding</alert>
                 <form>
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
