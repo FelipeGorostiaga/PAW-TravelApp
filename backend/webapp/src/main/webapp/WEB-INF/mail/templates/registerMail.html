@@ -1,40 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:remove="all" th:text="#{mailRegisterTitle}"></title>
-    <meta charset="UTF-8"/>
-    <style>
-        .container {
-            text-align: center;
-            margin-bottom: 20px;
-            color: black;
-        }
-
-        .button {
-            margin-top: 20px;
-            background-color: lightblue;
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-        }
-        a:link {
-            color: white;
-        }
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
-<body>
-<div>
-    <div class="container">
-        <h1 th:text="#{mailRegisterHeader1(${name})}"></h1>
-        <h3 th:text="#{mailRegisterHeader2}"></h3>
-        <p th:text="#{mailRegisterBody}"></p>
-        <a class="button" th:href="${verificationURL}">Verify Account</a>
-    </div>
-</div>
+<body style="margin: 0;padding: 0;">
+<table style="border-spacing: 0; padding: 0; border: 0; width: 100%;">
+    <tr>
+        <td style="padding: 10px 0 30px 0;">
+            <table style="border: 1px solid #bbbbbb; width: 500px;	margin-left:auto; margin-right:auto; border-spacing: 0;	padding: 0;">
+                <tr>
+                    <td style="padding: 30px 0 0 0; color: #153643; font-size: 25px; font-weight: bold; font-family: 'Arial', sans-serif;"
+                        align="center" bgcolor="#fff">
+                        <img style="display: block;" src="https://i.imgur.com/02TsB8T.png" alt="Travelapp Logo"
+                             width="250" height="250"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td bgcolor="#ffffff" style="padding: 30px 40px 30px 40px;">
+                        <table style="border-spacing: 0; padding: 0; border: 0; width: 100%;">
+                            <tr>
+                                <td style="padding: 0 0 10px 0; color: #153643;text-align: center; font-family: 'Arial', sans-serif; font-size: 18px;">
+                                    <b th:text="#{mailRegisterHeader}"></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 0 10px 0; color: #153643;text-align: center; font-family: 'Arial', sans-serif; font-size: 15px; line-height: 20px;">
+                                    <p th:text="#{mailRegisterBody}"></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 0 10px 0; color: #153643; font-family: 'Arial', sans-serif; font-size: 15px; line-height: 20px">
+                                    <a style="color: white; background: #00C3FF; border-radius: 5%; width:200px; padding: 15px 30px; margin-left:37%; margin-top:10px;font-size:1.2em; text-decoration: none !important;"
+                                       th:href="${verificationURL}">Verify</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 50px 0 0px 0; color: #999999;text-align: center; font-family: 'Arial', sans-serif; font-size: 12px; font-style: italic; line-height: 20px;">
+                                    <span th:text="#{mailFooter}"></span> <a th:href="${appURL}" style="color:#999999;">Meet
+                                    and Travel</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+            </table>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
 

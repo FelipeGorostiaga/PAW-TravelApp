@@ -1,4 +1,5 @@
 <app-navigation></app-navigation>
+<ngx-bootstrap-spinner></ngx-bootstrap-spinner>
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -52,6 +53,9 @@
                                     <div *ngIf="f.email?.errors.email" i18n=@@register.email.emailFormat>Email must be a
                                         valid email address
                                     </div>
+                                </div>
+                                <div *ngIf="invalidEmail" class="invalid-feedback is-invalid">
+                                    <div>Email already in use</div>
                                 </div>
                             </div>
                             <div class="form-group col">

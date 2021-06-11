@@ -71,6 +71,7 @@ public class MailingServiceImpl implements MailingService {
         ctx.setVariable("name", user.getFirstname());
         ctx.setVariable("lastname", user.getLastname());
         ctx.setVariable("verificationURL", verifyURL);
+        ctx.setVariable("appURL", frontEndURL);
         String html = htmlTemplateEngine.process(REGISTER_TEMPLATE, ctx);
         sendMail(recipients, html, subject);
     }

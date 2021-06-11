@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DateUtilService} from "../services/date-util.service";
 import {ErrorDTO} from "../model/ErrorDTO";
+import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 
 
 @Component({
@@ -18,6 +19,8 @@ export class RegisterComponent implements OnInit {
     registerForm: FormGroup;
     submitted = false;
 
+    invalidEmail: boolean;
+
     bsConfig = Object.assign({}, {containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY'});
 
     errors: ErrorDTO[];
@@ -26,13 +29,14 @@ export class RegisterComponent implements OnInit {
                 private authService: AuthService,
                 private router: Router,
                 private formBuilder: FormBuilder,
-                private dateUtilService: DateUtilService) {
+                private dateUtilService: DateUtilService,
+                private spinner: NgxSpinnerService) {
     }
 
     ngOnInit() {
         this.registerForm = this.formBuilder.group({
-            firstName: ['',[ Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
-            lastName: ['',[ Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
+            firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
+            lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
             confirmPassword: ['', Validators.required],
@@ -58,11 +62,16 @@ export class RegisterComponent implements OnInit {
         const formData = new UserForm(values.firstName, values.lastName, values.email, values.password, values.confirmPassword,
             values.nationality, this.dateUtilService.convertToDateString(values.birthDate), values.customRadioInline1);
 
+        this.spinner.show();
         this.authService.register(formData).subscribe(
-            data => {
+            () => {
+                this.invalidEmail = false;
+                this.spinner.hide();
                 this.router.navigate(['/verification']);
             },
             error => {
+                this.spinner.hide();
+                this.invalidEmail = true;
                 this.errors = error;
             });
     }
