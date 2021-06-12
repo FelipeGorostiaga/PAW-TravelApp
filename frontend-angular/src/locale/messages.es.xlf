@@ -628,12 +628,36 @@
                     <context context-type="linenumber">63</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="all-rates.empty" datatype="html">
+                <source>This user has no available rates </source>
+                <target>No se encontraron calificaciones</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/user-rates/user-rates.component.html</context>
+                    <context context-type="linenumber">7,8</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="all-rates.error" datatype="html">
+                <source>Error getting data from server, try again later </source>
+                <target>Error del servidor, intentelo nuevamente</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/user-rates/user-rates.component.html</context>
+                    <context context-type="linenumber">9,11</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="profile.editTrip.title" datatype="html">
                 <source>Edit Trip</source>
                 <target>Editar viaje</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/profile/profile.component.html</context>
                     <context context-type="linenumber">76</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="profile.editProfile.title" datatype="html">
+                <source>Edit Profile</source>
+                <target>Editar Perfil</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/profile/profile.component.html</context>
+                    <context context-type="linenumber">139</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="profile.fileInput" datatype="html">

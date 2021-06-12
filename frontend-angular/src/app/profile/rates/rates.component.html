@@ -8,7 +8,8 @@
                 server, please try again later
             </alert>
             <div *ngIf="user.rates?.length > 0" class="list-group list-group-flush">
-                <app-rate-tile *ngFor="let rate of user.rates | slice:0:maxShowedRates; let i=index" [rate]="rate"></app-rate-tile>
+                <app-rate-tile *ngFor="let rate of user.rates | slice:0:maxShowedRates; let i=index"
+                               [rate]="rate"></app-rate-tile>
             </div>
             <a *ngIf="user?.rates?.length > maxShowedRates" class="btn btn-link text-muted"
                routerLink="/user/{{user?.id}}/rates" i18n=@@profile.showAllLink>Show all</a>

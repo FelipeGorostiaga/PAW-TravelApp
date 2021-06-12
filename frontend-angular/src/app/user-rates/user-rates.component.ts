@@ -3,7 +3,7 @@ import {ApiUserService} from "../services/api-user.service";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Rate} from "../model/rate";
-import { User } from '../model/user';
+import {User} from '../model/user';
 
 @Component({
     selector: 'app-user-rates',
@@ -20,8 +20,7 @@ export class UserRatesComponent implements OnInit {
 
     constructor(private userService: ApiUserService,
                 private spinner: NgxSpinnerService,
-                private route: ActivatedRoute,
-                private router: Router) {
+                private route: ActivatedRoute) {
     }
 
     ngOnInit(): void {

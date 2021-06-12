@@ -54,7 +54,7 @@
                 </div>
                 <div class="px-4 py-3">
                     <h5 class="mb-0" i18n=@@profile.aboutMe style="padding-bottom: 20px;">About Me</h5>
-                    <alert *ngIf="!user?.biography || user?.biography?.length === 0" [dismissible]="true"
+                    <alert *ngIf="isProfileOwner && !user?.biography || user?.biography?.length === 0" [dismissible]="true"
                            style="margin-top: 10px;" [type]="'primary'" i18n=@@profile.editProfileAlert>Edit your
                         profile to
                         add a biography!
@@ -136,7 +136,7 @@
 
 <ng-template #modalTemplate>
     <div class="modal-header">
-        <h4 class="modal-title pull-left" i18n=@@profile.editTrip.title>Edit Trip</h4>
+        <h4 class="modal-title pull-left" i18n=@@profile.editProfile.title>Edit Profile</h4>
         <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()"><span
                 aria-hidden="true">&times;</span></button>
     </div>
