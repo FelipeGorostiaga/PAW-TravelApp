@@ -18,6 +18,7 @@ import {RespondInviteComponent} from "./trip/respond-invite/respond-invite.compo
 import {ForbiddenComponent} from "./errors/forbidden/forbidden.component";
 import {SearchResultComponent} from "./search-result/search-result.component";
 import {AdvancedSearchComponent} from "./advanced-search/advanced-search.component";
+import {UserRatesComponent} from "./user-rates/user-rates.component";
 
 const routes: Routes = [
     {
@@ -54,6 +55,11 @@ const routes: Routes = [
     {
         path: 'user-trips',
         component: UserTripsComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'user/:id/rates',
+        component: UserRatesComponent,
         canActivate: [AuthGuard]
     },
     {

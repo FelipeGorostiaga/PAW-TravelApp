@@ -1,6 +1,6 @@
 <div class="card" style="margin-bottom: 25px;">
     <div class="card-header">
-        {{rate?.ratedBy.firstname}} {{rate?.ratedBy.lastname}}  -  {{rate?.trip?.name}}
+        <a routerLink="/profile/{{rate.ratedBy.id}}">{{rate?.ratedBy.firstname}} {{rate?.ratedBy.lastname}}</a> - {{rate?.trip?.name}}
     </div>
     <div class="card-body" style="margin-top: 10px; margin-bottom: 5px;">
         <p class="card-text">{{rate?.comment}}</p>

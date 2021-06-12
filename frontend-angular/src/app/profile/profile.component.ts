@@ -74,7 +74,6 @@ export class ProfileComponent implements OnInit {
         this.userService.getUser(profileId).subscribe(
             data => {
                 this.user = data;
-                console.log(this.user);
                 this.isProfileOwner = this.authService.getLoggedUser().id === this.user.id;
 
                 this.editProfileForm = this.formBuilder.group({
@@ -106,15 +105,9 @@ export class ProfileComponent implements OnInit {
                     this.hasImage = false;
                     this.spinner.hide();
                 }
-
                 const rates$ = this.userService.getUserRates(this.user.ratesURL);
                 const pendingRates$ = this.userService.getUserPendingRates(this.user.pendingRatesURL);
                 const tripsData$ = this.userService.getUserTripsData(this.user.tripsDataURL);
-
-                console.log(this.user.ratesURL);
-                console.log(this.user.pendingRatesURL);
-                console.log(this.user.tripsDataURL);
-
                 forkJoin([rates$, pendingRates$, tripsData$]).subscribe(
                     res => {
                         this.user.rates = res[0];
