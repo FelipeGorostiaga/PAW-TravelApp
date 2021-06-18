@@ -76,7 +76,7 @@
             },
             "es": {
               "localize": ["es"],
-              "i18nMissingTranslation": "error"
+              "i18nMissingTranslation": "warning"
             }
 
           }

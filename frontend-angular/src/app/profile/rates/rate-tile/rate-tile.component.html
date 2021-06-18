@@ -1,17 +1,16 @@
-<div class="card" style="margin-bottom: 25px;">
-    <div class="card-header">
-        <a routerLink="/profile/{{rate.ratedBy.id}}">{{rate?.ratedBy.firstname}} {{rate?.ratedBy.lastname}}</a>
-        - {{rate?.trip?.name}}
-    </div>
-    <div class="card-body" style="margin-top: 10px; margin-bottom: 5px;">
-        <p class="card-text">{{rate?.comment}}</p>
+<div class="card m-5" style="margin-bottom: 25px;">
+    <p class="card-header" style="font-size: 1.1em"><a
+            routerLink="/profile/{{rate?.ratedBy?.id}}">{{rate?.ratedBy?.firstname}} {{rate?.ratedBy?.lastname}}</a>
+        - <a routerLink="/trip/{{rate?.trip?.id}}">{{rate?.trip.name}}</a></p>
+
+    <div class="card-body" style="margin-top: 5px; margin-bottom: 5px;">
         <rating [max]="5" [(ngModel)]="rate.rate" [customTemplate]="tt" [readonly]="true"></rating>
         <ng-template #tt let-i="index" let-v="value">
             <button class="btn btn-{{i < v ? 'primary' : 'default'}}">
                 {{i < v ? '&#9733;' : '&#9734;'}}
             </button>
         </ng-template>
-
+        <p class="card-text" style="margin-top: 15px">{{rate?.comment}}</p>
     </div>
     <div class="card-footer text-center">
         <p style="font-size: 85%">{{createdOn | date }}</p>

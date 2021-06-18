@@ -1,51 +1,52 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Rate} from "../../../model/rate";
-import {ApiUserService} from "../../../services/api-user.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
-  selector: 'app-rate-form-tile',
-  templateUrl: './rate-form-tile.component.html',
-  styleUrls: ['./rate-form-tile.component.scss']
+    selector: 'app-rate-form-tile',
+    templateUrl: './rate-form-tile.component.html',
+    styleUrls: ['./rate-form-tile.component.scss']
 })
 export class RateFormTileComponent implements OnInit {
 
-  @Output() rateSubmitEvent = new EventEmitter();
-  @Input() rate: Rate;
+    @Output() rateSubmitEvent = new EventEmitter();
+    @Input() rate: Rate;
 
-  rating: number = 0;
-  comment: string = "";
-  userRating: number;
+    rating: number = 0;
+    comment: string = "";
+    userRating: number;
 
-  errorMessage = "";
-  showAlert = false;
+    errorMessage = "";
+    showAlert = false;
 
-  constructor(private userService: ApiUserService) {
-  }
+    rateForm: FormGroup;
 
-  ngOnInit(): void {
-    this.userService.getUserRating(this.rate.ratedUser.id).subscribe(
-        data => {
-          this.userRating = data;
-        }
-    );
-  }
+    submitted: boolean;
 
-  submitRate() {
-    if (this.comment.length < 20) {
-      this.showAlert = true;
-      return;
+    constructor(private fb: FormBuilder) {
     }
 
-    this.rateSubmitEvent.emit({
-      id: this.rate.id,
-      rating: this.rating,
-      comment: this.comment,
-      rate: this.rate
-    });
-  }
+    ngOnInit(): void {
+        this.rateForm = this.fb.group({
+            review: ['', [Validators.required, Validators.minLength(20),  Validators.maxLength(140)]]
+        });
+    }
 
-  closeAlert() {
-    this.showAlert = false;
-  }
+    get f() {
+        return this.rateForm.controls;
+    }
+
+    submitRate() {
+        this.submitted = true;
+        if (this.rateForm.invalid) {
+            return;
+        }
+        this.rateSubmitEvent.emit({
+            id: this.rate.id,
+            rating: this.rating,
+            comment: this.comment,
+            rate: this.rate
+        });
+    }
 
 }

@@ -70,6 +70,7 @@ export class RegisterComponent implements OnInit {
                 this.router.navigate(['/verification']);
             },
             error => {
+                console.log(error);
                 this.spinner.hide();
                 this.invalidEmail = true;
                 this.errors = error;

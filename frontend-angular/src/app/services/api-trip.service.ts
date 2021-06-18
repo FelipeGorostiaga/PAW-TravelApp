@@ -90,7 +90,7 @@ export class ApiTripService {
 
     respondJoinRequest(id: number, token: string, accepted: boolean): Observable<any> {
         let params = new HttpParams().set("token", token).set("accepted", String(accepted));
-        return this.http.post(`${this.tripsBaseURL}/${id}/inviteRequests`, {}, {params: params});
+        return this.http.put(`${this.tripsBaseURL}/${id}/inviteRequests`, {}, {params: params});
     }
 
     getPendingConfirmations(id: number, userId: number): Observable<InviteRequest[]> {
@@ -102,7 +102,7 @@ export class ApiTripService {
     }
 
     finishTrip(id: number) {
-        return this.http.post(`${this.tripsBaseURL}/${id}/finish`, {});
+        return this.http.put(`${this.tripsBaseURL}/${id}/finish`, {});
     }
 
     hasImage(id: number) {

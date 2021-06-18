@@ -32,15 +32,13 @@ export class CreateTripComponent implements OnInit {
     tripForm: FormGroup;
     submitted = false;
 
-    userLang: string;
-
     mapsError: boolean;
     datesError: boolean;
 
     bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, {containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY'});
 
     constructor(private mapsAPILoader: MapsAPILoader,
-                private  ngZone: NgZone,
+                private ngZone: NgZone,
                 private router: Router,
                 private ts: ApiTripService,
                 private formBuilder: FormBuilder,
@@ -48,9 +46,11 @@ export class CreateTripComponent implements OnInit {
                 private spinner: NgxSpinnerService) {
     }
 
+    /*, {
+        validators: validStart('startDate', 'endDate')
+    }*/
+
     ngOnInit() {
-        // @ts-ignore
-        this.userLang = (navigator.language || navigator.userLanguage).substr(0, 2);
         this.spinner.show();
         this.tripForm = this.formBuilder.group({
             name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(15)]],
@@ -59,8 +59,6 @@ export class CreateTripComponent implements OnInit {
             endDate: ['', Validators.required],
             placeInput: ['', Validators.required],
             isPrivate: ['']
-        }, {
-            validators: validInterval('startDate', 'endDate')
         });
         this.tripStatus = "Public";
         this.submittedPlace = false;
@@ -120,14 +118,37 @@ export class CreateTripComponent implements OnInit {
         }
     }
 
+    invalidDates(): boolean {
+        let now = new Date();
+        now.setHours(0, 0, 0, 0);
+        let startDate = this.tripForm.value.startDate;
+        let endDate = this.tripForm.value.endDate;
+        if (!startDate || !endDate) {
+            return true;
+        }
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(0, 0, 0, 0);
+        return startDate < now || startDate > endDate;
+    }
+
     onSubmit() {
+        let err = false;
+        this.datesError = false;
+        this.mapsError = false;
         const values = this.tripForm.value;
         this.submitted = true;
         if (this.tripForm.invalid) {
             return;
         }
+        if (this.invalidDates()) {
+            err = true;
+            this.datesError = true;
+        }
         if (!this.longitude || !this.latitude || !this.placeId) {
+            err = true;
             this.mapsError = true;
+        }
+        if (err) {
             return;
         }
         const formData = new TripForm(values.name, values.description, this.dateUtilService.convertToDateString(values.startDate),
@@ -186,23 +207,80 @@ export function validInterval(startControlName: string, endControlName: string) 
     return (formGroup: FormGroup) => {
         const startControl = formGroup.controls[startControlName];
         const endControl = formGroup.controls[endControlName];
-        if (startControl.errors || endControl.errors) {
+        if (startControl.errors) {
             return;
         }
         let now = new Date();
         now.setHours(0, 0, 0, 0);
         let startDate = startControl.value;
         startDate.setHours(0, 0, 0, 0);
+
         let endDate = endControl.value;
-        endDate.setHours(0, 0, 0, 0);
+        if (endDate) {
+            endDate.setHours(0, 0, 0, 0);
+        }
         if (startDate < now || startDate > endDate) {
             startControl.setErrors({invalidInterval: true});
-            endControl.setErrors({invalidInterval: true});
         } else {
             startControl.setErrors(null);
             endControl.setErrors(null);
         }
     };
 }
+
+export function validStart(startControlName: string, endControlName: string) {
+    return (formGroup: FormGroup) => {
+        const startControl = formGroup.controls[startControlName];
+        const endControl = formGroup.controls[endControlName];
+        if (startControl.errors) {
+            return;
+        }
+        let now = new Date();
+        now.setHours(0, 0, 0, 0);
+        let startDate = startControl.value;
+        startDate.setHours(0, 0, 0, 0);
+
+        let endDate = endControl.value;
+        if (endDate) {
+            endDate.setHours(0, 0, 0, 0);
+            if (startDate > endDate) {
+                startControl.setErrors({invalidInterval: true});
+                return;
+            }
+        }
+        if (startDate < now) {
+            startControl.setErrors({invalidInterval: true});
+            return;
+        }
+        startControl.setErrors(null);
+    };
+}
+
+/*export function validEnd(startControlName: string, endControlName: string) {
+    return (formGroup: FormGroup) => {
+        const startControl = formGroup.controls[startControlName];
+        const endControl = formGroup.controls[endControlName];
+        if (endControl.errors) {
+            return;
+        }
+        let now = new Date();
+        now.setHours(0, 0, 0, 0);
+        let startDate = startControl.value;
+        if (startDate) {
+            startDate.setHours(0, 0, 0, 0);
+        }
+        let endDate = endControl.value;
+        endDate.setHours(0, 0, 0, 0);
+/!*        if (endDate < startDate) {
+            endControl.setErrors({invalidInterval: true});
+            return;
+        }*!/
+        if (endDate < now) {
+            endControl.setErrors({invalidInterval: true});
+            return;
+        }
+        endControl.setErrors(null);
+    };*/
+
 
 

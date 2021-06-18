@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Comment} from "../../../model/comment";
-import {DateUtilService} from "../../../services/date-util.service";
 
 
 @Component({

@@ -566,7 +566,6 @@ public class TripController {
         User loggedUser = securityUserService.getLoggedUser();
         Optional<Trip> tripOptional = tripService.findById(tripId);
         Optional<TripPendingConfirmation> pendingConfirmationOptional = tripService.findJoinRequestByToken(token);
-
         if (!pendingConfirmationOptional.isPresent() || !tripOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

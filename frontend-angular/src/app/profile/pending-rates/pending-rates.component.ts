@@ -13,8 +13,10 @@ export class PendingRatesComponent implements OnInit {
 
     @Input() user: User;
 
+    maxShowedPendingRates = 3;
     loading: boolean;
     error: boolean;
+    sentReview: boolean;
 
     constructor(private spinner: NgxSpinnerService,
                 private route: ActivatedRoute,
@@ -37,6 +39,7 @@ export class PendingRatesComponent implements OnInit {
         if (this.loading) {
             return;
         }
+        this.sentReview = false;
         this.loading = true;
         let rate = data.rate;
         this.userService.rateUser({
@@ -48,7 +51,7 @@ export class PendingRatesComponent implements OnInit {
                 let index = this.user.pendingRates.indexOf(rate);
                 this.user.pendingRates.splice(index, 1);
                 this.loading = false;
-                // todo: add success message or show alert
+                this.sentReview = true;
             }, () => {
                 this.loading = false;
             }

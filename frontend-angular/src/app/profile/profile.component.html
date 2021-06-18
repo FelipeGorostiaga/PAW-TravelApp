@@ -44,7 +44,7 @@
                         </li>
                         <li class="list-inline-item" style="margin-left: 10px">
                         <li class="list-inline-item">
-                            <h5 *ngIf="user?.rating" class="font-weight-bold mb-0 d-block">{{user?.rating}}</h5>
+                            <h5 *ngIf="user?.rating" class="font-weight-bold mb-0 d-block">{{user?.rating |  number: '0.1-1'}}</h5>
                             <h5 *ngIf="!user?.rating" class="font-weight-bold mb-0 d-block">-</h5><small
                                 class="text-muted"
                                 i18n=@@profile.rate><i

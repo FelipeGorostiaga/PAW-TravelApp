@@ -113,7 +113,6 @@ export class ProfileComponent implements OnInit {
                         this.user.rates = res[0];
                         this.user.pendingRates = res[1];
                         this.user.tripsData = res[2];
-                        console.log(res[2]);
                         this.calculateUserRate();
                     },
                     () => {

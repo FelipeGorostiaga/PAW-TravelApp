@@ -4,18 +4,14 @@
             <alert *ngIf="user?.pendingRates?.length === 0" [type]="'primary'" class="text-center"
                    i18n=@@complete-rates.noRatesAlert>You have no pending rates
             </alert>
+            <alert *ngIf="sentReview" [type]="'primary'" class="text-center" [dismissOnTimeout]="3000">Review sent successfully</alert>
             <div *ngIf="user?.pendingRates?.length > 0">
-                <h1 style="margin-left: 50px; margin-top: 40px;" i18n=@@rate-form.title>Pending rates</h1>
-                <app-rate-form-tile *ngFor="let rate of user?.pendingRates" (rateSubmitEvent)="submitRate($event)"
+                <p style="margin-left: 8%" class="text-muted">{{user?.pendingRates?.length}} Pending</p>
+                <app-rate-form-tile *ngFor="let rate of user?.pendingRates | slice:0:maxShowedPendingRates; let i=index"
+                                    (rateSubmitEvent)="submitRate($event)"
                                     [rate]="rate"></app-rate-form-tile>
             </div>
         </div>
     </div>
-    <!--   TODO  -->
-    <!--    <app-paginator
-                *ngIf="numberOfPages > 1"
-                [numberOfPages]="numberOfPages"
-                (pageNumberClick)="updatePage($event)">
-        </app-paginator>-->
 </div>
 

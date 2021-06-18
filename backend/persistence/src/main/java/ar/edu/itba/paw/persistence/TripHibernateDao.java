@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -55,6 +56,10 @@ public class TripHibernateDao implements TripDao {
                 .setMaxResults(MAX_SEARCH_RESULTS)
                 .getResultList();
 
+        if (tripIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         // Get entities with associations
         TypedQuery<Trip> tripQuery = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.id in (:ids)", Trip.class);
         tripQuery.setParameter("ids", tripIds);
@@ -89,6 +94,10 @@ public class TripHibernateDao implements TripDao {
         List<Long> tripIds = idQuery.setFirstResult((pageNum - 1) * MAX_ROWS)
                 .setMaxResults(MAX_ROWS)
                 .getResultList();
+
+        if (tripIds.isEmpty()) {
+            return new ArrayList<>();
+        }
 
         // Get entities with associations
         final TypedQuery<Trip> tripQuery = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.id in (:ids)", Trip.class);
@@ -243,6 +252,10 @@ public class TripHibernateDao implements TripDao {
                 .setMaxResults(ADV_MAX_SEARCH_RESULTS)
                 .getResultList();
 
+        if (tripIds.isEmpty()) {
+            return new PaginatedResult<>(new ArrayList<>(), 0);
+        }
+
         TypedQuery<Trip> tripQuery = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.id in (:ids)", Trip.class);
         tripQuery.setParameter("ids", tripIds);
         List<Trip> resultList = tripQuery.getResultList();
@@ -314,20 +327,24 @@ public class TripHibernateDao implements TripDao {
     public PaginatedResult<Trip> findUserTrips(long userId, int page) {
 
         // Get primary keys with LIMIT and OFFSET
-        final TypedQuery<Long> idQuery = em.createQuery("SELECT t.id FROM Trip t left join t.members as m" +
+        final TypedQuery<Long> idQuery = em.createQuery("SELECT t.id FROM Trip as t left join t.members as m" +
                 " left join m.user as u where u.id = :userId order by t.startDate", Long.class);
         List<Long> tripIds = idQuery.setParameter("userId", userId)
                 .setFirstResult((page - 1) * MAX_ROWS)
                 .setMaxResults(MAX_ROWS)
                 .getResultList();
 
+        if (tripIds.isEmpty()) {
+            return new PaginatedResult<>(new ArrayList<>(), 0);
+        }
+
         // Get entities with associations
-        TypedQuery<Trip> tripQuery = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.id in (:ids)", Trip.class);
+        TypedQuery<Trip> tripQuery = em.createQuery("SELECT DISTINCT t FROM Trip as t WHERE t.id in (:ids)", Trip.class);
         tripQuery.setParameter("ids", tripIds);
         List<Trip> result = tripQuery.getResultList();
 
         // Count query
-        final TypedQuery<Long> queryCount = em.createQuery( "select count(distinct t) FROM Trip t left join t.members as m" +
+        final TypedQuery<Long> queryCount = em.createQuery( "select count(distinct t) FROM Trip as t left join t.members as m" +
                 " left join m.user as u where u.id = :userId", Long.class );
         queryCount.setParameter("userId", userId );
         int total = queryCount.getSingleResult().intValue();

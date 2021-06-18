@@ -24,7 +24,6 @@ export class ChatComponent implements OnInit {
     ngOnInit() {
         this.sendingMessage = false;
         if (!this.trip.comments) {
-            console.log('fetching comments...');
             this.tripService.getTripComments(this.trip.commentsURL).subscribe(
                 data => {
                     this.trip.comments = data;

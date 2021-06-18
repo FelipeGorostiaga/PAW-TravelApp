@@ -37,7 +37,7 @@ export class UserRatesComponent implements OnInit {
                     }
                 );
             },
-            error => {
+            () => {
                 this.error = true;
             }
         );

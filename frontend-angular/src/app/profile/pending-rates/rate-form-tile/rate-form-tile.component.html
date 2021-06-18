@@ -1,38 +1,36 @@
-<div class="row">
-    <div class="col-12">
-        <div class="card m-5">
-            <h5 class="card-header"><a
-                    routerLink="/profile/{{rate?.ratedUser?.id}}">{{rate?.ratedUser?.firstname}} {{rate?.ratedUser?.lastname}}</a>
-                - <a routerLink="/trip/{{rate?.trip?.id}}">{{rate?.trip.name}}</a></h5>
-            <div class="card-body">
-                <rating [max]="5" [(ngModel)]="rating" [customTemplate]="tt"></rating>
-                <ng-template #tt let-i="index" let-v="value">
-                    <button class="btn btn-{{i < v ? 'primary' : 'default'}}">
-                        {{i < v ? '&#9733;' : '&#9734;'}}
-                    </button>
-                </ng-template>
-
-                <textarea
-                        class="form-control"
-                        type="text"
-                        id="commentTextArea"
-                        rows="3"
-                        [(ngModel)]="comment"
-                        i18n-placeholder=@@rate-form.placeholder
-                        placeholder="Write a short review (max 200 characters)"
-                        style="margin-top: 20px;resize:none;"
-                        maxlength="300">
+<div class="card m-5">
+    <p class="card-header" style="font-size: 1.1em"><a
+            routerLink="/profile/{{rate?.ratedUser?.id}}">{{rate?.ratedUser?.firstname}} {{rate?.ratedUser?.lastname}}</a>
+        - <a routerLink="/trip/{{rate?.trip?.id}}">{{rate?.trip.name}}</a></p>
+    <div class="card-body">
+        <rating [max]="5" [(ngModel)]="rating" [customTemplate]="tt"></rating>
+        <ng-template #tt let-i="index" let-v="value">
+            <button class="btn btn-{{i < v ? 'primary' : 'default'}}">
+                {{i < v ? '&#9733;' : '&#9734;'}}
+            </button>
+        </ng-template>
+        <div [formGroup]="rateForm">
+               <textarea
+                       class="form-control"
+                       type="text"
+                       id="commentTextArea"
+                       rows="3"
+                       formControlName="review"
+                       i18n-placeholder=@@rate-form.placeholder
+                       placeholder="Write a short review (max 200 characters)"
+                       [ngClass]="{ 'is-invalid': (f.review.touched || submitted) && f.review.errors }"
+                       style="margin-top: 20px; resize:none;"
+                       maxlength="300">
                 </textarea>
-                <div style="margin-top: 10px;" *ngIf="showAlert">
-                    <alert [type]="'warning'" [dismissible]="true" (onClosed)="closeAlert()"
-                           i18n=rate-form.alertMinLength>Please write a review, at least 20 characters long
-                    </alert>
-                </div>
-            </div>
-
-            <div class="card-footer text-center">
-                <button class="btn btn-primary" (click)="submitRate()" i18n=@@rate-form.submitButton>Submit</button>
+            <div *ngIf="(f.review.touched || submitted) && f.review.errors" class="invalid-feedback">
+                <p *ngIf="f.review.errors.required">Review is required</p>
+                <p *ngIf="f.review.errors.maxlength">Max 140 characters</p>
+                <p *ngIf="f.review.errors.minlength">Min 20 characters</p>
             </div>
         </div>
+    </div>
+
+    <div class="card-footer text-center">
+        <button class="btn btn-primary" (click)="submitRate()" i18n=@@rate-form.submitButton>Submit</button>
     </div>
 </div>

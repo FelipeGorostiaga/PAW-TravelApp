@@ -29,6 +29,7 @@ export class RespondJoinReqComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loading = true;
         this.spinner.show();
         this.tripId = Number(this.route.snapshot.paramMap.get("id"));
         let token = this.route.snapshot.queryParams['token'];
@@ -64,6 +65,7 @@ export class RespondJoinReqComponent implements OnInit {
                             break;
 
                     }
+                    this.loading = false;
                     this.spinner.hide();
                 }
             );
