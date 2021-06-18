@@ -32,7 +32,7 @@ public class User {
     @Column(length = 100, nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate birthday;
 
     @Column(length = 1, nullable = false)
@@ -46,6 +46,9 @@ public class User {
 
     @Column(length = 500)
     private String biography;
+
+    @Column(length = 100, nullable = false)
+    private String nationality;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<TripMember> trips = new LinkedList<>();
@@ -70,9 +73,6 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "inviter", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripInvitation> sentTripInvitations;
-
-    @Column(length = 100, nullable = false)
-    private String nationality;
 
     public User(long id, String firstname, String lastname, String email, String password, LocalDate birthday, String nationality, String sex, String verificationCode) {
         this(firstname, lastname, email, password, birthday, nationality, sex, verificationCode);

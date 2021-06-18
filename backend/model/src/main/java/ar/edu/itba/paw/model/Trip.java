@@ -29,10 +29,10 @@ public class Trip implements Comparable<Trip> {
     @Column(length = 400, nullable = false)
     private String description;
 
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date")
     private LocalDate startDate;
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     private LocalDate endDate;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)

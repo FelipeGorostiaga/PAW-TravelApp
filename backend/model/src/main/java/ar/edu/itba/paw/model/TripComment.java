@@ -20,7 +20,7 @@ public class TripComment implements Comparable<TripComment>{
     @Column(length = 160, nullable = false)
     private String comment;
 
-    @Column(name = "created_on", nullable = false)
+    @Column(name = "created_on")
     private LocalDateTime createdOn;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

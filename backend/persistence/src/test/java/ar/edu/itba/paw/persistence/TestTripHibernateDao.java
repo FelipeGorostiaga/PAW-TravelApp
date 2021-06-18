@@ -21,7 +21,6 @@ import java.time.LocalDate;
 @Transactional
 public class TestTripHibernateDao {
 
-
     private static final User user = new User("felipe", "gorostiaga", "test@mail.com", "secret", LocalDate.now(), "German", "F", "1231128371982" );
     private static final Place place = new Place("googleId", "Mars", 420, 69, "A couple of miles away");
     private static final String name = "My trip to Mars";
@@ -29,10 +28,8 @@ public class TestTripHibernateDao {
     private static final LocalDate startDate = LocalDate.now();
     private static final LocalDate endDate = LocalDate.now();
 
-
     @Autowired
     TripHibernateDao tripDao;
-
 
     @Test
     public void TestCreate() {
@@ -40,6 +37,5 @@ public class TestTripHibernateDao {
         Assert.assertNotNull(trip);
         Assert.assertEquals(name, trip.getName());
     }
-
 
 }

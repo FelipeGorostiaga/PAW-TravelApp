@@ -23,10 +23,10 @@ public class Activity implements Comparable<Activity> {
     @Column(length = 300, nullable = false)
     private String description;
 
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date")
     private LocalDate startDate;
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     private LocalDate endDate;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
