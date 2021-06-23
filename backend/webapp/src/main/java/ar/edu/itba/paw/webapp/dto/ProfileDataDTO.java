@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import java.util.List;
-
 public class ProfileDataDTO {
 
     private int dueTripsAmount;
