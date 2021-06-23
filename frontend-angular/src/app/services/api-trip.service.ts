@@ -74,7 +74,7 @@ export class ApiTripService {
         return this.http.delete(`${this.tripsBaseURL}/${id}/activities/${activityId}`);
     }
 
-    inviteUserToTrip(id: number, invitationForm: TripInvitation): Observable<any> {
+    inviteUserToTrip(id: number, invitationForm: Object): Observable<any> {
         return this.http.post(`${this.tripsBaseURL}/${id}/invitation`, invitationForm);
     }
 

@@ -70,6 +70,7 @@ const routes: Routes = [
     {
         path: 'profile/:id',
         component: ProfileComponent,
+        pathMatch: 'full',
         canActivate: [AuthGuard]
     },
     {

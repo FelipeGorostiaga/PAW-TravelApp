@@ -6,6 +6,7 @@ import java.net.URI;
 
 public class TripInvitationDTO {
 
+    private long id;
 
     private TripDTO trip;
 
@@ -27,6 +28,15 @@ public class TripInvitationDTO {
         this.token = invitation.getToken();
         this.responded = invitation.isResponded();
         this.trip = new TripDTO(invitation.getTrip(), baseUri);
+        this.id = invitation.getId();
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public TripDTO getTrip() {

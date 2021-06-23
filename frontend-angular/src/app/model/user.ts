@@ -1,5 +1,6 @@
 import {Rate} from "./rate";
 import {UserTripsData} from "./UserTripsData";
+import {TripInvitation} from "./forms/TripInvitation";
 
 export class User {
 
@@ -11,10 +12,10 @@ export class User {
     biography: string;
     nationality: string;
     sex: string;
+    rating: number;
     rates: Rate[];
     pendingRates: Rate[];
-    invitations: any[];
-    rating: number;
+    invitations: TripInvitation[];
     tripsData: UserTripsData;
     url: string;
     imageURL: string;

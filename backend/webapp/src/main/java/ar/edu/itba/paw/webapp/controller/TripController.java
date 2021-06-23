@@ -500,15 +500,15 @@ public class TripController {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         User loggedUser = securityUserService.getLoggedUser();
         Optional<TripInvitation> tripInvitation = tripService.findTripInvitationByToken(token);
-
         if (!tripInvitation.isPresent() || !tripOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
+        if (tripInvitation.get().isResponded()) {
+            return Response.status(Response.Status.GONE).build();
+        }
         if (tripOptional.get().getStatus().equals(TripStatus.COMPLETED)) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
-
         if (tripInvitation.get().getInvitee().getId() != loggedUser.getId()) {
             return Response.status(Response.Status.FORBIDDEN)
                     .entity(new ErrorDTO("Only the invitee can accept or reject this invitation", "permission-denied"))

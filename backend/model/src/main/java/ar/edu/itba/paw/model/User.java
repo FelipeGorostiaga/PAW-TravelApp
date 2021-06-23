@@ -213,13 +213,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id &&
-                firstname.equals(user.firstname) &&
-                lastname.equals(user.lastname) &&
-                email.equals(user.email) &&
-                password.equals(user.password) &&
-                birthday.equals(user.birthday) &&
-                nationality.equals(user.nationality);
+        return id == user.id && email.equals(user.email);
     }
 
     @Override

@@ -127,8 +127,7 @@ export class InformationComponent implements OnInit {
                         this.hasImage = false;
                     }
                 );
-            }
-            else {
+            } else {
                 this.hasImage = false;
             }
         }
@@ -179,7 +178,7 @@ export class InformationComponent implements OnInit {
     }
 
     sendInvite(user: User) {
-        this.tripService.inviteUserToTrip(this.trip.id, new TripInvitation(this.trip.id, user.id)).subscribe(
+        this.tripService.inviteUserToTrip(this.trip.id, {tripId: this.trip.id, userId: user.id}).subscribe(
             () => {
                 this.showSuccessAlert = true;
             },

@@ -6,6 +6,7 @@ import {environment} from "../../environments/environment";
 import {UserTripsData} from "../model/UserTripsData";
 import {User} from "../model/user";
 import {Rate} from "../model/rate";
+import {TripInvitation} from "../model/forms/TripInvitation";
 
 
 @Injectable({
@@ -57,7 +58,7 @@ export class ApiUserService {
         return this.http.post(`${this.usersBaseURL}/rates`, rateForm);
     }
 
-    getUserInvitations(url: string): Observable<any> {
-        return this.http.get(url);
+    getUserInvitations(url: string): Observable<TripInvitation[]> {
+        return this.http.get<TripInvitation[]>(url);
     }
 }

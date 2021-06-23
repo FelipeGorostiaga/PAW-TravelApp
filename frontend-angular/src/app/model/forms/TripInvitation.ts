@@ -1,10 +1,11 @@
-export class TripInvitation {
+import {Trip} from "../trip";
+import {User} from "../user";
 
-    userId: number;
-    tripId: number;
-
-    constructor(tripId: number, userId: number) {
-        this.tripId = tripId;
-        this.userId = userId;
-    }
+export interface TripInvitation {
+    id: number;
+    trip: Trip;
+    inviter: User;
+    invitee: User;
+    token: string;
+    responded: boolean;
 }
