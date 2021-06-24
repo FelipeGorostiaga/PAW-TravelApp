@@ -6,15 +6,16 @@
         <td>
             <a routerLink="/profile/{{member.user.id}}">
                 <p class="mb-1">
-                    <i class="fa fa-user"
-                       style="margin-right: 10px;"></i>{{member.user.firstname}} {{member.user.lastname}}
+                    {{member.user.firstname}} {{member.user.lastname}}
                 </p>
             </a>
         </td>
         <td>{{member.user.nationality}}</td>
         <td>
-            <p *ngIf="member.role === 'CREATOR'" style="color: darkblue">Creator</p>
-            <p *ngIf="member.role === 'ADMIN'" style="color: forestgreen">Administrator</p>
+            <p *ngIf="member.role === 'CREATOR'"><span class="badge badge-pill badge-info member-badge">Creator</span></p>
+            <p *ngIf="member.role === 'ADMIN'"><span class="badge badge-pill badge-primary member-badge">Administrator</span></p>
+            <p *ngIf="member.role === 'MEMBER'"><span class="badge badge-pill badge-light member-badge">Member</span>
+            </p>
         </td>
         <td>
             <button

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-6" *ngIf="!loadingImage">
+    <div class="col-6" *ngIf="!loadingImage && hasImage">
         <img *ngIf="hasImage" [src]="tripImage" alt="Trip image">
         <img *ngIf="!hasImage" src="{{tripDefaultImg}}" alt="Trip image">
     </div>
@@ -12,51 +12,24 @@
     </div>
 </div>
 <div class="row row-custom">
-    <div class="col-6 form-group">
+    <div class="col-4 form-group">
         <div class="form-control" placeholder="Datepicker" bsDatepicker #dp="bsDatepicker"
-             [isDisabled]="true" [(bsValue)]="startDate" [bsConfig]="bsConfig" i18n=@@trip.information.startDate>Start
-            date: {{startDate | date}}
+             [isDisabled]="true" [(bsValue)]="startDate" [bsConfig]="bsConfig" i18n=@@trip.information.startDate>From: {{startDate | date}}
         </div>
     </div>
-    <div class="col-6 form-group">
+    <div class="col-4 form-group">
         <div class="form-control" placeholder="Datepicker" bsDatepicker #dp="bsDatepicker" [isDisabled]="true"
-             [(bsValue)]="endDate" [bsConfig]="bsConfig" i18n=@@trip.information.endDate>End date: {{endDate | date}}
+             [(bsValue)]="endDate" [bsConfig]="bsConfig" i18n=@@trip.information.endDate>To: {{endDate | date}}
         </div>
     </div>
 </div>
 <div class="row row-custom">
-    <div class="col-8">
+    <div class="col-10">
         <agm-map [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude" [zoom]="14"
                  [zoomControl]="true" id="googleMaps">
             <agm-marker [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude"></agm-marker>
         </agm-map>
     </div>
-    <!--<div class="col-4">
-        <div class="list-group">
-            <div *ngFor="let member of trip?.members" class="list-group-item">
-                <div class="d-flex w-100 justify-content-between">
-                    <a routerLink="/profile/{{member.user.id}}"><h5 class="mb-1"><i class="fa fa-user" style="margin-right: 15px;"></i>{{member.user.firstname}} {{member.user.lastname}}</h5></a>
-                    <p *ngIf="member.role === 'CREATOR' && userLang === 'es'" style="color: darkblue">Creador</p>
-                    <p *ngIf="member.role === 'ADMIN' && userLang === 'es'" style="color: forestgreen">Administrador</p>
-                    <p *ngIf="member.role === 'CREATOR' && userLang !== 'es'" style="color: darkblue">Creator</p>
-                    <p *ngIf="member.role === 'ADMIN' && userLang !== 'es'" style="color: forestgreen">Administrator</p>
-                    <button *ngIf="isAdmin && !completed && member.role === 'MEMBER' "
-                            tooltip="Make trip administrator"
-                            mwlConfirmationPopover
-                            [popoverTitle]="'Administrator role'"
-                            [popoverMessage]="'Are you sure you want to grant administrator role?'"
-                            placement="right"
-                            (confirm)="grantAdminRole(member.user)"
-                    ><img src="{{plusIcon}}" alt="plus icon"></button>
-                </div>
-            </div>
-        </div>
-        <div *ngIf="isAdmin && !completed" style="margin-top: 20px;">
-            <button class="btn btn-primary" (click)="openModal(template)" i18n=@@trip.information.inviteUserButton>
-                Invite User
-            </button>
-        </div>
-    </div>-->
 </div>
 
 <div class="row justify-content-around" id="button-row">

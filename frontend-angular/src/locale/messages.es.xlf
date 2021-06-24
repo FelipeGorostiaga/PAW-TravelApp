@@ -35,16 +35,16 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="advanced-search.startDate" datatype="html">
-                <source>Start date</source>
-                <target>Fecha de inicio</target>
+                <source>From</source>
+                <target>Desde</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/advanced-search/advanced-search.component.html</context>
                     <context context-type="linenumber">18</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="advanced-search.endDate" datatype="html">
-                <source>End date</source>
-                <target>Fecha de finalización</target>
+                <source>To</source>
+                <target>Hasta</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/advanced-search/advanced-search.component.html</context>
                     <context context-type="linenumber">26</context>
