@@ -58,7 +58,7 @@ public class TestUserHibernateDao {
     }
 
     @Test
-    public void testFindyByUsername() {
+    public void testFindByUsername() {
         Optional<User> userOptional = userDao.findByUsername("fgorostiaga@itba.edu.ar");
         Assert.assertTrue(userOptional.isPresent());
         Assert.assertNotNull(userOptional.get());
