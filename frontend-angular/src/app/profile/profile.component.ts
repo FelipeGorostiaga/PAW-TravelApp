@@ -59,7 +59,8 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.selectedIndex = 0;
+        const idx = this.route.snapshot.paramMap.get('index');
+        this.selectedIndex = +idx || 0;
         this.spinner.show();
         this.loading = true;
         this.ratesError = false;
@@ -116,7 +117,6 @@ export class ProfileComponent implements OnInit {
                         this.calculateUserRate();
                     },
                     () => {
-                        console.log('error in fork join');
                         this.ratesError = true;
                     }
                 );

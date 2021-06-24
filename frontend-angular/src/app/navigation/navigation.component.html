@@ -8,13 +8,18 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul
-            *ngIf="isLoggedIn"
-            class="navbar-nav mr-auto">
-            <li class="nav-item" id="home-item"><a class="nav-link" routerLink="/home" i18n=@@navbar.home>Home<span class="sr-only">(current)</span></a></li>
-            <li class="nav-item" id="my-trips-item"><a class="nav-link" routerLink="/user-trips" i18n=@@navbar.myTrips>My trips</a></li>
-            <li class="nav-item" id="create-trip-item"><a class="nav-link" routerLink="/create-trip" i18n=@@navbar.createTrip>Create trip </a></li>
-            <li class="nav-item" id="adv-search-item"><a class="nav-link" routerLink="/advanced-search" i18n=@@navbar.advancedSearch>Advanced Search</a></li>
-            <li class="nav-item" id="about-item"><a class="nav-link" routerLink="/about" i18n=@@navbar.about>About</a></li>
+                *ngIf="isLoggedIn"
+                class="navbar-nav mr-auto">
+            <li class="nav-item" id="home-item"><a class="nav-link" routerLink="/home" i18n=@@navbar.home>Home<span
+                    class="sr-only">(current)</span></a></li>
+            <li class="nav-item" id="my-trips-item"><a class="nav-link" routerLink="/user-trips" i18n=@@navbar.myTrips>My
+                trips</a></li>
+            <li class="nav-item" id="create-trip-item"><a class="nav-link" routerLink="/create-trip"
+                                                          i18n=@@navbar.createTrip>Create trip </a></li>
+            <li class="nav-item" id="adv-search-item"><a class="nav-link" routerLink="/advanced-search"
+                                                         i18n=@@navbar.advancedSearch>Advanced Search</a></li>
+            <li class="nav-item" id="about-item"><a class="nav-link" routerLink="/about" i18n=@@navbar.about>About</a>
+            </li>
         </ul>
         <div *ngIf="isLoggedIn" class="form-inline my-2 my-lg-0">
             <form (ngSubmit)="search()">
@@ -23,7 +28,7 @@
                         name="nameInput"
                         class="form-control mr-sm-2"
                         type="search"
-                        [(ngModel)] = "searchInput"
+                        [(ngModel)]="searchInput"
                         placeholder="Search trips by name..."
                         i18n-placeholder=@@navbar.searchPlaceholder/>
 
@@ -34,9 +39,13 @@
                 </button>
             </form>
         </div>
-        <a *ngIf="isLoggedIn" [routerLink] = "['/profile/' + loggedUser.id]" style="margin-left: 5px;">
-            <img *ngIf="loggedUser.sex === 'M'" alt="Male icon" style="margin-left: 10px" src="{{man}}" />
-            <img *ngIf="loggedUser.sex === 'F'" alt="Female icon" style="margin-left: 10px" src="{{woman}}" />
+        <a *ngIf="isLoggedIn" [routerLink]="['/profile/' + loggedUser.id]" style="margin-left: 5px;">
+            <img *ngIf="loggedUser.sex === 'M'" alt="Male icon" style="margin-left: 10px" src="{{man}}"/>
+            <img *ngIf="loggedUser.sex === 'F'" alt="Female icon" style="margin-left: 10px" src="{{woman}}"/>
+        </a>
+        <a *ngIf="isLoggedIn && hasNotifications" [routerLink]="['/profile/' + loggedUser.id, { index: '2' }]"
+           style="margin-left: 5px; cursor: pointer">
+            <img alt="Notification icon" style="margin-left: 10px" src="{{bell}}"/>
         </a>
         <a *ngIf="isLoggedIn" (click)="logout()" class="btn">
             <img src="{{logoutIcon}}" alt="Logout icon"/>

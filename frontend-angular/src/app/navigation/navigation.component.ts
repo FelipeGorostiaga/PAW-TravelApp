@@ -3,6 +3,7 @@ import {AuthService} from "../services/auth/auth.service";
 import {Router} from "@angular/router";
 import {User} from "../model/user";
 import {ApiSearchService} from "../services/api-search.service";
+import {ApiUserService} from "../services/api-user.service";
 
 declare var require: any;
 
@@ -17,22 +18,30 @@ export class NavigationComponent implements OnInit {
     loggedUser: User;
     searchInput: string;
 
+    hasNotifications;
+
     // Webpack require function to add fingerprinting to assets
     globe = require('!!file-loader!../../assets/images/earth-globe.png').default;
     woman = require('!!file-loader!../../assets/icons/woman.png').default;
     man = require('!!file-loader!../../assets/icons/man.png').default;
     logoutIcon = require('!!file-loader!../../assets/icons/logout.png').default;
+    bell = require('!!file-loader!../../assets/icons/bell.png').default;
 
-    constructor(private authService: AuthService,
-                private router: Router,
-                private searchService: ApiSearchService) {
+    constructor(private authService: AuthService, private userService: ApiUserService, private router: Router) {
     }
 
     ngOnInit() {
+        this.hasNotifications = false;
         this.isLoggedIn = this.authService.isLoggedIn();
         if (this.isLoggedIn) {
             this.loggedUser = this.authService.getLoggedUser();
+            this.userService.getUserInvitations(this.loggedUser.invitationsURL).subscribe(
+                data => {
+                    this.hasNotifications = data.length > 0;
+                }
+            )
         }
+
     }
 
     search() {
