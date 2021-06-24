@@ -5,5 +5,5 @@ export class Comment {
     tripId: number;
     user: User;
     comment: string;
-    createdOn: string;
+    createdOn: Date;
 }

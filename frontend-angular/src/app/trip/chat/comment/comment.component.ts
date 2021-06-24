@@ -1,5 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Comment} from "../../../model/comment";
+import {AuthService} from "../../../services/auth/auth.service";
+import {User} from "../../../model/user";
 
 
 @Component({
@@ -12,8 +14,10 @@ export class CommentComponent implements OnInit {
     createdOn: Date;
 
     @Input() comment: Comment;
+    loggedUser: User;
 
-    constructor() {
+    constructor(private authService: AuthService) {
+        this.loggedUser = authService.getLoggedUser();
     }
 
     ngOnInit() {

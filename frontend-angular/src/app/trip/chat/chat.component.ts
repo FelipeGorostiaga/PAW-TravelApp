@@ -3,6 +3,7 @@ import {Trip} from "../../model/trip";
 import {ApiTripService} from "../../services/api-trip.service";
 import {AuthService} from "../../services/auth/auth.service";
 import {CommentForm} from "../../model/forms/comment-form";
+import {User} from "../../model/user";
 
 
 @Component({
@@ -15,6 +16,7 @@ export class ChatComponent implements OnInit {
     @Input() trip: Trip;
     @Input() isAdmin: boolean;
     @Input() completed: boolean;
+    loggedUser: User;
 
     sendingMessage: boolean;
 
@@ -23,10 +25,15 @@ export class ChatComponent implements OnInit {
 
     ngOnInit() {
         this.sendingMessage = false;
+        this.loggedUser = this.authService.getLoggedUser();
         if (!this.trip.comments) {
             this.tripService.getTripComments(this.trip.commentsURL).subscribe(
                 data => {
                     this.trip.comments = data;
+                    this.trip.comments.sort(function(a,b){
+                        // @ts-ignore
+                        return new Date(b.createdOn) - new Date(a.createdOn);
+                    });
                 }
             );
         }
@@ -41,7 +48,8 @@ export class ChatComponent implements OnInit {
         input.value = "";
         this.tripService.postComment(this.trip.id, new CommentForm(String(inputValue))).subscribe(
             data => {
-                this.trip.comments.push(data);
+                this.trip.comments.splice(0, 0, data);
+                //this.trip.comments.push(data);
                 this.sendingMessage = false;
             }
         );

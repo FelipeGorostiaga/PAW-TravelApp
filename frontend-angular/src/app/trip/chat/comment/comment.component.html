@@ -1,4 +1,13 @@
-<div class="list-group-item" style="border: none">
-    <strong>{{comment?.user?.firstname}} {{comment?.user?.lastname}}</strong>
-    {{comment?.createdOn | date :'short'}}<br>{{comment?.comment}}
+<div *ngIf="comment.user.id !== loggedUser.id" class="media media-chat"> <!--<img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">-->
+    <div class="media-body">  <div style="font-size: 1.2em;">{{comment.user.firstname}} {{comment.user.lastname}}</div>
+        <p>{{comment.comment}}</p>
+        <p class="meta"><time datetime="2018">{{createdOn | date}}</time></p>
+    </div>
+</div>
+
+<div *ngIf="comment.user.id === loggedUser.id" class="media media-chat media-chat-reverse">
+    <div class="media-body">
+        <p>{{comment.comment}}</p>
+        <p class="meta" style="color: darkgrey"><time datetime="2018">{{createdOn | date}}</time></p>
+    </div>
 </div>
