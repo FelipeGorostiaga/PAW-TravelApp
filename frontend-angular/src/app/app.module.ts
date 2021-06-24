@@ -34,7 +34,7 @@ import {VerificationResultComponent} from './register/verification-result/verifi
 import {NgxSpinnerModule} from "ngx-bootstrap-spinner";
 import {RespondJoinReqComponent} from './trip/respond-join-req/respond-join-req.component';
 import {RespondInviteComponent} from './trip/respond-invite/respond-invite.component';
-import {UserListItemComponent} from './trip/information/user-list-item/user-list-item.component';
+import {UserListItemComponent} from './trip/members/user-list-item/user-list-item.component';
 import {AlertModule} from "ngx-bootstrap/alert";
 import {ModalModule} from "ngx-bootstrap/modal";
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
@@ -49,6 +49,7 @@ import {PendingRatesComponent} from './profile/pending-rates/pending-rates.compo
 import {InvitationsComponent} from './profile/invitations/invitations.component';
 import {RateFormTileComponent} from './profile/pending-rates/rate-form-tile/rate-form-tile.component';
 import {UserRatesComponent} from './user-rates/user-rates.component';
+import { MembersComponent } from './trip/members/members.component';
 
 
 @NgModule({
@@ -86,6 +87,7 @@ import {UserRatesComponent} from './user-rates/user-rates.component';
         InvitationsComponent,
         RateFormTileComponent,
         UserRatesComponent,
+        MembersComponent,
     ],
     imports: [
         BrowserModule,

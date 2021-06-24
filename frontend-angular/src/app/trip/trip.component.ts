@@ -42,7 +42,6 @@ export class TripComponent implements OnInit {
         this.ts.getTrip(this.tripId).subscribe(
             data => {
                 this.trip = data;
-                this.trip = data;
                 this.ts.getTripMembers(this.trip.membersURL).subscribe(
                     res => {
                         this.trip.members = res;
@@ -55,9 +54,9 @@ export class TripComponent implements OnInit {
                         this.spinner.hide();
                         this.loading = false;
                     }
-                )
+                );
             },
-            err => {
+            () => {
                 this.loading = false;
                 this.spinner.hide();
             });

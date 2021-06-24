@@ -30,6 +30,14 @@
                            aria-controls="nav-contact"
                            aria-selected="false"
                            i18n=@@trip.chatTab>Chat</a>
+                        <a *ngIf="isAdmin || isMember" class="nav-item nav-link"
+                           id="nav-members-tab"
+                           data-toggle="tab"
+                           (click)="switchTab(3)"
+                           role="tab"
+                           [ngClass]="{'active':selectedIndex == 3}"
+                           aria-controls="nav-members"
+                           aria-selected="false">Members</a>
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent" style="margin-top: 40px;">
@@ -54,8 +62,16 @@
                          [ngClass]="{
                             'show':selectedIndex == 2,
                             'active':selectedIndex == 2}"
-                         id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                         id="nav-contact" role="tabpanel" aria-labelledby="nav-chat-tab">
                         <app-chat [trip]="trip" [isAdmin]="isAdmin" [completed]="completed"></app-chat>
+                    </div>
+                    <div *ngIf="selectedIndex == 3"
+                         class="tab-pane fade"
+                         [ngClass]="{
+                            'show':selectedIndex == 3,
+                            'active':selectedIndex == 3}"
+                         id="nav-members" role="tabpanel" aria-labelledby="nav-members-tab">
+                        <app-members *ngIf="trip?.members" [trip]="trip" [isAdmin]="isAdmin" [isCreator]="isCreator" [completed]="completed" ></app-members>
                     </div>
                 </div>
             </div>

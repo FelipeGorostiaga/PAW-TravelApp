@@ -30,7 +30,7 @@ export class ChatComponent implements OnInit {
             this.tripService.getTripComments(this.trip.commentsURL).subscribe(
                 data => {
                     this.trip.comments = data;
-                    this.trip.comments.sort(function(a,b){
+                    this.trip.comments.sort(function(a, b) {
                         // @ts-ignore
                         return new Date(b.createdOn) - new Date(a.createdOn);
                     });
@@ -49,7 +49,6 @@ export class ChatComponent implements OnInit {
         this.tripService.postComment(this.trip.id, new CommentForm(String(inputValue))).subscribe(
             data => {
                 this.trip.comments.splice(0, 0, data);
-                //this.trip.comments.push(data);
                 this.sendingMessage = false;
             }
         );

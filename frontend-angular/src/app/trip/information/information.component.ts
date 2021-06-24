@@ -70,7 +70,6 @@ export class InformationComponent implements OnInit {
 
     // Webpack require for image fingerprinting
     tripDefaultImg = require('!!file-loader!../../../assets/images/trip-default-info.jpg').default;
-    plusIcon = require('!!file-loader!../../../assets/icons/plus.png').default;
     editIcon = require('!!file-loader!../../../assets/icons/editar.png').default;
     deleteIcon = require('!!file-loader!../../../assets/icons/eliminar-small.png').default;
 
@@ -164,45 +163,6 @@ export class InformationComponent implements OnInit {
         return this.editTripForm.controls;
     }
 
-    openModal(template: TemplateRef<any>) {
-        this.modalRef = this.modalService.show(template);
-    }
-
-    closeModal() {
-        this.modalRef.hide();
-        this.resetSearch();
-    }
-
-    newSearch(term: string) {
-        this.latestSearch.next(term);
-    }
-
-    sendInvite(user: User) {
-        this.tripService.inviteUserToTrip(this.trip.id, {tripId: this.trip.id, userId: user.id}).subscribe(
-            () => {
-                this.showSuccessAlert = true;
-            },
-            () => {
-                this.showErrorAlert = true;
-            }
-        );
-        this.resetSearch();
-
-    }
-
-    resetSearch() {
-        this.searchTerm = "";
-        this.latestSearch.next(" ");
-    }
-
-    closeSuccessAlert() {
-        this.showSuccessAlert = false;
-    }
-
-    closeErrorAlert() {
-        this.showErrorAlert = false;
-    }
-
     openEditTripModal(template: TemplateRef<any>) {
         this.populateForm();
         this.editTripModalRef = this.modalService.show(template);
@@ -212,7 +172,6 @@ export class InformationComponent implements OnInit {
         this.editTripModalRef.hide();
         this.resetEditTripForm();
     }
-
 
     submitEditTripForm() {
         this.submitted = true;
@@ -253,15 +212,6 @@ export class InformationComponent implements OnInit {
 
     onFileSelected(event) {
         this.selectedFile = event.target.files[0];
-    }
-
-    grantAdminRole(user: User) {
-        this.tripService.grantAdminRole(this.trip.id, user.id).subscribe(
-            () => {
-                const index = this.trip.members.findIndex(member => member.user.id === user.id);
-                this.trip.members[index].role = TripRole.ADMIN;
-            }
-        );
     }
 
     validImgExtension() {

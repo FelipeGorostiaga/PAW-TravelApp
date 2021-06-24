@@ -1,0 +1,75 @@
+<table class="table">
+    <thead>
+    </thead>
+    <tbody>
+    <tr *ngFor="let member of trip?.members">
+        <td>
+            <a routerLink="/profile/{{member.user.id}}">
+                <p class="mb-1">
+                    <i class="fa fa-user"
+                       style="margin-right: 10px;"></i>{{member.user.firstname}} {{member.user.lastname}}
+                </p>
+            </a>
+        </td>
+        <td>{{member.user.nationality}}</td>
+        <td>
+            <p *ngIf="member.role === 'CREATOR'" style="color: darkblue">Creator</p>
+            <p *ngIf="member.role === 'ADMIN'" style="color: forestgreen">Administrator</p>
+        </td>
+        <td>
+            <button
+                    *ngIf="isAdmin && !completed && member.role === 'MEMBER'"
+                    tooltip="Make trip administrator"
+                    mwlConfirmationPopover
+                    [popoverTitle]="'Administrator role'"
+                    [popoverMessage]="'Grant administrator role?'"
+                    placement="right"
+                    (confirm)="grantAdminRole(member.user)"
+            ><img src="{{shield}}" alt="admin icon"></button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div *ngIf="isAdmin && !completed" style="margin-top: 20px;">
+    <button type="button" class="btn btn-link" (click)="openModal(template)">
+        <img src="{{bluePlus}}" alt="invite icon"></button>
+</div>
+
+<!-- invite user modal -->
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left" i18n=@@trip.information.inviteUser.title>Invite user</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="showSuccessAlert">
+            <alert [type]="'success'" [dismissible]="true" (onClosed)="closeSuccessAlert()"
+                   i18n=@@trip.information.inviteUser.success>User invite sent.
+            </alert>
+        </div>
+        <div *ngIf="showErrorAlert">
+            <alert [type]="'warning'" [dismissible]="true" (onClosed)="closeErrorAlert()"
+                   i18n=@@trip.information.inviteUser.error>User was already invited.
+            </alert>
+        </div>
+        <section>
+            <div class="input-group mb-3">
+                <input type="search" placeholder="Search by name..." class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default" [(ngModel)]="searchTerm"
+                       (ngModelChange)="newSearch(searchTerm)">
+            </div>
+            <div *ngFor="let u of userSearchList | async" class="list-group">
+                <user-list-item [user]="u" (userClickedEvent)="sendInvite($event)"></user-list-item>
+            </div>
+        </section>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary" (click)="closeModal()" style="margin-top: 20px;"
+                i18n=@@trip.information.inviteUser.closeButton>Close
+        </button>
+    </div>
+</ng-template>
+
