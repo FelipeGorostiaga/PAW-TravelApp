@@ -1,30 +1,36 @@
 <div class="row">
-    <div class="col-6" *ngIf="!loadingImage && hasImage">
-        <img *ngIf="hasImage" [src]="tripImage" alt="Trip image">
-        <img *ngIf="!hasImage" src="{{tripDefaultImg}}" alt="Trip image">
+    <div class="col-4" *ngIf="!loadingImage && hasImage">
+        <img *ngIf="hasImage" [src]="tripImage" alt="Trip image" width="360" height="240">
     </div>
-    <div class="col-6">
-        <h3 *ngIf="trip?.status === 'DUE'" style="color: white"><span class="badge bg-primary">Due</span></h3>
-        <h3 *ngIf="trip?.status === 'COMPLETED'" style="color: white"><span class="badge bg-danger">Completed</span></h3>
-        <h3 *ngIf="trip?.status === 'IN_PROGRESS'" style="color: white"><span class="badge bg-success">In progress</span></h3>
-        <div class="display-3">{{trip?.name}}</div>
-        <p class="text-justify" style="font-size: 150%;margin-top: 10px;">{{trip?.description}}</p>
+    <div class="col-8">
+        <div class="row">
+            <div class="col-8">
+                <div class="display-3">{{trip?.name}}</div>
+            </div>
+            <div class="col-4">
+                <h3 *ngIf="trip?.status === 'DUE'" style="color: white"><span class="badge bg-primary">Due</span></h3>
+                <h3 *ngIf="trip?.status === 'COMPLETED'" style="color: white; margin-top: 30px;"><span class="badge bg-danger">Completed</span></h3>
+                <h3 *ngIf="trip?.status === 'IN_PROGRESS'" style="color: white"><span class="badge bg-success">In progress</span></h3>
+            </div>
+        </div>
+        <p class="text-justify" style="font-size: 120%;margin-top: 30px;">{{trip?.description}}</p>
     </div>
 </div>
+
 <div class="row row-custom">
-    <div class="col-4 form-group">
+    <div class="col-6 form-group">
         <div class="form-control" placeholder="Datepicker" bsDatepicker #dp="bsDatepicker"
              [isDisabled]="true" [(bsValue)]="startDate" [bsConfig]="bsConfig" i18n=@@trip.information.startDate>From: {{startDate | date}}
         </div>
     </div>
-    <div class="col-4 form-group">
+    <div class="col-6 form-group">
         <div class="form-control" placeholder="Datepicker" bsDatepicker #dp="bsDatepicker" [isDisabled]="true"
              [(bsValue)]="endDate" [bsConfig]="bsConfig" i18n=@@trip.information.endDate>To: {{endDate | date}}
         </div>
     </div>
 </div>
 <div class="row row-custom">
-    <div class="col-10">
+    <div class="col-12">
         <agm-map [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude" [zoom]="14"
                  [zoomControl]="true" id="googleMaps">
             <agm-marker [latitude]="trip?.startPlace?.latitude" [longitude]="trip?.startPlace?.longitude"></agm-marker>
