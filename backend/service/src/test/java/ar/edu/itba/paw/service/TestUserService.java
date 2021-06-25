@@ -21,7 +21,6 @@ import static org.mockito.Mockito.when;
 
 public class TestUserService {
 
-
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -34,7 +33,6 @@ public class TestUserService {
     @Mock
     private TripHibernateDao tripDao;
 
-
     private static final User USER = new User("felipe", "gorostiaga", "test@mail.com", "secret", LocalDate.now(), "German", "F", "1231128371982");
     private static final String VERIFICATION_CODE = "1231128371982";
     private static final String FIRSTNAME = "Test";
@@ -43,7 +41,7 @@ public class TestUserService {
 
 
     @Before
-    public void initMocks(){
+    public void initMocks() {
         MockitoAnnotations.initMocks(this);
     }
 
