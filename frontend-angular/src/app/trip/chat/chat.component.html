@@ -1,28 +1,29 @@
+<div class="alert alert-primary" role="alert" style="margin-top: 40px; text-align: center">This chat room is empty</div>
 <div class="page-content page-container" id="page-content">
     <div class="padding">
         <div class="row container d-flex justify-content-center">
             <div class="col-md-12">
                 <div class="card card-bordered">
-                    <div *ngIf="trip?.comments?.length > 0" class="ps-container ps-theme-default ps-active-y" id="chat-content"
+                    <div *ngIf="trip?.comments?.length > 0" class="ps-container ps-theme-default ps-active-y"
+                         id="chat-content"
                          style="overflow-y: scroll !important; height:400px !important; display: flex; flex-direction: column-reverse;">
-
                         <app-comment *ngFor="let comment of trip?.comments" [comment]="comment"></app-comment>
-                        <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
-                            <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                        <div class="ps-scrollbar-x-rail" style="left: 0; bottom: 0;">
+                            <div class="ps-scrollbar-x" tabindex="0" style="left: 0; width: 0;"></div>
                         </div>
-                        <!--style="top: 0px; height: 0px; right: 2px;"-->
-                        <div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;">
-                            <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div>
+                        <div class="ps-scrollbar-y-rail" style="top: 0; height: 0; right: 2px;">
+                            <div class="ps-scrollbar-y" tabindex="0" style="top: 0; height: 2px;"></div>
                         </div>
                     </div>
-                    <div class="publisher bt-1 border-light">
+                    <div *ngIf="!completed" class="publisher bt-1 border-light">
                         <img class="avatar avatar-xs"
                              src="https://img.icons8.com/color/36/000000/administrator-male.png"
                              alt="...">
                         <input type="text" #comment class="publisher-input" placeholder="Write something"
                                i18n-placeholder=@@chat.commentPlaceholder>
                         <a class="publisher-btn text-info" (click)="sendMessage(comment)" data-abc="true"><i
-                                class="fa fa-paper-plane"></i></a></div>
+                                class="fa fa-paper-plane"></i></a>
+                    </div>
                 </div>
             </div>
         </div>

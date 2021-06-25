@@ -1,5 +1,5 @@
 <div *ngIf="activitiesLoaded && trip?.activities?.length == 0">
-    <div class="alert alert-primary" role="alert" style="margin-top: 40px" i18n=@@activities.emptyAlert>This trip has no activities</div>
+    <div class="alert alert-primary" role="alert" style="margin-top: 40px; text-align: center" i18n=@@activities.emptyAlert>This trip has no activities</div>
 </div>
 <div *ngIf="activitiesLoaded && trip?.activities?.length !== 0">
     <div class="list-group" >
