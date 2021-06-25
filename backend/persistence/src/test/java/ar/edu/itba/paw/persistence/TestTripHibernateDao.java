@@ -30,7 +30,7 @@ public class TestTripHibernateDao {
     private static final String TOKEN = "token";
 
     @Autowired
-    TripHibernateDao tripDao;
+    private TripHibernateDao tripDao;
 
     @Test
     public void testCreate() {

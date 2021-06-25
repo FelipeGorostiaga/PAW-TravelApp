@@ -26,7 +26,7 @@ public class TestPlaceHibernateDao {
     private static final double longitude = 69;
 
     @Autowired
-    PlaceHibernateDao placeDao;
+    private PlaceHibernateDao placeDao;
 
     @Test
     public void TestCreate() {
