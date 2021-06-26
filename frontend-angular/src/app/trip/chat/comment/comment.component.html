@@ -4,7 +4,6 @@
         <p class="meta"><time datetime="2018">{{createdOn | date}}</time></p>
     </div>
 </div>
-
 <div *ngIf="comment.user.id === loggedUser.id" class="media media-chat media-chat-reverse">
     <div class="media-body">
         <p>{{comment.comment}}</p>

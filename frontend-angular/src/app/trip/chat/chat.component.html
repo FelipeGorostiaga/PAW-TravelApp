@@ -1,4 +1,4 @@
-<div class="alert alert-primary" role="alert" style="margin-top: 40px; text-align: center">This chat room is empty</div>
+<div *ngIf="trip?.comments?.length === 0" class="alert alert-primary" role="alert" style="margin-top: 40px; text-align: center">This chat room is empty</div>
 <div class="page-content page-container" id="page-content">
     <div class="padding">
         <div class="row container d-flex justify-content-center">
