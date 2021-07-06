@@ -4,6 +4,7 @@
             <alert *ngIf="user?.invitations?.length === 0" [type]="'primary'"
                    i18n=@@invitations.noInvitations class="text-center">You don't have any pending invitations
             </alert>
+            <alert *ngIf="tripCompleted" [type]="'danger'" class="text-center" [dismissOnTimeout]="3000">Trip already completed</alert>
             <alert *ngIf="sentResponseAccept" [type]="'success'" class="text-center" [dismissOnTimeout]="3000">Invitation accepted</alert>
             <alert *ngIf="sentResponseDeny" [type]="'primary'" class="text-center" [dismissOnTimeout]="3000">Invitation rejected</alert>
             <alert *ngIf="serverError" [type]="'danger'" class="text-center" [dismissOnTimeout]="3000">Server error, try again...</alert>

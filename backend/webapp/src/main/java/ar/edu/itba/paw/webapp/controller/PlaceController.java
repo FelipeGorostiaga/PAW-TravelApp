@@ -31,6 +31,7 @@ public class PlaceController {
     @Path("/{id}")
     public Response getPlace(@PathParam("id") final long placeId) {
         Optional<Place> placeOptional = this.placeService.findById(placeId);
+        LOGGER.debug("Get place with id {}", placeId);
         if (!placeOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

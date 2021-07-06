@@ -2,7 +2,7 @@
     <div class="row d-flex justify-content-center">
         <div class="col-8">
             <alert *ngIf="user?.pendingRates?.length === 0" [type]="'primary'" class="text-center"
-                   i18n=@@complete-rates.noRatesAlert>You have no pending rates
+                   i18n=@@complete-rates.noRatesAlert>You don't have any pending rates
             </alert>
             <alert *ngIf="sentReview" [type]="'primary'" class="text-center" [dismissOnTimeout]="3000">Review sent successfully</alert>
             <div *ngIf="user?.pendingRates?.length > 0">

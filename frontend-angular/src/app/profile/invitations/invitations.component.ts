@@ -18,6 +18,7 @@ export class InvitationsComponent implements OnInit {
 
     serverError: boolean;
     alreadyRespondedError: boolean;
+    tripCompleted: boolean;
 
     sentResponseAccept: boolean;
     sentResponseDeny: boolean;
@@ -58,7 +59,13 @@ export class InvitationsComponent implements OnInit {
                 const status = error.status;
                 if (status === 410) {
                     this.alreadyRespondedError = true;
-                } else {
+                }
+                else if (status == 406) {
+                    this.tripCompleted = true;
+                    const index = this.user.invitations.indexOf(invitation);
+                    this.user.invitations.splice(index, 1);
+                }
+                else {
                     this.serverError = true;
                 }
                 this.loading = false;

@@ -100,6 +100,7 @@ public class AuthController {
             return Response.status(Response.Status.NOT_FOUND).entity(new ErrorDTO("Invalid user verification code or user is already verified", "verification")).build();
         }
         User user = userOptional.get();
+        LOGGER.debug("Verifying user with id {}", user.getId());
         userService.verify(user);
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         final String accessToken = jwtUtil.generateToken(userDetails, JWT_ACCESS_EXPIRATION);
