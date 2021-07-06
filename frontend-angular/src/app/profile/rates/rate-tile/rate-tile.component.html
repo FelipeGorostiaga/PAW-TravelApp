@@ -1,6 +1,6 @@
 <div class="card m-5" style="margin-bottom: 25px;">
-    <p class="card-header" style="font-size: 1.1em"><a
-            routerLink="/profile/{{rate?.ratedBy?.id}}">{{rate?.ratedBy?.firstname}} {{rate?.ratedBy?.lastname}}</a>
+    <p class="card-header" style="font-size: 1.1em">
+        <a routerLink="/profile/{{rate?.ratedBy?.id}}">{{rate?.ratedBy?.firstname}} {{rate?.ratedBy?.lastname}}</a>
         - <a routerLink="/trip/{{rate?.trip?.id}}">{{rate?.trip.name}}</a></p>
 
     <div class="card-body" style="margin-top: 5px; margin-bottom: 5px;">

@@ -56,6 +56,9 @@ export class ProfileComponent implements OnInit {
                 private formBuilder: FormBuilder,
                 private modalService: BsModalService,
                 private sanitizer: DomSanitizer) {
+        this.router.routeReuseStrategy.shouldReuseRoute = function() {
+            return false;
+        }
     }
 
     ngOnInit() {
@@ -106,20 +109,38 @@ export class ProfileComponent implements OnInit {
                     this.hasImage = false;
                     this.spinner.hide();
                 }
-                const rates$ = this.userService.getUserRates(this.user.ratesURL);
-                const pendingRates$ = this.userService.getUserPendingRates(this.user.pendingRatesURL);
-                const tripsData$ = this.userService.getUserTripsData(this.user.tripsDataURL);
-                forkJoin([rates$, pendingRates$, tripsData$]).subscribe(
-                    res => {
-                        this.user.rates = res[0];
-                        this.user.pendingRates = res[1];
-                        this.user.tripsData = res[2];
-                        this.calculateUserRate();
-                    },
-                    () => {
-                        this.ratesError = true;
-                    }
-                );
+
+                // Profile owner --> rates, pending, tripsData
+                if (this.isProfileOwner) {
+                    const rates$ = this.userService.getUserRates(this.user.ratesURL);
+                    const pendingRates$ = this.userService.getUserPendingRates(this.user.pendingRatesURL);
+                    const tripsData$ = this.userService.getUserTripsData(this.user.tripsDataURL);
+                    forkJoin([rates$, pendingRates$, tripsData$]).subscribe(
+                        res => {
+                            this.user.rates = res[0];
+                            this.user.pendingRates = res[1];
+                            this.user.tripsData = res[2];
+                            this.calculateUserRate();
+                        },
+                        () => {
+                            this.ratesError = true;
+                        }
+                    );
+                } else {
+                    const rates$ = this.userService.getUserRates(this.user.ratesURL);
+                    const tripsData$ = this.userService.getUserTripsData(this.user.tripsDataURL);
+                    forkJoin([rates$, tripsData$]).subscribe(
+                        res => {
+                            this.user.rates = res[0];
+                            this.user.tripsData = res[1];
+                            this.calculateUserRate();
+                        },
+                        () => {
+                            this.ratesError = true;
+                        }
+                    );
+
+                }
             },
             () => {
                 this.spinner.hide();

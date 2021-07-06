@@ -59,13 +59,11 @@ export class InvitationsComponent implements OnInit {
                 const status = error.status;
                 if (status === 410) {
                     this.alreadyRespondedError = true;
-                }
-                else if (status == 406) {
+                } else if (status == 406) {
                     this.tripCompleted = true;
                     const index = this.user.invitations.indexOf(invitation);
                     this.user.invitations.splice(index, 1);
-                }
-                else {
+                } else {
                     this.serverError = true;
                 }
                 this.loading = false;

@@ -81,7 +81,7 @@
                                role="tab" aria-controls="nav-profile"
                                [ngClass]="{'active':selectedIndex === 0}"
                                aria-selected="false" i18n=@@profile.ratesTab>Rates</a>
-                            <a class="nav-item nav-link"
+                            <a *ngIf="isProfileOwner" class="nav-item nav-link"
                                id="nav-pending-rates-tab"
                                data-toggle="tab"
                                (click)="switchTab(1)"
@@ -90,7 +90,7 @@
                                aria-controls="nav-contact"
                                aria-selected="false"
                                i18n=@@profile.pendingRatesTab>Pending Rates</a>
-                            <a class="nav-item nav-link"
+                            <a *ngIf="isProfileOwner" class="nav-item nav-link"
                                id="nav-invitations-tab"
                                data-toggle="tab"
                                (click)="switchTab(2)"

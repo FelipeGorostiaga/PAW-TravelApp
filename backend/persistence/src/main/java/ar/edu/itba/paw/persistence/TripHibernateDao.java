@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.model.TripStatus.COMPLETED;
+
 @Repository
 public class TripHibernateDao implements TripDao {
 
@@ -75,7 +77,7 @@ public class TripHibernateDao implements TripDao {
 
     @Override
     public int countAllPublicTrips() {
-        TypedQuery<Long> query = em.createQuery("SELECT count(*) FROM Trip WHERE isPrivate = false", Long.class);
+        TypedQuery<Long> query = em.createQuery("SELECT count(*) FROM Trip WHERE isPrivate = false AND status <> 'COMPLETED'", Long.class);
         return query.getSingleResult().intValue();
     }
 
@@ -83,7 +85,7 @@ public class TripHibernateDao implements TripDao {
     public List<Trip> getAllTripsPerPage(int pageNum) {
 
         // Get primary keys with LIMIT and OFFSET
-        final TypedQuery<Long> idQuery = em.createQuery("SELECT t.id FROM Trip t WHERE t.isPrivate = false order by t.startDate", Long.class);
+        final TypedQuery<Long> idQuery = em.createQuery("SELECT t.id FROM Trip t WHERE t.isPrivate = false AND t.status <> 'COMPLETED' order by t.startDate", Long.class);
         List<Long> tripIds = idQuery.setFirstResult((pageNum - 1) * MAX_ROWS)
                 .setMaxResults(MAX_ROWS)
                 .getResultList();
@@ -186,7 +188,7 @@ public class TripHibernateDao implements TripDao {
     @Override
     public void markTripAsCompleted(long tripId) {
         Query query = em.createQuery("UPDATE Trip SET status = :completed WHERE id = :tripId");
-        query.setParameter("completed", TripStatus.COMPLETED);
+        query.setParameter("completed", COMPLETED);
         query.setParameter("tripId", tripId);
         query.executeUpdate();
     }
