@@ -7,11 +7,14 @@
             </div>
             <div class="card-body" id="card-id">
                 <alert *ngIf="credentialsError" [dismissible]="true" [type]="'danger'"
-                       (onClosed)="closeCredentialsAlert()" i18n=@@login.credentialsError>Invalid username or password</alert>
+                       (onClosed)="closeCredentialsAlert()" i18n=@@login.credentialsError>Invalid username or password
+                </alert>
                 <alert *ngIf="verificationError" [dismissible]="true" [type]="'warning'"
-                       (onClosed)="closeVerificationAlert()" i18n=@@login.verificationError>Please verify your email</alert>
+                       (onClosed)="closeVerificationAlert()" i18n=@@login.verificationError>Please verify your email
+                </alert>
                 <alert *ngIf="serverError" [dismissible]="true" [type]="'danger'"
-                       (onClosed)="closeVerificationAlert()" i18n=@@login.serverError>Server not responding</alert>
+                       (onClosed)="closeVerificationAlert()" i18n=@@login.serverError>Server not responding
+                </alert>
                 <form>
                     <div class="input-group form-group">
                         <div class="input-group-prepend">

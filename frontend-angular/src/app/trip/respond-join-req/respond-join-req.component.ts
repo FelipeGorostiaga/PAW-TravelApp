@@ -11,11 +11,8 @@ import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 export class RespondJoinReqComponent implements OnInit {
 
     tripId: number;
-
     loading: boolean;
     accepted: boolean;
-
-    // http errors
     serverError: boolean;
     alreadyResponded: boolean;
     tripCompleted: boolean;
@@ -39,7 +36,7 @@ export class RespondJoinReqComponent implements OnInit {
             this.router.navigate(['404']);
         } else {
             this.ts.respondJoinRequest(this.tripId, token, this.accepted).subscribe(
-                data => {
+                () => {
                     this.error = false;
                     this.loading = false;
                     this.spinner.hide();

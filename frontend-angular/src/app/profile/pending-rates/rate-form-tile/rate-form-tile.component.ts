@@ -28,7 +28,7 @@ export class RateFormTileComponent implements OnInit {
 
     ngOnInit(): void {
         this.rateForm = this.fb.group({
-            review: ['', [Validators.required, Validators.minLength(20),  Validators.maxLength(140)]]
+            review: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(140)]]
         });
     }
 

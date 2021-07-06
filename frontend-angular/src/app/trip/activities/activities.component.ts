@@ -163,15 +163,15 @@ export class ActivitiesComponent implements OnInit {
         this.latitude = -34.603722;
         this.longitude = -58.381592;
         // Google maps does not accept non https calls to getCurrentPosition() anymore
-/*        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                this.latitude = position.coords.latitude;
-                this.longitude = position.coords.longitude;
-            });
-        } else {
-            this.latitude = -34.603722;
-            this.longitude = -58.381592;
-        }*/
+        /*        if ('geolocation' in navigator) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        this.latitude = position.coords.latitude;
+                        this.longitude = position.coords.longitude;
+                    });
+                } else {
+                    this.latitude = -34.603722;
+                    this.longitude = -58.381592;
+                }*/
     }
 
     deleteActivity(activity: Activity) {

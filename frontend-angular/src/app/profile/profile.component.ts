@@ -58,7 +58,7 @@ export class ProfileComponent implements OnInit {
                 private sanitizer: DomSanitizer) {
         this.router.routeReuseStrategy.shouldReuseRoute = function() {
             return false;
-        }
+        };
     }
 
     ngOnInit() {

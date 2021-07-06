@@ -4,7 +4,8 @@
     <div *ngIf="rates" class="row d-flex justify-content-center">
         <div class="col-8">
             <h3>{{user.firstname}} {{user.lastname}}   <span *ngIf="rating" class="text-muted">{{rating}}</span></h3>
-            <alert *ngIf="rates?.length === 0" [type]="'warning'" i18n=@@all-rates.empty class="text-center">This user has no available rates
+            <alert *ngIf="rates?.length === 0" [type]="'warning'" i18n=@@all-rates.empty class="text-center">This user
+                has no available rates
             </alert>
             <alert *ngIf="error" [type]="'danger'" i18n=@@all-rates.error class="text-center">Error getting data from
                 server, try again later

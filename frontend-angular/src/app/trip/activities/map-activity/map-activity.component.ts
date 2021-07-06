@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Activity} from "../../../model/activity";
 import {ApiTripService} from "../../../services/api-trip.service";
 import {DateUtilService} from "../../../services/date-util.service";
@@ -32,12 +32,11 @@ export class MapActivityComponent implements OnInit {
 
     ngOnInit(): void {
         // @ts-ignore
-        this.userLang = (navigator.language || navigator.userLanguage).substr(0,2);
+        this.userLang = (navigator.language || navigator.userLanguage).substr(0, 2);
         if (this.userLang === 'es') {
             this.popoverTitle = "Eliminar actividad";
             this.popoverMessage = "Estas seguro que deseas eliminar esta actividad?";
-        }
-        else {
+        } else {
             this.popoverTitle = "Delete activity";
             this.popoverMessage = "Are you sure you want to delete this activity?";
         }

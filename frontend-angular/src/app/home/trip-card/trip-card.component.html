@@ -6,11 +6,12 @@
             <div class="card-body">
                 <h5 class="card-title" style="font-size: 35px;">{{trip?.name}}</h5>
                 <p class="card-text">{{trip?.description}}</p>
-                <p class="card-text"><img src="{{mapIcon}}" alt="map-icon" style="margin-right: 16px;">{{trip?.startPlace?.name}}</p>
+                <p class="card-text"><img src="{{mapIcon}}" alt="map-icon"
+                                          style="margin-right: 16px;">{{trip?.startPlace?.name}}</p>
                 <p class="card-text">
                     <span *ngIf="trip?.status === 'DUE'" class="badge bg-primary card-badge">Due</span>
                     <span *ngIf="trip?.status === 'IN_PROGRESS'" class="badge bg-success card-badge">In progress</span>
-                    <span *ngIf="trip?.status === 'COMPLETED'"class="badge bg-danger card-badge">Completed</span>
+                    <span *ngIf="trip?.status === 'COMPLETED'" class="badge bg-danger card-badge">Completed</span>
                     {{startDate | date}} - {{endDate | date}}
                 </p>
             </div>

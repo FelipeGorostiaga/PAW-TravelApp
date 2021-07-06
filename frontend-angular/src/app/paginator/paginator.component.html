@@ -1,7 +1,8 @@
 <div class="d-flex justify-content-center align-bottom card-footer footer">
     <ul class="pagination">
         <li class="page-item" *ngFor="let page of pages; index as i">
-            <a class="page-link" [ngClass]="{'selected-page': currentPage === (i + 1) }" (click)="pageNumberClicked(i + 1)">{{i + 1}}</a>
+            <a class="page-link" [ngClass]="{'selected-page': currentPage === (i + 1) }"
+               (click)="pageNumberClicked(i + 1)">{{i + 1}}</a>
         </li>
     </ul>
 </div>

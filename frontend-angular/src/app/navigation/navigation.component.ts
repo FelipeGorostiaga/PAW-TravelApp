@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../services/auth/auth.service";
 import {Router} from "@angular/router";
 import {User} from "../model/user";
-import {ApiSearchService} from "../services/api-search.service";
 import {ApiUserService} from "../services/api-user.service";
 
 declare var require: any;
@@ -39,7 +38,7 @@ export class NavigationComponent implements OnInit {
                 data => {
                     this.hasNotifications = data.length > 0;
                 }
-            )
+            );
         }
 
     }

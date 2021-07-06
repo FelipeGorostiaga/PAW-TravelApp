@@ -7,7 +7,6 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CommentForm} from "../model/forms/comment-form";
 import {mergeMap, shareReplay} from "rxjs/operators";
-import {TripInvitation} from "../model/forms/TripInvitation";
 import {InviteRequest} from "../model/InviteRequest";
 import {TripMember} from "../model/TripMember";
 import {Activity} from "../model/activity";

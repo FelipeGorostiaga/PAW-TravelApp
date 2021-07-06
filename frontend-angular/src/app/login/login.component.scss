@@ -1,9 +1,9 @@
-.container{
+.container {
   //height: 100%;
   align-content: center;
 }
 
-.card{
+.card {
   height: 350px;
   margin-top: 15%;
   margin-bottom: auto;
@@ -11,43 +11,43 @@
   background-color: rgb(248, 248, 253) !important;
 }
 
-.social_icon span{
+.social_icon span {
   font-size: 60px;
   margin-left: 13px;
   color: forestgreen;
 }
 
-.social_icon span:hover{
+.social_icon span:hover {
   color: white;
   cursor: pointer;
 }
 
-.social_icon{
+.social_icon {
   position: absolute;
   top: -45px;
 }
 
-.input-group-prepend span{
+.input-group-prepend span {
   width: 50px;
   background-color: white;
   color: black;
-  border:0 !important;
+  border: 0 !important;
 }
 
 
-input:focus{
-/*  outline: 0 0 0 0  !important;*/
+input:focus {
+  /*  outline: 0 0 0 0  !important;*/
   box-shadow: 0 0 0 0 !important;
 
 }
 
-.login_btn{
+.login_btn {
   color: white;
-  background-color:   forestgreen;
+  background-color: forestgreen;
   width: 100px;
 }
 
-.links a{
+.links a {
   margin-left: 4px;
   color: #2056d6;
 }
@@ -61,12 +61,12 @@ a:hover {
 }
 
 label {
-  padding:10px;
-  margin:0 0 10px;
+  padding: 10px;
+  margin: 0 0 10px;
 }
 
 label:hover {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 

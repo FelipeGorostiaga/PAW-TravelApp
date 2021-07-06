@@ -4,7 +4,9 @@
             <alert *ngIf="user?.pendingRates?.length === 0" [type]="'primary'" class="text-center"
                    i18n=@@complete-rates.noRatesAlert>You don't have any pending rates
             </alert>
-            <alert *ngIf="sentReview" [type]="'primary'" class="text-center" [dismissOnTimeout]="3000">Review sent successfully</alert>
+            <alert *ngIf="sentReview" [type]="'primary'" class="text-center" [dismissOnTimeout]="3000">Review sent
+                successfully
+            </alert>
             <div *ngIf="user?.pendingRates?.length > 0">
                 <p style="margin-left: 8%" class="text-muted">{{user?.pendingRates?.length}} Pending</p>
                 <app-rate-form-tile *ngFor="let rate of user?.pendingRates | slice:0:maxShowedPendingRates; let i=index"

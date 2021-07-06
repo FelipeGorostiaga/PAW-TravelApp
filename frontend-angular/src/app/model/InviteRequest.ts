@@ -1,5 +1,5 @@
-import { Trip } from "./trip";
-import { User } from "./user";
+import {Trip} from "./trip";
+import {User} from "./user";
 
 export interface InviteRequest {
     trip: Trip;

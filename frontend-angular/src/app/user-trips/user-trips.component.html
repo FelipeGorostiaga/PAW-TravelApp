@@ -3,8 +3,12 @@
 <div class="container" *ngIf="trips?.length === 0 || serverError" style="margin-top: 50px;">
     <div class="row">
         <div class="col text-center">
-            <alert *ngIf="trips?.length === 0" [type]="'primary'" [dismissible]="false" i18n=@@user-trips.noTrips>You are not participating in any trips</alert>
-            <alert *ngIf="serverError" [type]="'danger'" [dismissible]="false" i18n=@@user-trips.serverError>Unexpected error occurred, please try again later</alert>
+            <alert *ngIf="trips?.length === 0" [type]="'primary'" [dismissible]="false" i18n=@@user-trips.noTrips>You
+                are not participating in any trips
+            </alert>
+            <alert *ngIf="serverError" [type]="'danger'" [dismissible]="false" i18n=@@user-trips.serverError>Unexpected
+                error occurred, please try again later
+            </alert>
         </div>
     </div>
 </div>

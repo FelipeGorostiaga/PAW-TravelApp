@@ -61,7 +61,7 @@ export class SearchResultComponent implements OnInit {
                 this.totalTrips = data.totalAmount;
                 this.spinner.hide();
             },
-            err => {
+            () => {
                 this.serverError = true;
                 this.spinner.hide();
             }

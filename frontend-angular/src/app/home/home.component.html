@@ -3,13 +3,17 @@
 <div class="container" *ngIf="trips?.length === 0 || serverError" style="margin-top: 50px;">
     <div class="row">
         <div class="col  text-center">
-            <alert *ngIf="trips?.length === 0" [type]="'primary'" [dismissible]="false" i18n=@@home.noTripsAlert>There are no available trips</alert>
-            <alert *ngIf="serverError" [type]="'danger'" [dismissible]="false" i18n=@@home.serverError>Unexpected error occurred, please try again later</alert>
+            <alert *ngIf="trips?.length === 0" [type]="'primary'" [dismissible]="false" i18n=@@home.noTripsAlert>There
+                are no available trips
+            </alert>
+            <alert *ngIf="serverError" [type]="'danger'" [dismissible]="false" i18n=@@home.serverError>Unexpected error
+                occurred, please try again later
+            </alert>
         </div>
     </div>
 </div>
 <div *ngIf="trips?.length > 0" class="container-fluid mt-4" id="main">
-    <div class="card-deck" >
+    <div class="card-deck">
         <div class="row">
             <app-trip-card
                     *ngFor="let trip of trips"

@@ -12,7 +12,8 @@
                                 <label i18n=@@register.firstname>First Name</label>
                                 <input type="text" formControlName="firstName" class="form-control"
                                        [ngClass]="{ 'is-invalid': (f.firstName?.touched || submitted) && f.firstName?.errors }"/>
-                                <div *ngIf="(f.firstName?.touched || submitted) && f.firstName?.errors" class="invalid-feedback">
+                                <div *ngIf="(f.firstName?.touched || submitted) && f.firstName?.errors"
+                                     class="invalid-feedback">
                                     <div *ngIf="f.firstName?.errors.required" i18n=@@register.firstname.required>First
                                         name is required
                                     </div>
@@ -28,7 +29,8 @@
                                 <label i18n=@@register.lastname>Last Name</label>
                                 <input type="text" formControlName="lastName" class="form-control"
                                        [ngClass]="{ 'is-invalid': (f.lastName.touched || submitted) && f.lastName?.errors }"/>
-                                <div *ngIf="(f.lastName.touched || submitted) && f.lastName?.errors" class="invalid-feedback">
+                                <div *ngIf="(f.lastName.touched || submitted) && f.lastName?.errors"
+                                     class="invalid-feedback">
                                     <div *ngIf="f.lastName?.errors.required" i18n=@@register.lastname.required>Last Name
                                         is required
                                     </div>
@@ -299,7 +301,8 @@
                                     <option value="Zambia">Zambia</option>
                                     <option value="Zimbabwe">Zimbabwe</option>
                                 </select>
-                                <div *ngIf="(f.nationality?.touched || submitted) && f.nationality?.errors" class="invalid-feedback">
+                                <div *ngIf="(f.nationality?.touched || submitted) && f.nationality?.errors"
+                                     class="invalid-feedback">
                                     <div *ngIf="f.nationality?.errors.required" i18n=@@register.nationality.required>
                                         Nationality is required
                                     </div>
@@ -311,7 +314,8 @@
                                 <label i18n=@@register.password>Password</label>
                                 <input type="password" formControlName="password" class="form-control"
                                        [ngClass]="{ 'is-invalid': (f.password?.touched || submitted) && f.password?.errors }"/>
-                                <div *ngIf="(f.password?.touched || submitted) && f.password?.errors" class="invalid-feedback">
+                                <div *ngIf="(f.password?.touched || submitted) && f.password?.errors"
+                                     class="invalid-feedback">
                                     <div *ngIf="f.password?.errors.required" i18n=@@register.password.required>Password
                                         is required
                                     </div>
@@ -327,7 +331,8 @@
                                 <label i18n=@@register.confirmPassword>Confirm Password</label>
                                 <input type="password" formControlName="confirmPassword" class="form-control"
                                        [ngClass]="{ 'is-invalid': (f.confirmPassword?.touched || submitted) && f.confirmPassword?.errors }"/>
-                                <div *ngIf="(f.confirmPassword?.touched || submitted) && f.confirmPassword?.errors" class="invalid-feedback">
+                                <div *ngIf="(f.confirmPassword?.touched || submitted) && f.confirmPassword?.errors"
+                                     class="invalid-feedback">
                                     <div *ngIf="f.confirmPassword?.errors.required"
                                          i18n=@@register.confirmPassword.required>Confirm Password is required
                                     </div>
@@ -349,7 +354,8 @@
                                        [bsConfig]="bsConfig"
                                        i18n-placeholder=@@register.birthdayPlaceholder
                                        placeholder="Enter a valid birthday">
-                                <div *ngIf="(f.birthDate?.touched || submitted) && f.birthDate?.errors" class="invalid-feedback">
+                                <div *ngIf="(f.birthDate?.touched || submitted) && f.birthDate?.errors"
+                                     class="invalid-feedback">
                                     <div *ngIf="f.birthDate?.errors.required" i18n=@@register.birthday.required>Birthday
                                         is required
                                     </div>
@@ -373,7 +379,8 @@
                                            name="customRadioInline1" class="custom-control-input" value="F">
                                     <label class="custom-control-label" for="customRadioInline2" i18n=@@register.female>Female</label>
                                 </div>
-                                <div *ngIf="(f.customRadioInline1.touched || submitted) && f.customRadioInline1.errors" class="text-danger">
+                                <div *ngIf="(f.customRadioInline1.touched || submitted) && f.customRadioInline1.errors"
+                                     class="text-danger">
                                     <small *ngIf="f.customRadioInline1.errors.required"
                                            i18n=@@register.sex.required>Sex is
                                         required</small>
@@ -386,13 +393,15 @@
                                    [ngClass]="{ 'is-invalid': (f.acceptTerms?.touched || submitted) && f.acceptTerms?.errors }"/>
                             <label for="acceptTerms" class="form-check-label" i18n=@@register.termsAndConditions>Accept
                                 Terms & Conditions</label>
-                            <div *ngIf="(f.acceptTerms?.touched || submitted) && f.acceptTerms?.errors" class="invalid-feedback"
+                            <div *ngIf="(f.acceptTerms?.touched || submitted) && f.acceptTerms?.errors"
+                                 class="invalid-feedback"
                                  i18n=@@register.termsAndConditions.required>Accept Terms &
                                 Conditions is required
                             </div>
                         </div>
                         <div class="text-center">
-                            <button class="btn btn-primary mr-1" i18n=@@register.registerButton type="submit">Register</button>
+                            <button class="btn btn-primary mr-1" i18n=@@register.registerButton type="submit">Register
+                            </button>
                             <button class="btn btn-secondary" type="reset" (click)="onReset()"
                                     i18n=@@register.cancelButton>Cancel
                             </button>

@@ -75,10 +75,11 @@
               ]
             },
             "es": {
-              "localize": ["es"],
+              "localize": [
+                "es"
+              ],
               "i18nMissingTranslation": "warning"
             }
-
           }
         },
         "serve": {

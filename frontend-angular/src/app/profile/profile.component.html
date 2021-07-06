@@ -38,13 +38,15 @@
                             progress</small>
                         </li>
                         <li class="list-inline-item" style="margin-left: 10px">
-                            <h5 class="font-weight-bold mb-0 d-block">{{user?.tripsData?.completedTripsAmount}}</h5><small
-                                class="text-muted" i18n=@@profile.completed><i
-                                class="fa fa-check mr-1"></i>Completed</small>
+                            <h5 class="font-weight-bold mb-0 d-block">{{user?.tripsData?.completedTripsAmount}}</h5>
+                            <small
+                                    class="text-muted" i18n=@@profile.completed><i
+                                    class="fa fa-check mr-1"></i>Completed</small>
                         </li>
                         <li class="list-inline-item" style="margin-left: 10px">
                         <li class="list-inline-item">
-                            <h5 *ngIf="user?.rating" class="font-weight-bold mb-0 d-block">{{user?.rating |  number: '0.1-1'}}</h5>
+                            <h5 *ngIf="user?.rating"
+                                class="font-weight-bold mb-0 d-block">{{user?.rating |  number: '0.1-1'}}</h5>
                             <h5 *ngIf="!user?.rating" class="font-weight-bold mb-0 d-block">-</h5><small
                                 class="text-muted"
                                 i18n=@@profile.rate><i
@@ -54,7 +56,8 @@
                 </div>
                 <div class="px-4 py-3">
                     <h5 class="mb-0" i18n=@@profile.aboutMe style="padding-bottom: 20px;">About Me</h5>
-                    <alert *ngIf="isProfileOwner && !user?.biography || user?.biography?.length === 0" [dismissible]="true"
+                    <alert *ngIf="isProfileOwner && !user?.biography || user?.biography?.length === 0"
+                           [dismissible]="true"
                            style="margin-top: 10px;" [type]="'primary'" i18n=@@profile.editProfileAlert>Edit your
                         profile to
                         add a biography!

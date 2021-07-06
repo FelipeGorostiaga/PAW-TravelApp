@@ -14,8 +14,12 @@
             <div class="row">
                 <div class="col">
                     <div class="text-center">
-                        <alert *ngIf="trips?.length === 0 || invalidInput" [type]="'warning'" [dismissible]="false" i18n=@@search-result.noTrips>No trips where found with selected specifications</alert>
-                        <alert *ngIf="serverError" [type]="'danger'" [dismissible]="false" i18n=@@search-result.serverError>Unexpected error occurred, please try again</alert>
+                        <alert *ngIf="trips?.length === 0 || invalidInput" [type]="'warning'" [dismissible]="false"
+                               i18n=@@search-result.noTrips>No trips where found with selected specifications
+                        </alert>
+                        <alert *ngIf="serverError" [type]="'danger'" [dismissible]="false"
+                               i18n=@@search-result.serverError>Unexpected error occurred, please try again
+                        </alert>
                     </div>
                 </div>
             </div>

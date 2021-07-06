@@ -23,5 +23,4 @@ describe('UserTripsComponent', () => {
         expect(component).toBeTruthy();
     });
 
-
 });

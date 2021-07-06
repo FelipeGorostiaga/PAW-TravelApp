@@ -125,26 +125,26 @@ export class AdvancedSearchComponent implements OnInit {
         this.router.navigate(["/404"]);
     }
 
-/*    addParamsToURL() {
-        let queryParams = {
-            page: this.currentPage
-        };
-        if (!!this.nameInput) {
-            queryParams["name"] = this.nameInput;
-        }
-        if (!!this.placeInput) {
-            queryParams["place"] = this.placeInput;
-        }
-        if (!!this.startDate) {
-            queryParams["startDate"] = this.dateUtil.convertToDateString(this.startDate);
-        }
-        if (!!this.endDate) {
-            queryParams["endDate"] = this.dateUtil.convertToDateString(this.endDate);
-        }
-        this.router.navigate(['/advanced-search'], {
-            queryParams: queryParams,
-            queryParamsHandling: 'merge',
-        });
-    }*/
+    /*    addParamsToURL() {
+            let queryParams = {
+                page: this.currentPage
+            };
+            if (!!this.nameInput) {
+                queryParams["name"] = this.nameInput;
+            }
+            if (!!this.placeInput) {
+                queryParams["place"] = this.placeInput;
+            }
+            if (!!this.startDate) {
+                queryParams["startDate"] = this.dateUtil.convertToDateString(this.startDate);
+            }
+            if (!!this.endDate) {
+                queryParams["endDate"] = this.dateUtil.convertToDateString(this.endDate);
+            }
+            this.router.navigate(['/advanced-search'], {
+                queryParams: queryParams,
+                queryParamsHandling: 'merge',
+            });
+        }*/
 
 }

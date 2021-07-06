@@ -41,7 +41,7 @@ export class ApiUserService {
     }
 
     // rates the user received
-    getUserRates(url: string): Observable<Rate[]>  {
+    getUserRates(url: string): Observable<Rate[]> {
         return this.http.get<Rate[]>(url);
     }
 

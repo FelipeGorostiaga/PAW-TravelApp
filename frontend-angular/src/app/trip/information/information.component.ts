@@ -11,10 +11,8 @@ import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DomSanitizer} from "@angular/platform-browser";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
-import {TripRole} from "../../model/TripMember";
 import {DateUtilService} from "../../services/date-util.service";
 import {BsDatepickerConfig} from "ngx-bootstrap/datepicker";
-import {TripInvitation} from "../../model/forms/TripInvitation";
 
 declare var require: any;
 

@@ -3,20 +3,21 @@ import {Rate} from "../../../model/rate";
 import {DateUtilService} from "../../../services/date-util.service";
 
 @Component({
-  selector: 'app-rate-tile',
-  templateUrl: './rate-tile.component.html',
-  styleUrls: ['./rate-tile.component.scss']
+    selector: 'app-rate-tile',
+    templateUrl: './rate-tile.component.html',
+    styleUrls: ['./rate-tile.component.scss']
 })
 export class RateTileComponent implements OnInit {
 
-  @Input() rate: Rate;
+    @Input() rate: Rate;
 
-  createdOn: Date;
+    createdOn: Date;
 
-  constructor(private dateUtil: DateUtilService) { }
+    constructor(private dateUtil: DateUtilService) {
+    }
 
-  ngOnInit(): void {
-    this.createdOn = this.dateUtil.stringToDate(this.rate.createdOn);
-  }
+    ngOnInit(): void {
+        this.createdOn = this.dateUtil.stringToDate(this.rate.createdOn);
+    }
 
 }

@@ -8,7 +8,8 @@
                 <div class="form-row">
                     <div class="form-group col-12">
                         <label for="name-input" i18n=@@advanced-search.name>Name</label>
-                        <input class="form-control" type="text" name="nameInput" i18n-placeholder=@@advanced-search.placeholder placeholder="Trip name..."
+                        <input class="form-control" type="text" name="nameInput"
+                               i18n-placeholder=@@advanced-search.placeholder placeholder="Trip name..."
                                id="name-input"
                                autocomplete="off" [(ngModel)]="nameInput">
                     </div>
@@ -37,14 +38,20 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary" (click)="getPageTripsWithFilters(1)" i18n=@@advanced-search.searchButton>Search</button>
+                    <button class="btn btn-primary" (click)="getPageTripsWithFilters(1)"
+                            i18n=@@advanced-search.searchButton>Search
+                    </button>
                 </div>
             </form>
         </div>
         <div class="col-10">
             <div style="width: 1000px; margin-left: 20%; margin-right: 20%">
-                <alert *ngIf="trips?.length === 0" [type]="'warning'" class="text-center" i18n=@@advanced-search.noTripsMessage>No trips where found with selected specifications</alert>
-                <alert *ngIf="serverError" [type]="'danger'" class="text-center" i18n=@@advanced-search.errorMessage>Error getting trips, please try again later</alert>
+                <alert *ngIf="trips?.length === 0" [type]="'warning'" class="text-center"
+                       i18n=@@advanced-search.noTripsMessage>No trips where found with selected specifications
+                </alert>
+                <alert *ngIf="serverError" [type]="'danger'" class="text-center" i18n=@@advanced-search.errorMessage>
+                    Error getting trips, please try again later
+                </alert>
             </div>
             <div class="card-deck" *ngIf="trips?.length > 0" style="margin-left: 50px">
                 <div class="row justify-content-center">

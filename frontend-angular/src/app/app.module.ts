@@ -49,7 +49,7 @@ import {PendingRatesComponent} from './profile/pending-rates/pending-rates.compo
 import {InvitationsComponent} from './profile/invitations/invitations.component';
 import {RateFormTileComponent} from './profile/pending-rates/rate-form-tile/rate-form-tile.component';
 import {UserRatesComponent} from './user-rates/user-rates.component';
-import { MembersComponent } from './trip/members/members.component';
+import {MembersComponent} from './trip/members/members.component';
 
 
 @NgModule({

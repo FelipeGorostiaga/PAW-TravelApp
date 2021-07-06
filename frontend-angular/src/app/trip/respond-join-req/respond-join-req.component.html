@@ -16,11 +16,15 @@
                     </alert>
                 </div>
                 <div *ngIf="!error">
-                    <alert *ngIf="accepted" [type]="'success'" i18n=@@respond-join-req.accepted>User was successfully added to the trip.</alert>
-                    <alert *ngIf="!accepted" [type]="'info'" i18n=@@respond-join-req.denied>Join request was denied.</alert>
+                    <alert *ngIf="accepted" [type]="'success'" i18n=@@respond-join-req.accepted>User was successfully
+                        added to the trip.
+                    </alert>
+                    <alert *ngIf="!accepted" [type]="'info'" i18n=@@respond-join-req.denied>Join request was denied.
+                    </alert>
                 </div>
                 <div class="error-actions">
-                    <a [routerLink]="['/trip/' + tripId]" class="btn btn-primary btn-lg" i18n=@@respond-join-req.tripButton>Go to trip</a>
+                    <a [routerLink]="['/trip/' + tripId]" class="btn btn-primary btn-lg"
+                       i18n=@@respond-join-req.tripButton>Go to trip</a>
                 </div>
             </div>
         </div>
