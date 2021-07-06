@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.model.DateManipulation;
+import ar.edu.itba.paw.webapp.utils.DateManipulation;
 
 import java.time.LocalDate;
 
@@ -59,6 +59,6 @@ public class AdvancedSearchForm {
     public boolean validateDates() {
         LocalDate sDate = DateManipulation.stringToLocalDate(startDate);
         LocalDate eDate = DateManipulation.stringToLocalDate(endDate);
-        return  sDate.isBefore(eDate);
+        return sDate.isBefore(eDate);
     }
 }

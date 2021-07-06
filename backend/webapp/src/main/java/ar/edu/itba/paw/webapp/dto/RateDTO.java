@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.model.DateManipulation;
+import ar.edu.itba.paw.webapp.utils.DateManipulation;
 import ar.edu.itba.paw.model.UserRate;
 
 import java.net.URI;

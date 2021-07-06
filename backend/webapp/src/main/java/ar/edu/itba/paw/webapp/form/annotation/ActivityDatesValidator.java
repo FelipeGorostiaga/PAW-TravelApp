@@ -1,13 +1,12 @@
 package ar.edu.itba.paw.webapp.form.annotation;
 
-import ar.edu.itba.paw.model.DateManipulation;
+import ar.edu.itba.paw.webapp.utils.DateManipulation;
 import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
 import java.time.LocalDate;
 
 import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
@@ -32,7 +31,7 @@ public class ActivityDatesValidator implements ConstraintValidator<ValidDates, A
         context.buildConstraintViolationWithTemplate(errorMessage).addConstraintViolation();
         LocalDate sDate = DateManipulation.stringToLocalDate(form.getStartDate());
         LocalDate eDate = DateManipulation.stringToLocalDate(form.getEndDate());
-        if(sDate == null || eDate == null) {
+        if (sDate == null || eDate == null) {
             System.out.println("Couldn't parse dates, returning false...");
             return false;
         }

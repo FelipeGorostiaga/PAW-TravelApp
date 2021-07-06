@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "trip_comments")
-public class TripComment implements Comparable<TripComment>{
+public class TripComment implements Comparable<TripComment> {
 
     /* package */ TripComment() {
         // Just for Hibernate

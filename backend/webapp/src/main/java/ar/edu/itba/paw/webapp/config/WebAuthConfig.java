@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @Configuration
-@ComponentScan({"ar.edu.itba.paw.webapp.auth","ar.edu.itba.paw.webapp.filters"})
+@ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.filters"})
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -42,15 +42,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                        .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .antMatchers(HttpMethod.POST, "/api/users").anonymous()
-                        .antMatchers(HttpMethod.POST, "/api/authenticate").anonymous()
-                        .antMatchers(HttpMethod.GET, "/api/authenticate/verify").anonymous()
-                        .antMatchers(HttpMethod.GET, "/api/authenticate/refresh").anonymous()
-                        .and()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users").anonymous()
+                .antMatchers(HttpMethod.POST, "/api/authenticate").anonymous()
+                .antMatchers(HttpMethod.GET, "/api/authenticate/verify").anonymous()
+                .antMatchers(HttpMethod.GET, "/api/authenticate/refresh").anonymous()
+                .and()
                 .authorizeRequests()
-                        .anyRequest()
-                        .authenticated()
+                .anyRequest()
+                .authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
@@ -58,7 +58,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico","/icons/**","/webjars/**");
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico", "/icons/**", "/webjars/**");
     }
 
     @Bean
@@ -81,7 +81,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

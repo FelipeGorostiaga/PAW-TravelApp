@@ -18,11 +18,11 @@ import java.util.Optional;
 public class TripHibernateDao implements TripDao {
 
     /* *
-    *
-    *   Hibernate Pagination as stated here:
-    *   https://thorben-janssen.com/pagination-jpa-hibernate/#Pitfall_2_Pagination_With_JOIN_FETCH_and_EntityGraphs_Clauses
-    *
-    * */
+     *
+     *   Hibernate Pagination as stated in:
+     *   https://thorben-janssen.com/pagination-jpa-hibernate/#Pitfall_2_Pagination_With_JOIN_FETCH_and_EntityGraphs_Clauses
+     *
+     * */
 
     private static final int MAX_ROWS = 6;
     private static final int MAX_SEARCH_RESULTS = 3;
@@ -64,13 +64,6 @@ public class TripHibernateDao implements TripDao {
         TypedQuery<Trip> tripQuery = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.id in (:ids)", Trip.class);
         tripQuery.setParameter("ids", tripIds);
         return tripQuery.getResultList();
-    }
-
-    @Override
-    public int countByNameSearch(String name) {
-        final TypedQuery<Long> query = em.createQuery("SELECT count(*) FROM Trip as t WHERE lower(t.name) LIKE lower(:name) AND t.isPrivate = false", Long.class);
-        query.setParameter("name", "%" + name + "%");
-        return query.getSingleResult().intValue();
     }
 
     @Override
@@ -139,15 +132,6 @@ public class TripHibernateDao implements TripDao {
         TripInvitation invitation = new TripInvitation(trip, invitedUser, admin, token);
         em.persist(invitation);
         return invitation;
-    }
-
-    @Override
-    public Optional<TripPendingConfirmation> findTripConfirmationByUser(Trip trip, User user) {
-        final TypedQuery<TripPendingConfirmation> query = em.createQuery("From TripPendingConfirmation as tpc where tpc.trip.id = :tripId  and tpc.requestingUser.id = :userId", TripPendingConfirmation.class);
-        query.setParameter("tripId", trip.getId());
-        query.setParameter("userId", user.getId());
-        List<TripPendingConfirmation> resultList = query.getResultList();
-        return resultList.stream().findAny();
     }
 
     @Override
@@ -240,7 +224,7 @@ public class TripHibernateDao implements TripDao {
     public PaginatedResult<Trip> findWithFilters(Map<String, Object> filterMap, int page) {
 
         final TypedQuery<Long> idQuery = em.createQuery("SELECT distinct t.id FROM Trip as t, Place as p"
-                + filtersQuery(filterMap) +  "order by t.id", Long.class);
+                + filtersQuery(filterMap) + "order by t.id", Long.class);
 
         final TypedQuery<Long> queryCount = em.createQuery("select count(distinct t) From Trip as t, Place as p "
                 + filtersQuery(filterMap), Long.class);
@@ -344,9 +328,9 @@ public class TripHibernateDao implements TripDao {
         List<Trip> result = tripQuery.getResultList();
 
         // Count query
-        final TypedQuery<Long> queryCount = em.createQuery( "select count(distinct t) FROM Trip as t left join t.members as m" +
-                " left join m.user as u where u.id = :userId", Long.class );
-        queryCount.setParameter("userId", userId );
+        final TypedQuery<Long> queryCount = em.createQuery("select count(distinct t) FROM Trip as t left join t.members as m" +
+                " left join m.user as u where u.id = :userId", Long.class);
+        queryCount.setParameter("userId", userId);
         int total = queryCount.getSingleResult().intValue();
 
         return new PaginatedResult<>(result, total);
@@ -357,13 +341,6 @@ public class TripHibernateDao implements TripDao {
         final TypedQuery<TripMember> query = em.createQuery("FROM TripMember as tm where tm.trip.id = :tripId", TripMember.class);
         query.setParameter("tripId", tripId);
         return query.getResultList();
-    }
-
-    @Override
-    public Boolean hasImage(long tripId) {
-        final TypedQuery<TripPicture> query = em.createQuery("FROM TripPicture as tp WHERE tp.trip.id = :tripId", TripPicture.class);
-        query.setParameter("tripId", tripId);
-        return !query.getResultList().isEmpty();
     }
 
 }

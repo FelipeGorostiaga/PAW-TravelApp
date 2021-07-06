@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.form.annotation;
 
-import ar.edu.itba.paw.model.DateManipulation;
+import ar.edu.itba.paw.webapp.utils.DateManipulation;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 
 import javax.validation.ConstraintValidator;
@@ -18,7 +18,7 @@ public class BirthdayValidator implements ConstraintValidator<ValidBirthday, Use
     @Override
     public boolean isValid(UserCreateForm value, ConstraintValidatorContext context) {
         LocalDate birthday = DateManipulation.stringToLocalDate(value.getBirthday());
-        if(birthday == null) return false;
+        if (birthday == null) return false;
         context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
                 .addNode("birthday").addConstraintViolation().disableDefaultConstraintViolation();
         return birthday.isBefore(LocalDate.now());

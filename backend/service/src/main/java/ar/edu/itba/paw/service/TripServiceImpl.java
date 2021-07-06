@@ -74,10 +74,6 @@ public class TripServiceImpl implements TripService {
         return td.findByName(name, page);
     }
 
-    @Override
-    public int countByNameSearch(String name) {
-        return td.countByNameSearch(name);
-    }
 
     @Override
     public List<TripMember> getTripMembers(long tripId) {
@@ -189,7 +185,7 @@ public class TripServiceImpl implements TripService {
     public boolean createJoinRequest(Trip trip, User user) {
         String token;
         do {
-           token = RandomStringUtils.random(64, true, true);
+            token = RandomStringUtils.random(64, true, true);
         } while (findJoinRequestByToken(token).isPresent());
         TripPendingConfirmation pendingConfirmation = td.createPendingConfirmation(trip, user, token);
         mailService.sendJoinRequestMail(trip, user, token);
@@ -213,12 +209,6 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public Boolean hasImage(long tripId) {
-        return td.hasImage(tripId);
-    }
-
-
-    @Override
     public Optional<TripPendingConfirmation> findJoinRequestByToken(String token) {
         return td.findJoinRequestByToken(token);
     }
@@ -229,12 +219,6 @@ public class TripServiceImpl implements TripService {
         TripInvitation invitation = td.createTripInvitation(trip, invitedUser, admin, token);
         mailService.sendTripInviteMail(trip, invitedUser, admin, token);
         return invitation;
-    }
-
-    @Override
-    public Boolean isWaitingJoinTripConfirmation(Trip trip, User user) {
-        Optional<TripPendingConfirmation> tripPendingConfirmationOptional = td.findTripConfirmationByUser(trip, user);
-        return tripPendingConfirmationOptional.isPresent();
     }
 
     @Override
@@ -290,12 +274,6 @@ public class TripServiceImpl implements TripService {
     @Override
     public boolean isMember(Trip trip, User user) {
         return trip.getMembers().stream().anyMatch(member -> member.getUser().equals(user));
-    }
-
-
-    @Override
-    public int countUserTrips(User user) {
-        return (int) user.getTrips().stream().map(TripMember::getTrip).distinct().count();
     }
 
     @Override

@@ -15,7 +15,8 @@ import java.util.Optional;
 
 public class ImageUtils {
 
-    private ImageUtils() {}
+    private ImageUtils() {
+    }
 
     private static final long MAX_UPLOAD_SIZE = 5242880;
 

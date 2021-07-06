@@ -36,8 +36,6 @@ public interface TripDao {
 
     TripInvitation createTripInvitation(Trip trip, User invitedUser, User admin, String token);
 
-    Optional<TripPendingConfirmation> findTripConfirmationByUser(Trip trip, User user);
-
     Optional<TripInvitation> findTripInvitationByToken(String token);
 
     void deleteTripInvitation(String token, Trip trip);
@@ -52,15 +50,11 @@ public interface TripDao {
 
     void markTripAsCompleted(long tripId);
 
-    Boolean hasImage(long tripId);
-
     void deleteTripMember(long userId, long tripId);
 
     void deleteAllTripMembers(long tripId);
 
     void deleteTripInvitations(long tripId);
-
-    int countByNameSearch(String name);
 
     void deleteTripPendingConfirmations(long id);
 

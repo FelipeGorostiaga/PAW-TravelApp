@@ -14,6 +14,8 @@ import java.lang.annotation.Target;
 public @interface UniqueUsername {
 
     String message() default "Email already in use!";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

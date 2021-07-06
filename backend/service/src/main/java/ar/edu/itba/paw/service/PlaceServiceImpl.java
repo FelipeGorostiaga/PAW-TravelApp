@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,7 +18,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Place create(String googleId, String name, double latitude, double longitude, String address) {
-        return pd.create(googleId,name,latitude,longitude,address);
+        return pd.create(googleId, name, latitude, longitude, address);
     }
 
     @Override

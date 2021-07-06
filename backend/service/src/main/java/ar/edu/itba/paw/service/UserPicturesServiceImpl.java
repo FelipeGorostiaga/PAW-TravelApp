@@ -30,8 +30,7 @@ public class UserPicturesServiceImpl implements UserPicturesService {
         try {
             byte[] resizedImage = resizeImageAsJPG(image, RESOLUTION);
             return upd.create(user, resizedImage);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             return upd.create(user, image);
         }
     }
@@ -64,7 +63,7 @@ public class UserPicturesServiceImpl implements UserPicturesService {
 
         ImageIO.write(bufferedResizedImage, "jpeg", encoderOutputStream);
 
-        return  encoderOutputStream.toByteArray();
+        return encoderOutputStream.toByteArray();
     }
 
 }

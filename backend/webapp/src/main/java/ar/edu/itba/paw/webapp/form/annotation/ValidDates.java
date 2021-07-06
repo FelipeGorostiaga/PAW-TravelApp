@@ -14,7 +14,9 @@ import java.lang.annotation.Target;
 public @interface ValidDates {
 
     String message() default "Invalid dates, start date must be before end date";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 
 }

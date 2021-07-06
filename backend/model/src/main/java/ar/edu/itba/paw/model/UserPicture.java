@@ -17,7 +17,7 @@ public class UserPicture {
     //////////////////////
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     ///////////////////////

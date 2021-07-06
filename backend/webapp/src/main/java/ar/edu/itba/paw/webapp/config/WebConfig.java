@@ -43,7 +43,7 @@ import static java.util.concurrent.TimeUnit.DAYS;
 import static org.springframework.http.CacheControl.maxAge;
 
 @EnableTransactionManagement
-@ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.service","ar.edu.itba.paw.webapp.utils"})
+@ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.persistence", "ar.edu.itba.paw.service", "ar.edu.itba.paw.webapp.utils"})
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 

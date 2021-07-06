@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.TripCommentsDao;
 import ar.edu.itba.paw.model.Trip;
 import ar.edu.itba.paw.model.TripComment;
-import ar.edu.itba.paw.model.TripMember;
 import ar.edu.itba.paw.model.User;
 import org.springframework.stereotype.Repository;
 
@@ -28,7 +27,7 @@ public class TripCommentHibernateDao implements TripCommentsDao {
 
     @Override
     public Optional<TripComment> findById(long id) {
-        return Optional.of(em.find(TripComment.class, id));
+        return Optional.ofNullable(em.find(TripComment.class, id));
     }
 
     @Override

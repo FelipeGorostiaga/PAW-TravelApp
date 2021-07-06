@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -95,8 +97,6 @@ public class UserServiceImpl implements UserService {
         ud.editBiography(user, biography);
     }
 
-
-    // rates that the user received
     @Override
     public List<UserRate> getUserRates(long userId) {
         return ud.getUserRates(userId);
@@ -107,17 +107,9 @@ public class UserServiceImpl implements UserService {
         return ud.getTripInvitations(userId);
     }
 
-    // rates that the user need to complete to other users
     @Override
     public List<UserRate> getUserPendingRates(long userId) {
         return ud.getUserPendingRates(userId);
     }
 
-    @Override
-    public double calculateRate(long userId) {
-        List<UserRate> rates = getUserRates(userId);
-        if (rates.isEmpty()) return 0;
-        int totalRating = rates.stream().map(UserRate::getRate).reduce(0, Integer::sum);
-        return totalRating / (double) rates.size();
-    }
 }

@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Retention(RUNTIME)
 @Constraint(validatedBy = BirthdayValidator.class)
-@Target({ TYPE, ANNOTATION_TYPE })
+@Target({TYPE, ANNOTATION_TYPE})
 public @interface ValidBirthday {
 
     String message() default "{ar.edu.itba.paw.webapp.form.annotation.ValidBirthday.message}";

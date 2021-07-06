@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.form.ActivityCreateForm;
 import ar.edu.itba.paw.webapp.form.TripCommentForm;
 import ar.edu.itba.paw.webapp.form.TripCreateForm;
 import ar.edu.itba.paw.webapp.form.TripInvitationForm;
+import ar.edu.itba.paw.webapp.utils.DateManipulation;
 import ar.edu.itba.paw.webapp.utils.ImageUtils;
 import ar.edu.itba.paw.webapp.utils.PaginationLinkFactory;
 import org.apache.commons.io.FileUtils;
@@ -74,7 +75,7 @@ public class TripController {
     @Path("/{id}")
     public Response getTrip(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
-
+        LOGGER.debug("Requesting trip with id {}", tripId);
         if (!tripOptional.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -92,6 +93,7 @@ public class TripController {
             errorDTOS.addAll(violations.stream().map(violation -> new ErrorDTO(violation.getMessage(), violation.getInvalidValue().toString())).collect(Collectors.toList()));
         }
         if (!tripCreateForm.validateDates()) {
+            LOGGER.debug("Invalid trip dates");
             errorDTOS.add(new ErrorDTO("Invalid dates, start date must be before end date", "dates"));
         }
         if (!errorDTOS.isEmpty())
@@ -106,7 +108,9 @@ public class TripController {
                     DateManipulation.stringToLocalDate(tripCreateForm.getStartDate()),
                     DateManipulation.stringToLocalDate(tripCreateForm.getEndDate()), tripCreateForm.isPrivate(),
                     tripCreateForm.getGooglePlaceId(), tripCreateForm.getPlaceInput());
+            LOGGER.debug("Trip created successfully");
         } catch (GooglePlacesException exception) {
+            LOGGER.debug("Error connecting to the GoogleMaps API");
             return Response.status(Response.Status.CONFLICT)
                     .entity(new ErrorDTO("There was an error connecting to the GoogleMaps API", "googleMaps"))
                     .build();
@@ -196,6 +200,7 @@ public class TripController {
     public Response getTripPlaces(@PathParam("id") final long tripId) {
         Optional<Trip> tripOptional = tripService.findById(tripId);
         if (tripOptional.isPresent()) {
+            LOGGER.debug("Requesting trip places for trip with id {}", tripId);
             List<PlaceDTO> places = tripService.findTripPlaces(tripOptional.get())
                     .stream()
                     .map(PlaceDTO::new)
@@ -215,6 +220,7 @@ public class TripController {
         if (tripOptional.isPresent()) {
 
             if (tripOptional.get().getStatus().equals(TripStatus.COMPLETED)) {
+                LOGGER.debug("Trying to delete completed trip with id {}", tripId);
                 return Response.status(Response.Status.NOT_ACCEPTABLE).build();
             }
 
@@ -242,6 +248,7 @@ public class TripController {
             tripService.removeUserFromTrip(loggedUser, trip);
             return Response.noContent().build();
         }
+        LOGGER.debug("User can't leave trip, is not a member of trip with id {}", tripId);
         return Response.status(Response.Status.BAD_REQUEST)
                 .entity(new ErrorDTO("User is not part of this trip", "invalid-user"))
                 .build();
@@ -252,7 +259,6 @@ public class TripController {
     @Produces(value = {"image/png", "image/jpeg"})
     public Response getTripImage(@PathParam("id") final long tripId) {
         final Optional<TripPicture> tripPictureOptional = tripPicturesService.findByTripId(tripId);
-
         if (!tripPictureOptional.isPresent()) {
             LOGGER.warn("Cannot render trip picture, trip picture for id {} not found", tripId);
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -263,14 +269,13 @@ public class TripController {
                     TRIP_IMAGE_WIDTH, TRIP_IMAGE_HEIGHT);
 
         } catch (IOException e) {
+            LOGGER.debug("Error resizing image for trip with id {}", tripId);
             return Response.serverError().build();
         }
-
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(50000);
         cacheControl.setPrivate(false);
         cacheControl.setMustRevalidate(true);
-
         return Response.ok(resizedImage).cacheControl(cacheControl).build();
     }
 
@@ -290,6 +295,7 @@ public class TripController {
                     TRIP_CARD_IMAGE_WIDTH, TRIP_CARD_IMAGE_HEIGHT);
 
         } catch (IOException e) {
+            LOGGER.debug("Error resizing image for trip with id {}", tripId);
             return Response.serverError().build();
         }
 
@@ -309,11 +315,12 @@ public class TripController {
         if (!tripOptional.isPresent()) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-
         Trip t = tripOptional.get();
         if (!tripService.isMember(t, loggedUser)) {
+            LOGGER.debug("Forbidden request: user needs to be a member to view comments");
             return Response.status(Response.Status.FORBIDDEN).build();
         }
+        LOGGER.debug("Requesting comments for trip with id {}", tripId);
         Set<TripCommentDTO> comments = tripService.getTripComments(tripId)
                 .stream()
                 .distinct()
@@ -335,6 +342,7 @@ public class TripController {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         if (tripOptional.get().isPrivate() && !tripService.isMember(tripOptional.get(), loggedUser)) {
+            LOGGER.debug("Requesting comments for trip with id {}", tripId);
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         Set<TripMemberDTO> members = tripService.getTripMembers(tripId)
@@ -652,18 +660,6 @@ public class TripController {
             return Response.noContent().build();
         }
         return Response.status(Response.Status.FORBIDDEN).build();
-    }
-
-    @GET
-    @Path("/{id}/hasImage")
-    @Produces({MediaType.TEXT_PLAIN})
-    public Response hasTripImage(@PathParam("id") final long tripId) {
-        Optional<Trip> tripOptional = tripService.findById(tripId);
-
-        if (!tripOptional.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(tripService.hasImage(tripId)).build();
     }
 
     @GET

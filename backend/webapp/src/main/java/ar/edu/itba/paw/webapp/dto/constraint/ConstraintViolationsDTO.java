@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.dto.constraint;
 
 import javax.validation.ConstraintViolation;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class ConstraintViolationsDTO {
 
@@ -12,14 +14,14 @@ public class ConstraintViolationsDTO {
     }
 
     public <T> ConstraintViolationsDTO(Set<ConstraintViolation<T>> violations) {
-        if(!violations.isEmpty()) {
+        if (!violations.isEmpty()) {
             add(violations);
         }
     }
 
     public <T> void add(Set<ConstraintViolation<T>> violations) {
-        if(violations != null) {
-            for(ConstraintViolation<T> violation : violations) {
+        if (violations != null) {
+            for (ConstraintViolation<T> violation : violations) {
                 errors.add(new ConstraintViolationDTO(violation.getMessage(), violation.getPropertyPath().toString()));
             }
         }

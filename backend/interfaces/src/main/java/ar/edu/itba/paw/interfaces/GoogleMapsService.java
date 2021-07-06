@@ -11,7 +11,4 @@ public interface GoogleMapsService {
 
     ar.edu.itba.paw.model.Place createGooglePlaceReference(List<se.walkercrou.places.Place> googlePlaces, String placeInput,
                                                            double latitude, double longitude) throws GooglePlacesException;
-
-    Place findGooglePlaceById(String googlePlaceId);
-
 }

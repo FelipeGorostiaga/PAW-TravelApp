@@ -16,7 +16,7 @@ public class TripPicture {
     private byte[] picture;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="trip_id")
+    @JoinColumn(name = "trip_id")
     private Trip trip;
 
     public TripPicture(long id, byte[] picture, Trip trip) {

@@ -13,7 +13,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Retention(RUNTIME)
 @Constraint(validatedBy = FieldMatchValidator.class)
-@Target({ TYPE, ANNOTATION_TYPE })
+@Target({TYPE, ANNOTATION_TYPE})
 public @interface FieldMatch {
     String message() default "{ar.edu.itba.paw.webapp.form.annotation.FieldMatch.message}";
 
@@ -21,22 +21,22 @@ public @interface FieldMatch {
 
     Class<? extends Payload>[] payload() default {};
 
-        /**
-         * @return The first field
-         */
+    /**
+     * @return The first field
+     */
     String first();
 
-        /**
-         * @return The second field
-         */
+    /**
+     * @return The second field
+     */
     String second();
 
-        /**
-         * Defines several <code>@FieldMatch</code> annotations on the same element
-         *
-         * @see FieldMatch
-         */
-    @Target({ TYPE, ANNOTATION_TYPE })
+    /**
+     * Defines several <code>@FieldMatch</code> annotations on the same element
+     *
+     * @see FieldMatch
+     */
+    @Target({TYPE, ANNOTATION_TYPE})
     @Retention(RUNTIME)
     @Documented
     @interface List {

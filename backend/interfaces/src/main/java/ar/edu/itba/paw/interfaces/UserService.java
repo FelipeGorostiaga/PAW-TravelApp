@@ -37,5 +37,4 @@ public interface UserService {
 
     List<UserRate> getUserPendingRates(long userId);
 
-    double calculateRate(long userId);
 }

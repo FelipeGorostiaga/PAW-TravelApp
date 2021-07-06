@@ -14,6 +14,8 @@ import java.lang.annotation.Target;
 public @interface ValidTripItinerary {
 
     String message() default "Invalid dates, inconsistent with the trip itinerary";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

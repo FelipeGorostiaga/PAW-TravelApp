@@ -20,7 +20,7 @@ public interface UserDao {
     User create(final String firstname, final String lastname, final String email, final String password,
                 LocalDate birthday, final String nationality, final String sex, final String verificationCode);
 
-    void verify(User u);
+    void verify(User user);
 
     List<User> findByName(String name);
 
@@ -32,5 +32,5 @@ public interface UserDao {
 
     List<UserRate> getUserPendingRates(long userId);
 
-    boolean hasTripInvitation(Trip trip, User u);
+    boolean hasTripInvitation(Trip trip, User user);
 }

@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -40,9 +39,9 @@ public class MailingServiceImpl implements MailingService {
     private static final String EMAIL_PASS = "power123321";
     private static final Locale locale = getLocale();
 
-    //private static final String frontEndURL = "http://pawserver.it.itba.edu.ar/paw-2019a-4/#";
+    private static final String frontEndURL = "http://pawserver.it.itba.edu.ar/paw-2019a-4/#";
 
-    private static final String frontEndURL = "http://localhost:4200/#";
+    //private static final String frontEndURL = "http://localhost:4200/#";
 
     @Autowired
     private ApplicationContext applicationContext;

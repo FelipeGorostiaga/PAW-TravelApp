@@ -1,24 +1,11 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.model.DateManipulation;
+import ar.edu.itba.paw.webapp.utils.DateManipulation;
 import ar.edu.itba.paw.model.Trip;
-import ar.edu.itba.paw.model.TripPicture;
 import ar.edu.itba.paw.model.TripStatus;
-import ar.edu.itba.paw.webapp.utils.ImageUtils;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class TripDTO {
 

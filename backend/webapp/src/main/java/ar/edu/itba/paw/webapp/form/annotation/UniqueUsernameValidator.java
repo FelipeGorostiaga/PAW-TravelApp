@@ -8,7 +8,6 @@ import org.springframework.context.ApplicationContext;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
 import java.util.Optional;
 
 import static org.springframework.context.i18n.LocaleContextHolder.getLocale;

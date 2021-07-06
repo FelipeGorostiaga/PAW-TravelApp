@@ -28,11 +28,6 @@ public class GoogleMapsServiceImpl implements GoogleMapsService {
     }
 
     @Override
-    public Place findGooglePlaceById(String googlePlaceId) {
-        return this.googleClient.getPlaceById(googlePlaceId);
-    }
-
-    @Override
     public ar.edu.itba.paw.model.Place createGooglePlaceReference(List<Place> googlePlaces, String address, double latitude, double longitude) throws GooglePlacesException {
         if (googlePlaces != null && !googlePlaces.isEmpty()) {
             se.walkercrou.places.Place googlePlace = googlePlaces.get(0);

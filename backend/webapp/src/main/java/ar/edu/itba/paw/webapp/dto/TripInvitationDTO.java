@@ -22,7 +22,7 @@ public class TripInvitationDTO {
 
     }
 
-    public TripInvitationDTO(TripInvitation invitation,  final URI baseUri) {
+    public TripInvitationDTO(TripInvitation invitation, final URI baseUri) {
         this.inviter = new UserDTO(invitation.getInviter(), baseUri);
         this.invitee = new UserDTO(invitation.getInvitee(), baseUri);
         this.token = invitation.getToken();

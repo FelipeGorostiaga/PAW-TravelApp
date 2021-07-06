@@ -10,6 +10,7 @@ import ar.edu.itba.paw.webapp.auth.SecurityUserService;
 import ar.edu.itba.paw.webapp.dto.*;
 import ar.edu.itba.paw.webapp.form.UserCreateForm;
 import ar.edu.itba.paw.webapp.form.UserRateForm;
+import ar.edu.itba.paw.webapp.utils.DateManipulation;
 import ar.edu.itba.paw.webapp.utils.ImageUtils;
 import ar.edu.itba.paw.webapp.utils.PaginationLinkFactory;
 import org.apache.commons.io.FileUtils;
@@ -88,6 +89,7 @@ public class UserController {
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorDTO("Email already in use", "email")).build();
         }
+        LOGGER.debug("Created user with id {}", user.getId());
         return Response.ok(new UserDTO(user, uriContext.getBaseUri())).build();
     }
 
@@ -96,8 +98,10 @@ public class UserController {
     public Response getUser(@PathParam("id") final int id) {
         final Optional<User> userOptional = userService.findById(id);
         if (userOptional.isPresent()) {
+            LOGGER.debug("Requesting user with id {}", id);
             return Response.ok(new UserDTO(userOptional.get(), uriContext.getBaseUri())).build();
         } else {
+            LOGGER.debug("User with id {} not found", id);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
@@ -110,6 +114,7 @@ public class UserController {
         if (!pictureOpt.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+        LOGGER.debug("Requesting image for user with id {}", id);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(50000);
         cacheControl.setPrivate(false);
@@ -126,6 +131,7 @@ public class UserController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         User user = userOptional.get();
+        LOGGER.debug("Requesting user trips for user with id {}", id);
         PaginatedResult<Trip> paginatedResult = tripService.getUserTrips(user, page);
         final int maxPage = (int) (Math.ceil((float) paginatedResult.getTotalTrips() / PAGE_SIZE));
         if (maxPage != 0 && page > maxPage) {
@@ -151,6 +157,7 @@ public class UserController {
         User loggedUser = securityUserService.getLoggedUser();
 
         if (id != loggedUser.getId()) {
+            LOGGER.debug("Forbidden request: edit profile of another user");
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
@@ -162,6 +169,7 @@ public class UserController {
             try {
                 imageBytes = FileUtils.readFileToByteArray(imageFile);
             } catch (IOException e) {
+                LOGGER.debug("Error reading image file bytes");
                 return Response.serverError().build();
             }
             if (!ImageUtils.validateImage(fileMetaData, imageBytes.length)) {
@@ -173,12 +181,14 @@ public class UserController {
             try {
                 resizedImage = ImageUtils.resizeToProfileSize(imageBytes, PROFILE_WIDTH, PROFILE_HEIGHT);
             } catch (IOException e) {
+                LOGGER.debug("Error resizing user image");
                 return Response.serverError().build();
             }
             userService.changeProfilePicture(loggedUser, resizedImage);
             imageFile.delete();
         }
         if (biography != null) {
+            LOGGER.debug("User profile with id {} was edited", id);
             userService.editBiography(loggedUser, biography.getValue());
         }
         return Response.ok().build();
@@ -188,11 +198,10 @@ public class UserController {
     @Path("/{id}/rates")
     public Response getUserRates(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
-
         if (!userOptional.isPresent()) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-
+        LOGGER.debug("Requesting rates for user with id {}", userId);
         List<RateDTO> rateDTOs = userService.getUserRates(userId)
                 .stream()
                 .map(userRate -> new RateDTO(userRate, uriContext.getBaseUri()))
@@ -214,20 +223,21 @@ public class UserController {
             }).build();
         }
         Optional<UserRate> rateOptional = userRatesService.findById(form.getRateId());
-
         if (!rateOptional.isPresent()) {
+            LOGGER.debug("Invalid rate id {}", form.getRateId());
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         UserRate rate = rateOptional.get();
 
         if (!rate.getRatedByUser().equals(loggedUser)) {
+            LOGGER.debug("Forbidden request: only logged user can rate");
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         if (rate.getTrip().getStatus() != TripStatus.COMPLETED) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
-
         if (userRatesService.rateUser(rate.getId(), form.getRate(), form.getComment())) {
+            LOGGER.debug("Rate with id {} created", rate.getId());
             return Response.noContent().build();
         }
         return Response.serverError().build();
@@ -239,8 +249,10 @@ public class UserController {
     public Response getUserTripsData(@PathParam("id") final long userId) {
         Optional<User> userOptional = userService.findById(userId);
         if (!userOptional.isPresent()) {
+            LOGGER.debug("Trips data: User with id {} not found", userId);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+        LOGGER.debug("Requesting trip data for user with id {}", userId);
         int dueTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.DUE);
         int activeTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.IN_PROGRESS);
         int completedTrips = this.tripService.countUserTripsWithStatus(userId, TripStatus.COMPLETED);
@@ -256,6 +268,7 @@ public class UserController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         if (!userOptional.get().equals(securityUserService.getLoggedUser())) {
+            LOGGER.debug("Forbidden request: requesting invitations of another user");
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
@@ -281,7 +294,7 @@ public class UserController {
         if (!userOptional.get().equals(loggedUser)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-
+        LOGGER.debug("Requesting pending rates for user with id {}", userId);
         List<RateDTO> rates = userService.getUserPendingRates(userId)
                 .stream()
                 .map(userRate -> new RateDTO(userRate, uriContext.getBaseUri()))

@@ -13,6 +13,4 @@ public interface UserRatesDao {
     boolean rateUser(long rateId, int rate, String comment);
 
     Optional<UserRate> findById(long rateId);
-
-    Optional<UserRate> findUserRate(Trip trip, User ratedUser, User ratedBy);
 }
