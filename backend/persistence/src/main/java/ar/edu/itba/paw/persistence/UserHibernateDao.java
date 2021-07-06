@@ -60,7 +60,7 @@ public class UserHibernateDao implements UserDao {
 
     @Override
     public List<TripInvitation> getTripInvitations(long userId) {
-        final TypedQuery<TripInvitation> query = em.createQuery("FROM TripInvitation AS ti WHERE ti.invitee.id = :userId", TripInvitation.class);
+        final TypedQuery<TripInvitation> query = em.createQuery("FROM TripInvitation AS ti WHERE ti.invitee.id = :userId AND ti.trip.status <> 'COMPLETED'", TripInvitation.class);
         query.setParameter("userId", userId);
         return query.getResultList();
     }
