@@ -40,7 +40,6 @@ export class NavigationComponent implements OnInit {
                 }
             );
         }
-
     }
 
     search() {

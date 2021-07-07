@@ -1,6 +1,5 @@
 <div class="card m-5">
-    <p class="card-header" style="font-size: 1.1em"><a
-            routerLink="/profile/{{rate?.ratedUser?.id}}">{{rate?.ratedUser?.firstname}} {{rate?.ratedUser?.lastname}}</a>
+    <p class="card-header" style="font-size: 1.1em"><span>{{rate?.ratedUser?.firstname}} {{rate?.ratedUser?.lastname}}</span>
         - <a routerLink="/trip/{{rate?.trip?.id}}">{{rate?.trip.name}}</a></p>
     <div class="card-body">
         <rating [max]="5" [(ngModel)]="rating" [customTemplate]="tt"></rating>
@@ -29,7 +28,6 @@
             </div>
         </div>
     </div>
-
     <div class="card-footer text-center">
         <button class="btn btn-primary" (click)="submitRate()" i18n=@@rate-form.submitButton>Submit</button>
     </div>

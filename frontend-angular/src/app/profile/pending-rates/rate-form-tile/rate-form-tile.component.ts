@@ -13,7 +13,6 @@ export class RateFormTileComponent implements OnInit {
     @Input() rate: Rate;
 
     rating: number = 0;
-    comment: string = "";
     userRating: number;
 
     errorMessage = "";
@@ -44,7 +43,7 @@ export class RateFormTileComponent implements OnInit {
         this.rateSubmitEvent.emit({
             id: this.rate.id,
             rating: this.rating,
-            comment: this.comment,
+            comment: this.rateForm.controls['review'].value,
             rate: this.rate
         });
     }

@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class TestTripService {
 
     @InjectMocks
-    TripServiceImpl tripService;
+    private TripServiceImpl tripService;
 
     @Mock
     private TripHibernateDao tripDao;

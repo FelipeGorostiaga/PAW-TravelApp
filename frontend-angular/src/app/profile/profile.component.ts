@@ -56,9 +56,6 @@ export class ProfileComponent implements OnInit {
                 private formBuilder: FormBuilder,
                 private modalService: BsModalService,
                 private sanitizer: DomSanitizer) {
-        this.router.routeReuseStrategy.shouldReuseRoute = function() {
-            return false;
-        };
     }
 
     ngOnInit() {
