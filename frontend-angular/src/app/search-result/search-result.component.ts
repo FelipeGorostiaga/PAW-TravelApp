@@ -12,12 +12,9 @@ import {ApiSearchService} from "../services/api-search.service";
 export class SearchResultComponent implements OnInit {
 
     nameInput: string;
-
     trips: Trip[];
-
     serverError: boolean;
     invalidInput: boolean;
-
     currentPage: number;
     numberOfPages: number;
     totalTrips: number;
@@ -29,16 +26,18 @@ export class SearchResultComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.currentPage = this.route.snapshot.queryParams['page'] || 1;
-        this.nameInput = this.route.snapshot.queryParams['name'];
-        if (!this.nameInput) {
-            this.invalidInput = true;
-        }
-        if (Number(this.currentPage)) {
-            this.getPageTrips(this.currentPage);
-        } else {
-            this.navigateNotFound();
-        }
+        this.route.queryParams.subscribe(params => {
+            this.currentPage = params['page'] || 1;
+            this.nameInput = params['name'];
+            if (!this.nameInput) {
+                this.invalidInput = true;
+            }
+            if (Number(this.currentPage)) {
+                this.getPageTrips(this.currentPage);
+            } else {
+                this.navigateNotFound();
+            }
+        });
     }
 
     updatePage(newPage) {
@@ -48,7 +47,6 @@ export class SearchResultComponent implements OnInit {
         this.currentPage = newPage;
         this.getPageTrips(newPage);
     }
-
 
     getPageTrips(page: number) {
         this.spinner.show();

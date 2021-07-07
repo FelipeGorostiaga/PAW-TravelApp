@@ -37,31 +37,32 @@ export class TripComponent implements OnInit {
     ngOnInit() {
         this.spinner.show();
         this.selectedIndex = 0;
-        this.tripId = Number(this.route.snapshot.paramMap.get("id"));
         this.loggedUser = this.authService.getLoggedUser();
-        this.ts.getTrip(this.tripId).subscribe(
-            data => {
-                this.trip = data;
-                this.ts.getTripMembers(this.trip.membersURL).subscribe(
-                    res => {
-                        this.trip.members = res;
-                        let members = this.trip.members;
-                        this.isAdmin = !!members.find(member => (member.role === TripRole.CREATOR || member.role === TripRole.ADMIN) &&
-                            member.user.id === this.loggedUser.id);
-                        this.isMember = !!(this.isAdmin || members.find(member => member.user.id === this.loggedUser.id));
-                        this.isCreator = !!members.find(member => (member.role === TripRole.CREATOR && member.user.id === this.loggedUser.id));
-                        this.completed = this.trip.status === TripStatus.COMPLETED;
-                        this.spinner.hide();
-                        this.loading = false;
-                    }
-                );
-            },
-            () => {
-                this.loading = false;
-                this.spinner.hide();
-            });
+        this.route.params.subscribe(params => {
+            this.tripId = params['id'];
+            this.ts.getTrip(this.tripId).subscribe(
+                data => {
+                    this.trip = data;
+                    this.ts.getTripMembers(this.trip.membersURL).subscribe(
+                        res => {
+                            this.trip.members = res;
+                            let members = this.trip.members;
+                            this.isAdmin = !!members.find(member => (member.role === TripRole.CREATOR || member.role === TripRole.ADMIN) &&
+                                member.user.id === this.loggedUser.id);
+                            this.isMember = !!(this.isAdmin || members.find(member => member.user.id === this.loggedUser.id));
+                            this.isCreator = !!members.find(member => (member.role === TripRole.CREATOR && member.user.id === this.loggedUser.id));
+                            this.completed = this.trip.status === TripStatus.COMPLETED;
+                            this.spinner.hide();
+                            this.loading = false;
+                        }
+                    );
+                },
+                () => {
+                    this.loading = false;
+                    this.spinner.hide();
+                });
+        });
     }
-
 
     switchTab(index: number) {
         this.selectedIndex = index;

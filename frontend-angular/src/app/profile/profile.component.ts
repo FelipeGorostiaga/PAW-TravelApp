@@ -22,23 +22,16 @@ export class ProfileComponent implements OnInit {
     isProfileOwner: boolean;
     modalRef: BsModalRef;
     loading: boolean;
-
     selectedIndex: number;
-
     bioInput;
-
     editProfileForm: FormGroup;
-
     hasRates: boolean;
-
     loadingImage: boolean;
     profilePicture;
     hasImage: boolean;
-
     ratesError: boolean;
-
     submitted: boolean;
-
+    profileId: number;
     imageError: string;
     selectedFile: File;
     invalidFileExtension: boolean;
@@ -59,91 +52,93 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit() {
-        const idx = this.route.snapshot.paramMap.get('index');
-        this.selectedIndex = +idx || 0;
-        this.spinner.show();
-        this.loading = true;
-        this.ratesError = false;
-        this.loadingImage = true;
-
-        const profileId = Number(this.route.snapshot.paramMap.get("id"));
-        if (!profileId) {
-            this.spinner.hide();
-            this.navigateNotFound();
-        }
-
-        this.userService.getUser(profileId).subscribe(
-            data => {
-                this.user = data;
-                this.isProfileOwner = this.authService.getLoggedUser().id === this.user.id;
-
-                this.editProfileForm = this.formBuilder.group({
-                    biography: [this.user.biography, Validators.maxLength(500)]
-                });
-
-                if (this.user.imageURL) {
-                    this.userService.getUserPicture(this.user.imageURL).subscribe(
-                        data => {
-                            this.hasImage = true;
-                            const reader = new FileReader();
-                            reader.onload = (e) => {
-                                // @ts-ignore
-                                this.profilePicture = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
-                                this.loadingImage = false;
-                                this.spinner.hide();
-                            };
-                            reader.readAsDataURL(new Blob([data]));
-                            this.hasImage = true;
-                        },
-
-                        () => {
-                            this.loadingImage = false;
-                            this.hasImage = false;
-                        }
-                    );
-                } else {
-                    this.loadingImage = false;
-                    this.hasImage = false;
-                    this.spinner.hide();
-                }
-
-                // Profile owner --> rates, pending, tripsData
-                if (this.isProfileOwner) {
-                    const rates$ = this.userService.getUserRates(this.user.ratesURL);
-                    const pendingRates$ = this.userService.getUserPendingRates(this.user.pendingRatesURL);
-                    const tripsData$ = this.userService.getUserTripsData(this.user.tripsDataURL);
-                    forkJoin([rates$, pendingRates$, tripsData$]).subscribe(
-                        res => {
-                            this.user.rates = res[0];
-                            this.user.pendingRates = res[1];
-                            this.user.tripsData = res[2];
-                            this.calculateUserRate();
-                        },
-                        () => {
-                            this.ratesError = true;
-                        }
-                    );
-                } else {
-                    const rates$ = this.userService.getUserRates(this.user.ratesURL);
-                    const tripsData$ = this.userService.getUserTripsData(this.user.tripsDataURL);
-                    forkJoin([rates$, tripsData$]).subscribe(
-                        res => {
-                            this.user.rates = res[0];
-                            this.user.tripsData = res[1];
-                            this.calculateUserRate();
-                        },
-                        () => {
-                            this.ratesError = true;
-                        }
-                    );
-
-                }
-            },
-            () => {
+        this.route.params.subscribe(params => {
+            this.profileId = params['id'];
+            if (!this.profileId || !Number(this.profileId)) {
                 this.spinner.hide();
                 this.navigateNotFound();
             }
-        );
+            const idx = params['index'];
+            this.selectedIndex = +idx || 0;
+
+            this.spinner.show();
+            this.loading = true;
+            this.ratesError = false;
+            this.loadingImage = true;
+
+            this.userService.getUser(this.profileId).subscribe(
+                data => {
+                    this.user = data;
+                    this.isProfileOwner = this.authService.getLoggedUser().id === this.user.id;
+
+                    this.editProfileForm = this.formBuilder.group({
+                        biography: [this.user.biography, Validators.maxLength(500)]
+                    });
+
+                    if (this.user.imageURL) {
+                        this.userService.getUserPicture(this.user.imageURL).subscribe(
+                            data => {
+                                this.hasImage = true;
+                                const reader = new FileReader();
+                                reader.onload = (e) => {
+                                    // @ts-ignore
+                                    this.profilePicture = this.sanitizer.bypassSecurityTrustUrl(e.target.result);
+                                    this.loadingImage = false;
+                                    this.spinner.hide();
+                                };
+                                reader.readAsDataURL(new Blob([data]));
+                                this.hasImage = true;
+                            },
+
+                            () => {
+                                this.loadingImage = false;
+                                this.hasImage = false;
+                            }
+                        );
+                    } else {
+                        this.loadingImage = false;
+                        this.hasImage = false;
+                        this.spinner.hide();
+                    }
+
+                    if (this.isProfileOwner) {
+                        const rates$ = this.userService.getUserRates(this.user.ratesURL);
+                        const pendingRates$ = this.userService.getUserPendingRates(this.user.pendingRatesURL);
+                        const tripsData$ = this.userService.getUserTripsData(this.user.tripsDataURL);
+                        forkJoin([rates$, pendingRates$, tripsData$]).subscribe(
+                            res => {
+                                this.user.rates = res[0];
+                                this.user.pendingRates = res[1];
+                                this.user.tripsData = res[2];
+                                this.calculateUserRate();
+                            },
+                            () => {
+                                this.ratesError = true;
+                            }
+                        );
+                    } else {
+                        const rates$ = this.userService.getUserRates(this.user.ratesURL);
+                        const tripsData$ = this.userService.getUserTripsData(this.user.tripsDataURL);
+                        forkJoin([rates$, tripsData$]).subscribe(
+                            res => {
+                                this.user.rates = res[0];
+                                this.user.tripsData = res[1];
+                                this.calculateUserRate();
+                            },
+                            () => {
+                                this.ratesError = true;
+                            }
+                        );
+
+                    }
+                },
+                () => {
+                    this.spinner.hide();
+                    this.navigateNotFound();
+                }
+            );
+        });
+
     }
 
     switchTab(index: number) {

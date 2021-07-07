@@ -14,15 +14,11 @@ import {NgxSpinnerService} from "ngx-bootstrap-spinner";
 export class UserTripsComponent implements OnInit {
 
     trips: Trip[];
-
     loggedUser: User;
-
     loading = true;
-
     numberOfPages: number;
-    currentPage;
+    currentPage: number;
     totalTrips: number;
-
     serverError: boolean;
 
     constructor(private userService: ApiUserService, private authService: AuthService,
@@ -33,13 +29,14 @@ export class UserTripsComponent implements OnInit {
 
     ngOnInit(): void {
         this.loggedUser = this.authService.getLoggedUser();
-        this.currentPage = this.route.snapshot.queryParams['page'] || 1;
-
-        if (Number(this.currentPage)) {
-            this.getPageTrips(this.currentPage);
-        } else {
-            this.navigateNotFound();
-        }
+        this.route.queryParams.subscribe(params => {
+            this.currentPage = params['page'] || 1;
+            if (Number(this.currentPage)) {
+                this.getPageTrips(this.currentPage);
+            } else {
+                this.navigateNotFound();
+            }
+        });
 
         this.router.events.subscribe((val) => {
                 if (val instanceof RoutesRecognized) {

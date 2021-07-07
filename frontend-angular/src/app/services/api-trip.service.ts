@@ -32,7 +32,7 @@ export class ApiTripService {
     }
 
     editTrip(formData: FormData, id: number): Observable<any> {
-        return this.http.put(`${this.tripsBaseURL}/${id}/edit`, formData);
+        return this.http.put(`${this.tripsBaseURL}/${id}`, formData);
     }
 
     getTripsForPage(page: number): Observable<any> {

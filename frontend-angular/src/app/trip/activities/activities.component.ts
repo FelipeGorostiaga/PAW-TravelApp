@@ -209,7 +209,7 @@ export function InvalidInterval(sControl: string, eControl: string, activities: 
 }
 
 export function hasActivityConflict(activities: Activity[], startDate: Date, endDate: Date): boolean {
-    activities.forEach(
+    activities?.forEach(
         activity => {
             let asdate = activity.startDate;
             let sday = Number(asdate.slice(0, 2));

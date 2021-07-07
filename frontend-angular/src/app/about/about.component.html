@@ -2,7 +2,9 @@
 <div *ngIf="sent" class="container">
     <div class="row">
         <div class="col-12" style="margin-top: 80px;">
-            <alert [type]="'primary'" class="text-center" [dismissible]="true" (onClosed)="showForm()">Thank you for your message, we will reach you via email.</alert>
+            <alert [type]="'primary'" class="text-center" [dismissible]="true" (onClosed)="showForm()" i18n=@@about.alertSuccess>Thank you for
+                your message, we will reach you via email.
+            </alert>
         </div>
     </div>
 </div>
@@ -11,23 +13,26 @@
         <img src="{{globeImg}}" alt="earth-globe"/>
     </div>
     <form [formGroup]="form">
-        <h3 style="font-size: 2em">Contact Us</h3>
+        <h3 style="font-size: 2em" i18n=@@about.contact>Contact Us</h3>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
                     <textarea name="txtMsg" class="form-control"
                               formControlName="message"
+                              i18n-placeholder=@@about.placeholder
                               placeholder="Tell us what you think about Meet and Travel..."
                               [ngClass]="{ 'is-invalid': (f.message.touched || submitted) && f.message.errors }"
                               style="width: 100%; height: 150px; font-size: 1.1em; resize:none;"></textarea>
                 </div>
                 <div *ngIf="(f.message.touched || submitted) && f.message.errors" class="invalid-feedback">
-                    <p *ngIf="f.message.errors.required">Review is required</p>
-                    <p *ngIf="f.message.errors.maxlength">Max 400 characters</p>
-                    <p *ngIf="f.message.errors.minlength">Min 20 characters</p>
+                    <p *ngIf="f.message.errors.required"  i18n=@@about.required>Review is required</p>
+                    <p *ngIf="f.message.errors.maxlength" i18n=@@about.maxlength>Max 400 characters</p>
+                    <p *ngIf="f.message.errors.minlength" i18n=@@about.minlength>Min 20 characters</p>
                 </div>
                 <div class="form-group text-center">
-                    <button type="button" (click)="submit()" name="btnSubmit" class="btn btn-primary" style="width: 200px;">Send Message</button>
+                    <button type="button" (click)="submit()" name="btnSubmit" class="btn btn-primary"
+                            style="width: 200px;" i18n=@@about.send>Send Message
+                    </button>
                 </div>
             </div>
         </div>

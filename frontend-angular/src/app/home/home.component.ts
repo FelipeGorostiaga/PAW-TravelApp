@@ -15,7 +15,6 @@ export class HomeComponent implements OnInit {
     currentPage: number;
     numberOfPages: number;
     totalTrips: number;
-
     serverError: boolean;
 
     constructor(private ts: ApiTripService,
@@ -25,12 +24,11 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.currentPage = this.route.snapshot.queryParams['page'] || 1;
-        if (Number(this.currentPage)) {
+        this.route.queryParams.subscribe(params => {
+            this.currentPage = params['page'] || 1;
             this.getPageTrips(this.currentPage);
-        } else {
-            this.navigateNotFound();
-        }
+        });
+
         this.router.events.subscribe((val) => {
                 if (val instanceof RoutesRecognized) {
                     const url = val.state.url;

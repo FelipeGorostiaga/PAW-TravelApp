@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiUserService} from "../services/api-user.service";
 import {NgxSpinnerService} from "ngx-bootstrap-spinner";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {Rate} from "../model/rate";
 import {User} from '../model/user';
 
@@ -25,22 +25,24 @@ export class UserRatesComponent implements OnInit {
 
     ngOnInit(): void {
         this.spinner.show();
-        const userId = Number(this.route.snapshot.paramMap.get("id"));
-        this.userService.getUser(userId).subscribe(
-            data => {
-                this.user = data;
-                this.userService.getUserRates(this.user.ratesURL).subscribe(
-                    data => {
-                        this.rates = data;
-                        this.calculateUserRate();
-                        this.spinner.hide();
-                    }
-                );
-            },
-            () => {
-                this.error = true;
-            }
-        );
+        this.route.params.subscribe(params => {
+            const userId = params['id'];
+            this.userService.getUser(userId).subscribe(
+                data => {
+                    this.user = data;
+                    this.userService.getUserRates(this.user.ratesURL).subscribe(
+                        data => {
+                            this.rates = data;
+                            this.calculateUserRate();
+                            this.spinner.hide();
+                        }
+                    );
+                },
+                () => {
+                    this.error = true;
+                }
+            );
+        });
     }
 
     private calculateUserRate() {

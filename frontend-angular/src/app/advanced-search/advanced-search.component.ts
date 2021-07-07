@@ -13,24 +13,17 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class AdvancedSearchComponent implements OnInit {
 
-
     startDate: Date;
     endDate: Date;
     nameInput;
     placeInput;
-
     numberOfPages: number;
     totalTrips: number;
     currentPage: number;
-
     trips: Trip[];
-
     submitted: boolean;
-
     serverError: boolean;
-
     searched: boolean;
-
     bsConfig: Partial<BsDatepickerConfig> = Object.assign({}, {containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY'});
 
     constructor(private searchService: ApiSearchService,
@@ -41,47 +34,70 @@ export class AdvancedSearchComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.currentPage = this.route.snapshot.queryParams['page'] || 1;
-        if (!Number(this.currentPage)) {
-            this.navigateNotFound();
+        this.route.queryParams.subscribe(params => {
+            this.currentPage = params['page'] || 1;
+            this.nameInput = params['name'];
+            this.placeInput = params['place'];
+
+            const start = params['startDate'];
+            const end = params['endDate'];
+
+            if (start) {
+                this.startDate = this.stringToDate(start, 'dd/MM/yyyy', '/');
+            }
+            if (end) {
+                this.endDate = this.stringToDate(end, 'dd/MM/yyyy', '/');
+            }
+
+            const formData = this.getFormData();
+            this.searchTrips(formData, this.currentPage);
+        });
+    }
+
+    private removeSpecialCharacters() {
+        if (this.nameInput && this.nameInput.length > 0) {
+            if (AdvancedSearchComponent.containsSpecialCharacters(this.nameInput)) {
+                this.nameInput = null;
+            }
         }
-        this.getPageTripsWithFilters(this.currentPage);
+        if (!!this.placeInput && this.placeInput.length > 0) {
+            if (AdvancedSearchComponent.containsSpecialCharacters(this.placeInput)) {
+                this.placeInput = null;
+            }
+        }
+    }
+
+    private stringToDate(_date, _format, _delimiter): Date {
+        if (!_date) {
+            return null;
+        }
+        let formatLowerCase = _format.toLowerCase();
+        let formatItems = formatLowerCase.split(_delimiter);
+        let dateItems = _date.split(_delimiter);
+        let monthIndex = formatItems.indexOf("mm");
+        let dayIndex = formatItems.indexOf("dd");
+        let yearIndex = formatItems.indexOf("yyyy");
+        let month = parseInt(dateItems[monthIndex]);
+        month -= 1;
+        return new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
     }
 
     public getPageTripsWithFilters(page: number) {
         if (this.submitted) {
             return;
         }
-
-        if (!!this.nameInput) {
-            if (this.containsSpecialCharacters(this.nameInput)) {
-                this.nameInput = null;
-            }
-        }
-        if (!!this.placeInput) {
-            if (this.containsSpecialCharacters(this.placeInput)) {
-                this.placeInput = null;
-            }
-        }
+        this.removeSpecialCharacters();
+        //this.addQueryParams();
 
         this.spinner.show();
         this.submitted = true;
         this.serverError = false;
 
-        let formData = new FormData();
-        if (!!this.startDate) {
-            formData.append('startDate', this.dateUtil.convertToDateString(this.startDate));
-        }
-        if (!!this.endDate) {
-            formData.append('endDate', this.dateUtil.convertToDateString(this.endDate));
-        }
-        if (!!this.placeInput) {
-            formData.append('place', this.placeInput);
-        }
-        if (!!this.nameInput) {
-            formData.append('name', this.nameInput);
-        }
+        const formData = this.getFormData();
+        this.searchTrips(formData, page);
+    }
 
+    private searchTrips(formData: FormData, page) {
         this.searchService.advancedSearch(formData, page).subscribe(
             data => {
                 this.trips = data.trips;
@@ -90,7 +106,6 @@ export class AdvancedSearchComponent implements OnInit {
                 this.searched = true;
                 this.spinner.hide();
                 this.submitted = false;
-                //this.addParamsToURL();
             },
             error => {
                 switch (error.status) {
@@ -108,16 +123,38 @@ export class AdvancedSearchComponent implements OnInit {
         );
     }
 
+    private getFormData(): FormData {
+        let formData = new FormData();
+        if (this.startDate) {
+            formData.append('startDate', this.dateUtil.convertToDateString(this.startDate));
+        }
+        if (this.endDate) {
+            formData.append('endDate', this.dateUtil.convertToDateString(this.endDate));
+        }
+        if (this.placeInput) {
+            formData.append('place', this.placeInput);
+        }
+        if (this.nameInput) {
+            formData.append('name', this.nameInput);
+        }
+        return formData;
+    }
 
     public updatePage(newPage) {
         if (this.currentPage === newPage) {
             return;
         }
         this.currentPage = newPage;
-        this.getPageTripsWithFilters(newPage);
+
+        const formData = this.getFormData();
+        this.searchTrips(formData, newPage);
+/*        this.router.navigate(['/advanced-search'], {
+            queryParams: { page: newPage},
+            queryParamsHandling: 'merge'
+        });*/
     }
 
-    private containsSpecialCharacters(input: string): boolean {
+    private static containsSpecialCharacters(input: string): boolean {
         return input.includes('%') || input.includes('_');
     }
 
@@ -125,26 +162,25 @@ export class AdvancedSearchComponent implements OnInit {
         this.router.navigate(["/404"]);
     }
 
-    /*    addParamsToURL() {
-            let queryParams = {
-                page: this.currentPage
-            };
-            if (!!this.nameInput) {
-                queryParams["name"] = this.nameInput;
-            }
-            if (!!this.placeInput) {
-                queryParams["place"] = this.placeInput;
-            }
-            if (!!this.startDate) {
-                queryParams["startDate"] = this.dateUtil.convertToDateString(this.startDate);
-            }
-            if (!!this.endDate) {
-                queryParams["endDate"] = this.dateUtil.convertToDateString(this.endDate);
-            }
-            this.router.navigate(['/advanced-search'], {
-                queryParams: queryParams,
-                queryParamsHandling: 'merge',
-            });
-        }*/
+    private addQueryParams() {
+        let queryParams = {
+            page: this.currentPage
+        };
+        if (this.nameInput) {
+            queryParams['name'] = this.nameInput;
+        }
+        if (this.placeInput) {
+            queryParams['place'] = this.placeInput;
+        }
+        if (this.startDate) {
+            queryParams['startDate'] = this.dateUtil.convertToDateString(this.startDate);
+        }
+        if (this.endDate) {
+            queryParams['endDate'] = this.dateUtil.convertToDateString(this.endDate);
+        }
+        this.router.navigate(['/advanced-search'], {
+            queryParams: queryParams
+        });
+    }
 
 }
