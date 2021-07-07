@@ -2,6 +2,62 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en-US" datatype="plaintext" original="ng2.template">
         <body>
+            <trans-unit id="about.alertSuccess" datatype="html">
+                <source>Thank you for your message, we will reach you via email. </source>
+                <target>Gracias por su mensaje, nos comunicaremos con usted via email.</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/about/about.component.html</context>
+                    <context context-type="linenumber">5,7</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="about.contact" datatype="html">
+                <source>Contact Us</source>
+                <target>Contactanos</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/about/about.component.html</context>
+                    <context context-type="linenumber">16</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="about.placeholder" datatype="html">
+                <source>Tell us what you think about Meet and Travel...</source>
+                <target>Cuentanos que opinas sobre Meet and Travel...</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/about/about.component.html</context>
+                    <context context-type="linenumber">23</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="about.required" datatype="html">
+                <source>Review is required</source>
+                <target>Requerido</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/about/about.component.html</context>
+                    <context context-type="linenumber">28</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="about.maxlength" datatype="html">
+                <source>Max 400 characters</source>
+                <target>Max 400 caracteres</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/about/about.component.html</context>
+                    <context context-type="linenumber">29</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="about.minlength" datatype="html">
+                <source>Min 20 characters</source>
+                <target>Min 20 caracteres</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/about/about.component.html</context>
+                    <context context-type="linenumber">30</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="about.send" datatype="html">
+                <source>Send Message </source>
+                <target>Enviar mensaje</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/about/about.component.html</context>
+                    <context context-type="linenumber">34,35</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="about.title" datatype="html">
                 <source>Software Engineering Student @ Instituto Tecnologico de Buenos Aires</source>
                 <target>Ingeniería en Informática @ Instituto Tecnológico de Buenos Aires</target>

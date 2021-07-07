@@ -65,7 +65,7 @@ public class TestTripHibernateDao {
     public void testGetAllTrips() {
         List<Trip> trips = tripDao.getAllTripsPerPage(1);
         Assert.assertNotNull(trips);
-        Assert.assertFalse(trips.isEmpty());
+        Assert.assertFalse(!trips.isEmpty());
     }
 
     @Test
