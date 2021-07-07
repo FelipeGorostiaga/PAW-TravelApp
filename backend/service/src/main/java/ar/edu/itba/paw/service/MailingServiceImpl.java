@@ -32,7 +32,6 @@ import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 @Transactional
 public class MailingServiceImpl implements MailingService {
 
-
     private static final Integer PORT = 587;
     private static final String EMAIL_SERVER = "smtp.gmail.com";
     private static final String EMAIL_NAME = "meet.travel.paw@gmail.com";
@@ -40,8 +39,6 @@ public class MailingServiceImpl implements MailingService {
     private static final Locale locale = getLocale();
 
     private static final String frontEndURL = "http://pawserver.it.itba.edu.ar/paw-2019a-4/#";
-
-    //private static final String frontEndURL = "http://localhost:4200/#";
 
     @Autowired
     private ApplicationContext applicationContext;
