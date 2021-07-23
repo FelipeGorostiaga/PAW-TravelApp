@@ -1,3 +1,7 @@
-Web App to meet people and travel the world with them!
+# Meet and Travel
 
-Developed using Java Spring MVC 
+### Web App for PAW course at ITBA
+
+Meet new people and organize trips with them
+
+Developed using Angular and Java (Spring, Jersey and Hibernate)
